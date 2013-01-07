@@ -1,0 +1,66 @@
+// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+// PARTICULAR PURPOSE.
+//
+// Copyright (c) Microsoft Corporation. All rights reserved
+
+
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Kona.Infrastructure;
+using Kona.UILogic.Models;
+using Windows.UI.Xaml.Navigation;
+
+namespace Kona.UILogic.ViewModels
+{
+    public interface IBillingAddressUserControlViewModel
+    {
+        [RestorableState]
+        string FirstName { get; set; }
+
+        [RestorableState]
+        string MiddleInitial { get; set; }
+
+        [RestorableState]
+        string LastName { get; set; }
+
+        [RestorableState]
+        string StreetAddress { get; set; }
+
+        [RestorableState]
+        string OptionalAddress { get; set; }
+
+        [RestorableState]
+        string City { get; set; }
+        
+        string State { get; set; }
+
+        [RestorableState]
+        string ZipCode { get; set; }
+
+        [RestorableState]
+        string Phone { get; set; }
+
+        [RestorableState]
+        bool SaveAddress { get; set; }
+
+        [RestorableState]
+        bool SetAsDefault { get; set; }
+
+        [RestorableState]
+        int CurrentFormStatus { get; set; }
+
+        EntityValidator Validator { get; }
+        IReadOnlyCollection<ComboBoxItemValue> States { get; set; }
+        Address GetAddress();
+        string EntityId { get; set; }
+        void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState);
+        void OnNavigatedFrom(Dictionary<string, object> viewState, bool suspending);
+        void ProcessForm();
+        Task<bool> ValidateFormAsync();
+        event PropertyChangedEventHandler PropertyChanged;
+    }
+}

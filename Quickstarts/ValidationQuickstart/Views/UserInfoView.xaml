@@ -1,0 +1,69 @@
+﻿<Page
+    x:Class="ValidationQuickStart.Views.UserInfoView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:ValidationQuickStart.ViewModels" 
+    xmlns:behaviors="using:ValidationQuickStart.Behaviors"
+    mc:Ignorable="d">
+
+    <!-- <snippet1301> -->
+    <Page.DataContext>
+        <vm:UserInfoViewModel />
+    </Page.DataContext>
+    <!-- </snippet1301> -->
+
+    <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+        <Grid Margin="50,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="120" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="100"  />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="600" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Page Title -->
+            <TextBlock Text="Validation Quickstart" Style="{StaticResource HeaderTextStyle}" VerticalAlignment="Center" />
+
+            <!-- <snippet1302> -->
+            <!-- First Name -->
+            <TextBlock x:Uid="FirstNameTitle" Grid.Row="1" Style="{StaticResource BasicTextStyle}" />
+            <TextBox Grid.Row="2" Text="{Binding FirstName, Mode=TwoWay}"
+                     behaviors:HighlightOnErrors.PropertyErrors="{Binding Validator[FirstName]}" />
+
+            <!-- Middle Name -->
+            <TextBlock x:Uid="MiddleNameTitle" Grid.Row="3" Style="{StaticResource BasicTextStyle}" />
+            <TextBox Grid.Row="4" Text="{Binding MiddleName, Mode=TwoWay}"
+                     behaviors:HighlightOnErrors.PropertyErrors="{Binding Validator[MiddleName]}" />
+
+            <!-- Last Name -->
+            <TextBlock x:Uid="LastNameTitle" Grid.Row="5" Style="{StaticResource BasicTextStyle}" />
+            <TextBox Grid.Row="6" Text="{Binding LastName, Mode=TwoWay}"
+                     behaviors:HighlightOnErrors.PropertyErrors="{Binding Validator[LastName]}" />
+            <!-- </snippet1302> -->
+
+            <!-- Menu -->
+            <Button Grid.Row="7" Command="{Binding ValidateCommand}">Validate</Button>
+
+            <!-- Errors -->
+            <!-- <snippet1303> -->
+            <ItemsControl Grid.Row="8" ItemsSource="{Binding AllErrors}" >
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" Style="{StaticResource ErrorMessageStyle}"></TextBlock>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <!-- </snippet1303> -->
+        </Grid>
+    </Grid>
+</Page>
