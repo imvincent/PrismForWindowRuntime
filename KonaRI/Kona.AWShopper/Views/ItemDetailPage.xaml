@@ -19,23 +19,13 @@
     </Page.Resources>
     <!-- <snippet401> -->
     <Page.TopAppBar>
-        <AppBar>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <Button Content="Shopping Cart" Command="{Binding ShoppingCartCommand}"/>
-            </StackPanel>
+        <AppBar Style="{StaticResource AppBarStyle}">
+            <Views:TopAppBarUserControl />
         </AppBar>
     </Page.TopAppBar>
     <!-- </snippet401> -->
-    <Page.BottomAppBar>
-        <AppBar>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <Button Content="Add to Shopping Cart" Command="{Binding AddToCartCommand}" />
-            </StackPanel>
-        </AppBar>
-    </Page.BottomAppBar>
-
     
-        <!--
+    <!--
         This grid acts as a root panel for the page that defines two rows:
         * Row 0 contains the back button and page title
         * Row 1 contains the rest of the page layout
@@ -45,6 +35,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="140" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!-- Back button and page title -->
@@ -61,7 +52,7 @@
                        Text="{Binding Title}"
                        Style="{StaticResource PageHeaderTextStyle}"
                        Grid.Column="1" />
-            <Views:ShoppingCartTab Grid.Column="2" VerticalAlignment="Top" />
+            <Views:ShoppingCartTabUserControl Grid.Column="2" />
         </Grid>
 
         <!--
@@ -69,6 +60,7 @@
             one item at a time, allowing the user to flip through all items in the chosen
             group
         -->
+        <!-- <snippet605> -->
         <FlipView x:Name="flipView"
                   AutomationProperties.AutomationId="ItemsFlipView"
                   AutomationProperties.Name="Item Details"
@@ -77,6 +69,7 @@
                   Margin="0,-3,0,0"
                   ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
                   SelectedItem="{Binding SelectedProduct, Mode=TwoWay}">
+            <!-- </snippet605> -->
 
             <FlipView.ItemTemplate>
                 <DataTemplate>
@@ -87,36 +80,35 @@
                     -->
                     <UserControl Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates">
                         <ScrollViewer x:Name="scrollViewer"
-                                      Style="{StaticResource HorizontalScrollViewerStyle}"
-                                      Grid.Row="1">
-
+                                        Style="{StaticResource HorizontalScrollViewerStyle}"
+                                        Grid.Row="1">
                             <!-- Content is allowed to flow across as many columns as needed -->
                             <Common:RichTextColumns x:Name="richTextColumns"
                                                     Margin="117,0,117,47">
                                 <RichTextBlock x:Name="richTextBlock"
-                                               Width="560"
-                                               Style="{StaticResource ItemRichTextStyle}">
+                                                Width="560"
+                                                Style="{StaticResource ItemRichTextStyle}">
                                     <Paragraph>
                                         <Run FontSize="26.667"
-                                             FontWeight="Light"
-                                             Text="{Binding Title}" />
+                                                FontWeight="Light"
+                                                Text="{Binding Title}" />
                                         <LineBreak />
                                         <LineBreak />
                                         <Run FontWeight="SemiBold"
-                                             Text="{Binding Subtitle}" />
+                                                Text="{Binding Description}" />
                                     </Paragraph>
                                     <Paragraph LineStackingStrategy="MaxHeight">
                                         <InlineUIContainer>
                                             <Image x:Name="image"
-                                                   MaxHeight="480"
-                                                   Margin="0,20,0,10"
-                                                   Stretch="Uniform"
-                                                   Source="{Binding Image}" />
+                                                    MaxHeight="480"
+                                                    Margin="0,20,0,10"
+                                                    Stretch="Uniform"
+                                                    Source="{Binding Image}" />
                                         </InlineUIContainer>
                                     </Paragraph>
                                     <Paragraph>
                                         <Run FontWeight="SemiLight"
-                                             Text="{Binding Content}" />
+                                                Text="{Binding ListPrice}" />
                                     </Paragraph>
                                 </RichTextBlock>
 
@@ -124,7 +116,7 @@
                                 <Common:RichTextColumns.ColumnTemplate>
                                     <DataTemplate>
                                         <RichTextBlockOverflow Width="560"
-                                                               Margin="80,0,0,0">
+                                                                Margin="80,0,0,0">
                                             <RichTextBlockOverflow.RenderTransform>
                                                 <TranslateTransform X="-1"
                                                                     Y="4" />
@@ -145,12 +137,12 @@
                                     <VisualState x:Name="FullScreenPortrait">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="richTextColumns"
-                                                                           Storyboard.TargetProperty="Margin">
+                                                                            Storyboard.TargetProperty="Margin">
                                                 <DiscreteObjectKeyFrame KeyTime="0"
                                                                         Value="97,0,87,57" />
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="image"
-                                                                           Storyboard.TargetProperty="MaxHeight">
+                                                                            Storyboard.TargetProperty="MaxHeight">
                                                 <DiscreteObjectKeyFrame KeyTime="0"
                                                                         Value="400" />
                                             </ObjectAnimationUsingKeyFrames>
@@ -161,22 +153,22 @@
                                     <VisualState x:Name="Snapped">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="richTextColumns"
-                                                                           Storyboard.TargetProperty="Margin">
+                                                                            Storyboard.TargetProperty="Margin">
                                                 <DiscreteObjectKeyFrame KeyTime="0"
                                                                         Value="17,0,17,57" />
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="scrollViewer"
-                                                                           Storyboard.TargetProperty="Style">
+                                                                            Storyboard.TargetProperty="Style">
                                                 <DiscreteObjectKeyFrame KeyTime="0"
                                                                         Value="{StaticResource VerticalScrollViewerStyle}" />
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="richTextBlock"
-                                                                           Storyboard.TargetProperty="Width">
+                                                                            Storyboard.TargetProperty="Width">
                                                 <DiscreteObjectKeyFrame KeyTime="0"
                                                                         Value="280" />
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="image"
-                                                                           Storyboard.TargetProperty="MaxHeight">
+                                                                            Storyboard.TargetProperty="MaxHeight">
                                                 <DiscreteObjectKeyFrame KeyTime="0"
                                                                         Value="160" />
                                             </ObjectAnimationUsingKeyFrames>
@@ -189,6 +181,8 @@
                 </DataTemplate>
             </FlipView.ItemTemplate>
         </FlipView>
+
+        <Button x:Uid="AddToCartButton" Content="Add to Cart" Command="{Binding AddToCartCommand}" Grid.Row="2" />
 
         <VisualStateManager.VisualStateGroups>
 

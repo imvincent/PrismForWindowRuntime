@@ -7,6 +7,7 @@
 
 
 using System.Threading.Tasks;
+using Kona.UILogic.Events;
 using Kona.UILogic.Models;
 using Kona.UILogic.Repositories;
 using Kona.UILogic.Tests.Mocks;
@@ -24,11 +25,14 @@ namespace Kona.UILogic.Tests.Repositories
             var shoppingCartService = new MockShoppingCartService();
             shoppingCartService.AddProductToShoppingCartAsyncDelegate =
                 (s, s1) => Task.FromResult(new ShoppingCartItem());
-            var target = new ShoppingCartRepository(shoppingCartService, new MockAccountService());
-            target.ShoppingCartUpdated += (sender, args) =>
-                                              {
-                                                  shoppingCartUpdatedRaised = true;
-                                              };
+            var shoppingCartUpdatedEvent = new ShoppingCartUpdatedEvent();
+            shoppingCartUpdatedEvent.Subscribe((args) =>
+                                                   {
+                                                       shoppingCartUpdatedRaised = true;
+                                                   });
+            var eventAggregator = new MockEventAggregator();
+            eventAggregator.GetEventDelegate = type => shoppingCartUpdatedEvent;
+            var target = new ShoppingCartRepository(shoppingCartService, new MockAccountService(), eventAggregator, new MockProductCatalogRepository());
 
             target.AddProductToShoppingCartAsync("TestProductId");
 
@@ -36,19 +40,26 @@ namespace Kona.UILogic.Tests.Repositories
         }
 
         [TestMethod]
-        public void CartUpdatedEventRaised_WhenProductRemoved()
+        public async Task CartUpdatedEventRaised_WhenProductRemoved()
         {
             var shoppingCartUpdatedRaised = false;
             var shoppingCartService = new MockShoppingCartService();
-            shoppingCartService.RemoveShoppingCartItemAsyncDelegate =
-                (s, s1) => new Task(() => {});
-            var target = new ShoppingCartRepository(shoppingCartService, new MockAccountService());
-            target.ShoppingCartUpdated += (sender, args) =>
+            shoppingCartService.RemoveShoppingCartItemDelegate =
+                (s, s1) =>
+                    {
+                        Assert.AreEqual(123, s1);
+                        return;
+                    };
+            var shoppingCartUpdatedEvent = new MockShoppingCartUpdatedEvent();
+            shoppingCartUpdatedEvent.PublishDelegate =((args) =>
             {
                 shoppingCartUpdatedRaised = true;
-            };
-
-            target.RemoveShoppingCartItemAsync("TestItemId");
+            });
+            var eventAggregator = new MockEventAggregator();
+            eventAggregator.GetEventDelegate = type => shoppingCartUpdatedEvent;
+            var target = new ShoppingCartRepository(shoppingCartService, new MockAccountService(), eventAggregator, new MockProductCatalogRepository());
+            
+            target.RemoveShoppingCartItemAsync(123);
 
             Assert.IsTrue(shoppingCartUpdatedRaised);
         }

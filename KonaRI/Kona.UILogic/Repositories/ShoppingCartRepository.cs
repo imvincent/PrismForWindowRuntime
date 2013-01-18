@@ -6,8 +6,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using Kona.UILogic.Events;
 using Kona.UILogic.Models;
 using Kona.UILogic.Services;
+using Microsoft.Practices.Prism.Events;
 using System;
 using System.Threading.Tasks;
 
@@ -16,16 +18,19 @@ namespace Kona.UILogic.Repositories
     public class ShoppingCartRepository : IShoppingCartRepository
     {
         public static readonly string HighPriorityRoamingSettingKey = "HighPriority";
-        IShoppingCartService _cartService;
+        private readonly IShoppingCartService _shoppingCartService;
         private readonly IAccountService _accountService;
+        private readonly IEventAggregator _eventAggregator;
+        private readonly IProductCatalogRepository _productCatalogRepository;
 
-        string _shoppingCartId;
-        private AddressAndPaymentInfo _addressAndPaymentInfo;
-
-        public ShoppingCartRepository(IShoppingCartService service, IAccountService accountService)
+        private string _shoppingCartId;
+        
+        public ShoppingCartRepository(IShoppingCartService shoppingCartService, IAccountService accountService, IEventAggregator eventAggregator, IProductCatalogRepository productCatalogRepository)
         {
-            _cartService = service;
+            _shoppingCartService = shoppingCartService;
             _accountService = accountService;
+            _eventAggregator = eventAggregator;
+            _productCatalogRepository = productCatalogRepository;
 
             if (accountService != null)
             {
@@ -45,11 +50,9 @@ namespace Kona.UILogic.Repositories
 
         public Task ClearCartAsync()
         {
-            // TODO - need a DELETE method on ShoppingCartController that deletes the whole cart
-            // current DELETE method could be used and just check for a null itemId, but need a server repository method to 
-            // remove the whole cart
+            var task = _shoppingCartService.DeleteShoppingCartAsync(_shoppingCartId);
             RaiseShoppingCartUpdated();
-            return Task.Factory.StartNew(() => { });
+            return task;
         }
 
         void _accountService_UserChanged(object sender, UserChangedEventArgs e)
@@ -69,56 +72,33 @@ namespace Kona.UILogic.Repositories
 
         public async Task<ShoppingCart> GetShoppingCartAsync()
         {
-            ShoppingCart cart = null;
-            try
+            ShoppingCart cart = await _shoppingCartService.GetShoppingCartAsync(_shoppingCartId);
+            if (cart == null) return null;
+
+            foreach (var shoppingCartItem in cart.ShoppingCartItems)
             {
-                return await _cartService.GetShoppingCartAsync(_shoppingCartId);
+                //Update ImageName with path to local instance of image.
+                var product = await _productCatalogRepository.GetProductAsync(shoppingCartItem.Product.ProductNumber);
+                shoppingCartItem.Product.ImageName = product.ImageName;
             }
-            catch (Exception)
-            {
-                return cart;
-            }
+            return cart;
         }
 
-        public Task AddProductToShoppingCartAsync(string productId)
+        public async void AddProductToShoppingCartAsync(string productId)
         {
-            var task = _cartService.AddProductToShoppingCartAsync(_shoppingCartId, productId);
+            await _shoppingCartService.AddProductToShoppingCartAsync(_shoppingCartId, productId);
             RaiseShoppingCartUpdated();
-            return task;
         }
 
-        public Task RemoveShoppingCartItemAsync(string itemId)
+        public void RemoveShoppingCartItemAsync(int itemId)
         {
-            var task = _cartService.RemoveShoppingCartItemAsync(_shoppingCartId, itemId);
+            _shoppingCartService.RemoveShoppingCartItemAsync(_shoppingCartId, itemId);
             RaiseShoppingCartUpdated();
-            return task;
-        }
-
-
-        public void AddAddressAndPurchaseInfo(Address shippingAddress, Address billingAddress, PaymentInfo paymentInfo)
-        {
-            _addressAndPaymentInfo = new AddressAndPaymentInfo
-                                         {
-                                             ShippingAddress = shippingAddress,
-                                             BillingAddress = billingAddress,
-                                             PaymentInfo = paymentInfo
-                                         };
-        }
-
-        public AddressAndPaymentInfo AddressAndPurchaseInfo
-        {
-            get { return _addressAndPaymentInfo; }
         }
 
         private void RaiseShoppingCartUpdated()
         {
-            var handler = ShoppingCartUpdated;
-            if (handler != null)
-            {
-                ShoppingCartUpdated(this, null);
-            }
+            _eventAggregator.GetEvent<ShoppingCartUpdatedEvent>().Publish("payload");
         }
-
-        public event EventHandler ShoppingCartUpdated;
     }
 }

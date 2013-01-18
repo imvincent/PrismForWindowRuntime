@@ -64,6 +64,7 @@ namespace Kona.Infrastructure
 
         #endregion
 
+        // <snippet300>
         private static void AutoWireViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             FrameworkElement view = d as FrameworkElement;
@@ -82,6 +83,7 @@ namespace Kona.Infrastructure
             }
             view.DataContext = viewModel;
         }
+        // </snippet300>
 
         private static object GetViewModelForView(FrameworkElement view)
         {

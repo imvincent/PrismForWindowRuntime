@@ -31,17 +31,5 @@ namespace Kona.UILogic.Services
                 return result;
             }
         }
-
-        public async Task<bool> GetIsZipCodeValidAsync(string state, string zipCode)
-        {
-            using (var client = new HttpClient())
-            {
-                var response = await client.GetAsync(string.Format("{0}?state={1}&zipCode={2}", _clientBaseUrl, state, zipCode));
-                response.EnsureSuccessStatusCode();
-
-                var result = await response.Content.ReadAsAsync<bool>();
-                return result;
-            }
-        }
     }
 }

@@ -24,18 +24,23 @@ namespace Kona.UILogic.ViewModels
             _checkoutDataRepository = checkoutDataRepository;
             _viewModel = shippingAddressUserControlViewModel;
             AddCommand = new DelegateCommand(AddShippingAddress);
+            GoBackCommand = new DelegateCommand(() => GoBack(), () => true);
         }
 
         public IShippingAddressUserControlViewModel ShippingAddressUserControlViewModel { get { return _viewModel; } }
         public ICommand AddCommand { get; set; }
         public Action CloseFlyout { get; set; }
         public Action GoBack { get; set; }
+        public ICommand GoBackCommand { get; private set; }
 
-        public void Open() { }
-
-        private async void AddShippingAddress()
+        public async void Open(object parameter, Action successAction)
         {
-            if (await ShippingAddressUserControlViewModel.ValidateFormAsync())
+            await _viewModel.PopulateStatesAsync();
+        }
+
+        private void AddShippingAddress()
+        {
+            if (ShippingAddressUserControlViewModel.ValidateForm())
             {
                 _checkoutDataRepository.SaveShippingAddress(ShippingAddressUserControlViewModel.Address);
                 CloseFlyout();

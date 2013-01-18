@@ -6,22 +6,32 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System;
+using System.ComponentModel.DataAnnotations;
+using Kona.WebServices.Strings;
+
 namespace Kona.WebServices.Models
 {
     public class Order
     {
-        public int OrderId { get; set; }
+        public int Id { get; set; }
 
+        [Required(ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRequired")]
         public string UserId { get; set; }
 
-        public ShoppingCart Cart { get; set; }
+        [Required(ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRequired")]
+        public ShoppingCart ShoppingCart { get; set; }
 
+        [Required(ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRequired")]
         public Address ShippingAddress { get; set; }
 
+        [Required(ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRequired")]
         public Address BillingAddress { get; set; }
 
-        public PaymentInfo Payment { get; set; }
+        [Required(ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRequired")]
+        public PaymentInfo PaymentInfo { get; set; }
 
-        public ShippingMethod ShipMethod { get; set; }
+        [Required(ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRequired")]
+        public ShippingMethod ShippingMethod { get; set; }
     }
 }

@@ -19,13 +19,15 @@ namespace Kona.UILogic.Services
     {
         private readonly string _clientBaseUrl = string.Format("{0}/api/Identity/", Constants.ServerAddress);
 
+        // <snippet508>
         public async Task<LogOnResult> LogOnAsync(string userId, string password)
         {
             using (var handler = new HttpClientHandler { CookieContainer = new CookieContainer() })
             {
                 using (var client = new HttpClient(handler))
                 {
-                    var response = await client.GetAsync(_clientBaseUrl + userId + "?password=" + password);
+                    //The password is intentionally not sent to the IdentityController to simplify the deployment of this app.
+                    var response = await client.GetAsync(_clientBaseUrl + userId + "?password=");
                     response.EnsureSuccessStatusCode();
                     var result = await response.Content.ReadAsAsync<UserValidationResult>();
                     var serverUri = new Uri(Constants.ServerAddress);
@@ -33,6 +35,7 @@ namespace Kona.UILogic.Services
                 }
             }
         }
+        // </snippet508>
 
         public async Task<bool> VerifyActiveSession(string userId, string serverCookieHeader)
         {

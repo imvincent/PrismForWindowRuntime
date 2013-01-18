@@ -18,86 +18,34 @@ namespace ValidationQuickStart.ViewModels
 {
     public class UserInfoViewModel : ViewModel
     {
-        private readonly IUserInfo _userInfo;
-        private readonly EntityValidator _validator;
+        private IUserInfo _userInfo;
         private ReadOnlyCollection<string> _allErrors;
 
         // <snippet1306> 
         public UserInfoViewModel()
+            : this(new UserInfo())
         {
-            _userInfo = new UserInfo();
-            _validator = new EntityValidator(UserInfo);
-            _allErrors = EntityValidator.EmptyErrorsCollection;
-            _validator.ErrorsChanged += ValidatorErrorsChanged;
-            ValidateCommand = new DelegateCommand(async () => await ValidateAsync());
         }
-        // </snippet1306> 
 
         public UserInfoViewModel(IUserInfo userInfo)
         {
             _userInfo = userInfo;
-            _validator = new EntityValidator(userInfo);
-            _allErrors = EntityValidator.EmptyErrorsCollection;
-            _validator.ErrorsChanged += ValidatorErrorsChanged;
-            ValidateCommand = new DelegateCommand(async () => await ValidateAsync());
+            _userInfo.ErrorsChanged += OnErrorsChanged;
+            _allErrors = BindableValidator.EmptyErrorsCollection;
+            ValidateCommand = new DelegateCommand(Validate);
         }
+        // </snippet1306>
 
         public IUserInfo UserInfo
         {
             get { return _userInfo; }
+            set { SetProperty(ref _userInfo, value); }
         }
 
-        public EntityValidator Validator
+        public BindableValidator Errors
         {
-            get { return _validator; }
-        }
-
-        // <snippet1307>
-        public string FirstName
-        {
-            get { return UserInfo.FirstName; }
-            set
-            {
-                if (UserInfo.FirstName != value)
-                {
-                    UserInfo.FirstName = value;
-                    OnPropertyChanged("FirstName");
-                    _validator.ValidateProperty("FirstName");
-
-                    // We also check if the Middle Name is valid
-                    _validator.ValidateProperty("MiddleName");
-                }
+            get { return _userInfo.Errors; }
             }
-        }
-        // </snippet1307>
-
-        public string MiddleName
-        {
-            get { return UserInfo.MiddleName; }
-            set
-            {
-                if (UserInfo.MiddleName != value)
-                {
-                    UserInfo.MiddleName = value;
-                    OnPropertyChanged("MiddleName");
-                    _validator.ValidateProperty("MiddleName");
-                }
-            }
-        }
-
-        public string LastName
-        {
-            get { return UserInfo.LastName; }
-            set
-            {
-                if (UserInfo.LastName != value)
-                {
-                    UserInfo.LastName = value;
-                    OnPropertyChanged("LastName");
-                    _validator.ValidateProperty("LastName");
-                }
-            }
-        }
 
         public ReadOnlyCollection<string> AllErrors
         {
@@ -107,15 +55,15 @@ namespace ValidationQuickStart.ViewModels
 
         public ICommand ValidateCommand { get; set; }
 
-        public async Task ValidateAsync()
+        public void Validate()
         {
-            await _validator.ValidatePropertiesAsync();
+            _userInfo.ValidateProperties();
         }
 
         // <snippet1308>
-        private void ValidatorErrorsChanged(object sender, DataErrorsChangedEventArgs e)
+        private void OnErrorsChanged(object sender, DataErrorsChangedEventArgs e)
         {
-            AllErrors = new ReadOnlyCollection<string>(Validator.GetAllErrors().Values.SelectMany(c => c).ToList());
+            AllErrors = new ReadOnlyCollection<string>(_userInfo.GetAllErrors().Values.SelectMany(c => c).ToList());
         }
         // </snippet1308>
     }

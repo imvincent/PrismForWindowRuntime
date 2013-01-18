@@ -20,9 +20,18 @@ namespace Kona.UILogic.Repositories
         void SaveBillingAddress(Address address);
         void SavePaymentInfo(PaymentInfo paymentInfo);
         bool ContainsDefaultValue(string container);
-        void SetAsDefaultValue(string container, string id);
-        T GetDefaultValue<T>(string container) where T : new();
-        void DeleteValue(string container, string id);
+        void SetAsDefaultShippingAddress(string id);
+        void SetAsDefaultBillingAddress(string id);
+        void SetAsDefaultPaymentInfo(string id);
+        Address GetDefaultShippingAddressValue();
+        Address GetDefaultBillingAddressValue();
+        PaymentInfo GetDefaultPaymentInfoValue();
+        void DeleteShippingAddressValue(string id);
+        void DeleteBillingAddressValue(string id);
+        void DeletePaymentInfoValue(string id);
         void DeleteContainer(string container);
+        PaymentInfo RetrievePaymentInformation(string id);
+        Address RetrieveShippingAddress(string id);
+        Address RetrieveBillingAddress(string id);
     }
 }

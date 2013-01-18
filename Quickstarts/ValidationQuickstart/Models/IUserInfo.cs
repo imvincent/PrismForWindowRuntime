@@ -6,6 +6,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using Kona.Infrastructure;
+
 namespace ValidationQuickStart.Models
 {
     public interface IUserInfo
@@ -15,5 +20,13 @@ namespace ValidationQuickStart.Models
         string MiddleName { get; set; }
 
         string LastName { get; set; }
+
+        BindableValidator Errors { get; }
+
+        bool ValidateProperties();
+
+        ReadOnlyDictionary<string, ReadOnlyCollection<string>> GetAllErrors();
+
+        event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
     }
 }

@@ -9,7 +9,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Kona.Infrastructure;
 using Kona.UILogic.Models;
 using Windows.UI.Xaml.Navigation;
@@ -19,30 +18,7 @@ namespace Kona.UILogic.ViewModels
     public interface IBillingAddressUserControlViewModel
     {
         [RestorableState]
-        string FirstName { get; set; }
-
-        [RestorableState]
-        string MiddleInitial { get; set; }
-
-        [RestorableState]
-        string LastName { get; set; }
-
-        [RestorableState]
-        string StreetAddress { get; set; }
-
-        [RestorableState]
-        string OptionalAddress { get; set; }
-
-        [RestorableState]
-        string City { get; set; }
-        
-        string State { get; set; }
-
-        [RestorableState]
-        string ZipCode { get; set; }
-
-        [RestorableState]
-        string Phone { get; set; }
+        Address Address { get; set; }
 
         [RestorableState]
         bool SaveAddress { get; set; }
@@ -53,14 +29,17 @@ namespace Kona.UILogic.ViewModels
         [RestorableState]
         int CurrentFormStatus { get; set; }
 
-        EntityValidator Validator { get; }
+        BindableValidator Errors { get; }
         IReadOnlyCollection<ComboBoxItemValue> States { get; set; }
-        Address GetAddress();
         string EntityId { get; set; }
         void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState);
         void OnNavigatedFrom(Dictionary<string, object> viewState, bool suspending);
         void ProcessForm();
-        Task<bool> ValidateFormAsync();
+        bool ValidateForm();
+        Task PopulateStatesAsync();
+        void UpdateAddressInformation(Address address);
         event PropertyChangedEventHandler PropertyChanged;
+
+        bool IsEnabled { get; set; }
     }
 }

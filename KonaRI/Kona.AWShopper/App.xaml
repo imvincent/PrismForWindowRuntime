@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
     xmlns:common="using:Kona.AWShopper.Common"
     xmlns:converters="using:Kona.AWShopper.Converters"
-    RequestedTheme="Light">
+    RequestedTheme="Dark">
 
     <Application.Resources>
         <ResourceDictionary>
@@ -27,7 +27,8 @@
             <!-- Converters -->
             <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <converters:BooleanNegationToVisibilityConverter x:Key="BooleanNegationToVisibilityConverter" />
-            <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+            <converters:NullToVisibleConverter x:Key="NullToVisibleConverter" />
+            <converters:NotNullToVisibleConverter x:Key="NotNullToVisibleConverter" />
             <converters:IsGiftContentConverter x:Key="IsGiftContentConverter" />
             <converters:IsSignInInvalidConverter x:Key="IsSignInInvalidConverter" />
             <converters:FormStatusToVisibilityConverter x:Key="FormStatusToVisibilityConverter" />

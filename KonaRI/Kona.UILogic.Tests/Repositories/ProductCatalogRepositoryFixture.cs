@@ -31,19 +31,19 @@ namespace Kona.UILogic.Tests.Repositories
             var productCatalogService = new MockProductCatalogService();
             var categories = new List<Category>
             {
-                new Category{ CategoryId = 1},
-                new Category{ CategoryId = 2}
+                new Category{ Id = 1},
+                new Category{ Id = 2}
             };
 
-            productCatalogService.GetCategoriesAsyncDelegate = (depth) => Task.FromResult(new ObservableCollection<Category>(categories));
-            productCatalogService.GetSubcategoriesAsyncDelegate = (i) => Task.FromResult(new ObservableCollection<Category>());
+            productCatalogService.GetCategoriesAsyncDelegate = (depth) => Task.FromResult(new ReadOnlyCollection<Category>(categories));
+            productCatalogService.GetSubcategoriesAsyncDelegate = (i) => Task.FromResult(new ReadOnlyCollection<Category>(null));
             
             var target = new ProductCatalogRepository(productCatalogService, cacheService);
             var returnedCategories = await target.GetCategoriesAsync();
 
             Assert.AreEqual(2, returnedCategories.Count);
-            Assert.AreEqual(1, returnedCategories[0].CategoryId);
-            Assert.AreEqual(2, returnedCategories[1].CategoryId);
+            Assert.AreEqual(1, returnedCategories[0].Id);
+            Assert.AreEqual(2, returnedCategories[1].Id);
         }
 
         [TestMethod]
@@ -54,28 +54,28 @@ namespace Kona.UILogic.Tests.Repositories
             
             var categories = new List<Category>
             {
-                new Category{ CategoryId = 1},
-                new Category{ CategoryId = 2}
+                new Category{ Id = 1},
+                new Category{ Id = 2}
             };
 
             cacheService.GetDataDelegate = (string s) =>
             {
                 if (s == "Categories")
-                    return new ObservableCollection<Category>(categories);
+                    return new ReadOnlyCollection<Category>(categories);
 
-                return new ObservableCollection<Category>(null);
+                return new ReadOnlyCollection<Category>(null);
             };
 
             var productCatalogService = new MockProductCatalogService();
-            productCatalogService.GetCategoriesAsyncDelegate = (depth) => Task.FromResult(new ObservableCollection<Category>(null));
+            productCatalogService.GetCategoriesAsyncDelegate = (depth) => Task.FromResult(new ReadOnlyCollection<Category>(null));
 
             var target = new ProductCatalogRepository(productCatalogService, cacheService);
 
             var returnedCategories = await target.GetCategoriesAsync();
 
             Assert.AreEqual(2, returnedCategories.Count);
-            Assert.AreEqual(1, returnedCategories[0].CategoryId);
-            Assert.AreEqual(2, returnedCategories[1].CategoryId);
+            Assert.AreEqual(1, returnedCategories[0].Id);
+            Assert.AreEqual(2, returnedCategories[1].Id);
         }
 
         [TestMethod]
@@ -87,23 +87,23 @@ namespace Kona.UILogic.Tests.Repositories
 
             cacheService.SaveDataAsyncDelegate = (s, o) =>
             {
-                ObservableCollection<Category> collection = (ObservableCollection<Category>)o;
+                var collection = (ReadOnlyCollection<Category>)o;
                 Assert.AreEqual("Categories", s);
                 Assert.AreEqual(2, collection.Count);
-                Assert.AreEqual(1, collection[0].CategoryId);
-                Assert.AreEqual(2, collection[1].CategoryId);
+                Assert.AreEqual(1, collection[0].Id);
+                Assert.AreEqual(2, collection[1].Id);
                 return Task.FromResult(new Uri("http://test.org"));
             };
 
             var productCatalogService = new MockProductCatalogService();
             var categories = new List<Category>
                                  {
-                                     new Category{ CategoryId = 1},
-                                     new Category{ CategoryId = 2}
+                                     new Category{ Id = 1},
+                                     new Category{ Id = 2}
                                  };
-            productCatalogService.GetCategoriesAsyncDelegate = (depth) => Task.FromResult(new ObservableCollection<Category>(categories));
+            productCatalogService.GetCategoriesAsyncDelegate = (depth) => Task.FromResult(new ReadOnlyCollection<Category>(categories));
             productCatalogService.GetSubcategoriesAsyncDelegate =
-                i => Task.FromResult(new ObservableCollection<Category>());
+                i => Task.FromResult(new ReadOnlyCollection<Category>(null));
 
             var target = new ProductCatalogRepository(productCatalogService, cacheService);
 
@@ -121,18 +121,18 @@ namespace Kona.UILogic.Tests.Repositories
             var productCatalogService = new MockProductCatalogService();
             var subCategories = new List<Category>
                                  {
-                                     new Category{ CategoryId = 10},
-                                     new Category{ CategoryId = 11}
+                                     new Category{ Id = 10},
+                                     new Category{ Id = 11}
                                  };
-            productCatalogService.GetSubcategoriesAsyncDelegate = (i) => Task.FromResult(new ObservableCollection<Category>(subCategories));
+            productCatalogService.GetSubcategoriesAsyncDelegate = (i) => Task.FromResult(new ReadOnlyCollection<Category>(subCategories));
 
             var target = new ProductCatalogRepository(productCatalogService, cacheService);
 
             var returnedSubcategories = await target.GetSubcategoriesAsync(1);
 
             Assert.AreEqual(2, returnedSubcategories.Count);
-            Assert.AreEqual(10, returnedSubcategories[0].CategoryId);
-            Assert.AreEqual(11, returnedSubcategories[1].CategoryId);
+            Assert.AreEqual(10, returnedSubcategories[0].Id);
+            Assert.AreEqual(11, returnedSubcategories[1].Id);
         }
 
         [TestMethod]
@@ -142,27 +142,27 @@ namespace Kona.UILogic.Tests.Repositories
             cacheService.DataExistsAndIsValidAsyncDelegate = s => Task.FromResult(true);
             var categories = new List<Category>
                                  {
-                                     new Category{ CategoryId = 10},
-                                     new Category{ CategoryId = 11}
+                                     new Category{ Id = 10},
+                                     new Category{ Id = 11}
                                  };
             cacheService.GetDataDelegate = s =>
             {
                 if (s == "SubCategoriesOfCategoryId1")
-                    return new ObservableCollection<Category>(categories);
+                    return new ReadOnlyCollection<Category>(categories);
 
-                return new ObservableCollection<Category>(null);
+                return new ReadOnlyCollection<Category>(null);
             };
 
             var productCatalogService = new MockProductCatalogService();
-            productCatalogService.GetSubcategoriesAsyncDelegate = (i) => Task.FromResult(new ObservableCollection<Category>(null));
+            productCatalogService.GetSubcategoriesAsyncDelegate = (i) => Task.FromResult(new ReadOnlyCollection<Category>(null));
 
             var target = new ProductCatalogRepository(productCatalogService, cacheService);
 
             var returnedCategories = await target.GetSubcategoriesAsync(1);
 
             Assert.AreEqual(2, returnedCategories.Count);
-            Assert.AreEqual(10, returnedCategories[0].CategoryId);
-            Assert.AreEqual(11, returnedCategories[1].CategoryId);
+            Assert.AreEqual(10, returnedCategories[0].Id);
+            Assert.AreEqual(11, returnedCategories[1].Id);
         }
 
         [TestMethod]
@@ -173,21 +173,21 @@ namespace Kona.UILogic.Tests.Repositories
             cacheService.SaveExternalDataAsyncDelegate = (uri, s) => Task.FromResult(new Uri("http://test.org"));
             cacheService.SaveDataAsyncDelegate = (s, o) => 
             {
-                ObservableCollection<Category> collection = (ObservableCollection<Category>)o;
+                var collection = (ReadOnlyCollection<Category>)o;
                 Assert.AreEqual("SubCategoriesOfCategoryId1", s);
                 Assert.AreEqual(2, collection.Count);
-                Assert.AreEqual(10, collection[0].CategoryId);
-                Assert.AreEqual(11, collection[1].CategoryId);
+                Assert.AreEqual(10, collection[0].Id);
+                Assert.AreEqual(11, collection[1].Id);
                 return Task.FromResult(new Uri("http://test.org"));
             };
 
             var productCatalogService = new MockProductCatalogService();
             var subCategories = new List<Category>
                                  {
-                                     new Category{ CategoryId = 10},
-                                     new Category{ CategoryId = 11}
+                                     new Category{ Id = 10},
+                                     new Category{ Id = 11}
                                  };
-            productCatalogService.GetSubcategoriesAsyncDelegate = (i) => Task.FromResult(new ObservableCollection<Category>(subCategories));
+            productCatalogService.GetSubcategoriesAsyncDelegate = (i) => Task.FromResult(new ReadOnlyCollection<Category>(subCategories));
 
             var target = new ProductCatalogRepository(productCatalogService, cacheService);
 

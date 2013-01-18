@@ -16,21 +16,27 @@ namespace Kona.UILogic.Tests.Mocks
     {
         public Func<string, Task<ShoppingCart>> GetShoppingCartAsyncDelegate { get; set; }
         public Func<string, string, Task<ShoppingCartItem>> AddProductToShoppingCartAsyncDelegate { get; set; }
-        public Func<string, string, Task> RemoveShoppingCartItemAsyncDelegate { get; set; }
+        public Action<string, int> RemoveShoppingCartItemDelegate { get; set; }
+        public Func<string, Task> DeleteShoppingCartAsyncDelegate { get; set; }
 
-        public System.Threading.Tasks.Task<Models.ShoppingCart> GetShoppingCartAsync(string shoppingCartId)
+        public Task<ShoppingCart> GetShoppingCartAsync(string shoppingCartId)
         {
             return GetShoppingCartAsyncDelegate(shoppingCartId);
         }
 
-        public System.Threading.Tasks.Task<Models.ShoppingCartItem> AddProductToShoppingCartAsync(string shoppingCartId, string productId)
+        public Task<ShoppingCartItem> AddProductToShoppingCartAsync(string shoppingCartId, string productId)
         {
             return AddProductToShoppingCartAsyncDelegate(shoppingCartId, productId);
         }
 
-        public System.Threading.Tasks.Task RemoveShoppingCartItemAsync(string shoppingCartId, string itemId)
+        public void RemoveShoppingCartItemAsync(string shoppingCartId, int itemId)
         {
-            return RemoveShoppingCartItemAsyncDelegate(shoppingCartId, itemId);
+            RemoveShoppingCartItemDelegate(shoppingCartId, itemId);
+        }
+
+        public Task DeleteShoppingCartAsync(string shoppingCartId)
+        {
+            return DeleteShoppingCartAsyncDelegate(shoppingCartId);
         }
     }
 }

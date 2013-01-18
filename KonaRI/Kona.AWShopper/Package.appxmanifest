@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Kona.AWShopper">
-      <VisualElements DisplayName="Kona.AWShopper" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="Kona.AWShopper" ForegroundText="light" BackgroundColor="#464646">
+      <VisualElements DisplayName="Kona.AWShopper" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="Kona.AWShopper" ForegroundText="light" BackgroundColor="#353C41">
         <DefaultTile ShowName="allLogos" />
         <SplashScreen Image="Assets\SplashScreen.png" />
       </VisualElements>

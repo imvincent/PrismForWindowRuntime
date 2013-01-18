@@ -36,20 +36,31 @@ namespace Kona.UILogic.Services
 
             foreach (var flyout in flyouts)
             {
-                SettingsCommand cmd = new SettingsCommand(flyout.CommandId, flyout.CommandTitle, (o) => flyout.Open());
-                applicationCommands.Add(cmd);
+                var notFound = applicationCommands.FirstOrDefault(
+                    (settingsCommand) => settingsCommand.Id.ToString() == flyout.CommandId) == null;
+                if (notFound && !flyout.ExcludeFromSettingsPane)
+                {
+                    SettingsCommand cmd = new SettingsCommand(flyout.CommandId, flyout.CommandTitle,
+                                                              (o) => flyout.Open(null, null));
+                    applicationCommands.Add(cmd);
+                }
             }
         }
 
-        public void ShowFlyout(string flyoutId)
+        public void ShowFlyout(string flyoutId, object parameter, Action successAction)
         {
             var flyouts = _flyoutsResolver();
             var flyout = flyouts.FirstOrDefault(c => c.CommandId == flyoutId);
 
             if (flyout != null)
             {
-                flyout.Open();
+                flyout.Open(parameter, successAction);
             }
+        }
+
+        public void ShowFlyout(string flyoutId)
+        {
+            ShowFlyout(flyoutId, null, null);
         }
     }
 }

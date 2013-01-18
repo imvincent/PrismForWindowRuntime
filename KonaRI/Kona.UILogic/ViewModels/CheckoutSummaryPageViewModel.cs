@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 using Kona.Infrastructure;
 using Kona.UILogic.Models;
 using Kona.UILogic.Repositories;
@@ -18,16 +20,16 @@ using Windows.ApplicationModel.Resources;
 using Windows.Globalization;
 using Windows.Globalization.NumberFormatting;
 using Windows.UI.Popups;
-using Windows.UI.Xaml;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Navigation;
-using System.Security;
 using Windows.Globalization.DateTimeFormatting;
 
 namespace Kona.UILogic.ViewModels
 {
-    public class CheckoutSummaryPageViewModel : ViewModel, INavigationAware
+    public class CheckoutSummaryPageViewModel : ViewModel, INavigationAware, IHandleWindowSizeChanged
     {
-        private ShoppingCart _shoppingCart;
+        private IShoppingCartRepository _shoppingCartRepository;
+        private Order _order;
         private string _orderSubtotal;
         private string _shippingCost;
         private string _taxCost;
@@ -37,30 +39,32 @@ namespace Kona.UILogic.ViewModels
         private ShoppingCartItemViewModel _selectedShoppingCartItem;
         private CheckoutDataViewModel _selectedCheckoutData;
         private CheckoutDataViewModel _selectedEditableCheckoutDataViewModel;
-        private ShippingMethodViewModel _selectedShippingMethodViewModel;
+        private IReadOnlyCollection<ShippingMethod> _shippingMethods;
+        private ShippingMethod _selectedShippingMethod;
         private ObservableCollection<ShoppingCartItemViewModel> _shoppingCartItemViewModels;
         private ObservableCollection<CheckoutDataViewModel> _editableCheckoutDataViewModels;
-        private readonly IShoppingCartRepository _shoppingCartRepository;
         private readonly INavigationService _navigationService;
         private readonly IOrderService _orderService;
+        private readonly IShippingMethodService _shippingMethodService;
         private readonly ICheckoutDataRepository _checkoutDataRepository;
         private readonly IAccountService _accountService;
         private ObservableCollection<CheckoutDataViewModel> _checkoutDataViewModels;
-        private string _newDataTypeLabel;
         private ISettingsCharmService _settingsCharmService;
-        private ReadOnlyCollection<ShippingMethodViewModel> _shippingMethodViewModels;
+        private readonly IResourceLoader _resourceLoader;
+        private bool _isUnsnapping = false;
 
-        public CheckoutSummaryPageViewModel(IShoppingCartRepository shoppingCartRepository,
-            INavigationService navigationService, IOrderService orderService, ICheckoutDataRepository checkoutDataRepository,
-            IAccountService accountService, ISettingsCharmService settingsCharmService)
+        public CheckoutSummaryPageViewModel(INavigationService navigationService, IOrderService orderService, ShippingMethodServiceProxy shippingMethodService, ICheckoutDataRepository checkoutDataRepository, IShoppingCartRepository shoppingCartRepository,
+            IAccountService accountService, ISettingsCharmService settingsCharmService, IResourceLoader resourceLoader)
         {
-            _shoppingCartRepository = shoppingCartRepository;
             _navigationService = navigationService;
             _orderService = orderService;
+            _shippingMethodService = shippingMethodService;
             _checkoutDataRepository = checkoutDataRepository;
+            _shoppingCartRepository = shoppingCartRepository;
             _settingsCharmService = settingsCharmService;
-            SubmitCommand = new DelegateCommand(Submit);
+            _resourceLoader = resourceLoader;
             _accountService = accountService;
+
             SubmitCommand = new DelegateCommand(Submit, CanSubmit);
             GoBackCommand = new DelegateCommand(_navigationService.GoBack);
             AppBarEditAddressCommand = new DelegateCommand<CheckoutDataViewModel>(OpenEditAddressFlyout);
@@ -104,12 +108,6 @@ namespace Kona.UILogic.ViewModels
             set { SetProperty(ref _editingDataTypeLabel, value); }
         }
 
-        public string NewDataTypeLabel
-        {
-            get { return _newDataTypeLabel; }
-            set { SetProperty(ref _newDataTypeLabel, value); }
-        }
-
         public ShoppingCartItemViewModel SelectedShoppingCartItem
         {
             get { return _selectedShoppingCartItem; }
@@ -146,20 +144,24 @@ namespace Kona.UILogic.ViewModels
             set { SetProperty(ref _selectedCheckoutData, value); }
         }
 
-        public ReadOnlyCollection<ShippingMethodViewModel> ShippingMethodViewModels
+        public IReadOnlyCollection<ShippingMethod> ShippingMethods
         {
-            get { return _shippingMethodViewModels; }
-            private set { SetProperty(ref _shippingMethodViewModels, value); }
+            get { return _shippingMethods; }
+            private set { SetProperty(ref _shippingMethods, value); }
         }
-
-        public ShippingMethodViewModel SelectedShippingMethodViewModel
+        
+        public ShippingMethod SelectedShippingMethod
         {
-            get { return _selectedShippingMethodViewModel; }
+            get { return _selectedShippingMethod; }
             set
             {
-                SetProperty(ref _selectedShippingMethodViewModel, value);
-                SubmitCommand.RaiseCanExecuteChanged();
-                UpdatePrices(_selectedShippingMethodViewModel.ShippingMethod.Cost);
+                if (SetProperty(ref _selectedShippingMethod, value))
+                {
+                    SubmitCommand.RaiseCanExecuteChanged();
+                    var shippingCost = _selectedShippingMethod != null ? _selectedShippingMethod.Cost : 0;
+                    _order.ShippingMethod = _selectedShippingMethod;
+                    UpdatePrices(shippingCost);
+                }
             }
         }
 
@@ -171,41 +173,30 @@ namespace Kona.UILogic.ViewModels
 
         public Action<object> SelectCheckoutDataAction { get; private set; }
 
-        //public DelegateCommand<CheckoutDataViewModel> EditAddressCommand { get; private set; }
-
         public DelegateCommand<CheckoutDataViewModel> AddNewCommand { get; private set; }
 
         public override async void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState)
         {
-            _shoppingCart = await _shoppingCartRepository.GetShoppingCartAsync();
-
-            if (_shoppingCart != null)
+            if (navigationParameter == null || navigationParameter.GetType() != typeof(Order))
             {
-                UpdatePrices(0);
-
-                ShoppingCartItemViewModels = new ObservableCollection<ShoppingCartItemViewModel>();
-                foreach (var item in _shoppingCart.ShoppingCartItems)
-                {
-                    ShoppingCartItemViewModels.Add(new ShoppingCartItemViewModel(item));
-                }
-
-                ShippingMethodViewModels = new ReadOnlyCollection<ShippingMethodViewModel>(new List<ShippingMethodViewModel>() { 
-                new ShippingMethodViewModel(new ShippingMethod() { Description = "Standard Shipping", EstimatedTime = "5-8 business days", Cost = 7.65 })
-                {Currency = _shoppingCart.Currency},
-                new ShippingMethodViewModel(new ShippingMethod() { Description = "Expedited Shipping", EstimatedTime = "3-5 business days", Cost = 14.25 })
-                {Currency = _shoppingCart.Currency},
-                new ShippingMethodViewModel(new ShippingMethod() { Description = "Two-day Shipping", EstimatedTime = "2 business days", Cost = 26.45 })
-                {Currency = _shoppingCart.Currency},
-                new ShippingMethodViewModel(new ShippingMethod() { Description = "One-day Shipping", EstimatedTime = "1 business day", Cost = 37.32 })
-                {Currency = _shoppingCart.Currency}
-            });
+                throw new ArgumentException("navigationParameter");
             }
 
+            _order = (Order)navigationParameter;
 
-            var checkoutInfo = _shoppingCartRepository.AddressAndPurchaseInfo;
-            Address shippingAddress = checkoutInfo.ShippingAddress;
-            Address billingAddress = checkoutInfo.BillingAddress;
-            PaymentInfo paymentInfo = checkoutInfo.PaymentInfo;
+            ShoppingCartItemViewModels = new ObservableCollection<ShoppingCartItemViewModel>();
+            foreach (var item in _order.ShoppingCart.ShoppingCartItems)
+            {
+                ShoppingCartItemViewModels.Add(new ShoppingCartItemViewModel(item));
+            }
+
+            var shippingMethods = await _shippingMethodService.GetShippingMethodsAsync();
+            ShippingMethods = new ReadOnlyCollection<ShippingMethod>(shippingMethods);
+            SelectedShippingMethod = ShippingMethods.FirstOrDefault(c => c.Id == _order.ShippingMethod.Id);
+
+            Address shippingAddress = _order.ShippingAddress;
+            Address billingAddress = _order.BillingAddress;
+            PaymentInfo paymentInfo = _order.PaymentInfo;
 
             var tempDateTimeFormatter = new DateTimeFormatter("shortdate");
 
@@ -219,12 +210,10 @@ namespace Kona.UILogic.ViewModels
                 new DateTimeOffset(new DateTime(int.Parse(paymentInfo.ExpirationYear),
                                                 int.Parse(paymentInfo.ExpirationMonth), 2));
 
-            var resourceLoader = new ResourceLoader();
-
             var checkoutData = new List<CheckoutDataViewModel>
-                { new CheckoutDataViewModel(new { EntityId = shippingAddress.Id, FirstLine = shippingAddress.StreetAddress, SecondLine = shippingAddress.City + "," + shippingAddress.State + " " + shippingAddress.ZipCode, Name = shippingAddress.FirstName + " " + shippingAddress.MiddleInitial + " " + shippingAddress.LastName, DataType = resourceLoader.GetString("ShippingAddress"), Content = shippingAddress }),
-                  new CheckoutDataViewModel(new { EntityId = billingAddress.Id, FirstLine = billingAddress.StreetAddress, SecondLine = billingAddress.City + "," + billingAddress.State + " " + billingAddress.ZipCode, Name = billingAddress.FirstName + " " + billingAddress.MiddleInitial + " " + billingAddress.LastName, DataType = resourceLoader.GetString("BillingAddress"), Content = billingAddress }),
-                  new CheckoutDataViewModel(new { EntityId = paymentInfo.Id, FirstLine = string.Format(CultureInfo.CurrentUICulture, resourceLoader.GetString("CardEndingIn"), paymentInfo.CardNumber.Substring(paymentInfo.CardNumber.Length - 4)), SecondLine = string.Format(CultureInfo.CurrentUICulture, resourceLoader.GetString("CardExpiringOn"), yearMonthDateTimeFormatter.Format(creditCardExpirationDateOffset)), Name = paymentInfo.CardholderName, DataType = resourceLoader.GetString("Payment"), Content = paymentInfo })
+                { new CheckoutDataViewModel(new { EntityId = shippingAddress.Id, FirstLine = shippingAddress.StreetAddress, SecondLine = String.Format("{0}, {1} {2}", shippingAddress.City, shippingAddress.State, shippingAddress.ZipCode), Name = String.Format("{0} {1} {2}", shippingAddress.FirstName, shippingAddress.MiddleInitial, shippingAddress.LastName), DataType = _resourceLoader.GetString("ShippingAddress"), Content = shippingAddress }, _settingsCharmService),
+                  new CheckoutDataViewModel(new { EntityId = billingAddress.Id, FirstLine = billingAddress.StreetAddress, SecondLine = String.Format("{0}, {1} {2}", billingAddress.City, billingAddress.State, billingAddress.ZipCode), Name = String.Format("{0} {1} {2}", billingAddress.FirstName, billingAddress.MiddleInitial, billingAddress.LastName), DataType = _resourceLoader.GetString("BillingAddress"), Content = billingAddress }, _settingsCharmService),
+                  new CheckoutDataViewModel(new { EntityId = paymentInfo.Id, FirstLine = string.Format(CultureInfo.CurrentUICulture, _resourceLoader.GetString("CardEndingIn"), paymentInfo.CardNumber.Substring(paymentInfo.CardNumber.Length - 4)), SecondLine = string.Format(CultureInfo.CurrentUICulture, _resourceLoader.GetString("CardExpiringOn"), yearMonthDateTimeFormatter.Format(creditCardExpirationDateOffset)), Name = paymentInfo.CardholderName, DataType = _resourceLoader.GetString("Payment"), Content = paymentInfo }, _settingsCharmService)
                 };
             CheckoutDataViewModels = new ObservableCollection<CheckoutDataViewModel>(checkoutData);
 
@@ -233,12 +222,12 @@ namespace Kona.UILogic.ViewModels
 
         private void UpdatePrices(double shippingCost)
         {
-            var currencyFormatter = new CurrencyFormatter(_shoppingCart.Currency);
-            OrderSubtotal = currencyFormatter.FormatDouble(_shoppingCart.FullPrice);
+            var currencyFormatter = new CurrencyFormatter(_order.ShoppingCart.Currency);
+            OrderSubtotal = currencyFormatter.FormatDouble(Math.Round(_order.ShoppingCart.FullPrice, 2));
             ShippingCost = currencyFormatter.FormatDouble(shippingCost);
-            var taxCost = Math.Round((_shoppingCart.FullPrice + shippingCost) * _shoppingCart.TaxRate, 2);
+            var taxCost = Math.Round((_order.ShoppingCart.FullPrice + shippingCost) * _order.ShoppingCart.TaxRate, 2);
             TaxCost = currencyFormatter.FormatDouble(taxCost);
-            var grandTotal = Math.Round(_shoppingCart.FullPrice + shippingCost + taxCost, 2);
+            var grandTotal = Math.Round(_order.ShoppingCart.FullPrice + shippingCost + taxCost, 2);
             GrandTotal = currencyFormatter.FormatDouble(grandTotal);
         }
 
@@ -252,7 +241,7 @@ namespace Kona.UILogic.ViewModels
                     break;
                 case "Shipping Address": _settingsCharmService.ShowFlyout("newShippingAddress");
                     break;
-                case "Payment": _settingsCharmService.ShowFlyout("newPaymentMethod");
+                case "PaymentInfo": _settingsCharmService.ShowFlyout("newPaymentMethod");
                     break;
             }
         }
@@ -262,9 +251,7 @@ namespace Kona.UILogic.ViewModels
             var resourceLoader = new ResourceLoader();
             if (selectedData == null) return;
 
-            EditingDataTypeLabel = resourceLoader.GetString("Editing") + " " + selectedData.DataType;
-            NewDataTypeLabel = resourceLoader.GetString("AddNew") + selectedData.DataType;
-
+            EditingDataTypeLabel = String.Format(CultureInfo.CurrentUICulture, resourceLoader.GetString("Editing"), selectedData.DataType);
 
             var editableViewModels = new ObservableCollection<CheckoutDataViewModel>() { selectedData };
 
@@ -275,7 +262,7 @@ namespace Kona.UILogic.ViewModels
                 {
                     if (address.Id != selectedData.EntityId)
                     {
-                        editableViewModels.Add(new CheckoutDataViewModel(new { EntityId = address.Id, FirstLine = address.StreetAddress, SecondLine = address.City + "," + address.State + " " + address.ZipCode, Name = address.FirstName + " " + address.MiddleInitial + " " + address.LastName, DataType = resourceLoader.GetString("ShippingAddress"), Content = address }));
+                        editableViewModels.Add(new CheckoutDataViewModel(new { EntityId = address.Id, FirstLine = address.StreetAddress, SecondLine = String.Format(CultureInfo.CurrentUICulture, "{0}, {1} {2}", address.City, address.State, address.ZipCode), Name = String.Format(CultureInfo.CurrentUICulture, "{0} {1} {2}", address.FirstName, address.MiddleInitial, address.LastName), DataType = resourceLoader.GetString("ShippingAddress"), Content = address }, _settingsCharmService));
                     }
                 }
             }
@@ -286,7 +273,7 @@ namespace Kona.UILogic.ViewModels
                 {
                     if (billingAddress.Id != selectedData.EntityId)
                     {
-                        editableViewModels.Add(new CheckoutDataViewModel(new { EntityId = billingAddress.Id, FirstLine = billingAddress.StreetAddress, SecondLine = billingAddress.City + "," + billingAddress.State + " " + billingAddress.ZipCode, Name = billingAddress.FirstName + " " + billingAddress.MiddleInitial + " " + billingAddress.LastName, DataType = resourceLoader.GetString("BillingAddress"), Content = billingAddress }));
+                        editableViewModels.Add(new CheckoutDataViewModel(new { EntityId = billingAddress.Id, FirstLine = billingAddress.StreetAddress, SecondLine = String.Format(CultureInfo.CurrentUICulture, "{0}, {1} {2}", billingAddress.City, billingAddress.State, billingAddress.ZipCode), Name = String.Format(CultureInfo.CurrentUICulture, "{0} {1} {2}", billingAddress.FirstName, billingAddress.MiddleInitial, billingAddress.LastName), DataType = resourceLoader.GetString("BillingAddress"), Content = billingAddress }, _settingsCharmService));
                     }
                 }
             }
@@ -307,7 +294,7 @@ namespace Kona.UILogic.ViewModels
                         var creditCardExpirationDateOffset =
     new DateTimeOffset(new DateTime(int.Parse(paymentInfo.ExpirationYear, CultureInfo.CurrentUICulture),
                                     int.Parse(paymentInfo.ExpirationMonth, CultureInfo.CurrentUICulture), 2));
-                        editableViewModels.Add(new CheckoutDataViewModel(new { EntityId = paymentInfo.Id, FirstLine = string.Format(CultureInfo.CurrentUICulture, resourceLoader.GetString("CardEndingIn"), paymentInfo.CardNumber.Substring(paymentInfo.CardNumber.Length - 4)), SecondLine = string.Format(CultureInfo.CurrentUICulture, resourceLoader.GetString("CardExpiringOn"), yearMonthDateTimeFormatter.Format(creditCardExpirationDateOffset)), Name = paymentInfo.CardholderName, DataType = resourceLoader.GetString("Payment"), Content = paymentInfo }));
+                        editableViewModels.Add(new CheckoutDataViewModel(new { EntityId = paymentInfo.Id, FirstLine = string.Format(CultureInfo.CurrentUICulture, resourceLoader.GetString("CardEndingIn"), paymentInfo.CardNumber.Substring(paymentInfo.CardNumber.Length - 4)), SecondLine = string.Format(CultureInfo.CurrentUICulture, resourceLoader.GetString("CardExpiringOn"), yearMonthDateTimeFormatter.Format(creditCardExpirationDateOffset)), Name = paymentInfo.CardholderName, DataType = resourceLoader.GetString("Payment"), Content = paymentInfo }, _settingsCharmService));
                     }
                 }
             }
@@ -339,41 +326,64 @@ namespace Kona.UILogic.ViewModels
 
         private bool CanSubmit()
         {
-            if (SelectedShippingMethodViewModel == null) return false;
-            else return true;
+            return SelectedShippingMethod != null;
         }
-
 
         public async void Submit()
         {
-            Order order = new Order();
-            order.ShippingAddress = _shoppingCartRepository.AddressAndPurchaseInfo.ShippingAddress;
-            order.BillingAddress = _shoppingCartRepository.AddressAndPurchaseInfo.BillingAddress;
-            order.Payment = _shoppingCartRepository.AddressAndPurchaseInfo.PaymentInfo;
-            order.Cart = await _shoppingCartRepository.GetShoppingCartAsync();
-            order.ShipMethod = SelectedShippingMethodViewModel.ShippingMethod;
+            var user = await _accountService.GetSignedInUserAsync();
 
-            Action submitOrderAction = async () =>
-                        {
-                            await _orderService.SubmitOrder(order, _accountService.ServerCookieHeader);
-                            HandleOrderComplete();
-                        };
-
-            if (await _accountService.CheckIfUserSignedIn() != null)
+            if (user != null)
             {
-                submitOrderAction();
+                await SubmitOrderTransactionAsync();
             }
             else
             {
-                _accountService.DisplaySignIn(submitOrderAction, null);
+                if (ApplicationView.Value == ApplicationViewState.Snapped)
+                {
+                    _isUnsnapping = true;
+                    ApplicationView.TryUnsnap();
+                }
+
+                _settingsCharmService.ShowFlyout("signIn", null, successAction: async () => await SubmitOrderTransactionAsync());
             }
         }
 
-        private async void HandleOrderComplete()
+        private async Task<bool> SubmitOrderTransactionAsync()
         {
-            MessageDialog dialog = new MessageDialog("Order complete");
-            await dialog.ShowAsync(); // TODO: Navigate?
-            await _shoppingCartRepository.ClearCartAsync();
+            var result = await _orderService.ProcessOrderAsync(_order, _accountService.ServerCookieHeader);
+
+            if (result.IsValid)
+            {
+                    // TODO: replace message with localized strings
+                    MessageDialog dialog = new MessageDialog("Your order has been submitted. Thank you for your purchase.", "Order complete");
+                    dialog.Commands.Add(new UICommand("OK", async (command) =>
+                        {
+                            _navigationService.Navigate("Hub", null);
+                            await _shoppingCartRepository.ClearCartAsync();
+                        }));
+
+                    await dialog.ShowAsync();
+                    return true;
+            }
+            else
+            {
+                // TODO: replace message with localized strings
+                var errorMessage = "The following error messages were received from the service: {0} {1}";
+                MessageDialog errorDialog = new MessageDialog(string.Format(CultureInfo.CurrentCulture, errorMessage, Environment.NewLine, result.Message),
+                    "There was an error while proccessing your order");
+                await errorDialog.ShowAsync();
+                return false;   
+            }
+        }
+
+        public void WindowCurrentSizeChanged()
+        {
+            if (_isUnsnapping)
+            {
+                _settingsCharmService.ShowFlyout("signIn", null, successAction: async () => await SubmitOrderTransactionAsync());
+                _isUnsnapping = false;
+            }
         }
     }
 }

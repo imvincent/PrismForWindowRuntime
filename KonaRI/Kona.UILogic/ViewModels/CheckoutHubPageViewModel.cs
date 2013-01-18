@@ -7,89 +7,174 @@
 
 
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Kona.Infrastructure;
+using Kona.UILogic.Models;
 using Kona.UILogic.Repositories;
+using Kona.UILogic.Services;
 
 namespace Kona.UILogic.ViewModels
 {
     public class CheckoutHubPageViewModel : ViewModel, INavigationAware
     {
         private readonly INavigationService _navigationService;
+        private readonly IAccountService _accountService;
+        private readonly IOrderService _orderService;
+        private IShippingMethodService _shippingMethodService;
         private readonly IShoppingCartRepository _shoppingCartRepository;
-        private readonly IShippingAddressUserControlViewModel _shippingAddressPageViewModel;
-        private readonly IBillingAddressUserControlViewModel _billingAddressPageViewModel;
-        private readonly IPaymentMethodUserControlViewModel _paymentMethodPageViewModel;
+        private readonly IShippingAddressUserControlViewModel _shippingAddressViewModel;
+        private readonly IBillingAddressUserControlViewModel _billingAddressViewModel;
+        private readonly IPaymentMethodUserControlViewModel _paymentMethodViewModel;
+        private bool _useSameAddressAsShipping;
+        private bool _shippingInvalid;
+        private bool _billingInvalid;
+        private bool _paymentInvalid;
 
-        public CheckoutHubPageViewModel(INavigationService navigationService, 
-                                        IShoppingCartRepository shoppingCartRepository,
-                                        IShippingAddressUserControlViewModel shippingAddressUserControlViewModel, 
-                                        IBillingAddressUserControlViewModel billingAddressUserControlViewModel, 
-                                        IPaymentMethodUserControlViewModel paymentMethodUserControlViewModel)
+        public CheckoutHubPageViewModel(INavigationService navigationService, IAccountService accountService, IOrderService orderService, ShippingMethodServiceProxy shippingMethodService, IShoppingCartRepository shoppingCartRepository,
+                                        IShippingAddressUserControlViewModel shippingAddressViewModel, IBillingAddressUserControlViewModel billingAddressViewModel, IPaymentMethodUserControlViewModel paymentMethodViewModel)
         {
             _navigationService = navigationService;
+            _accountService = accountService;
+            _orderService = orderService;
+            _shippingMethodService = shippingMethodService;
             _shoppingCartRepository = shoppingCartRepository;
-            _shippingAddressPageViewModel = shippingAddressUserControlViewModel;
-            _billingAddressPageViewModel = billingAddressUserControlViewModel;
-            _paymentMethodPageViewModel = paymentMethodUserControlViewModel;
+
+            _shippingAddressViewModel = shippingAddressViewModel;
+            _billingAddressViewModel = billingAddressViewModel;
+            _paymentMethodViewModel = paymentMethodViewModel;
 
             GoBackCommand = new DelegateCommand(() => navigationService.GoBack(), () => navigationService.CanGoBack());
             GoNextCommand = new DelegateCommand(() => GoNext());
-            UseSameAsShippingAddressAction = UseSameAddressAsShipping;
-
         }
 
         public DelegateCommand GoBackCommand { get; private set; }
         public DelegateCommand GoNextCommand { get; private set; }
-        public Action<object> UseSameAsShippingAddressAction { get; private set; }
 
-        public IShippingAddressUserControlViewModel ShippingAddressPageViewModel { get { return _shippingAddressPageViewModel; } }
-        public IBillingAddressUserControlViewModel BillingAddressPageViewModel { get { return _billingAddressPageViewModel; } }
-        public IPaymentMethodUserControlViewModel PaymentMethodPageViewModel { get { return _paymentMethodPageViewModel; } }
+        public IShippingAddressUserControlViewModel ShippingAddressViewModel { get { return _shippingAddressViewModel; } }
+        public IBillingAddressUserControlViewModel BillingAddressViewModel { get { return _billingAddressViewModel; } }
+        public IPaymentMethodUserControlViewModel PaymentMethodViewModel { get { return _paymentMethodViewModel; } }
+
+        [RestorableState]
+        public bool UseSameAddressAsShipping
+        {
+            get { return _useSameAddressAsShipping; }
+            set
+            {
+                SetProperty(ref _useSameAddressAsShipping, value);
+                BillingAddressViewModel.IsEnabled = !value;
+            }
+        }
+
+        [RestorableState]
+        public bool ShippingInvalid
+        {
+            get { return _shippingInvalid; }
+            set { SetProperty(ref _shippingInvalid, value); }
+        }
+
+        [RestorableState]
+        public bool BillingInvalid
+        {
+            get { return _billingInvalid; }
+            set { SetProperty(ref _billingInvalid, value); }
+        }
+
+        [RestorableState]
+        public bool PaymentInvalid
+        {
+            get { return _paymentInvalid; }
+            set { SetProperty(ref _paymentInvalid, value); }
+        }
 
         public override void OnNavigatedTo(object navigationParameter, Windows.UI.Xaml.Navigation.NavigationMode navigationMode, System.Collections.Generic.Dictionary<string, object> viewState)
         {
-            ShippingAddressPageViewModel.OnNavigatedTo(navigationParameter, navigationMode, viewState);
-            BillingAddressPageViewModel.OnNavigatedTo(navigationParameter, navigationMode, viewState);
-            PaymentMethodPageViewModel.OnNavigatedTo(navigationParameter, navigationMode, viewState);
+            ShippingAddressViewModel.OnNavigatedTo(navigationParameter, navigationMode, viewState);
+            BillingAddressViewModel.OnNavigatedTo(navigationParameter, navigationMode, viewState);
+            PaymentMethodViewModel.OnNavigatedTo(navigationParameter, navigationMode, viewState);
             base.OnNavigatedTo(navigationParameter, navigationMode, viewState);
         }
 
         public override void OnNavigatedFrom(System.Collections.Generic.Dictionary<string, object> viewState, bool suspending)
         {
-            ShippingAddressPageViewModel.OnNavigatedFrom(viewState, suspending);
-            BillingAddressPageViewModel.OnNavigatedFrom(viewState, suspending);
-            PaymentMethodPageViewModel.OnNavigatedFrom(viewState, suspending);
+            ShippingAddressViewModel.OnNavigatedFrom(viewState, suspending);
+            BillingAddressViewModel.OnNavigatedFrom(viewState, suspending);
+            PaymentMethodViewModel.OnNavigatedFrom(viewState, suspending);
             base.OnNavigatedFrom(viewState, suspending);
         }
 
         private async void GoNext()
         {
-            var shippingAddressValid = await ShippingAddressPageViewModel.ValidateFormAsync();
-            var billingAddressValid = await BillingAddressPageViewModel.ValidateFormAsync();
-            var paymentMethodValid = await PaymentMethodPageViewModel.ValidateFormAsync();
+            var billingAddressValid = false;
+            if (!UseSameAddressAsShipping)
+            {
+                billingAddressValid = BillingAddressViewModel.ValidateForm();
+            }
+            else
+            {
+                billingAddressValid = true;
+                BillingAddressViewModel.UpdateAddressInformation(ShippingAddressViewModel.Address);
+            }
+            var shippingAddressValid = ShippingAddressViewModel.ValidateForm();
+            var paymentMethodValid = PaymentMethodViewModel.ValidateForm();
+
+            BillingInvalid = !billingAddressValid;
+            ShippingInvalid = !shippingAddressValid;
+            PaymentInvalid = !paymentMethodValid;
 
             if (shippingAddressValid && billingAddressValid && paymentMethodValid)
             {
-                ShippingAddressPageViewModel.ProcessForm();
-                BillingAddressPageViewModel.ProcessForm();
-                PaymentMethodPageViewModel.ProcessForm();
-                
-                _shoppingCartRepository.AddAddressAndPurchaseInfo(ShippingAddressPageViewModel.Address, BillingAddressPageViewModel.GetAddress(), PaymentMethodPageViewModel.GetPaymentInfo());
-                _navigationService.Navigate("CheckoutSummary", null);
+                ShippingAddressViewModel.ProcessForm();
+                BillingAddressViewModel.ProcessForm();
+                PaymentMethodViewModel.ProcessForm();
+
+                Order order = new Order
+                {
+                    ShoppingCart = await _shoppingCartRepository.GetShoppingCartAsync(),
+                    UserId = (await _accountService.GetSignedInUserAsync()).UserName,
+                    ShippingAddress = ShippingAddressViewModel.Address,
+                    BillingAddress = BillingAddressViewModel.Address,
+                    PaymentInfo = PaymentMethodViewModel.PaymentInfo,
+                    ShippingMethod = (await _shippingMethodService.GetDefaultShippingMethodAsync())
+                };
+
+                var result = await _orderService.CreateOrderAsync(order, _accountService.ServerCookieHeader);
+
+                if (result.IsValid)
+                {
+                    _navigationService.Navigate("CheckoutSummary", result.Order);
+                }
+                else
+                {
+                    // we receive a custom message from the service
+                    // we manage it in a way it fits best in our validation strategy
+                    DisplayErrorMessages(result.Message);
+                }
             }
         }
 
-        private void UseSameAddressAsShipping(object parameter)
+        private void DisplayErrorMessages(dynamic errorMessages)
         {
-            BillingAddressPageViewModel.FirstName = ShippingAddressPageViewModel.Address.FirstName;
-            BillingAddressPageViewModel.MiddleInitial = ShippingAddressPageViewModel.Address.MiddleInitial;
-            BillingAddressPageViewModel.LastName = ShippingAddressPageViewModel.Address.LastName;
-            BillingAddressPageViewModel.StreetAddress = ShippingAddressPageViewModel.Address.StreetAddress;
-            BillingAddressPageViewModel.OptionalAddress = ShippingAddressPageViewModel.Address.OptionalAddress;
-            BillingAddressPageViewModel.City = ShippingAddressPageViewModel.Address.City;
-            BillingAddressPageViewModel.State = ShippingAddressPageViewModel.Address.State;
-            BillingAddressPageViewModel.ZipCode = ShippingAddressPageViewModel.Address.ZipCode;
-            BillingAddressPageViewModel.Phone = ShippingAddressPageViewModel.Address.Phone;
+            // error messages, from the order perspective
+            // [{ PropertyName: string, Message: [{ string }] }]
+            var shippingAddressErrors = new Dictionary<string, ReadOnlyCollection<string>>();
+            var billingAddressErrors = new Dictionary<string, ReadOnlyCollection<string>>();
+            var paymentMethodErrors = new Dictionary<string, ReadOnlyCollection<string>>();
+
+            foreach (dynamic propertyErrors in errorMessages)
+            {
+                string orderProperty = propertyErrors.Property.Value;
+                string entityProperty = orderProperty.Substring(orderProperty.LastIndexOf('.') + 1);
+                IList<string> messages = propertyErrors.Messages.ToObject<List<string>>();
+
+                if (orderProperty.ToLower().Contains("shipping")) shippingAddressErrors.Add(entityProperty, new ReadOnlyCollection<string>(messages));
+                if (orderProperty.ToLower().Contains("billing")) billingAddressErrors.Add(entityProperty, new ReadOnlyCollection<string>(messages));
+                if (orderProperty.ToLower().Contains("payment")) paymentMethodErrors.Add(entityProperty, new ReadOnlyCollection<string>(messages));
+            }
+
+            if (shippingAddressErrors.Count > 0) _shippingAddressViewModel.Errors.SetAllErrors(shippingAddressErrors);
+            if (billingAddressErrors.Count > 0) _billingAddressViewModel.Errors.SetAllErrors(billingAddressErrors);
+            if (paymentMethodErrors.Count > 0) _paymentMethodViewModel.Errors.SetAllErrors(paymentMethodErrors);
         }
     }
 }

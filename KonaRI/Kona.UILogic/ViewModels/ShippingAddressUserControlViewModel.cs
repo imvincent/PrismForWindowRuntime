@@ -29,18 +29,12 @@ namespace Kona.UILogic.ViewModels
         private bool _setAsDefault;
         private readonly ICheckoutDataRepository _checkoutDataRepository;
         private readonly ILocationService _locationService;
-        private EntityValidator _validator;
         private int _currentFormStatus;
-        private bool _validationEnabled;
 
         public ShippingAddressUserControlViewModel(ICheckoutDataRepository checkoutDataRepository, ILocationService locationService)
         {
             _address = new Address() { Id = Guid.NewGuid().ToString() };
-            _address.PropertyChanged += Address_PropertyChanged;
-
-            _validator = new EntityValidator(_address);
-            _validator.ErrorsChanged += ValidatorErrorsChanged;
-            _validationEnabled = true;
+            _address.ErrorsChanged += ValidatorErrorsChanged;
 
             _checkoutDataRepository = checkoutDataRepository;
             _locationService = locationService;
@@ -51,22 +45,12 @@ namespace Kona.UILogic.ViewModels
         public Address Address
         {
             get { return _address; }
-            private set
+            set
             {
-                if (_address != value)
+                if (SetProperty(ref _address, value))
                 {
-                    if (_address != null)
-                    {
-                        _address.PropertyChanged -= Address_PropertyChanged;
-                    }
-
-                    if (value != null)
-                    {
-                        value.PropertyChanged += Address_PropertyChanged;
-                    }
-
-                    SetProperty(ref _address, value);
-                    Validator = new EntityValidator(_address);
+                    _address.ErrorsChanged += ValidatorErrorsChanged;
+                    OnPropertyChanged("Errors");
                 }
             }
         }
@@ -98,26 +82,9 @@ namespace Kona.UILogic.ViewModels
             set { SetProperty(ref _currentFormStatus, value); }
         }
 
-        public EntityValidator Validator
+        public BindableValidator Errors
         {
-            get { return _validator; }
-            private set
-            {
-                if (_validator != value)
-                {
-                    if (_validator != null)
-                    {
-                        _validator.ErrorsChanged -= ValidatorErrorsChanged;
-                    }
-
-                    if (value != null)
-                    {
-                        value.ErrorsChanged += ValidatorErrorsChanged;
-                    }
-
-                    SetProperty(ref _validator, value);
-                }
-            }
+            get { return _address.Errors; }
         }
 
         public override async void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState)
@@ -136,7 +103,7 @@ namespace Kona.UILogic.ViewModels
 
                     if (errorsCollection != null)
                     {
-                        _validator.SetAllErrors(errorsCollection);
+                        _address.SetAllErrors(errorsCollection);
                     }
                 }
             }
@@ -145,11 +112,10 @@ namespace Kona.UILogic.ViewModels
             {
                 if (_checkoutDataRepository.ContainsDefaultValue("ShippingAddress"))
                 {
-                    var defaultAddress = _checkoutDataRepository.GetDefaultValue<Address>("ShippingAddress");
-                    Address = defaultAddress;
+                    Address = _checkoutDataRepository.GetDefaultShippingAddressValue();
 
                     // Validate form fields
-                    bool isValid = await Validator.ValidatePropertiesAsync();
+                    bool isValid = _address.ValidateProperties();
                     CurrentFormStatus = isValid ? FormStatus.Complete : FormStatus.Invalid;
                 }
             }
@@ -159,8 +125,7 @@ namespace Kona.UILogic.ViewModels
         {
             if (!suspending)
             {
-                Address.PropertyChanged -= Address_PropertyChanged;
-                Validator.ErrorsChanged -= ValidatorErrorsChanged;
+                _address.ErrorsChanged -= ValidatorErrorsChanged;
             }
 
             base.OnNavigatedFrom(viewState, suspending);
@@ -168,13 +133,28 @@ namespace Kona.UILogic.ViewModels
             // Store the errors collection manually
             if (viewState != null)
             {
-                AddEntityStateValue("errorsCollection", _validator.GetAllErrors(), viewState);
+                AddEntityStateValue("errorsCollection", _address.GetAllErrors(), viewState);
             }
         }
 
-        public async Task<bool> ValidateFormAsync()
+        public async Task PopulateStatesAsync()
         {
-            bool isValid = await Validator.ValidatePropertiesAsync();
+            var items = new List<ComboBoxItemValue> { new ComboBoxItemValue() { Id = string.Empty, Value = "State" } };
+            var states = await _locationService.GetStatesAsync();
+
+            items.AddRange(states.Select(state => new ComboBoxItemValue() { Id = state, Value = state }));
+            States = new ReadOnlyCollection<ComboBoxItemValue>(items);
+
+            // Select the first item on the list
+            // But disable validation first, because we don't want to fire it at this point
+            _address.IsValidationEnabled = false;
+            _address.State = States.First().Id;
+            _address.IsValidationEnabled = true;
+        }
+
+        public bool ValidateForm()
+        {
+            bool isValid = _address.ValidateProperties();
             CurrentFormStatus = isValid ? FormStatus.Complete : FormStatus.Invalid;
             return isValid;
         }
@@ -188,46 +168,13 @@ namespace Kona.UILogic.ViewModels
 
             if (SetAsDefault)
             {
-                _checkoutDataRepository.SetAsDefaultValue("ShippingAddress", Address.Id);
+                _checkoutDataRepository.SetAsDefaultShippingAddress(Address.Id);
             }
-        }
-
-        private void Address_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e == null || string.IsNullOrEmpty(e.PropertyName))
-            {
-                return;
-            }
-
-            if (_validationEnabled)
-            {
-                Validator.ValidateProperty(e.PropertyName);
-
-                if (e.PropertyName == "State" || e.PropertyName == "ZipCode")
-                {
-                    Validator.ValidatePropertyAsync("ZipCode");
-                }
-            }
-        }
-
-        private async Task PopulateStatesAsync()
-        {
-            var items = new List<ComboBoxItemValue> { new ComboBoxItemValue() { Id = string.Empty, Value = "State" } };
-            var states = await _locationService.GetStatesAsync();
-
-            items.AddRange(states.Select(state => new ComboBoxItemValue() { Id = state, Value = state }));
-            States = new ReadOnlyCollection<ComboBoxItemValue>(items);
-
-            // We need to set the default empty value to the State property
-            // but we don't want to fire the validation
-            _validationEnabled = false;
-            _address.State = States.First().Id;
-            _validationEnabled = true;
         }
 
         private void ValidatorErrorsChanged(object sender, DataErrorsChangedEventArgs e)
         {
-            var allErrors = Validator.GetAllErrors();
+            var allErrors = _address.GetAllErrors();
             CurrentFormStatus = allErrors.Values.Count > 0 ? FormStatus.Invalid : FormStatus.Incomplete;
         }
     }

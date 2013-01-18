@@ -32,7 +32,7 @@ namespace Kona.UILogic.Tests.ViewModels
 
                 if (categoryId == 1)
                 {
-                    category = new Category { CategoryId = categoryId, Title = "CategoryTitle" };
+                    category = new Category { Id = categoryId, Title = "CategoryTitle" };
                 }
 
                 return Task.FromResult(category);
@@ -40,16 +40,16 @@ namespace Kona.UILogic.Tests.ViewModels
 
             repository.GetProductsAsyncDelegate = (categoryId) =>
             {
-                ObservableCollection<Product> products = null;
+                ReadOnlyCollection<Product> products = null;
 
                 if (categoryId == 1)
                 {
-                    products = new ObservableCollection<Product>
+                    products = new ReadOnlyCollection<Product>(new List<Product>
                     {
                         new Product(),
                         new Product(),
                         new Product()
-                    };
+                    });
                 }
 
                 return Task.FromResult(products);
@@ -59,7 +59,7 @@ namespace Kona.UILogic.Tests.ViewModels
             viewModel.OnNavigatedTo(1, NavigationMode.New, null);
 
             Assert.IsNotNull(viewModel.Items);
-            Assert.AreEqual(3, ((ICollection<Product>)viewModel.Items).Count);
+            Assert.AreEqual(3, ((ICollection<ProductViewModel>)viewModel.Items).Count);
             Assert.AreEqual("CategoryTitle", viewModel.Title);
         }
 

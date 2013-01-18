@@ -49,17 +49,18 @@ namespace Kona.AWShopper
 
         private static ISettingsCharmService CreateSettingsCharmService()
         {
-            Func<IEnumerable<FlyoutView>> flyoutsFactory = () =>
-                {
-                    return new List<FlyoutView>()
+            Func<IEnumerable<FlyoutView>> flyoutsFactory = () => new List<FlyoutView>()
                         {
                             new SignInFlyout("signIn", "Login"),
                             new SignOutFlyout("signOut", "Logout"),
                             new PaymentMethodFlyout("newPaymentMethod", "Add Payment Information"),
                             new BillingAddressFlyout("newBillingAddress", "Add Billing Address"),
-                            new ShippingAddressFlyout("newShippingAddress", "Add Shipping Address")
+                            new ShippingAddressFlyout("newShippingAddress", "Add Shipping Address"),
+                            new EditPaymentMethodFlyout("editPaymentMethod", "Edit Payment Information") { ExcludeFromSettingsPane = true },
+                            new EditShippingAddressFlyout("editShippingAddress", "Edit Shipping Address") { ExcludeFromSettingsPane = true },
+                            new EditBillingAddressFlyout("editBillingAddress", "Edit Billing Address") { ExcludeFromSettingsPane = true },
+                            new ChangeDefaultsFlyout("changeDefaults", "Change Defaults"),
                         };
-                };
 
             var settingsCharmService = new SettingsCharmService(flyoutsFactory);
             SettingsPane.GetForCurrentView().CommandsRequested += settingsCharmService.OnCommandsRequested;
@@ -67,11 +68,13 @@ namespace Kona.AWShopper
             return settingsCharmService;
         }
 
-        private static AccountService CreateAccountService(ISettingsCharmService settingsCharmService, IRestorableStateService stateService, ICredentialStore credentialStore)
+        // <snippet506>
+        private static AccountService CreateAccountService(IRestorableStateService stateService, ICredentialStore credentialStore)
         {
             var identityService = new IdentityServiceProxy();
-            return new AccountService(identityService, settingsCharmService, stateService, credentialStore);
+            return new AccountService(identityService, stateService, credentialStore);
         }
+        // </snippet506>
 
         // Bootstrap prior to building HubPage
         // This class is intended to be a central bootstrapping class that ties together views and view models.
@@ -81,45 +84,52 @@ namespace Kona.AWShopper
             // Initialize service and repositories
             var checkoutDataRepository = new CheckoutDataRepository(new SettingsStoreService());
             var orderServiceProxy = new OrderServiceProxy();
+            var shippingMethodServiceProxy = new ShippingMethodServiceProxy();
 
             // Set up the list of known types for the SuspensionManager
             SuspensionManager.KnownTypes.Add(typeof(Address));
             SuspensionManager.KnownTypes.Add(typeof(PaymentInfo));
             SuspensionManager.KnownTypes.Add(typeof(UserInfo));
             SuspensionManager.KnownTypes.Add(typeof(ObservableCollection<ShoppingCartItemViewModel>));
-            SuspensionManager.KnownTypes.Add(typeof(Dictionary<string, ReadOnlyCollection<string>>));
+            SuspensionManager.KnownTypes.Add(typeof(ReadOnlyDictionary<string, ReadOnlyCollection<string>>));
            
 
             // Create Repositories
-            Func<IProductCatalogRepository> createProductCatalogRepository = () => new ProductCatalogRepository(new ProductCatalogServiceProxy(),
-                        new TemporaryFolderCacheService(new RequestService()));
-
+            // <snippet510>
+            // </snippet510>
 
             // Update resolver because the ViewModels are located in a separate assembly than the Views. The ViewModel Types are in the Kona.UILogic assembly.
+            // <snippet301>
             ViewModelLocator.SetDefaultViewTypeToViewModelTypeResolver((viewType) =>
                     {
                         var viewName = viewType.Name;
                         var viewModelName = String.Format(CultureInfo.InvariantCulture, "Kona.UILogic.ViewModels.{0}ViewModel, Kona.UILogic, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", viewName);
                         return Type.GetType(viewModelName);
                     });
+            // </snippet301>
 
-            Address.LocationService = new LocationServiceProxy();
-
-            ViewModelLocator.Register(typeof(HubPage), () => new HubPageViewModel(createProductCatalogRepository(), navService));
-            ViewModelLocator.Register(typeof(GroupDetailPage), () => new GroupDetailPageViewModel(createProductCatalogRepository(), navService));
-            ViewModelLocator.Register(typeof(ItemDetailPage), () => new ItemDetailPageViewModel(createProductCatalogRepository(), navService, _shoppingCartRepository));
+            // <snippet302>
+            ViewModelLocator.Register(typeof(HubPage), () => new HubPageViewModel(_productCatalogRepository, navService));
+            ViewModelLocator.Register(typeof(GroupDetailPage), () => new GroupDetailPageViewModel(_productCatalogRepository, navService));
+            ViewModelLocator.Register(typeof(ItemDetailPage), () => new ItemDetailPageViewModel(_productCatalogRepository, navService, _shoppingCartRepository));
             ViewModelLocator.Register(typeof(SignInFlyout), () => new SignInFlyoutViewModel(_accountService, _credentialStore));
             ViewModelLocator.Register(typeof(SignOutFlyout), () => new SignOutFlyoutViewModel(_accountService, _credentialStore));
-            ViewModelLocator.Register(typeof(ShoppingCartPage), () => new ShoppingCartPageViewModel(_shoppingCartRepository, navService, _accountService));
-            ViewModelLocator.Register(typeof(CheckoutSummaryPage), () => new CheckoutSummaryPageViewModel(_shoppingCartRepository, navService, orderServiceProxy, checkoutDataRepository, _accountService, CreateSettingsCharmService()));
-            ViewModelLocator.Register(typeof(CheckoutHubPage), () => new CheckoutHubPageViewModel(navService, _shoppingCartRepository, new ShippingAddressUserControlViewModel(checkoutDataRepository, new LocationServiceProxy()),
+            ViewModelLocator.Register(typeof(ShoppingCartPage), () => new ShoppingCartPageViewModel(_shoppingCartRepository, navService, _accountService, _settingsCharmService));
+            ViewModelLocator.Register(typeof(CheckoutSummaryPage), () => new CheckoutSummaryPageViewModel(navService, orderServiceProxy, shippingMethodServiceProxy, checkoutDataRepository, _shoppingCartRepository, _accountService, CreateSettingsCharmService(), _resourceLoader));
+            ViewModelLocator.Register(typeof(CheckoutHubPage), () => new CheckoutHubPageViewModel(navService, _accountService, orderServiceProxy, shippingMethodServiceProxy, _shoppingCartRepository,
+                                                                                                              new ShippingAddressUserControlViewModel(checkoutDataRepository, new LocationServiceProxy()),
                                                                                                               new BillingAddressUserControlViewModel(checkoutDataRepository, new LocationServiceProxy()), 
                                                                                                               new PaymentMethodUserControlViewModel(checkoutDataRepository)));
             ViewModelLocator.Register(typeof(PaymentMethodFlyout), () => new PaymentMethodFlyoutViewModel(new PaymentMethodUserControlViewModel(null), checkoutDataRepository));
             ViewModelLocator.Register(typeof(ShippingAddressFlyout), () => new ShippingAddressFlyoutViewModel(new ShippingAddressUserControlViewModel(null, new LocationServiceProxy()), checkoutDataRepository));
             ViewModelLocator.Register(typeof(BillingAddressFlyout), () => new BillingAddressFlyoutViewModel(new BillingAddressUserControlViewModel(null, new LocationServiceProxy()), checkoutDataRepository));
-            ViewModelLocator.Register(typeof(ShoppingCartTab), () => new ShoppingCartTabViewModel(_shoppingCartRepository));
-
+            ViewModelLocator.Register(typeof(ShoppingCartTabUserControl), () => new ShoppingCartTabUserControlViewModel(_shoppingCartRepository, _eventAggregator, _navigationService));
+            ViewModelLocator.Register(typeof(EditPaymentMethodFlyout), () => new EditPaymentMethodFlyoutViewModel(new PaymentMethodUserControlViewModel(null), checkoutDataRepository));
+            ViewModelLocator.Register(typeof(EditShippingAddressFlyout), () => new EditShippingAddressFlyoutViewModel(new ShippingAddressUserControlViewModel(null, new LocationServiceProxy()), checkoutDataRepository));
+            ViewModelLocator.Register(typeof(EditBillingAddressFlyout), () => new EditBillingAddressFlyoutViewModel(new BillingAddressUserControlViewModel(null, new LocationServiceProxy()), checkoutDataRepository));
+            ViewModelLocator.Register(typeof(TopAppBarUserControl), () => new TopAppBarUserControlViewModel(_navigationService));
+            ViewModelLocator.Register(typeof(ChangeDefaultsFlyout), () => new ChangeDefaultsFlyoutViewModel(checkoutDataRepository));
+            //</snippet302>
         }
     }
 }

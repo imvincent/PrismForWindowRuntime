@@ -32,7 +32,7 @@ namespace Kona.UILogic.Tests.ViewModels
                 return Task.FromResult(shoppingCart);
             };
 
-            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, new MockAccountService());
+            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, new MockAccountService(), null);
             target.OnNavigatedTo(null, NavigationMode.New, null);
 
             Assert.AreEqual("$200.00", target.FullPrice);
@@ -45,21 +45,22 @@ namespace Kona.UILogic.Tests.ViewModels
         {
             var shoppingCartRepository = new MockShoppingCartRepository();
             var navigationService = new MockNavigationService();
+            var productCatalogRepository = new MockProductCatalogRepository();
 
             shoppingCartRepository.GetShoppingCartAsyncDelegate = () =>
             {
                 ShoppingCart shoppingCart = null;
                 var shoppingCartItems = new ObservableCollection<ShoppingCartItem>
                                             {
-                                                new ShoppingCartItem() { Product = new Product { ImageName = "image" }, Currency = "USD"}, 
-                                                new ShoppingCartItem() { Product = new Product { ImageName = "image" }, Currency = "USD"}
+                                                new ShoppingCartItem() { Product = new Product { ImageName = "http://image" }, Currency = "USD"}, 
+                                                new ShoppingCartItem() { Product = new Product { ImageName = "http://image" }, Currency = "USD"}
                                             };
                 shoppingCart = new ShoppingCart(shoppingCartItems) { FullPrice = 200, TotalDiscount = 100, Currency = "USD"};
 
                 return Task.FromResult(shoppingCart);
             };
 
-            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, new MockAccountService());
+            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, new MockAccountService(), null);
             target.OnNavigatedTo(null, NavigationMode.New, null);
 
             Assert.AreEqual("$200.00", target.FullPrice);
@@ -82,7 +83,7 @@ namespace Kona.UILogic.Tests.ViewModels
                 return Task.FromResult(shoppingCart);
             };
 
-            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, accountService);
+            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, accountService, null);
             target.OnNavigatedTo(null, NavigationMode.New, null);  
 
             Assert.AreEqual("$100.00", target.FullPrice);
@@ -97,6 +98,25 @@ namespace Kona.UILogic.Tests.ViewModels
 
             Assert.AreEqual("$200.00", target.FullPrice);
 
+        }
+
+        [TestMethod]
+        public void UpdateShoppingCart_ClearsFields_WhenShoppingCartEmpty()
+        {
+            var shoppingCartRepository = new MockShoppingCartRepository();
+            shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult((ShoppingCart)null);
+
+            var target = new ShoppingCartPageViewModel(shoppingCartRepository, new MockNavigationService(),
+                                                       new MockAccountService(), new MockSettingsCharmService());
+
+            target.TotalPrice = "TotalPrice";
+            target.TotalDiscount = "TotalDiscount";
+            target.FullPrice = "FullPrice";
+            target.OnNavigatedTo(null, NavigationMode.New, null);
+
+            Assert.AreEqual(string.Empty, target.TotalPrice);
+            Assert.AreEqual(string.Empty, target.TotalDiscount);
+            Assert.AreEqual(string.Empty, target.FullPrice);
         }
 
         // Note: The remove method is a WIP

@@ -22,12 +22,15 @@ namespace Kona.UILogic.ViewModels
         private readonly IAccountService _accountService;
         private readonly ICredentialStore _credentialStore;
         private bool _saveCredentials;
+        private Action _successAction;
 
         public SignInFlyoutViewModel(IAccountService accountService, ICredentialStore credentialStore)
         {
             _accountService = accountService;
             _credentialStore = credentialStore;
+            // <snippet308>
             SignInCommand = new DelegateCommand(async () => await SignInAsync(), () => CanSignIn());
+            // </snippet308>
             GoBackCommand = new DelegateCommand(() => GoBack(), () => true);
         }
 
@@ -74,9 +77,14 @@ namespace Kona.UILogic.ViewModels
         
         public DelegateCommand GoBackCommand { get; private set; }
         
+        // <snippet309>
         public DelegateCommand SignInCommand { get; private set; }
+        // </snippet309>
 
-        public void Open() {}
+        public void Open(object parameter, Action successAction)
+        {
+            _successAction = successAction;
+        }
 
         public bool CanSignIn()
         {
@@ -95,6 +103,9 @@ namespace Kona.UILogic.ViewModels
                 {
                     _credentialStore.SaveCredentials("KonaRI", UserName, Password);
                 }
+                
+                if (_successAction != null) _successAction();
+
                 CloseFlyout();
             }
             else

@@ -14,11 +14,11 @@ namespace Kona.UILogic.Services
 {
     public interface IProductCatalogService
     {
-        Task<ObservableCollection<Category>> GetCategoriesAsync(int depth);
+        Task<ReadOnlyCollection<Category>> GetCategoriesAsync(int depth);
 
-        Task<ObservableCollection<Category>> GetSubcategoriesAsync(int categoryId);
+        Task<ReadOnlyCollection<Category>> GetSubcategoriesAsync(int categoryId);
 
-        Task<ObservableCollection<Product>> GetProductsAsync(int categoryId);
+        Task<ReadOnlyCollection<Product>> GetProductsAsync(int categoryId);
 
         Task<Category> GetCategoryAsync(int categoryId);
 

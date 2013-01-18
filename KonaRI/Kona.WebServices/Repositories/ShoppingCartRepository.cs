@@ -15,62 +15,121 @@ namespace Kona.WebServices.Repositories
 {
     public class ShoppingCartRepository : IShoppingCartRepository
     {
+        // key: user | value: shopping cart items
+        private static Dictionary<string, ShoppingCart> _shoppingCarts = new Dictionary<string, ShoppingCart>();
 
-        private Dictionary<string, ShoppingCart> shoppingCarts;
-
-        public ShoppingCartRepository()
+        public ShoppingCart GetByUserId(string userId)
         {
-            this.shoppingCarts = new Dictionary<string, ShoppingCart>
-                                {
-                                    { "JohnDoe", new ShoppingCart(new List<ShoppingCartItem>()
-                                        {   new ShoppingCartItem
-                                                {Id = Guid.NewGuid(), Currency = "USD", Product = new Product {Title = "Item1 with a long long long long description.", Description="Only 3 units left!", ImageName = "image1"}, Quantity = 1, IsGift = true, DiscountPercentage = 10},
-                                            new ShoppingCartItem
-                                                {Id = Guid.NewGuid(), Currency = "USD", Product = new Product {Title = "Item2 Loremp Ipsum dolor", Description="Eligible for free shipping", ImageName = "image2"}, Quantity = 2, DiscountPercentage = 10},
-                                            new ShoppingCartItem
-                                                {Id = Guid.NewGuid(), Currency = "USD", Product = new Product {Title = "Item3", Description="", ImageName = "image3"}, Quantity = 3, DiscountPercentage = 10}
-                                        })
-                                            {FullPrice = 350, Id = Guid.NewGuid(), TotalDiscount = 10, TaxRate = .09, Currency = "USD"}
-                                     }
-                                };
+            return _shoppingCarts.ContainsKey(userId) ? _shoppingCarts[userId] : null;
         }
 
-        public ShoppingCart GetShoppingCart(string userId)
+        public ShoppingCartItem AddProductToCart(string userId, Product product)
         {
-            return this.shoppingCarts.ContainsKey(userId) ? this.shoppingCarts[userId] : null;
-        }
+            ShoppingCart shoppingCart = GetByUserId(userId);
 
-        public ShoppingCartItem AddProductToCart(string userId, string productId)
-        {
-            ShoppingCart shoppingCart = GetShoppingCart(userId);
             if (shoppingCart == null)
             {
-                var shoppingCartItem = CreateShoppingCartItem(productId);
-                shoppingCart = new ShoppingCart(new List<ShoppingCartItem>()){Currency = "USD", TaxRate = .09};
-                shoppingCart.ShoppingCartItems.Add(shoppingCartItem);
+                shoppingCart = new ShoppingCart(new List<ShoppingCartItem>())
+                {
+                    UserId = userId,
+                    Currency = "USD",
+                    TaxRate = .09
+                };
 
-                UpdatePrices(shoppingCart);
-
-                shoppingCarts.Add(userId, shoppingCart);
-
-                return shoppingCartItem;
+                Create(shoppingCart);
             }
-            var matchingShoppingCartItem =
-                shoppingCart.ShoppingCartItems.FirstOrDefault(
-                    item => item.Product != null && item.Product.ProductNumber == productId);
-            
-            if (matchingShoppingCartItem != null)
+
+            ShoppingCartItem item = shoppingCart.ShoppingCartItems.FirstOrDefault(c => c.Product.ProductNumber == product.ProductNumber);
+
+            if (item == null)
             {
-                matchingShoppingCartItem.Quantity++;
-                UpdatePrices(shoppingCart);
-                return matchingShoppingCartItem;
-            }
+                item = new ShoppingCartItem
+                {
+                    Id = shoppingCart.ShoppingCartItems.Any() ? shoppingCart.ShoppingCartItems.Max(c => c.Id) : 1,
+                    Product = product,
+                    Quantity = 1,
+                    Currency = shoppingCart.Currency
+                };
 
-            var newShoppingCartItem = CreateShoppingCartItem(productId);
-            shoppingCart.ShoppingCartItems.Add(newShoppingCartItem);
+                shoppingCart.ShoppingCartItems.Add(item);
+            }
+            else
+            {
+                item.Quantity++;
+            }
 
             UpdatePrices(shoppingCart);
-            return newShoppingCartItem;
+            return item;
+        }
+
+        public bool RemoveItemFromCart(ShoppingCart shoppingCart, int itemId)
+        {
+            if (shoppingCart == null)
+            {
+                throw new ArgumentNullException("shoppingCart");
+            }
+
+            ShoppingCartItem item = shoppingCart.ShoppingCartItems.FirstOrDefault(i => i.Id == itemId);
+            bool itemRemoved = shoppingCart.ShoppingCartItems.Remove(item);
+
+            if (itemRemoved)
+            {
+                UpdatePrices(shoppingCart);
+            }
+
+            return itemRemoved;
+        }
+
+        public ShoppingCart Create(ShoppingCart item)
+        {
+            if (item == null)
+            {
+                throw new ArgumentNullException("item");
+            }
+
+            item.Id = _shoppingCarts.Values.Any() ? _shoppingCarts.Values.Max(c => c.Id) : 1;
+
+            if (_shoppingCarts.ContainsKey(item.UserId))
+            {
+                _shoppingCarts.Add(item.UserId, item);
+            }
+            else
+            {
+                _shoppingCarts[item.UserId] = item;
+            }
+
+            return item;
+        }
+
+        public bool Delete(ShoppingCart item)
+        {
+            if (item == null)
+            {
+                throw new ArgumentNullException("item");
+            }
+
+            if (_shoppingCarts.ContainsKey(item.UserId))
+            {
+                _shoppingCarts.Remove(item.UserId);
+                return true;
+            }
+
+            return false;
+        }
+
+        public IEnumerable<ShoppingCart> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ShoppingCart GetItem(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Update(ShoppingCart item)
+        {
+            throw new NotImplementedException();
         }
 
         private static void UpdatePrices(ShoppingCart shoppingCart)
@@ -84,25 +143,6 @@ namespace Kona.WebServices.Repositories
                 shoppingCart.TotalDiscount = discount;
                 shoppingCart.TotalPrice = fullPrice - discount;
             }
-        }
-
-        public bool Remove(string userId, string itemId)
-        {
-            var shoppingcart = GetShoppingCart(userId);
-            var itemGuid = new Guid(itemId);
-            var item = shoppingcart.ShoppingCartItems.FirstOrDefault(i => i.Id == itemGuid);
-            return shoppingcart.ShoppingCartItems.Remove(item);
-        }
-
-        private static ShoppingCartItem CreateShoppingCartItem(string productId)
-        {
-            var product = ProductRepository.Products.Where(p => p.ProductNumber == productId).FirstOrDefault();
-            return new ShoppingCartItem
-                       {
-                           Product = product,
-                           Quantity = 1,
-                           Currency = "USD"
-                       };
         }
     }
 }

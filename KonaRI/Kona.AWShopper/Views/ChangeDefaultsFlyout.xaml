@@ -1,0 +1,202 @@
+﻿<flyouts:FlyoutView
+    x:Class="Kona.AWShopper.Views.ChangeDefaultsFlyout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Kona.AWShopper.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:flyouts="using:Kona.Infrastructure.Flyouts"
+    xmlns:infrastructure="using:Kona.Infrastructure"
+    mc:Ignorable="d"
+    d:DesignHeight="768"
+    d:DesignWidth="364"
+    infrastructure:ViewModelLocator.AutoWireViewModel="true">
+    <flyouts:FlyoutView.Resources>
+        <Storyboard x:Name="HideShippingAddress">
+            <PopOutThemeAnimation Storyboard.TargetName="ShippingAddressList" />
+        </Storyboard>
+        <Storyboard x:Name="CollapseShippingAddress">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ShippingAddressList">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Collapsed</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Content)" Storyboard.TargetName="expandShippingAddressButton">
+                <DiscreteObjectKeyFrame KeyTime="0" Value="" />
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Name="ShowShippingAddress">
+            <PopInThemeAnimation Storyboard.TargetName="ShippingAddressList" />
+        </Storyboard>
+        <Storyboard x:Name="UncollapseShippingAddress">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ShippingAddressList">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Content)" Storyboard.TargetName="expandShippingAddressButton">
+                <DiscreteObjectKeyFrame KeyTime="0" Value="" />
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Name="HideBillingAddress">
+            <PopOutThemeAnimation Storyboard.TargetName="BillingAddressList" />
+        </Storyboard>
+        <Storyboard x:Name="CollapseBillingAddress">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="BillingAddressList">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Collapsed</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Content)" Storyboard.TargetName="expandBillingAddressButton">
+                <DiscreteObjectKeyFrame KeyTime="0" Value="" />
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Name="ShowBillingAddress">
+            <PopInThemeAnimation Storyboard.TargetName="BillingAddressList" />
+        </Storyboard>
+        <Storyboard x:Name="UncollapseBillingAddress">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="BillingAddressList">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Content)" Storyboard.TargetName="expandBillingAddressButton">
+                <DiscreteObjectKeyFrame KeyTime="0" Value="" />
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Name="HidePaymentInfo">
+            <PopOutThemeAnimation Storyboard.TargetName="PaymentInfoList" />
+        </Storyboard>
+        <Storyboard x:Name="CollapsePaymentInfo">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PaymentInfoList">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Collapsed</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Content)" Storyboard.TargetName="expandPaymentInfoButton">
+                <DiscreteObjectKeyFrame KeyTime="0" Value="" />
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Name="ShowPaymentInfo">
+            <PopInThemeAnimation Storyboard.TargetName="PaymentInfoList" />
+        </Storyboard>
+        <Storyboard x:Name="UncollapsePaymentInfo">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PaymentInfoList">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Content)" Storyboard.TargetName="expandPaymentInfoButton">
+                <DiscreteObjectKeyFrame KeyTime="0" Value="" />
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+        <DataTemplate x:Key="CheckoutDataTemplate">
+            <Grid Height="65">
+                <StackPanel Grid.Column="0" Background="#9C9EA0">
+                    <TextBlock Text="{Binding FirstLine}" Margin="5,0" FontSize="16" Foreground="White"></TextBlock>
+                    <TextBlock Text="{Binding SecondLine}" Grid.Row="1" Margin="5,0" FontSize="16" Foreground="White"></TextBlock>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </flyouts:FlyoutView.Resources>
+    <Border BorderBrush="{StaticResource AWShopperFlyoutHeaderBackground}"
+            BorderThickness="1,0,0,0">
+        <Grid VerticalAlignment="Stretch" Background="{StaticResource AWShopperFlyoutContentBackground}">
+
+            <!-- Root grid definition -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Header area for panel -->
+            <Grid Background="{StaticResource AWShopperFlyoutHeaderBackground}"
+                  Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal"
+                            Grid.Column="0"
+                            Margin="40, 32, 17, 13">
+                    <Button Command="{Binding GoBackCommand}"
+                            Margin="0,3,0,0"
+                            Style="{StaticResource SettingsBackButtonStyle}" />
+                    <TextBlock x:Uid="ChangeDefaultsTitle" Margin="10,0,0,0"
+                               FontFamily="Segoe UI"
+                               FontWeight="SemiLight"
+                               FontSize="24"
+                               Text="Change Defaults"
+                               Foreground="White" />
+                </StackPanel>
+            </Grid>
+
+            <!-- Settings Panel Content -->
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          Grid.Row="1">
+                <Grid Margin="10" VerticalAlignment="Top">
+                    <StackPanel x:Name="FlyoutContent">
+                        <Grid x:Name="ShippingAddressPanel">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="60" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Uid="ShippingAddressLabel" Text="Shipping Address" FontSize="22" VerticalAlignment="Center"></TextBlock>
+                            <Button x:Name="expandShippingAddressButton" Grid.Column="1" Content="" FontFamily="Segoe UI Symbol" FontSize="22" Click="ShippingAddressToggleClick"></Button>
+                        </Grid>
+                        <ListView x:Name="ShippingAddressList" SelectionMode="Single" ItemTemplate="{StaticResource CheckoutDataTemplate}" ItemsSource="{Binding ShippingAddresses}" SelectedItem="{Binding SelectedShippingAddress, Mode=TwoWay}" HorizontalAlignment="Stretch">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
+                        <Grid x:Name="BillingAddressPanel">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="60" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Uid="BillingAddressLabel" Text="Billing Address" FontSize="22" VerticalAlignment="Center"></TextBlock>
+                            <Button x:Name="expandBillingAddressButton" Grid.Column="1" Content="" FontFamily="Segoe UI Symbol" FontSize="22" Click="BillingAddressToggleClick"></Button>
+                        </Grid>
+                        <ListView x:Name="BillingAddressList" SelectionMode="Single" ItemTemplate="{StaticResource CheckoutDataTemplate}" ItemsSource="{Binding BillingAddresses}" SelectedItem="{Binding SelectedBillingAddress, Mode=TwoWay}" HorizontalAlignment="Stretch">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
+                        <Grid x:Name="PaymentInfoPanel">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="60" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Uid="PaymentMethodLabel" Text="Payment Method" FontSize="22" VerticalAlignment="Center"></TextBlock>
+                            <Button x:Name="expandPaymentInfoButton" Grid.Column="1" Content="" FontFamily="Segoe UI Symbol" FontSize="22" Click="PaymentInfoToggleClick"></Button>
+                        </Grid>
+                        <ListView x:Name="PaymentInfoList" SelectionMode="Single" ItemTemplate="{StaticResource CheckoutDataTemplate}" ItemsSource="{Binding PaymentInfos}" SelectedItem="{Binding SelectedPaymentInfo, Mode=TwoWay}" HorizontalAlignment="Stretch">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
+                        <Button x:Uid="SaveDefaultsButton" Background="{StaticResource AWShopperAccentBrush}" Content="Save Defaults" HorizontalAlignment="Stretch" Command="{Binding SaveDefaultsCommand}" />
+                    </StackPanel>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</flyouts:FlyoutView>

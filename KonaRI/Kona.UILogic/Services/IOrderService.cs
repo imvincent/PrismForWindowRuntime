@@ -18,6 +18,8 @@ namespace Kona.UILogic.Services
 {
     public interface IOrderService
     {
-        Task<Order> SubmitOrder(Order order, string serverCookieHeader);
+        Task<OrderSubmissionResult> CreateOrderAsync(Order order, string serverCookieHeader);
+        Task<OrderSubmissionResult> UpdateOrderAsync(Order order, string serverCookieHeader);
+        Task<OrderSubmissionResult> ProcessOrderAsync(Order order, string serverCookieHeader);
     }
 }

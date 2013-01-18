@@ -18,11 +18,12 @@ using System.Collections.ObjectModel;
 
 namespace Kona.Infrastructure
 {
+    // <snippet306>
     public abstract class BindableBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+        protected virtual bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (object.Equals(storage, value)) return false;
 
@@ -41,4 +42,5 @@ namespace Kona.Infrastructure
             }
         }
     }
+    // </snippet306>
 }

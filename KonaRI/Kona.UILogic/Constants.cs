@@ -6,16 +6,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Kona.UILogic
 {
     public static class Constants
     {
-        public const string ServerAddress = "http://localhost:2112";
+        public const string ServerAddress = "http://localhost.:2112";
     }
 }

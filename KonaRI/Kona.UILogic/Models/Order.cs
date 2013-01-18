@@ -10,18 +10,18 @@ namespace Kona.UILogic.Models
 {
     public class Order
     {
-        public int OrderId { get; set; }
+        public int Id { get; set; }
 
         public string UserId { get; set; }
 
-        public ShoppingCart Cart { get; set; }
+        public ShoppingCart ShoppingCart { get; set; }
 
         public Address ShippingAddress { get; set; }
 
         public Address BillingAddress { get; set; }
 
-        public PaymentInfo Payment { get; set; }
+        public PaymentInfo PaymentInfo { get; set; }
 
-        public ShippingMethod ShipMethod { get; set; }
+        public ShippingMethod ShippingMethod { get; set; }
     }
 }

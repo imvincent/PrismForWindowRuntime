@@ -15,13 +15,8 @@ namespace Kona.UILogic.Repositories
     public interface IShoppingCartRepository
     {
         Task<ShoppingCart> GetShoppingCartAsync();
-        Task AddProductToShoppingCartAsync(string productId);
-        Task RemoveShoppingCartItemAsync(string itemId);
-        void AddAddressAndPurchaseInfo(Address shippingAddress, Address billingAddress, PaymentInfo paymentInfo);
+        void AddProductToShoppingCartAsync(string productId);
+        void RemoveShoppingCartItemAsync(int itemId);
         Task ClearCartAsync();
-
-        AddressAndPaymentInfo AddressAndPurchaseInfo { get; }
-
-        event EventHandler ShoppingCartUpdated;
     }
 }

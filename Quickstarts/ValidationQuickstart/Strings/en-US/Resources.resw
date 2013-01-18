@@ -129,14 +129,11 @@
   <data name="ErrorLastNameRequired" xml:space="preserve">
     <value>Last Name is required</value>
   </data>
-  <data name="ErrorMiddleNameFirstName" xml:space="preserve">
-    <value>Middle Name is required if the First Name is an initial</value>
-  </data>
   <data name="ErrorMiddleNameRegex" xml:space="preserve">
     <value>Middle Name must contain only letters and spaces</value>
   </data>
   <data name="ErrorMiddleNameRequired" xml:space="preserve">
-    <value>Middle name is required if the first name is an initial</value>
+    <value>Middle Name is required</value>
   </data>
   <data name="FirstNameTitle.Text" xml:space="preserve">
     <value>First Name</value>

@@ -14,11 +14,11 @@ namespace Kona.UILogic.Repositories
 {
     public interface IProductCatalogRepository
     {
-        Task<ObservableCollection<Category>> GetCategoriesAsync();
+        Task<ReadOnlyCollection<Category>> GetCategoriesAsync();
 
-        Task<ObservableCollection<Category>> GetSubcategoriesAsync(int categoryId);
+        Task<ReadOnlyCollection<Category>> GetSubcategoriesAsync(int categoryId);
 
-        Task<ObservableCollection<Product>> GetProductsAsync(int categoryId);
+        Task<ReadOnlyCollection<Product>> GetProductsAsync(int categoryId);
 
         Task<Category> GetCategoryAsync(int categoryId);
 

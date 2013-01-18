@@ -20,13 +20,14 @@ namespace Kona.UILogic.ViewModels
         private string _firstLine;
         private string _secondLine;
         private object _content;
+        private ISettingsCharmService _settingsCharmService;
 
         public CheckoutDataViewModel()
         {
             this.EditDataCommand = new DelegateCommand(EditData);
         }
 
-        public CheckoutDataViewModel(dynamic checkoutData)
+        public CheckoutDataViewModel(dynamic checkoutData, ISettingsCharmService settingsCharmService)
             : this()
         {
             this.EntityId = checkoutData.EntityId;
@@ -35,6 +36,7 @@ namespace Kona.UILogic.ViewModels
             this.SecondLine = checkoutData.SecondLine;
             this.Name = checkoutData.Name;
             this.Content = checkoutData.Content;
+            this._settingsCharmService = settingsCharmService;
         }
 
         public string DataType
@@ -77,7 +79,7 @@ namespace Kona.UILogic.ViewModels
                         return null;
                     case "Billing Address":
                         return null;
-                    case "Payment":
+                    case "PaymentInfo":
                         return null;
                     default:
                         return null;
@@ -89,7 +91,20 @@ namespace Kona.UILogic.ViewModels
 
         public void EditData()
         {
-            // Navigate to edit page
+            // Navigate to edit page{
+
+            if (DataType == null) return;
+
+            switch (DataType)
+            {
+                case "Billing Address": _settingsCharmService.ShowFlyout("editBillingAddress", EntityId, null);
+                    break;
+                case "Shipping Address": _settingsCharmService.ShowFlyout("editShippingAddress", EntityId, null);
+                    break;
+                case "Payment": _settingsCharmService.ShowFlyout("editPaymentMethod", EntityId, null);
+                    break;
+            }
+        
         }
     }
 }

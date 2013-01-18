@@ -6,6 +6,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System;
 using Windows.UI.ApplicationSettings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -24,6 +25,8 @@ namespace Kona.Infrastructure.Flyouts
         
         public int FlyoutSize { get; private set; }
 
+        public bool ExcludeFromSettingsPane { get; set; }
+
         public FlyoutView(string commandId, string commandTitle, int flyoutSize)
         {
             this.CommandId = commandId;
@@ -31,7 +34,7 @@ namespace Kona.Infrastructure.Flyouts
             this.FlyoutSize = flyoutSize;
         }
 
-        public void Open()
+        public void Open(object parameter, Action successAction)
         {
             // Create a new Popup to display the Flyout
             _popup = new Popup();
@@ -61,7 +64,7 @@ namespace Kona.Infrastructure.Flyouts
             var viewModel = this.DataContext as IFlyoutViewModel;
             if (viewModel != null)
             {
-                viewModel.Open();
+                viewModel.Open(parameter, successAction);
             }
         }
 

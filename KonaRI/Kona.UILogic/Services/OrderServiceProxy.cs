@@ -23,7 +23,7 @@ namespace Kona.UILogic.Services
     {
         private string _clientBaseUrl = string.Format("{0}/api/Order/", Constants.ServerAddress);
 
-        public async Task<Order> SubmitOrder(Order order, string serverCookieHeader)
+        public async Task<OrderSubmissionResult> CreateOrderAsync(Order order, string serverCookieHeader)
         {
             using (HttpClientHandler handler = new HttpClientHandler { CookieContainer = new CookieContainer() })
             {
@@ -32,11 +32,47 @@ namespace Kona.UILogic.Services
                     Uri serverUri = new Uri(Constants.ServerAddress);
                     handler.CookieContainer.SetCookies(serverUri, serverCookieHeader);
                     orderClient.DefaultRequestHeaders.Add("Accept", "application/json");
-                    var response = await orderClient.PostAsJsonAsync<Order>(_clientBaseUrl, order);
-                    if (response.StatusCode == HttpStatusCode.Unauthorized)
-                        throw new SecurityException();
-                    response.EnsureSuccessStatusCode();
-                    return await response.Content.ReadAsAsync<Order>();
+
+                    string requestUrl = _clientBaseUrl + "create";
+                    var response = await orderClient.PostAsJsonAsync<Order>(requestUrl, order);
+                    
+                    return await response.Content.ReadAsAsync<OrderSubmissionResult>();
+                }
+            }
+        }
+
+        public async Task<OrderSubmissionResult> UpdateOrderAsync(Order order, string serverCookieHeader)
+        {
+            using (HttpClientHandler handler = new HttpClientHandler { CookieContainer = new CookieContainer() })
+            {
+                using (var orderClient = new HttpClient(handler))
+                {
+                    Uri serverUri = new Uri(Constants.ServerAddress);
+                    handler.CookieContainer.SetCookies(serverUri, serverCookieHeader);
+                    orderClient.DefaultRequestHeaders.Add("Accept", "application/json");
+
+                    string requestUrl = _clientBaseUrl + "update" + order.Id;
+                    var response = await orderClient.PutAsJsonAsync<Order>(requestUrl, order);
+                    
+                    return await response.Content.ReadAsAsync<OrderSubmissionResult>();
+                }
+            }
+        }
+
+        public async Task<OrderSubmissionResult> ProcessOrderAsync(Order order, string serverCookieHeader)
+        {
+            using (HttpClientHandler handler = new HttpClientHandler { CookieContainer = new CookieContainer() })
+            {
+                using (var orderClient = new HttpClient(handler))
+                {
+                    Uri serverUri = new Uri(Constants.ServerAddress);
+                    handler.CookieContainer.SetCookies(serverUri, serverCookieHeader);
+                    orderClient.DefaultRequestHeaders.Add("Accept", "application/json");
+
+                    string requestUrl = _clientBaseUrl + "process";
+                    var response = await orderClient.PostAsJsonAsync<Order>(requestUrl, order);
+                    
+                    return await response.Content.ReadAsAsync<OrderSubmissionResult>();
                 }
             }
         }

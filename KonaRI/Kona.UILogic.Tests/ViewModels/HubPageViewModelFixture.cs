@@ -28,12 +28,11 @@ namespace Kona.UILogic.Tests.ViewModels
 
             repository.GetCategoriesAsyncDelegate = () =>
             {
-                var categories = new ObservableCollection<Category>
-                {
+                var categories = new ReadOnlyCollection<Category>(new List<Category>{
                     new Category(),
                     new Category(),
                     new Category()
-                };
+                });
 
                 return Task.FromResult(categories);
             };
@@ -42,7 +41,7 @@ namespace Kona.UILogic.Tests.ViewModels
             viewModel.OnNavigatedTo(null, NavigationMode.New, null);
 
             Assert.IsNotNull(viewModel.RootCategories);
-            Assert.AreEqual(((ICollection<Category>)viewModel.RootCategories).Count, 3);
+            Assert.AreEqual(((ICollection<CategoryViewModel>)viewModel.RootCategories).Count, 3);
         }
 
         [TestMethod]

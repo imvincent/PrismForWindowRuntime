@@ -27,6 +27,7 @@ namespace Kona.UILogic.Services
             _requestService = requestService;
         }
 
+        // <snippet515>
         public async Task<bool> DataExistsAndIsValidAsync(string cacheKey)
         {
             try
@@ -46,6 +47,7 @@ namespace Kona.UILogic.Services
                 return false;
             }
         }
+        // </snippet515>
 
         public async Task<T> GetDataAsync<T>(string cacheKey)
         {
@@ -77,7 +79,7 @@ namespace Kona.UILogic.Services
 
             await FileIO.WriteBytesAsync(file, resourceBytes);
 
-            return new Uri(file.Path);
+            return new Uri(file.Path, UriKind.Absolute);
         }
 
         private static T Deserialize<T>(string json)

@@ -15,6 +15,7 @@ namespace Kona.UILogic.Services
     {
         Task<ShoppingCart> GetShoppingCartAsync(string shoppingCartId);
         Task<ShoppingCartItem> AddProductToShoppingCartAsync(string shoppingCartId, string productId);
-        Task RemoveShoppingCartItemAsync(string shoppingCartId, string itemId);
+        void RemoveShoppingCartItemAsync(string shoppingCartId, int itemId);
+        Task DeleteShoppingCartAsync(string shoppingCartId);
     }
 }

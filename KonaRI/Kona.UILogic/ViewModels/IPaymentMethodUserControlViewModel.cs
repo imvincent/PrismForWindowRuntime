@@ -7,6 +7,7 @@
 
 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
@@ -20,27 +21,7 @@ namespace Kona.UILogic.ViewModels
     public interface IPaymentMethodUserControlViewModel
     {
         [RestorableState]
-        [Required(ErrorMessageResourceType = typeof (ErrorMessagesHelper), ErrorMessageResourceName = "CardNumberRequired")]
-        string CardNumber { get; set; }
-
-        [RestorableState]
-        [Required(ErrorMessageResourceType = typeof (ErrorMessagesHelper), ErrorMessageResourceName = "CardholderNameRequired")]
-        string CardholderName { get; set; }
-
-        [RestorableState]
-        [Required(ErrorMessageResourceType = typeof (ErrorMessagesHelper), ErrorMessageResourceName = "ExpirationMonthRequired")]
-        string ExpirationMonth { get; set; }
-
-        [RestorableState]
-        [Required(ErrorMessageResourceType = typeof (ErrorMessagesHelper), ErrorMessageResourceName = "ExpirationYearRequired")]
-        string ExpirationYear { get; set; }
-
-        [RestorableState]
-        string Phone { get; set; }
-
-        [RestorableState]
-        [Required(ErrorMessageResourceType = typeof (ErrorMessagesHelper), ErrorMessageResourceName = "CardVerificationCodeRequired")]
-        string CardVerificationCode { get; set; }
+        PaymentInfo PaymentInfo { get; set; }
 
         [RestorableState]
         bool SaveInformation { get; set; }
@@ -51,13 +32,12 @@ namespace Kona.UILogic.ViewModels
         [RestorableState]
         int CurrentFormStatus { get; set; }
 
-        EntityValidator Validator { get; }
+        BindableValidator Errors { get; }
         string EntityId { get; set; }
         void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState);
         void OnNavigatedFrom(Dictionary<string, object> viewState, bool suspending);
         void ProcessForm();
-        Task<bool> ValidateFormAsync();
-        PaymentInfo GetPaymentInfo();
+        bool ValidateForm();
         event PropertyChangedEventHandler PropertyChanged;
     }
 }

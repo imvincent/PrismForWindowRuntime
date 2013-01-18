@@ -8,48 +8,43 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using Kona.Infrastructure;
 
 namespace ValidationQuickStart.Models
 {
-    public class UserInfo : IUserInfo
+    public class UserInfo : ValidatableBindableBase, IUserInfo
     {
+        private string _firstName;
+        private string _middleName;
+        private string _lastName;
+
         // We allow all Unicode letter characters as well as internal spaces and hypens, as long as these do not occur in sequences
         private const string REGEX_PATTERN = @"\A\p{L}+([\p{Zs}\-][\p{L}]+)*\z";
 
         // <snippet1310>
         [Required(ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "FirstNameRequired")]
         [RegularExpression(REGEX_PATTERN, ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "FirstNameRegex")]
-        public string FirstName { get; set; }
+        public string FirstName
+        {
+            get { return _firstName; }
+            set { SetProperty(ref _firstName, value); }
+        }
 
+        [Required(ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "MiddleNameRequired")]
         [RegularExpression(REGEX_PATTERN, ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "MiddleNameRegex")]
-        [CustomValidation(typeof(UserInfo), "ValidateMiddleName")]
-        public string MiddleName { get; set; }
+        public string MiddleName
+        {
+            get { return _middleName; }
+            set { SetProperty(ref _middleName, value); }
+        }
 
         [Required(ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "LastNameRequired")]
         [RegularExpression(REGEX_PATTERN, ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "LastNameRegex")]
-        public string LastName { get; set; }
-        // </snippet1310>
-
-        // <snippet1311>
-        public static ValidationResult ValidateMiddleName(object value, ValidationContext validationContext)
+        public string LastName
         {
-            if (validationContext == null)
-            {
-                throw new ArgumentException("validationContext cannot be null", "validationContext");
-            }
-
-            UserInfo user = (UserInfo)validationContext.ObjectInstance;
-
-            // Rule: Middle Name is required if the First Name is an initial
-            if (string.IsNullOrEmpty((string)value) && !string.IsNullOrEmpty(user.FirstName) && user.FirstName.Length == 1)
-            {
-                return new ValidationResult(ErrorMessagesHelper.MiddleNameFirstName);
-            }
-            else
-            {
-                return ValidationResult.Success;
-            }
+            get { return _lastName; }
+            set { SetProperty(ref _lastName, value); }
         }
-        // </snippet1311>
+        // </snippet1310>
     }
 }

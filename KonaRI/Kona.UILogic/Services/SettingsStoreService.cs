@@ -7,6 +7,7 @@
 
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Windows.Storage;
 
@@ -14,19 +15,21 @@ namespace Kona.UILogic.Services
 {
     public class SettingsStoreService : ISettingsStoreService
     {
+        // <snippet500>
         private ApplicationDataContainer _settingsContainer;
 
         public SettingsStoreService()
         {
             _settingsContainer = ApplicationData.Current.LocalSettings;
         }
+        // </snippet500>
 
         public void DeleteContainer(string container)
         {
             _settingsContainer.DeleteContainer(container);
         }
 
-        public List<T> RetrieveAllValues<T>(string container) where T: new()
+        public List<T> RetrieveAllValues<T>(string container) where T : new()
         {
             var selectedContainer = _settingsContainer.CreateContainer(container, ApplicationDataCreateDisposition.Always);
             var values = new List<T>();
@@ -47,7 +50,8 @@ namespace Kona.UILogic.Services
             }
             return values;
         }
-        
+
+        // <snippet501>
         public void SaveValue(string container, object entity)
         {
             if (entity == null)
@@ -60,6 +64,7 @@ namespace Kona.UILogic.Services
             var selectedContainer = _settingsContainer.CreateContainer(container, ApplicationDataCreateDisposition.Always);
             selectedContainer.Values[compositeValue["Id"].ToString()] = compositeValue;
         }
+        // </snippet501>
 
         public void DeleteValue(string container, string id)
         {
@@ -75,12 +80,16 @@ namespace Kona.UILogic.Services
 
         public T GetDefaultValue<T>(string container) where T : new()
         {
-            var selectedContainer = _settingsContainer.CreateContainer(container, ApplicationDataCreateDisposition.Always);
+            var selectedContainer = _settingsContainer.CreateContainer(container,
+                                                                       ApplicationDataCreateDisposition.Always);
             var defaultValueId = selectedContainer.Values["default"] as string;
-            var defaultValue = selectedContainer.Values[defaultValueId];
-            if (defaultValue != null)
+            if (!string.IsNullOrEmpty(defaultValueId))
             {
-                return PopulateEntity<T>(defaultValue as ApplicationDataCompositeValue);
+                var defaultValue = selectedContainer.Values[defaultValueId];
+                if (defaultValue != null)
+                {
+                    return PopulateEntity<T>(defaultValue as ApplicationDataCompositeValue);
+                }
             }
 
             return new T();
@@ -88,12 +97,12 @@ namespace Kona.UILogic.Services
 
         public void SetAsDefaultValue(string container, string id)
         {
+            var selectedContainer = _settingsContainer.CreateContainer(container, ApplicationDataCreateDisposition.Always);
             if (string.IsNullOrEmpty(id))
             {
-                return;
+                selectedContainer.Values["default"] = string.Empty;
             }
 
-            var selectedContainer = _settingsContainer.CreateContainer(container, ApplicationDataCreateDisposition.Always);
             selectedContainer.Values["default"] = id;
         }
 
@@ -115,7 +124,7 @@ namespace Kona.UILogic.Services
         private ApplicationDataCompositeValue GetCompositeValue(object entity)
         {
             var compositeValue = new ApplicationDataCompositeValue();
-            foreach (var property in entity.GetType().GetRuntimeProperties())
+            foreach (var property in entity.GetType().GetRuntimeProperties().Where(p => p.PropertyType.GetTypeInfo().IsSerializable))
             {
                 compositeValue[property.Name] = entity.GetType().GetRuntimeProperty(property.Name).GetValue(entity);
             }

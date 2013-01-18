@@ -5,8 +5,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:infrastructure="using:Kona.Infrastructure" xmlns:behaviors="using:Kona.AWShopper.Behaviors"
+    xmlns:Views="using:Kona.AWShopper.Views" xmlns:viewModels="using:Kona.UILogic.ViewModels"
     infrastructure:ViewModelLocator.AutoWireViewModel="true"
     mc:Ignorable="d">
+    <Page.TopAppBar>
+        <AppBar Style="{StaticResource AppBarStyle}">
+            <Views:TopAppBarUserControl />
+        </AppBar>
+    </Page.TopAppBar>
 
     <!--
         This grid acts as a root panel for the page that defines two rows:
@@ -26,55 +32,60 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Command="{Binding GoBackCommand}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="Checkout Summary" Style="{StaticResource PageHeaderTextStyle}"/>
+            <TextBlock x:Uid="CheckoutSummaryTitle" x:Name="pageTitle" Grid.Column="1" Text="Checkout Summary" Style="{StaticResource PageHeaderTextStyle}"/>
         </Grid>
-        <Grid x:Name="content" Grid.Row="1" Margin="100,0,0,0">
+        <ScrollViewer x:Name="content" Grid.Row="1" Padding="120,0,0,0" HorizontalScrollBarVisibility="Auto"  VerticalScrollBarVisibility="Hidden">
+            <Grid x:Name="grid">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="80" />
-                    <RowDefinition Height="200" />
-                <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="350" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="400"/>
                     <ColumnDefinition Width="400"/>
-                <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <!-- Overview -->
-                <TextBlock Text="Overview" Grid.Row="0" Grid.Column="0" Style="{StaticResource SubheaderTextStyle}"></TextBlock>
-                <Grid Grid.Row="1" Grid.Column="0" Margin="25,15" Background="#D1D3D4">
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Order Subtotal:" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="18" Foreground="#58595B" Margin="0,0,10,0"></TextBlock>
-                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding OrderSubtotal}" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="24" Foreground="#58595B" Margin="0,0,10,0"></TextBlock>
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Shipping:" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="18" Foreground="#58595B" Margin="0,0,10,0"></TextBlock>
-                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ShippingCost}" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="24" Foreground="#58595B" Margin="0,0,10,0"></TextBlock>
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Tax:" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="18" Foreground="#58595B" Margin="0,0,10,0"></TextBlock>
-                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding TaxCost}" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="24" Foreground="#58595B" Margin="0,0,10,0"></TextBlock>
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Grand Total:" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="24" Foreground="Black" Margin="0,0,10,0"></TextBlock>
-                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding GrandTotal}" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="24" Foreground="Black" Margin="0,0,10,0"></TextBlock>
-                </Grid>
-                <Grid Grid.Row="2" Grid.Column="0">
-                    <Button Content="Submit" Command="{Binding SubmitCommand}" Margin="25, 0" HorizontalAlignment="Stretch" VerticalAlignment="Top" FontSize="25" Background="#58595B" Foreground="White" />
-                </Grid>
-
+                <TextBlock x:Name="textBlock" x:Uid="OverviewLabel" Text="Overview" Grid.Row="0" Grid.Column="0" Margin="10,0" Width="350" Foreground="{StaticResource AWShopperAccentBrush}"  Style="{StaticResource SubheaderTextStyle}"></TextBlock>
+                <StackPanel x:Name="stackPanel"  Grid.Row="7" Grid.Column="0" Orientation="Vertical">
+                    <Grid Grid.Row="1" Grid.Column="0" Margin="25,15" Height="170" Background="{StaticResource AWShopperItemBackgroundBrush}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Uid="OrderSubtotalLabel" Grid.Row="0" Grid.Column="0" Text="Order Subtotal:" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="18" Foreground="{StaticResource AWShopperItemForegroundBrush}" Margin="0,0,10,0"></TextBlock>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding OrderSubtotal}" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="24" Foreground="{StaticResource AWShopperItemForegroundBrush}" Margin="0,0,10,0"></TextBlock>
+                        <TextBlock x:Uid="ShippingLabel" Grid.Row="1" Grid.Column="0" Text="Shipping:" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="18" Foreground="{StaticResource AWShopperItemForegroundBrush}" Margin="0,0,10,0"></TextBlock>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ShippingCost}" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="24" Foreground="{StaticResource AWShopperItemForegroundBrush}" Margin="0,0,10,0"></TextBlock>
+                        <TextBlock x:Uid="TaxLabel" Grid.Row="2" Grid.Column="0" Text="Tax:" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="18" Foreground="{StaticResource AWShopperItemForegroundBrush}" Margin="0,0,10,0"></TextBlock>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding TaxCost}" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="24" Foreground="{StaticResource AWShopperItemForegroundBrush}" Margin="0,0,10,0"></TextBlock>
+                        <TextBlock x:Uid="GrandTotalLabel" Grid.Row="3" Grid.Column="0" Text="Grand Total:" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="24" Foreground="Black" Margin="0,0,10,0"></TextBlock>
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding GrandTotal}" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="24" Foreground="{StaticResource AWShopperAccentBrush}" Margin="0,0,10,0"></TextBlock>
+                    </Grid>
+                    <Button x:Uid="SubmitButton" Content="Submit" Command="{Binding SubmitCommand}" Margin="25, 0" HorizontalAlignment="Stretch" VerticalAlignment="Top" FontSize="25" Background="{StaticResource AWShopperAccentBrush}" Foreground="White" />
+                </StackPanel>
+                
                 <!-- Address & Payment -->
-                <TextBlock Margin="10,0" Text="Address &amp; Payment" Grid.Row="0" Grid.Column="1" Style="{StaticResource SubheaderTextStyle}"></TextBlock>
-                <ListView SelectionMode="Single" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2"
-                                        ItemsSource="{Binding CheckoutDataViewModels}"
+                <TextBlock x:Name="textBlock1" x:Uid="AddressAndPaymentLabel" Margin="10,0" Text="Address &amp; Payment" Grid.Row="0" Grid.Column="1" Foreground="{StaticResource AWShopperAccentBrush}" Style="{StaticResource SubheaderTextStyle}"></TextBlock>
+                <ListView x:Name="listView" SelectionMode="Single" Grid.Row="7" Grid.Column="1" ItemsSource="{Binding CheckoutDataViewModels}"
                                             SelectedItem="{Binding SelectedCheckoutData, Mode=TwoWay}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Grid Margin="10" Width="357" Height="130" Background="#BCBEC0">
+                            <Grid Margin="10" Width="357" Height="130" Background="{StaticResource AWShopperItemBackgroundBrush}">
                                 <Grid Grid.Row="0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition />
@@ -87,9 +98,9 @@
                                         <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <TextBlock Text="{Binding DataType}" Grid.Row="0" Grid.Column="0" Margin="5,0" FontSize="26"></TextBlock>
-                                    <TextBlock Text="{Binding FirstLine, Mode=TwoWay}" Grid.Row="1" Foreground="#606163" Margin="5,0"></TextBlock>
-                                    <TextBlock Text="{Binding SecondLine, Mode=TwoWay}" Grid.Row="2" Foreground="#606163" Margin="5,0"></TextBlock>
-                                    <TextBlock Text="{Binding Name, Mode=TwoWay}" Grid.Row="3" Foreground="#808183" Margin="5,0" VerticalAlignment="Bottom"></TextBlock>
+                                    <TextBlock Text="{Binding FirstLine, Mode=TwoWay}" Grid.Row="1" Foreground="{StaticResource AWShopperItemForegroundBrush}" Margin="5,0"></TextBlock>
+                                    <TextBlock Text="{Binding SecondLine, Mode=TwoWay}" Grid.Row="2" Foreground="{StaticResource AWShopperItemForegroundBrush}" Margin="5,0"></TextBlock>
+                                    <TextBlock Text="{Binding Name, Mode=TwoWay}" Grid.Row="3" Foreground="{StaticResource AWShopperItemForegroundLighterBrush}" Margin="5,0" VerticalAlignment="Bottom"></TextBlock>
                                 </Grid>
                             </Grid>
                         </DataTemplate>
@@ -97,13 +108,12 @@
                 </ListView>
 
                 <!-- Shipping -->
-                <TextBlock Margin="10,0" Text="Select Shipping Plan" Grid.Row="0" Grid.Column="2" Style="{StaticResource SubheaderTextStyle}"></TextBlock>
-                <ListView SelectionMode="Single" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2"
-                                        ItemsSource="{Binding ShippingMethodViewModels}"
-                                            SelectedItem="{Binding SelectedShippingMethodViewModel, Mode=TwoWay}">
+                <TextBlock x:Name="textBlock2" x:Uid="SelectShippingPlanLabel" Text="Select Shipping Plan" Grid.Row="0" Grid.Column="2" Margin="10,0" Foreground="{StaticResource AWShopperAccentBrush}"  Style="{StaticResource SubheaderTextStyle}"></TextBlock>
+                <ListView x:Name="listView1" SelectionMode="Single" Grid.Row="7" Grid.Column="2" ItemsSource="{Binding ShippingMethods}"
+                                            SelectedItem="{Binding SelectedShippingMethod, Mode=TwoWay}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Grid Margin="10" Width="357" Height="80" Background="#BCBEC0">
+                            <Grid Margin="10" Width="357" Height="80" Background="{StaticResource AWShopperItemBackgroundBrush}">
                                 <Grid Grid.Row="0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition />
@@ -113,84 +123,71 @@
                                         <RowDefinition />
                                         <RowDefinition />
                                     </Grid.RowDefinitions>
-                                    <TextBlock Text="{Binding ShippingMethod.Description}" Grid.Row="0" Grid.Column="0" FontSize="26" Margin="5,0"></TextBlock>
+                                    <TextBlock Text="{Binding Description}" Grid.Row="0" Grid.Column="0" FontSize="26" Margin="5,0"></TextBlock>
 
-                                    <TextBlock Text="{Binding ShippingMethod.EstimatedTime}" Grid.Row="1" Foreground="#606163" TextWrapping="Wrap" Margin="5" ></TextBlock>
-                                    <TextBlock Text="{Binding FormattedCost}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" FontSize="26" Foreground="#606163" TextWrapping="Wrap" Margin="3" ></TextBlock>
+                                    <TextBlock Text="{Binding EstimatedTime}" Grid.Row="1" Foreground="{StaticResource AWShopperItemForegroundBrush}" TextWrapping="Wrap" Margin="5" ></TextBlock>
+                                    <TextBlock Text="{Binding Cost}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" FontSize="26" Foreground="{StaticResource AWShopperItemForegroundBrush}" TextWrapping="Wrap" Margin="3" ></TextBlock>
                                 </Grid>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
                 <!-- Items -->
-                <TextBlock Margin="10,0" Text="Cart Items" Grid.Row="0" Grid.Column="3" Style="{StaticResource SubheaderTextStyle}"></TextBlock>
-                <GridView x:Name="ItemsGridView" SelectionMode="Single" Width="Auto" Grid.Row="1" Grid.Column="3" Grid.RowSpan="2" Margin="10, 0"
+                <TextBlock x:Name="textBlock3" x:Uid="CartItemsLabel" Margin="10,0" Text="Cart Items" Foreground="{StaticResource AWShopperAccentBrush}" Grid.Row="0" Grid.Column="3" Style="{StaticResource SubheaderTextStyle}"></TextBlock>
+                <GridView x:Name="ItemsGridView" SelectionMode="Single" Width="Auto" Grid.Row="7" Grid.Column="3" Margin="10, 0"
                     ItemsSource="{Binding ShoppingCartItemViewModels}"
                       SelectedItem="{Binding SelectedShoppingCartItem, Mode=TwoWay}">
                     <GridView.ItemTemplate>
                         <DataTemplate>
-                            <Grid Margin="10" Width="357" Height="162" Background="#BCBEC0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="134"/>
-                                    <RowDefinition />
-                                </Grid.RowDefinitions>
-                                <Grid Grid.Row="0">
+                            <Grid Margin="10" Width="357" Height="162" Background="{StaticResource AWShopperItemBackgroundBrush}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="134" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Image Source="{Binding Image}" Grid.Column="0" Width="114" Height="114" Margin="10"/>
+                                <Grid Grid.Column="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="45"/>
+                                        <RowDefinition />
+                                        <RowDefinition Height="50" />
+                                    </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="134" />
                                         <ColumnDefinition />
+                                        <ColumnDefinition  Width="40"/>
                                     </Grid.ColumnDefinitions>
-                                    <Image Grid.Column="0" Width="114" Height="114" Margin="10">
-                                        <Image.Source>
-                                            <BitmapImage UriSource="{Binding Image}"/>
-                                        </Image.Source>
-                                    </Image>
-                                    <Grid Grid.Column="1">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="45"/>
-                                            <RowDefinition />
-                                            <RowDefinition Height="50" />
-                                        </Grid.RowDefinitions>
+                                    <TextBlock Text="{Binding Title, Mode=TwoWay}" Grid.Row="0" TextWrapping="Wrap" Margin="3" ></TextBlock>
+                                    <TextBlock Text="{Binding Description, Mode=TwoWay}" Grid.Row="1" Foreground="{StaticResource AWShopperItemForegroundLighterBrush}" Margin="3" TextWrapping="Wrap" ></TextBlock>
+                                    <Grid Grid.Row="2" Grid.Column="0">
                                         <Grid.ColumnDefinitions>
+                                            <ColumnDefinition  Width="110"/>
                                             <ColumnDefinition />
-                                            <ColumnDefinition  Width="40"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding Title, Mode=TwoWay}" Grid.Row="0" Foreground="#606163" TextWrapping="Wrap" Margin="3" ></TextBlock>
-                                        <TextBlock Text="{Binding Description, Mode=TwoWay}" Grid.Row="1" Foreground="#808183" Margin="3" ></TextBlock>
-                                        <Grid Grid.Row="2" Grid.Column="0">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition  Width="110"/>
-                                                <ColumnDefinition />
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0" Text="{Binding DiscountedPrice, Mode=TwoWay}" Foreground="#606163" Margin="3" VerticalAlignment="Bottom" FontSize="22"></TextBlock>
-                                            <Grid Grid.Column="1" Height="25" VerticalAlignment="Bottom">
-                                                <Line Stretch="Fill" Stroke="Gray" StrokeThickness="2" X1="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                                                <TextBlock Text="{Binding TotalPrice, Mode=TwoWay}" Foreground="#606163" Margin="3" VerticalAlignment="Bottom" FontSize="14" FontStyle="Oblique" ></TextBlock>
-                                            </Grid>
-                                        </Grid>
-                                        <Grid Grid.Row="2" Grid.Column="1" Background="#939598" Width="Auto" VerticalAlignment="Stretch">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="20"/>
-                                                <RowDefinition Height="30"/>
-                                            </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" Foreground="White">qty</TextBlock>
-                                            <TextBlock Grid.Row="1" Text="{Binding Quantity, Mode=TwoWay}" FontSize="24" HorizontalAlignment="Center" Foreground="White"></TextBlock>
+                                        <TextBlock Grid.Column="0" Text="{Binding DiscountedPrice, Mode=TwoWay}" Margin="3" VerticalAlignment="Bottom" FontSize="22"></TextBlock>
+                                        <Grid Grid.Column="1" Height="25" VerticalAlignment="Bottom">
+                                            <Line Stretch="Fill" Stroke="Gray" StrokeThickness="2" X1="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                            <TextBlock Text="{Binding TotalPrice}" Margin="3" VerticalAlignment="Bottom" FontSize="14" FontStyle="Oblique" ></TextBlock>
                                         </Grid>
                                     </Grid>
-                                </Grid>
-                                <Grid Grid.Row="1" Background="#D6D6D6">
-                                    <CheckBox IsChecked="{Binding IsGift, Mode=TwoWay}" Content="{Binding IsGift, Mode=TwoWay, Converter={StaticResource IsGiftContentConverter}}"></CheckBox>
+                                    <Grid Grid.Row="2" Grid.Column="1" Background="{StaticResource AWShopperItemDarkerBackgroundBrush}" Width="Auto" VerticalAlignment="Stretch">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="20"/>
+                                            <RowDefinition Height="30"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Row="0" HorizontalAlignment="Center" Foreground="White">QTY</TextBlock>
+                                        <TextBlock Grid.Row="1" Text="{Binding Quantity, Mode=TwoWay}" FontSize="24" HorizontalAlignment="Center" Foreground="{StaticResource AWShopperItemSelectionColor}"></TextBlock>
+                                    </Grid>
                                 </Grid>
                             </Grid>
                         </DataTemplate>
                     </GridView.ItemTemplate>
                 </GridView>
             </Grid>
+        </ScrollViewer>
         <Popup x:Name="pop" IsLightDismissEnabled="True" IsOpen="{Binding IsEditPopupOpened, Mode=TwoWay}">
-            <Grid x:Name="panel" Background="Gray" Height="400">
+            <Grid x:Name="panel" Background="Gray" Height="300" MinWidth="400">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="65"/>
                     <RowDefinition/>
-                    <RowDefinition Height="85"/>
                 </Grid.RowDefinitions>
                 <TextBlock Margin="10" Text="{Binding EditingDataTypeLabel}" FontSize="34" Foreground="White"></TextBlock>
                 <ListView Grid.Row="1" Margin="5,0,10,0" IsItemClickEnabled="True" ItemsSource="{Binding EditableCheckoutDataViewModels}" SelectedItem="{Binding SelectedCheckoutData, Mode=TwoWay}"  behaviors:ListViewItemClickedToAction.Action="{Binding SelectCheckoutDataAction}" ScrollViewer.VerticalScrollBarVisibility="Auto">
@@ -198,30 +195,23 @@
                         <DataTemplate>
                             <Grid Height="65">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="300" />
+                                    <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="100"/>
                                 </Grid.ColumnDefinitions>
-                                <Grid Grid.Column="0" Background="#9C9EA0">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
+                                <StackPanel Grid.Column="0" Background="#9C9EA0">
                                     <TextBlock Text="{Binding FirstLine}" Margin="5,0" FontSize="16" Foreground="White"></TextBlock>
                                     <TextBlock Text="{Binding SecondLine}" Grid.Row="1" Margin="5,0" FontSize="16" Foreground="White"></TextBlock>
-                                </Grid>
+                                </StackPanel>
                                 <Button Grid.Column="1" Style="{StaticResource EditAppBarButtonStyle}" Command="{Binding EditDataCommand}" CommandParameter="{Binding SelectedEditableCheckoutDataViewModel}" Foreground="White" Background="Transparent"></Button>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
                 </ListView>
-                <Grid Grid.Row="2" Background="#9C9EA0" Margin="10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="112" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="{Binding NewDataTypeLabel, Mode=TwoWay}"  VerticalAlignment="Center" Margin="5,0" FontSize="34" Foreground="White"></TextBlock>
-                    <Button Grid.Column="1" Style="{StaticResource AddAppBarButtonStyle}" Command="{Binding AddNewCommand}" CommandParameter="{Binding SelectedCheckoutData}" Foreground="White" Background="Transparent"></Button>
-                </Grid>
             </Grid>
         </Popup>
 
@@ -250,19 +240,165 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.Padding)" Storyboard.TargetName="content">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<Thickness>0</Thickness>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="textBlock">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<x:Double>300</x:Double>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="stackPanel">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<x:Int32>1</x:Int32>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="textBlock1">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<x:Int32>2</x:Int32>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="textBlock1">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<x:Int32>0</x:Int32>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="listView">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<x:Int32>3</x:Int32>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="listView">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<x:Int32>0</x:Int32>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="listView">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<x:Double>300</x:Double>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="textBlock2">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<x:Int32>4</x:Int32>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="textBlock2">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<x:Int32>0</x:Int32>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="listView1">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<x:Int32>5</x:Int32>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="listView1">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<x:Int32>0</x:Int32>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="listView1">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<x:Double>300</x:Double>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="textBlock3">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<x:Int32>0</x:Int32>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="textBlock3">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<x:Int32>6</x:Int32>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ItemsGridView">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<Visibility>Collapsed</Visibility>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ScrollViewer.VerticalScrollBarVisibility)" Storyboard.TargetName="content">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<ScrollBarVisibility>Auto</ScrollBarVisibility>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ScrollViewer.HorizontalScrollBarVisibility)" Storyboard.TargetName="content">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<ScrollBarVisibility>Hidden</ScrollBarVisibility>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="textBlock1">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<Thickness>10</Thickness>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="textBlock2">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<Thickness>10</Thickness>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="textBlock3">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<Thickness>10</Thickness>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </Grid>
     <Page.BottomAppBar>
-        <AppBar x:Name="AppBar" Padding="10,0,10,0" Background="Gray">
+        <AppBar Style="{StaticResource AppBarStyle}">
             <Grid>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left"
-                            Visibility="{Binding SelectedCheckoutData, Converter={StaticResource NullToVisibilityConverter}, Mode=TwoWay}">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                     <Button x:Name="editAppBarButton" 
                             Style="{StaticResource EditAppBarButtonStyle}" AutomationProperties.Name="edit"
-                            Visibility="{Binding SelectedCheckoutData, Converter={StaticResource NullToVisibilityConverter}, Mode=TwoWay}"
+                            Visibility="{Binding SelectedCheckoutData, Converter={StaticResource NotNullToVisibleConverter}}"
                             Command="{Binding AppBarEditAddressCommand}" CommandParameter="{Binding SelectedCheckoutData}"></Button>
                 </StackPanel>
             </Grid>

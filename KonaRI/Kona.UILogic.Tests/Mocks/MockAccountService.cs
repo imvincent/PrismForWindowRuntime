@@ -9,7 +9,6 @@
 using System;
 using System.Threading.Tasks;
 using Kona.UILogic.Services;
-using System.Net;
 using Kona.UILogic.Models;
 
 namespace Kona.UILogic.Tests.Mocks
@@ -20,44 +19,18 @@ namespace Kona.UILogic.Tests.Mocks
 
         public Func<string, string, Task<bool>> SignInUserAsyncDelegate { get; set; }
 
-        public Func<UserInfo> CheckIfUserSignedInDelegate { get; set; } 
-
-        public Action DisplaySignInDelegate { get; set; }
+        public Func<Task<UserInfo>> GetSignedInUserAsyncDelegate { get; set; } 
 
         public Action SignOutDelegate { get; set; }
 
-        public Action signInSuccessful { get; set; }
-
-        public Action signInFailed { get; set; }
-
-        public string UserId
-        {
-            get
-            {
-                return GetUserIdDelegate();
-            }
-        }
-
         public async Task<bool> SignInUserAsync(string userName, string password)
         {
-            var result = await this.SignInUserAsyncDelegate(userName, password);
-            if (result)
-                signInSuccessful();
-            else
-                signInFailed();
-            return result;
+            return await this.SignInUserAsyncDelegate(userName, password);
         }
 
-        public async Task<UserInfo> CheckIfUserSignedIn()
+        public async Task<UserInfo> GetSignedInUserAsync()
         {
-            return CheckIfUserSignedInDelegate();
-        }
-
-        public void DisplaySignIn(Action signInSuccessful = null, Action signInFailed = null)
-        {
-            this.signInSuccessful = signInSuccessful;
-            this.signInFailed = signInFailed;
-            this.DisplaySignInDelegate();
+            return await GetSignedInUserAsyncDelegate();
         }
 
         public void RaiseUserChanged(UserInfo userInfo)

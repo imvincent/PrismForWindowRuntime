@@ -3,6 +3,24 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Kona.AWShopper.Controls">
 
+    <!-- AW Shopper Brushes -->
+    <SolidColorBrush x:Name="AWShopperAccentBrush" Color="#B8CB11" />
+    <SolidColorBrush x:Name="AWShopperItemBackgroundBrush" Color="#41484E" />
+    <SolidColorBrush x:Name="AWShopperItemDarkerBackgroundBrush" Color="#FF353C41" />
+    <SolidColorBrush x:Name="AWShopperItemForegroundBrush" Color="#909093"/>
+    <SolidColorBrush x:Name="AWShopperItemForegroundLighterBrush" Color="#BCBEC0" />
+    <SolidColorBrush x:Name="AWShopperFlyoutHeaderBackground" Color="#00b2f0" />
+    <SolidColorBrush x:Name="AWShopperFlyoutContentBackground" Color="Black" />
+    
+   <!-- ListView Selection Color -->
+    <Color x:Key="ItemSelectionColor">#FFE2742F</Color>
+    <SolidColorBrush x:Name="AWShopperItemSelectionColor"  Color="{StaticResource ItemSelectionColor}"/>
+    <SolidColorBrush x:Key="ListViewItemSelectedBackgroundThemeBrush" Color="{StaticResource ItemSelectionColor}" />
+    <SolidColorBrush x:Key="ListViewItemSelectedPointerOverBackgroundThemeBrush" Color="{StaticResource ItemSelectionColor}" />
+    <SolidColorBrush x:Key="ListViewItemSelectedPointerOverBorderThemeBrush" Color="{StaticResource ItemSelectionColor}" />
+
+
+
     <Style x:Key="FormFieldTextBoxStyle" TargetType="controls:FormFieldTextBox">
         <Setter Property="MinWidth" Value="{StaticResource TextControlThemeMinWidth}"/>
         <Setter Property="MinHeight" Value="{StaticResource TextControlThemeMinHeight}"/>
@@ -147,7 +165,7 @@
                         </VisualStateManager.VisualStateGroups>
                         <Border x:Name="BackgroundElement" Background="{TemplateBinding Background}" Grid.ColumnSpan="2" Margin="{TemplateBinding BorderThickness}"/>
                         <Border x:Name="BorderElement" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Grid.ColumnSpan="2"/>
-                        
+
                         <!-- Watermark -->
                         <TextBlock x:Name="Watermark"
                                        Text="{TemplateBinding Watermark}"
@@ -302,7 +320,7 @@
     <Style x:Key="FormTopMenuStyle" TargetType="StackPanel" BasedOn="{StaticResource FormMenuStyle}">
         <Setter Property="Margin" Value="0,10,0,20"></Setter>
     </Style>
-	<Style x:Key="ErrorMessageStyle" TargetType="TextBlock">
+    <Style x:Key="ErrorMessageStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="Red" />
         <Setter Property="FontSize" Value="{StaticResource ControlContentThemeFontSize}"/>
         <Setter Property="FontFamily" Value="{StaticResource ContentControlThemeFontFamily}"/>
@@ -341,4 +359,296 @@
         <Setter Property="Foreground" Value="Red" />
     </Style>
     <!-- End Form Status styles -->
+
+    <Style x:Key="HouseStyle" TargetType="ContentControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ContentControl">
+                    <StackPanel VerticalAlignment="Top" Margin="0,12,0,11">
+                        <Viewbox Width="86.4" Height="86.4" Stretch="Uniform">
+                            <Canvas Width="86.4" Height="86.4" Canvas.Left="0" Canvas.Top="0" Background="#FFAAB1B5">
+                                <Path Fill="#FF353C41" Data="M 225.582,7.63947C 225.582,3.62878 222.31,0.334167 218.299,0.334167L 194.242,0.334167C 190.217,0.334167 186.938,3.62878 186.938,7.63947L 186.938,22.0661L 225.582,60.7488L 225.582,7.63947 Z M 281.939,143.101L 155.057,16.2112C 148.965,10.1259 139.081,10.1259 132.967,16.2112L 6.09198,143.101C -2.03451e-005,149.178 -2.03451e-005,159.09 6.09198,165.19C 9.1413,168.226 13.1306,169.75 17.148,169.75C 21.1133,169.75 25.1253,168.226 28.1826,165.19L 144.016,49.3193L 259.864,165.19C 265.965,171.245 275.855,171.267 281.939,165.19C 288.031,159.09 288.063,149.223 281.939,143.101 Z M 144.015,79.3772L 39.8861,183.491L 39.8861,281.429L 119.661,281.429L 119.661,198.741L 168.142,198.741L 168.142,281.429L 249.234,281.429L 249.234,184.604L 144.015,79.3772 Z ">
+                                    <Path.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform ScaleX=".15" ScaleY=".15" />
+                                            <TranslateTransform X="18" Y="18" />
+                                        </TransformGroup>
+                                    </Path.RenderTransform>
+                                </Path>
+                            </Canvas>
+                        </Viewbox>
+                        <TextBlock
+                                Text="Home"
+                                Foreground="{StaticResource AppBarItemForegroundThemeBrush}"
+                                Margin="0,0,2,0"
+                                FontSize="12"
+                                TextAlignment="Center"
+                                Width="88"
+                                MaxHeight="32"
+                                TextTrimming="WordEllipsis"
+                                Style="{StaticResource BasicTextStyle}"/>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CartStyle" TargetType="ContentControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ContentControl">
+                    <StackPanel VerticalAlignment="Top" Margin="0,12,0,11">
+                        <Viewbox Width="86.4" Height="86.4" Stretch="Uniform">
+                            <Canvas Width="86.4" Height="86.4" Canvas.Left="0" Canvas.Top="0" Background="#FFAAB1B5">
+                                <Path Fill="#FF353C41" Data="F1 M 372.601,181.645L 364.733,181.645L 363.407,175.361C 363.161,174.768 362.819,174.233 362.681,173.593L 338.831,60.2533C 338.792,60.192 338.845,60.108 338.831,60.0707L 336.244,47.9467L 348.789,47.9467L 359.097,47.9467L 568.193,47.9467L 576.223,12.1387L 584.832,12.1387L 587.523,12.1387L 629.964,12.1387L 632.588,12.1387L 642.752,12.1387L 642.752,32.5213L 632.588,32.5213L 629.964,32.5213L 592.823,32.5213L 559.036,173.624L 550.945,215.913C 550.573,217.804 549.62,219.367 548.384,220.716C 553.027,225.077 555.971,231.195 555.971,238.057C 555.971,251.279 545.319,262 532.067,262C 518.821,262 508.1,251.279 508.1,238.057C 508.1,232.785 510.129,228.151 512.988,224.187L 413.115,224.187C 416.004,228.151 418.055,232.785 418.055,238.057C 418.055,251.279 407.319,262 394.044,262C 380.867,262 370.147,251.279 370.147,238.057C 370.147,232.785 372.205,228.151 375.087,224.187L 356.887,224.187C 356.855,224.187 356.756,224.132 356.688,224.132L 346.325,224.132L 346.325,203.804L 356.887,203.804L 362.681,203.804L 532.463,203.804L 536.725,181.676L 372.655,181.676L 372.601,181.645 Z " Stretch="Fill">
+                                    <Path.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform ScaleX=".15" ScaleY=".15" />
+                                            <TranslateTransform X="20" Y="20" />
+                                        </TransformGroup>
+                                    </Path.RenderTransform>
+                                </Path>
+                            </Canvas>
+                        </Viewbox>
+                        <TextBlock
+                                Text="Shopping Cart"
+                                Foreground="{StaticResource AppBarItemForegroundThemeBrush}"
+                                Margin="0,0,2,0"
+                                FontSize="12"
+                                TextAlignment="Center"
+                                Width="88"
+                                MaxHeight="32"
+                                TextTrimming="WordEllipsis"
+                                Style="{StaticResource BasicTextStyle}"/>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Name="AppBarStyle" TargetType="AppBar">
+        <Setter Property="Background" Value="Black" />
+        <Setter Property="Opacity" Value="0.8" />
+        <Setter Property="Padding" Value="10,0,10,0" />
+    </Style>
+
+    <DataTemplate x:Key="KonaRI250x250ItemTemplate">
+        <Grid HorizontalAlignment="Left" Width="250" Height="250">
+            <Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}">
+                <Image Stretch="UniformToFill" Source="{Binding Image}" AutomationProperties.Name="{Binding Title}"/>
+            </Border>
+            <StackPanel VerticalAlignment="Bottom" Background="{StaticResource ListViewItemOverlayBackgroundThemeBrush}">
+                <TextBlock Text="{Binding Title}" Foreground="{StaticResource ListViewItemOverlayForegroundThemeBrush}" Style="{StaticResource TitleTextStyle}" Height="60" Margin="15,0,15,0"/>
+                <TextBlock Text="{Binding Subtitle}" Foreground="{StaticResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextStyle}" TextWrapping="NoWrap" Margin="15,0,15,10"/>
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+
+    <Style x:Key="BasicFlyoutTextStyle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="FontSize" Value="{StaticResource ControlContentThemeFontSize}"/>
+        <Setter Property="FontFamily" Value="{StaticResource ContentControlThemeFontFamily}"/>
+        <Setter Property="TextTrimming" Value="WordEllipsis"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="Typography.StylisticSet20" Value="True"/>
+        <Setter Property="Typography.DiscretionaryLigatures" Value="True"/>
+        <Setter Property="Typography.CaseSensitiveForms" Value="True"/>
+    </Style>
+
+    <Style x:Key="FlyoutTextBoxStyle" TargetType="TextBox">
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="Background" Value="White" />
+        <Setter Property="BorderBrush" Value="Black" />
+    </Style>
+
+    <Style x:Key="FlyoutPasswordBoxStyle" TargetType="PasswordBox">
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="Background" Value="White" />
+        <Setter Property="BorderBrush" Value="Black" />
+    </Style>
+
+    <Style x:Key="FlyoutCheckBoxStyle" TargetType="CheckBox">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Padding" Value="2,3,0,0" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="VerticalContentAlignment" Value="Top"/>
+        <Setter Property="FontFamily" Value="{StaticResource ContentControlThemeFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource ControlContentThemeFontSize}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="NormalRectangle"
+                                                                       Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPointerOverBackgroundThemeBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="NormalRectangle"
+                                                                       Storyboard.TargetProperty="Stroke">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPointerOverBorderThemeBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CheckGlyph"
+                                                                       Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPointerOverForegroundThemeBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndeterminateGlyph"
+                                                                       Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPointerOverForegroundThemeBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="NormalRectangle"
+                                                                       Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPressedBackgroundThemeBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="NormalRectangle"
+                                                                       Storyboard.TargetProperty="Stroke">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPressedBorderThemeBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CheckGlyph"
+                                                                       Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPressedForegroundThemeBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndeterminateGlyph"
+                                                                       Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPressedForegroundThemeBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="NormalRectangle"
+                                                                       Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxDisabledBackgroundThemeBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="NormalRectangle"
+                                                                       Storyboard.TargetProperty="Stroke">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxDisabledBorderThemeBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CheckGlyph"
+                                                                       Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxDisabledForegroundThemeBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndeterminateGlyph"
+                                                                       Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxDisabledForegroundThemeBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+                                                                       Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxContentDisabledForegroundThemeBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CheckStates">
+                                <VisualState x:Name="Checked">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="CheckGlyph"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="1"
+                                                         Duration="0" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unchecked" />
+                                <VisualState x:Name="Indeterminate">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="IndeterminateGlyph"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="1"
+                                                         Duration="0" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualState x:Name="Focused">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="FocusVisualWhite"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="1"
+                                                         Duration="0" />
+                                        <DoubleAnimation Storyboard.TargetName="FocusVisualBlack"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="1"
+                                                         Duration="0" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unfocused" />
+                                <VisualState x:Name="PointerFocused" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="27" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid VerticalAlignment="Top">
+                                <Rectangle x:Name="NormalRectangle"
+                                           Fill="{StaticResource CheckBoxBackgroundThemeBrush}"
+                                           Stroke="Black"
+                                           StrokeThickness="{StaticResource CheckBoxBorderThemeThickness}"
+                                           UseLayoutRounding="False"
+                                           Height="21"
+                                           Width="21" />
+                                <Path x:Name="CheckGlyph"
+                                      Data="F1 M 0,58 L 2,56 L 6,60 L 13,51 L 15,53 L 6,64 z"
+                                      Fill="{StaticResource CheckBoxForegroundThemeBrush}"
+                                      Height="14"
+                                      Stretch="Fill"
+                                      Width="16"
+                                      Opacity="0"
+                                      FlowDirection="LeftToRight" />
+                                <Rectangle x:Name="IndeterminateGlyph"
+                                           Width="9"
+                                           Height="9"
+                                           Fill="{StaticResource CheckBoxForegroundThemeBrush}"
+                                           Opacity="0"
+                                           UseLayoutRounding="False" />
+                                <Rectangle x:Name="FocusVisualWhite"
+                                           Stroke="Black"
+                                           StrokeEndLineCap="Square"
+                                           StrokeDashArray="1,1"
+                                           Opacity="0"
+                                           StrokeDashOffset="0.5"
+                                           Width="27"
+                                           Height="27" />
+                                <Rectangle x:Name="FocusVisualBlack"
+                                           Stroke="Black"
+                                           StrokeEndLineCap="Square"
+                                           StrokeDashArray="1,1"
+                                           Opacity="0"
+                                           StrokeDashOffset="1.5"
+                                           Width="27"
+                                           Height="27" />
+                            </Grid>
+                            <ContentPresenter x:Name="ContentPresenter"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              ContentTransitions="{TemplateBinding ContentTransitions}"
+                                              Content="{TemplateBinding Content}"
+                                              Margin="{TemplateBinding Padding}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Grid.Column="1" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="FlyoutButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource ButtonBackgroundThemeBrush}" />
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="BorderBrush" Value="Black" />
+    </Style>
 </ResourceDictionary>

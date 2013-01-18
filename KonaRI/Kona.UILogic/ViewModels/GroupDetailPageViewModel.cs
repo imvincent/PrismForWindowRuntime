@@ -6,6 +6,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 using Kona.Infrastructure;
 using Kona.UILogic.Models;
 using Kona.UILogic.Repositories;
@@ -19,7 +21,7 @@ namespace Kona.UILogic.ViewModels
     {
         private readonly IProductCatalogRepository _productCatalogRepository;
         private readonly INavigationService _navigationService;
-        private IEnumerable<Product> _items;
+        private IReadOnlyCollection<object> _items;
         private string _title;
 
         public GroupDetailPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService)
@@ -30,7 +32,7 @@ namespace Kona.UILogic.ViewModels
             GoBackCommand = new DelegateCommand(() => navigationService.GoBack(), () => navigationService.CanGoBack());
         }
 
-        public IEnumerable<Product> Items
+        public IReadOnlyCollection<object> Items
         {
             get { return _items; }
             set { SetProperty(ref _items, value); }
@@ -42,8 +44,14 @@ namespace Kona.UILogic.ViewModels
         public async override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState)
         {
             var categoryId = navigationParameter is int ? (int)navigationParameter : 0;
+            var products = await _productCatalogRepository.GetProductsAsync(categoryId);
+            var productViewModels = new List<ProductViewModel>();
+            foreach (var product in products)
+            {
+                productViewModels.Add(new ProductViewModel(product));
+            }
+            Items = new ReadOnlyCollection<ProductViewModel>(productViewModels);
 
-            Items = await _productCatalogRepository.GetProductsAsync(categoryId);
             var category = await _productCatalogRepository.GetCategoryAsync(categoryId);
             Title = category.Title;
         }
@@ -54,13 +62,15 @@ namespace Kona.UILogic.ViewModels
             set { SetProperty(ref _title, value); }
         }
 
+        // <snippet607>
         private void NavigateToProduct(object parameter)
         {
-            var product = parameter as Product;
+            var product = parameter as ProductViewModel;
             if (product != null)
             {
                 _navigationService.Navigate("ItemDetail", product.ProductNumber);
             }
         }
+        // </snippet607>
     }
 }

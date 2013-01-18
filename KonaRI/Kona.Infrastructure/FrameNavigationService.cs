@@ -49,6 +49,7 @@ namespace Kona.Infrastructure
             NavigateToCurrentViewModel(NavigationMode.Refresh, null);
         }
 
+        // <snippet705>
         private void NavigateToCurrentViewModel(NavigationMode navigationMode, object parameter)
         {
             var newView = frame.Content as FrameworkElement;
@@ -58,7 +59,9 @@ namespace Kona.Infrastructure
             if (newViewModel != null)
                 newViewModel.OnNavigatedTo(parameter, navigationMode, frameState);
         }
+        // </snippet705>
 
+        // <snippet702>
         private void NavigateFromCurrentViewModel(bool suspending)
         {
             var departingView = frame.Content as FrameworkElement;
@@ -68,6 +71,7 @@ namespace Kona.Infrastructure
             if (departingViewModel != null)
                 departingViewModel.OnNavigatedFrom(frameState, suspending);
         }
+        // </snippet702>
 
         public bool Navigate(string pageToken, object parameter)
         {

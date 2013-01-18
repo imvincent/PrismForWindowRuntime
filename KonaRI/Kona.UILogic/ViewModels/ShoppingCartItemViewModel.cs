@@ -7,29 +7,52 @@
 
 
 using System;
-using System.Windows.Input;
 using Kona.Infrastructure;
 using Kona.UILogic.Models;
 using Windows.Globalization.NumberFormatting;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace Kona.UILogic.ViewModels
 {
     public class ShoppingCartItemViewModel : ViewModel
     {
-        private Guid _id;
+        private int _id;
         private string _title;
         private string _description;
-        private bool _isGift;
         private int _quantity;
         private string _totalPrice;
         private string _discountPrice;
         private double _discountPercentage;
-        private Uri _image;
-        
-        public Guid Id
+        private string _imagePath;
+
+        public ShoppingCartItemViewModel(ShoppingCartItem shoppingCartItem)
+        {
+            if (shoppingCartItem == null)
+            {
+                throw new ArgumentNullException("shoppingCartItem", "shoppingCartItem cannot be null");
+            }
+
+            Id = shoppingCartItem.Id;
+            Title = shoppingCartItem.Product.Title;
+            Description = shoppingCartItem.Product.Description;
+            Quantity = shoppingCartItem.Quantity;
+            DiscountPercentage = shoppingCartItem.DiscountPercentage;
+            _imagePath = shoppingCartItem.Product.ImageName;
+            EntityId = shoppingCartItem.Id.ToString();
+
+            var totalPrice = Math.Round(shoppingCartItem.Quantity * shoppingCartItem.Product.ListPrice * (100 - shoppingCartItem.DiscountPercentage) / 100, 2);
+            var discountedPrice = Math.Round(totalPrice * (1 - (shoppingCartItem.DiscountPercentage / 100)),2);
+
+            var currencyFormatter = new CurrencyFormatter(shoppingCartItem.Currency);
+            TotalPrice = currencyFormatter.FormatDouble(totalPrice);
+            DiscountedPrice = currencyFormatter.FormatDouble(discountedPrice);
+        }
+
+        public int Id
         {
             get { return _id; }
-            set { this.SetProperty(ref _id, value); }
+            set { SetProperty(ref _id, value); }
         }
         
         public string Title
@@ -44,13 +67,6 @@ namespace Kona.UILogic.ViewModels
             set { SetProperty(ref _description, value); }
         }
 
-        [RestorableState]
-        public bool IsGift
-        {
-            get { return _isGift; }
-            set { SetProperty(ref _isGift, value); }
-        }
-        
         public int Quantity
         {
             get { return _quantity; }
@@ -69,53 +85,15 @@ namespace Kona.UILogic.ViewModels
             set { SetProperty(ref _discountPercentage, value); }
         }
 
-        public Uri Image 
+        public ImageSource Image
         {
-            get { return _image; }
-            set { SetProperty(ref _image, value); }
+            get { return new BitmapImage(new Uri(_imagePath, UriKind.Absolute)); }
         }
 
         public string DiscountedPrice 
         {
             get { return _discountPrice; }
             set { SetProperty(ref _discountPrice, value); }
-        }
-
-        public ICommand EditAmountCommand { get; private set; }
-
-        public ShoppingCartItemViewModel()
-        {
-            this.EditAmountCommand = new DelegateCommand(EditAmount);
-        }
-
-        public ShoppingCartItemViewModel(ShoppingCartItem shoppingCartItem)
-            : this()
-        {
-            if (shoppingCartItem == null)
-            {
-                throw new ArgumentNullException("shoppingCartItem", "shoppingCartItem cannot be null");
-            }
-
-            Id = shoppingCartItem.Id;
-            Title = shoppingCartItem.Product.Title;
-            Description = shoppingCartItem.Product.Description;
-            IsGift = shoppingCartItem.IsGift;
-            Quantity = shoppingCartItem.Quantity;
-            DiscountPercentage = shoppingCartItem.DiscountPercentage;
-            Image = new Uri(shoppingCartItem.Product.ImageName, UriKind.Relative);
-            EntityId = shoppingCartItem.Id.ToString();
-
-            var totalPrice = shoppingCartItem.Quantity * shoppingCartItem.Product.ListPrice * (100 - shoppingCartItem.DiscountPercentage) / 100;
-            var discountedPrice = totalPrice * (1 - (shoppingCartItem.DiscountPercentage / 100));
-
-            var currencyFormatter = new CurrencyFormatter(shoppingCartItem.Currency);
-            TotalPrice = currencyFormatter.FormatDouble(totalPrice);
-            DiscountedPrice = currencyFormatter.FormatDouble(discountedPrice);
-        }
-
-        private void EditAmount()
-        {
-            // edit amount
         }
     }
 }

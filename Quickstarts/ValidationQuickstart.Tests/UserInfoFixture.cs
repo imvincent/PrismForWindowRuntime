@@ -16,7 +16,7 @@ namespace ValidationQuickstart.Tests
     [TestClass]
     public class UserInfoFixture
     {
-        #region RequiredField validation
+        #region Required Field validation
 
         [TestMethod]
         public void FirstName_Is_Valid_If_Not_Empty()
@@ -32,6 +32,24 @@ namespace ValidationQuickstart.Tests
         {
             var target = new UserInfo();
             bool isValid = TryValidateProperty(target, "FirstName", target.FirstName);
+
+            Assert.IsFalse(isValid);
+        }
+
+        [TestMethod]
+        public void MiddleName_Is_Valid_If_Not_Empty()
+        {
+            var target = new UserInfo() { MiddleName = "This is a valid value" };
+            bool isValid = TryValidateProperty(target, "MiddleName", target.MiddleName);
+
+            Assert.IsTrue(isValid);
+        }
+
+        [TestMethod]
+        public void MiddleName_Is_Not_Valid_If_Empty()
+        {
+            var target = new UserInfo();
+            bool isValid = TryValidateProperty(target, "MiddleName", target.MiddleName);
 
             Assert.IsFalse(isValid);
         }
@@ -56,7 +74,7 @@ namespace ValidationQuickstart.Tests
 
         #endregion
 
-        #region RegularExpression Validation
+        #region Regular Expression validation
 
         [TestMethod]
         public void FirstName_Is_Valid_If_Contains_Valid_Characters()
@@ -70,7 +88,7 @@ namespace ValidationQuickstart.Tests
         }
 
         [TestMethod]
-        public void FirstName_Is_InValid_If_Contains_InValid_Characters()
+        public void FirstName_Is_InValid_If_Contains_Invalid_Characters()
         {
             // We allow unicode characters
             // as well as internal spaces and hypens, as long as these do not occur in sequences
@@ -155,28 +173,6 @@ namespace ValidationQuickstart.Tests
             Assert.IsFalse(TryValidateProperty(target5, "LastName", target5.LastName));
             Assert.IsFalse(TryValidateProperty(target6, "LastName", target6.LastName));
             Assert.IsFalse(TryValidateProperty(target7, "LastName", target7.LastName));
-        }
-
-        #endregion
-
-        #region Cross-Property Validation
-
-        [TestMethod]
-        public void Empty_MiddleName_Is_Valid_If_FirstName_Is_Not_An_Initial()
-        {
-            var target = new UserInfo() { FirstName = "Not an initial" };
-            bool isValid = TryValidateProperty(target, "MiddleName", target.MiddleName);
-
-            Assert.IsTrue(isValid);
-        }
-
-        [TestMethod]
-        public void Empty_MiddleName_Is_Not_Valid_If_FirstName_Is_An_Initial()
-        {
-            var target = new UserInfo() { FirstName = "A" };
-            bool isValid = TryValidateProperty(target, "MiddleName", target.MiddleName);
-
-            Assert.IsFalse(isValid);
         }
 
         #endregion

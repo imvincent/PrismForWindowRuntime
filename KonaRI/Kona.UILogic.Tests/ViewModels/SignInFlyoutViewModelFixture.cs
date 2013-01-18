@@ -17,7 +17,7 @@ namespace Kona.UILogic.Tests.ViewModels
     public class SignInFlyoutViewModelFixture
     {
         [TestMethod]
-        public void Firing_SaveCredentialsCommand_Persists_Credentials_And_Turns_Invisible()
+        public void FiringSignInCommand_Persists_Credentials_And_Turns_Invisible()
         {
             var accountService = new MockAccountService();
             bool accountServiceSignInCalled = false;
@@ -30,7 +30,6 @@ namespace Kona.UILogic.Tests.ViewModels
                 accountServiceSignInCalled = true;
                 return Task.FromResult(true);
             };
-            accountService.signInSuccessful = () => { };
 
             var credentialStore = new MockCredentialStore();
             credentialStore.SaveCredentialsDelegate = (resource, username, password) =>
@@ -54,7 +53,7 @@ namespace Kona.UILogic.Tests.ViewModels
         }
 
         [TestMethod]
-        public void Firing_SaveCredentialsCommand_WithNotRememberPassword_DoesNotSave()
+        public void FiringSignInCommand_WithNotRememberPassword_DoesNotSave()
         {
             var credentialStoreSaveCalled = false;
             var accountService = new MockAccountService();
@@ -62,7 +61,6 @@ namespace Kona.UILogic.Tests.ViewModels
             {
                 return Task.FromResult(true);
             };
-            accountService.signInSuccessful = () => { };
 
             var credentialStore = new MockCredentialStore();
             credentialStore.SaveCredentialsDelegate = (resource, username, password) =>
@@ -77,6 +75,23 @@ namespace Kona.UILogic.Tests.ViewModels
             target.SignInCommand.Execute();
 
             Assert.IsFalse(credentialStoreSaveCalled);
+        }
+
+        [TestMethod]
+        public void SuccessfulSignIn_CallsSuccessAction()
+        {
+            var successActionCalled = false;
+            var accountService = new MockAccountService();
+            accountService.SignInUserAsyncDelegate = (username, password) => Task.FromResult(true);
+            var credentialStore = new MockCredentialStore();
+            credentialStore.SaveCredentialsDelegate = (resource, username, password) => { };
+            var target = new SignInFlyoutViewModel(accountService, credentialStore);
+
+            target.Open(null, () => { successActionCalled = true; });
+
+            target.SignInCommand.Execute();
+
+            Assert.IsTrue(successActionCalled);
         }
     }
 }

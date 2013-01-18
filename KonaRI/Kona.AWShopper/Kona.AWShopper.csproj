@@ -119,12 +119,13 @@
     <Compile Include="Controls\FormFieldTextBox.cs" />
     <Compile Include="Converters\BooleanNegationToVisibilityConverter.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\NullToVisibleConverter.cs" />
     <Compile Include="Converters\FirstErrorConverter.cs" />
     <Compile Include="Converters\FormStatusToStyleConverter.cs" />
     <Compile Include="Converters\FormStatusToVisibilityConverter.cs" />
     <Compile Include="Converters\IsGiftContentConverter.cs" />
     <Compile Include="Converters\IsSignInInvalidConverter.cs" />
-    <Compile Include="Converters\NullToVisibilityConverter.cs" />
+    <Compile Include="Converters\NotNullToVisibleConverter.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Views\BillingAddressFlyout.xaml.cs">
       <DependentUpon>BillingAddressFlyout.xaml</DependentUpon>
@@ -138,11 +139,23 @@
     <Compile Include="Views\CheckoutSummaryPage.xaml.cs">
       <DependentUpon>CheckoutSummaryPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ChangeDefaultsFlyout.xaml.cs">
+      <DependentUpon>ChangeDefaultsFlyout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EditBillingAddressFlyout.xaml.cs">
+      <DependentUpon>EditBillingAddressFlyout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EditShippingAddressFlyout.xaml.cs">
+      <DependentUpon>EditShippingAddressFlyout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EditPaymentMethodFlyout.xaml.cs">
+      <DependentUpon>EditPaymentMethodFlyout.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ShippingAddressFlyout.xaml.cs">
       <DependentUpon>ShippingAddressFlyout.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ShoppingCartTab.xaml.cs">
-      <DependentUpon>ShoppingCartTab.xaml</DependentUpon>
+    <Compile Include="Views\ShoppingCartTabUserControl.xaml.cs">
+      <DependentUpon>ShoppingCartTabUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SignOutFlyout.xaml.cs">
       <DependentUpon>SignOutFlyout.xaml</DependentUpon>
@@ -172,6 +185,9 @@
     </Compile>
     <Compile Include="Views\ShoppingCartPage.xaml.cs">
       <DependentUpon>ShoppingCartPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TopAppBarUserControl.xaml.cs">
+      <DependentUpon>TopAppBarUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="VisualTreeUtilities.cs" />
   </ItemGroup>
@@ -217,11 +233,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\ChangeDefaultsFlyout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\EditBillingAddressFlyout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\EditShippingAddressFlyout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\EditPaymentMethodFlyout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ShippingAddressFlyout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ShoppingCartTab.xaml">
+    <Page Include="Views\ShoppingCartTabUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -269,6 +301,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Views\TopAppBarUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

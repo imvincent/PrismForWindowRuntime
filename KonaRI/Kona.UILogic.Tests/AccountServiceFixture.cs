@@ -9,7 +9,6 @@
 using System.Threading.Tasks;
 using Kona.UILogic.Services;
 using Kona.UILogic.Tests.Mocks;
-using Kona.UILogic.Tests.TestableClasses;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System.Net;
 using Kona.UILogic.Models;
@@ -38,7 +37,7 @@ namespace Kona.UILogic.Tests
                     return Task.FromResult(new LogOnResult { ServerCookieHeader = string.Empty, UserValidationResult = userValidationResult });
                 };
 
-            var target = new AccountService(identityService, null, stateService, null);
+            var target = new AccountService(identityService, stateService, null);
             target.UserChanged += (sender, userInfo) => { userChangedFired = true; }; 
 
             var retVal = await target.SignInUserAsync("TestUserName", "TestPassword");
@@ -63,7 +62,7 @@ namespace Kona.UILogic.Tests
                 return Task.FromResult(new LogOnResult { ServerCookieHeader = string.Empty, UserValidationResult = userValidationResult });
             };
 
-            var target = new AccountService(identityService, null, stateService, null);
+            var target = new AccountService(identityService, stateService, null);
             target.UserChanged += (sender, userInfo) => { userChangedFired = true; };
 
             var retVal = await target.SignInUserAsync("TestUserName", "TestPassword");
@@ -74,12 +73,29 @@ namespace Kona.UILogic.Tests
         [TestMethod]
         public async Task CheckIfUserSignedIn_ReturnsUserInfo_IfSessionIsStillLive()
         {
+            var restorableStateService = new MockRestorableStateService();
             var identityService = new MockIdentityService();
             identityService.VerifyActiveSessionDelegate = (userName, cookieHeader) => Task.FromResult(true);
-            var target = new TestableAccountService(identityService, null, null, null);
-            target.SignedInUser = new UserInfo {UserName = "TestUsername"};
+            identityService.LogOnAsyncDelegate = (userName, password) =>
+                {
+                    return Task.FromResult(new LogOnResult()
+                        {
+                            ServerCookieHeader = "cookie",
+                            UserValidationResult =
+                                new UserValidationResult()
+                                    {
+                                        IsValid = true,
+                                        UserInfo = new UserInfo() {UserName = "TestUsername"}
+                                    }
+                        });
+                };
 
-            var userInfo = await target.CheckIfUserSignedIn();
+            var target = new AccountService(identityService, restorableStateService, null);
+            bool userSignedIn = await target.SignInUserAsync("TestUsername", "password");
+
+            Assert.IsTrue(userSignedIn);
+
+            var userInfo = await target.GetSignedInUserAsync();
 
             Assert.IsNotNull(userInfo);
         }
@@ -92,9 +108,9 @@ namespace Kona.UILogic.Tests
             var credentialStore = new MockCredentialStore();
             credentialStore.GetSavedCredentialsDelegate = s => null;
 
-            var target = new AccountService(identityService, null, null, credentialStore);
+            var target = new AccountService(identityService, null, credentialStore);
 
-            var userInfo = await target.CheckIfUserSignedIn(); 
+            var userInfo = await target.GetSignedInUserAsync(); 
             
             Assert.IsNull(userInfo);
         }
@@ -102,6 +118,7 @@ namespace Kona.UILogic.Tests
         [TestMethod]
         public async Task CheckIfUserSignedIn_ReturnsUserInfo_IfSessionIsStillInactiveButHasSavedCredentials()
         {
+            var mockRestorableStateService = new MockRestorableStateService();
             var identityService = new MockIdentityService();
             identityService.VerifyActiveSessionDelegate = (userName, cookieHeader) => Task.FromResult(false);
             identityService.LogOnAsyncDelegate =
@@ -117,9 +134,9 @@ namespace Kona.UILogic.Tests
                     };
             var credentialStore = new MockCredentialStore();
             credentialStore.GetSavedCredentialsDelegate = s => new PasswordCredential("KonaRI", "TestUserName", "TestPassword");
-            var target = new AccountService(identityService, null, null, credentialStore);
+            var target = new AccountService(identityService, mockRestorableStateService, credentialStore);
 
-            var userInfo = await target.CheckIfUserSignedIn();
+            var userInfo = await target.GetSignedInUserAsync();
 
             Assert.IsNotNull(userInfo);
             Assert.AreEqual("ReturnedUserName", userInfo.UserName);
@@ -128,6 +145,7 @@ namespace Kona.UILogic.Tests
         [TestMethod]
         public async Task CheckIfUserSignedIn_ReturnsNull_IfSessionIsStillInactiveAndHasInvalidSavedCredentials()
         {
+            var restorableStateService = new MockRestorableStateService();
             var identityService = new MockIdentityService();
             identityService.VerifyActiveSessionDelegate = (userName, cookieHeader) => Task.FromResult(false);
             identityService.LogOnAsyncDelegate =
@@ -143,9 +161,9 @@ namespace Kona.UILogic.Tests
                 };
             var credentialStore = new MockCredentialStore();
             credentialStore.GetSavedCredentialsDelegate = s => new PasswordCredential("KonaRI", "TestUserName", "TestPassword");
-            var target = new AccountService(identityService, null, null, credentialStore);
+            var target = new AccountService(identityService, restorableStateService, credentialStore);
 
-            var userInfo = await target.CheckIfUserSignedIn();
+            var userInfo = await target.GetSignedInUserAsync();
 
             Assert.IsNull(userInfo);
         }

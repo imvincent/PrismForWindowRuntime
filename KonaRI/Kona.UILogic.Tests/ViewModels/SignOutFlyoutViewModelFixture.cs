@@ -18,7 +18,7 @@ namespace Kona.UILogic.Tests.ViewModels
     public class SignOutFlyoutViewModelFixture
     {
         [TestMethod]
-        public async Task SignOut_CallsSignOutinAccountServiceAndRemovesSavedCredentials()
+        public void SignOut_CallsSignOutinAccountServiceAndRemovesSavedCredentials()
         {
             var closeFlyoutCalled = false;
             var accountServiceSignOutCalled = false;
@@ -27,7 +27,7 @@ namespace Kona.UILogic.Tests.ViewModels
                                                  {
                                                      accountServiceSignOutCalled = true;
                                                  };
-            accountService.CheckIfUserSignedInDelegate = () => new UserInfo();
+            accountService.GetSignedInUserAsyncDelegate = () => Task.FromResult(new UserInfo());
             var credentialStoreRemoveCredsCalled = false;
             var credentialStore = new MockCredentialStore();
             credentialStore.RemovedSavedCredentialsDelegate = s =>
@@ -41,7 +41,7 @@ namespace Kona.UILogic.Tests.ViewModels
                                          closeFlyoutCalled = true;
                                      };
 
-            target.Open();
+            target.Open(null, null);
             target.SignOutCommand.Execute();
 
             Assert.IsTrue(accountServiceSignOutCalled);

@@ -10,9 +10,9 @@
       d:DesignWidth="364"
       Infrastructure:ViewModelLocator.AutoWireViewModel="true">
 
-    <Border BorderBrush="#00b2f0"
+    <Border BorderBrush="{StaticResource AWShopperFlyoutHeaderBackground}"
             BorderThickness="1,0,0,0">
-        <Grid VerticalAlignment="Stretch" Background="White">
+        <Grid VerticalAlignment="Stretch" Background="{StaticResource AWShopperFlyoutContentBackground}">
 
             <!-- Root grid definition -->
             <Grid.RowDefinitions>
@@ -21,7 +21,7 @@
             </Grid.RowDefinitions>
 
             <!-- Header area for panel -->
-            <Grid Background="#00b2f0"
+            <Grid Background="{StaticResource AWShopperFlyoutHeaderBackground}"
                   Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -33,7 +33,7 @@
                     <Button Command="{Binding GoBackCommand}"
                             Margin="0,3,0,0"
                             Style="{StaticResource SettingsBackButtonStyle}" />
-                    <TextBlock Margin="10,0,0,0"
+                    <TextBlock x:Uid="LogoutTitle" Margin="10,0,0,0"
                                FontFamily="Segoe UI"
                                FontWeight="SemiLight"
                                FontSize="24.6667"
@@ -50,11 +50,11 @@
                       Grid.RowSpan="3">
 
                     <StackPanel x:Name="FlyoutContent">
-                        <TextBlock Style="{StaticResource BasicTextStyle}" TextWrapping="Wrap"
+                        <TextBlock x:Uid="YoureCurrentlySignedInAsLabel" Style="{StaticResource BasicTextStyle}" TextWrapping="Wrap"
                                    Text="You are currently signed in as:" />
                         <TextBlock Style="{StaticResource BasicTextStyle}" TextWrapping="Wrap"
                                    Text="{Binding UserName}" />
-                        <Button Content="Logout" Width="280" Margin="0,25,0,0"
+                        <Button x:Uid="LogoutButton" Background="{StaticResource AWShopperAccentBrush}" Content="Logout" Width="280" Margin="0,25,0,0"
                                     Command="{Binding SignOutCommand}" />
                     </StackPanel>
                 </Grid>

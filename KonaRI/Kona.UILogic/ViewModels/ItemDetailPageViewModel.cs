@@ -21,8 +21,8 @@ namespace Kona.UILogic.ViewModels
     {
         private readonly IProductCatalogRepository _productCatalogRepository;
         private readonly IShoppingCartRepository _shoppingCartRepository;
-        private IEnumerable<Product> _items;
-        private Product _selectedProduct;
+        private IReadOnlyCollection<ProductViewModel> _items;
+        private ProductViewModel _selectedProduct;
         private string _title;
 
         public ItemDetailPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService, IShoppingCartRepository shoppingCartRepository)
@@ -30,23 +30,19 @@ namespace Kona.UILogic.ViewModels
             _productCatalogRepository = productCatalogRepository;
             _shoppingCartRepository = shoppingCartRepository;
             GoBackCommand = new DelegateCommand(() => navigationService.GoBack(), () => navigationService.CanGoBack());
-            // <snippet402>
-            ShoppingCartCommand = new DelegateCommand(() => navigationService.Navigate("ShoppingCart", null));
-            // </snippet402>
             AddToCartCommand = new DelegateCommand(()=> AddToCart(), () => CanAddToCart());
         }
 
         public DelegateCommand GoBackCommand { get; private set; }
-        public DelegateCommand ShoppingCartCommand { get; private set; }
         public DelegateCommand AddToCartCommand { get; private set; }
 
-        public Product SelectedProduct
+        public ProductViewModel SelectedProduct
         {
             get { return _selectedProduct; }
             set { SetProperty(ref _selectedProduct, value); }
         }
 
-        public IEnumerable<Product> Items
+        public IReadOnlyCollection<ProductViewModel> Items
         {
             get { return _items; }
             set { SetProperty(ref _items, value); }
@@ -61,8 +57,14 @@ namespace Kona.UILogic.ViewModels
         public async override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState)
         {
             var productNumber = navigationParameter as string;
-            var product = await _productCatalogRepository.GetProductAsync(productNumber);
-            Items = await _productCatalogRepository.GetProductsAsync(product.SubcategoryId);
+            var matchingproduct = await _productCatalogRepository.GetProductAsync(productNumber);
+            var products = await _productCatalogRepository.GetProductsAsync(matchingproduct.SubcategoryId);
+            var productViewModels = new List<ProductViewModel>();
+            foreach (var product in products)
+            {
+                productViewModels.Add(new ProductViewModel(product));   
+            }
+            Items = new ReadOnlyCollection<ProductViewModel>(productViewModels);
             SelectedProduct = Items.First(p => p.ProductNumber == productNumber);
             Title = SelectedProduct.Title;
         }

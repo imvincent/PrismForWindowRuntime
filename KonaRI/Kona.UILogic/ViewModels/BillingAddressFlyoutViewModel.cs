@@ -24,20 +24,25 @@ namespace Kona.UILogic.ViewModels
             _checkoutDataRepository = checkoutDataRepository;
             _viewModel = billingAddressUserControlViewModel;
             AddCommand = new DelegateCommand(AddBillingAddress);
+            GoBackCommand = new DelegateCommand(() => GoBack(), () => true);
         }
 
         public IBillingAddressUserControlViewModel BillingAddressUserControlViewModel { get { return _viewModel; } }
         public ICommand AddCommand { get; set; }
         public Action CloseFlyout { get; set; }
         public Action GoBack { get; set; }
+        public ICommand GoBackCommand { get; private set; }
 
-        public void Open() { }
-
-        private async void AddBillingAddress()
+        public async void Open(object parameter, Action successAction)
         {
-            if (await BillingAddressUserControlViewModel.ValidateFormAsync())
+            await _viewModel.PopulateStatesAsync();
+        }
+
+        private void AddBillingAddress()
+        {
+            if (BillingAddressUserControlViewModel.ValidateForm())
             {
-                _checkoutDataRepository.SaveBillingAddress(BillingAddressUserControlViewModel.GetAddress());
+                _checkoutDataRepository.SaveBillingAddress(BillingAddressUserControlViewModel.Address);
                 CloseFlyout();
                 //TODO: Set this as the Billing Address to use
             }

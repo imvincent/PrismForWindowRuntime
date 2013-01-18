@@ -42,11 +42,20 @@ namespace Kona.UILogic.Services
             }
         }
 
-        public async Task RemoveShoppingCartItemAsync(string shoppingCartId, string itemId)
+        public async void RemoveShoppingCartItemAsync(string shoppingCartId, int itemId)
         {
             using (var shoppingCartClient = new HttpClient())
             {
                 var response = await shoppingCartClient.DeleteAsync(_shoppingCartBaseUrl + shoppingCartId + "?itemId=" + itemId);
+                response.EnsureSuccessStatusCode();
+            }
+        }
+
+        public async Task DeleteShoppingCartAsync(string shoppingCartId)
+        {
+            using (var shoppingCartClient = new HttpClient())
+            {
+                var response = await shoppingCartClient.DeleteAsync(_shoppingCartBaseUrl + shoppingCartId);
                 response.EnsureSuccessStatusCode();
             }
         }

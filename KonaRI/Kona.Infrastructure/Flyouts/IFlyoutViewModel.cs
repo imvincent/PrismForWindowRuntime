@@ -14,6 +14,6 @@ namespace Kona.Infrastructure.Flyouts
     {
         Action GoBack { get; set; }
         Action CloseFlyout { get; set; }
-        void Open();
+        void Open(object parameter, Action successAction);
     }
 }

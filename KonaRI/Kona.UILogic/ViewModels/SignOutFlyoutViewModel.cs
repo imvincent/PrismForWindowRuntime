@@ -7,7 +7,6 @@
 
 
 using System;
-using System.Threading.Tasks;
 using Kona.Infrastructure;
 using Kona.Infrastructure.Flyouts;
 using Kona.UILogic.Models;
@@ -30,9 +29,10 @@ namespace Kona.UILogic.ViewModels
             GoBackCommand = new DelegateCommand(() => GoBack(), () => true);
         }
 
-        public async void Open()
+
+        public async void Open(object parameter, Action successAction)
         {
-            _userInfo = await _accountService.CheckIfUserSignedIn();
+            _userInfo = await _accountService.GetSignedInUserAsync();
 
             if (_userInfo != null)
             {

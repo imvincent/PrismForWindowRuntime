@@ -11,6 +11,9 @@ using System.Collections.Generic;
 using System.Web.Http;
 using System.Web.Security;
 using Kona.WebServices.Models;
+using System.Net;
+using System.Net.Http;
+using System;
 
 namespace Kona.WebServices.Controllers
 {
@@ -23,24 +26,26 @@ namespace Kona.WebServices.Controllers
             };
 
         // GET /api/Identity/id?password={password}
+        // <snippet509>
         public UserValidationResult GetIsValid(string id, string password)
         {
             var result = new UserValidationResult();
 
-            result.IsValid = identities.ContainsKey(id) && identities[id] == password;
+            //To properly validate user credentials, you must validate both username and password.
+            //Password validation is intentially omitted here to simplify the deployment of this sample service.
+            result.IsValid = identities.ContainsKey(id);
 
             if (result.IsValid)
             {
                 if (HttpContext.Current != null) // TODO - hack to avoid null ref in unit test, should find way to make this happy in the unit test instead
                     FormsAuthentication.SetAuthCookie(id, false);
-                result.UserInfo = new UserInfo()
-                {
-                    UserName = id
-                };
+
+                result.UserInfo = new UserInfo { UserName = id };
             }
 
             return result;
         }
+        // </snippet509>
 
         // GET /api/Identity/GetIsValidSession
         [Authorize]

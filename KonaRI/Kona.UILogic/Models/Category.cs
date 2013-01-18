@@ -13,9 +13,9 @@ namespace Kona.UILogic.Models
 {
     public class Category
     {
-        public int CategoryId { get; set; }
+        public int Id { get; set; }
 
-        public int ParentCategoryId { get; set; }
+        public int ParentId { get; set; }
 
         public string Title { get; set; }
 

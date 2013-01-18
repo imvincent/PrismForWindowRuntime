@@ -14,7 +14,5 @@ namespace Kona.UILogic.Services
     public interface ILocationService
     {
         Task<IReadOnlyCollection<string>> GetStatesAsync();
-
-        Task<bool> GetIsZipCodeValidAsync(string state, string zipCode);
     }
 }

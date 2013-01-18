@@ -30,13 +30,20 @@ namespace Kona.AWShopper.Views
         void itemGridView_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             itemGridViewScrollViewer = VisualTreeUtilities.GetVisualChild<ScrollViewer>(itemGridView);
+            ScrollToSavedHorizontalOffset();
+
             itemGridViewScrollViewer.Loaded += itemGridViewScrollViewer_Loaded;
 
         }
 
-        void itemGridViewScrollViewer_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void ScrollToSavedHorizontalOffset()
         {
             itemGridViewScrollViewer.ScrollToHorizontalOffset(itemGridViewScrollViewerHorizontalOffset);
+        }
+
+        void itemGridViewScrollViewer_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            ScrollToSavedHorizontalOffset();
         }
 
         protected override void SaveState(System.Collections.Generic.Dictionary<string, object> pageState)
@@ -58,6 +65,11 @@ namespace Kona.AWShopper.Views
                 double.TryParse(pageState["itemGridViewScrollViewerHorizontalOffset"].ToString(),
                                 out itemGridViewScrollViewerHorizontalOffset);
             }
+        }
+
+        private void Button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            ScrollToSavedHorizontalOffset();
         }
     }
 }

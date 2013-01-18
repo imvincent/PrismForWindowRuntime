@@ -54,12 +54,14 @@ namespace Kona.Infrastructure
         /// <param name="executeMethod">Delegate to execute when Execute is called on the command.  This can be null to just hook up a CanExecute delegate.</param>
         /// <param name="canExecuteMethod">Delegate to execute when CanExecute is called on the command.  This can be null.</param>
         /// <exception cref="ArgumentNullException">When both <paramref name="executeMethod"/> and <paramref name="canExecuteMethod"/> ar <see langword="null" />.</exception>
+        // <snippet307>
         public DelegateCommand(Action<T> executeMethod, Func<T, bool> canExecuteMethod)
             : base((o) => executeMethod((T)o), (o) => canExecuteMethod((T)o))
         {
             if (executeMethod == null || canExecuteMethod == null)
                 throw new ArgumentNullException("executeMethod", "DelegateCommand delegates cannot be null");
         }
+        // </snippet307>
 
         ///<summary>
         ///Determines if the command can execute by invoked the <see cref="Func{T,Bool}"/> provided during construction.

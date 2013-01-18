@@ -19,79 +19,34 @@ namespace Kona.UILogic.Services
     {
         private static ResourceLoader _resourceLoader = new ResourceLoader();
 
-        public static string FirstNameRequired
+        public static string RequiredErrorMessage
         {
-            get { return _resourceLoader.GetString("ErrorFirstNameRequired"); }
+            get { return _resourceLoader.GetString("ErrorRequired"); }
         }
 
-        public static string MiddleInitialRequired
+        public static string RegexErrorMessage
         {
-            get { return _resourceLoader.GetString("ErrorMiddleInitialRequired"); }
+            get { return _resourceLoader.GetString("ErrorRegex"); }
         }
 
-        public static string LastNameRequired
-        {
-            get { return _resourceLoader.GetString("ErrorLastNameRequired"); }
-        }
-
-        public static string AddressRequired
-        {
-            get { return _resourceLoader.GetString("ErrorAddressRequired"); }
-        }
-
-        public static string CityRequired
-        {
-            get { return _resourceLoader.GetString("ErrorCityRequired"); }
-        }
-
-        public static string StateRequired
-        {
-            get { return _resourceLoader.GetString("ErrorStateRequired"); }
-        }
-
-        public static string ZipCodeRequired
-        {
-            get { return _resourceLoader.GetString("ErrorZipCodeRequired"); }
-        }
-
-        public static string ZipCodeState
-        {
-            get { return _resourceLoader.GetString("ErrorZipCodeState"); }
-        }
-
-        public static string PhoneRequired
-        {
-            get { return _resourceLoader.GetString("ErrorPhoneRequired"); }
-        }
-
-        public static string CardNumberRequired
-        {
-            get { return _resourceLoader.GetString("ErrorCardNumberRequired"); }
-        }
-
-        public static string CardNumberInvalidLength
+        public static string CardNumberInvalidLengthErrorMessage
         {
             get { return _resourceLoader.GetString("ErrorCardNumberInvalidLength"); }
         }
 
-        public static string CardholderNameRequired
+        public static string CardYearInvalidLengthErrorMessage
         {
-            get { return _resourceLoader.GetString("ErrorCardholderNameRequired"); }
+            get { return _resourceLoader.GetString("ErrorCardYearInvalidLength"); }
+        } 
+        
+        public static string CardMonthInvalid
+        {
+            get { return _resourceLoader.GetString("ErrorCardMonthInvalid"); }
         }
 
-        public static string ExpirationMonthRequired
+        public static string CardYearInvalid
         {
-            get { return _resourceLoader.GetString("ErrorExpirationMonthRequired"); }
-        }
-
-        public static string ExpirationYearRequired
-        {
-            get { return _resourceLoader.GetString("ErrorExpirationYearRequired"); }
-        }
-
-        public static string CardVerificationCodeRequired
-        {
-            get { return _resourceLoader.GetString("ErrorCardVerificationCodeRequired"); }
+            get { return _resourceLoader.GetString("ErrorCardYearInvalid"); }
         }
     }
 }

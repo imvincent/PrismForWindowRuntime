@@ -65,6 +65,7 @@ namespace Kona.Infrastructure
             }
         }
 
+        // <snippet703>
         private IDictionary<string, object> RetrieveState()
         {
             Dictionary<string, object> entityState = new Dictionary<string, object>();
@@ -72,13 +73,16 @@ namespace Kona.Infrastructure
 
             return entityState;
         }
+        // </snippet703>
 
+        // <snippet706>
         private void RestoreState(object state)
         {
             var entityState = (IDictionary<string, object>)state;
 
             RestoreEntityState(entityState, this);
         }
+        // </snippet706>
 
         private static void FillEntityState(IDictionary<string, object> entityState, object entity)
         {

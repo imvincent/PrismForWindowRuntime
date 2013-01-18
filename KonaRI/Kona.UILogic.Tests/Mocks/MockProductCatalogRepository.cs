@@ -16,23 +16,23 @@ namespace Kona.UILogic.Tests.Mocks
 {
     public class MockProductCatalogRepository : IProductCatalogRepository
     {
-        public Func<Task<ObservableCollection<Category>>> GetCategoriesAsyncDelegate { get; set; }
-        public Func<int, Task<ObservableCollection<Category>>> GetSubcategoriesAsyncDelegate { get; set; }
-        public Func<int, Task<ObservableCollection<Product>>> GetProductsAsyncDelegate { get; set; }
+        public Func<Task<ReadOnlyCollection<Category>>> GetCategoriesAsyncDelegate { get; set; }
+        public Func<int, Task<ReadOnlyCollection<Category>>> GetSubcategoriesAsyncDelegate { get; set; }
+        public Func<int, Task<ReadOnlyCollection<Product>>> GetProductsAsyncDelegate { get; set; }
         public Func<int, Task<Category>> GetCategoryAsyncDelegate { get; set; }
         public Func<string, Task<Product>> GetProductAsyncDelegate { get; set; }
 
-        public Task<ObservableCollection<Category>> GetCategoriesAsync()
+        public Task<ReadOnlyCollection<Category>> GetCategoriesAsync()
         {
             return this.GetCategoriesAsyncDelegate();
         }
 
-        public Task<ObservableCollection<Category>> GetSubcategoriesAsync(int categoryId)
+        public Task<ReadOnlyCollection<Category>> GetSubcategoriesAsync(int categoryId)
         {
             return this.GetSubcategoriesAsyncDelegate(categoryId);
         }
 
-        public Task<ObservableCollection<Product>> GetProductsAsync(int categoryId)
+        public Task<ReadOnlyCollection<Product>> GetProductsAsync(int categoryId)
         {
             return this.GetProductsAsyncDelegate(categoryId);
         }

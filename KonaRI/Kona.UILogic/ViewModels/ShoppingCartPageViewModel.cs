@@ -12,14 +12,16 @@ using System.Collections.ObjectModel;
 using Kona.Infrastructure;
 using Kona.UILogic.Services;
 using Kona.UILogic.Repositories;
+using Windows.ApplicationModel.Resources;
 using Windows.Globalization.NumberFormatting;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
 using Kona.UILogic.Models;
 using Windows.UI.ViewManagement;
 
 namespace Kona.UILogic.ViewModels
 {
-    public class ShoppingCartPageViewModel : ViewModel, INavigationAware
+    public class ShoppingCartPageViewModel : ViewModel, INavigationAware, IHandleWindowSizeChanged
     {
         private string _fullPrice;
         private string _totalDiscount;
@@ -27,8 +29,31 @@ namespace Kona.UILogic.ViewModels
         private ShoppingCartItemViewModel _selectedItem;
         private ObservableCollection<ShoppingCartItemViewModel> _shoppingCartItemViewModels;
         private IShoppingCartRepository _shoppingCartRepository;
-        private INavigationService _navigationService;
         private IAccountService _accountService;
+        private readonly ISettingsCharmService _settingsCharmService;
+        private readonly Action _navigateAction;
+        private bool _isUnsnapping = false;
+        private bool _isEditPopupOpened;
+        private bool _isBottomAppBarOpened;
+
+        public ShoppingCartPageViewModel(IShoppingCartRepository shoppingCartRepository,
+                                         INavigationService navigationService,
+                                         IAccountService accountService,
+                                         ISettingsCharmService settingsCharmService)
+        {
+            _shoppingCartRepository = shoppingCartRepository;
+            _accountService = accountService;
+            _settingsCharmService = settingsCharmService;
+
+            CheckoutCommand = new DelegateCommand(Checkout, CanCheckout);
+            EditAmountCommand = new DelegateCommand(OpenEditAmountFlyout);
+            RemoveCommand = new DelegateCommand<ShoppingCartItemViewModel>(Remove);
+            GoBackCommand = new DelegateCommand(navigationService.GoBack);
+            IncrementCountCommand = new DelegateCommand(IncrementCount);
+            DecrementCountCommand = new DelegateCommand(DecrementCount, CanDecrementCount);
+            var navigationServiceReference = navigationService;
+            _navigateAction = () => navigationServiceReference.Navigate("CheckoutHub", null);
+        }
 
         public string FullPrice
         {
@@ -51,10 +76,18 @@ namespace Kona.UILogic.ViewModels
         public ShoppingCartItemViewModel SelectedItem
         {
             get { return _selectedItem; }
-            set { SetProperty(ref _selectedItem, value); }
+            set
+            {
+                if (SetProperty(ref _selectedItem, value))
+                {
+                    if (_selectedItem != null)
+                    {
+                        IsBottomAppBarOpened = true;
+                    }
+                }
+            }
         }
 
-        [RestorableState]
         public ObservableCollection<ShoppingCartItemViewModel> ShoppingCartItemViewModels
         {
             get { return _shoppingCartItemViewModels; }
@@ -63,25 +96,32 @@ namespace Kona.UILogic.ViewModels
 
         public DelegateCommand CheckoutCommand { get; private set; }
 
+        public DelegateCommand EditAmountCommand { get; private set; }
+
         public DelegateCommand GoBackCommand { get; private set; }
 
         public DelegateCommand<ShoppingCartItemViewModel> RemoveCommand { get; private set; }
 
-        public ShoppingCartPageViewModel(IShoppingCartRepository shoppingCartRepository, INavigationService navigationService, IAccountService accountService)
-        {
-            _shoppingCartRepository = shoppingCartRepository;
-            _navigationService = navigationService;
-            _accountService = accountService;
+        public DelegateCommand IncrementCountCommand { get; private set; }
 
-            CheckoutCommand = new DelegateCommand(Checkout, CanCheckout);
-            RemoveCommand = new DelegateCommand<ShoppingCartItemViewModel>(Remove);
-            GoBackCommand = new DelegateCommand(navigationService.GoBack);
+        public DelegateCommand DecrementCountCommand { get; private set; }
+
+        public bool IsEditPopupOpened
+        {
+            get { return _isEditPopupOpened; }
+            set { SetProperty(ref _isEditPopupOpened, value); }
+        }
+
+        public bool IsBottomAppBarOpened
+        {
+            get { return _isBottomAppBarOpened; }
+            set { SetProperty(ref _isBottomAppBarOpened, value); }
         }
 
         public override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState)
         {
             _accountService.UserChanged += _accountService_UserChanged;
-            UpdateShoppingCart();
+            UpdateShoppingCartAsync();
 
             base.OnNavigatedTo(navigationParameter, navigationMode, viewState);
         }
@@ -97,19 +137,19 @@ namespace Kona.UILogic.ViewModels
 
         void _accountService_UserChanged(object sender, UserChangedEventArgs e)
         {
-            UpdateShoppingCart();
+            UpdateShoppingCartAsync();
         }
 
-        private async void UpdateShoppingCart()
+        private async void UpdateShoppingCartAsync()
         {
             var shoppingCart = await _shoppingCartRepository.GetShoppingCartAsync();
 
             if (shoppingCart != null)
             {
                 var currencyFormatter = new CurrencyFormatter(shoppingCart.Currency);
-                FullPrice = currencyFormatter.FormatDouble(shoppingCart.FullPrice);
-                TotalDiscount = currencyFormatter.FormatDouble(shoppingCart.TotalDiscount);
-                TotalPrice = currencyFormatter.FormatDouble(shoppingCart.FullPrice - shoppingCart.TotalDiscount);
+                FullPrice = currencyFormatter.FormatDouble(Math.Round(shoppingCart.FullPrice, 2));
+                TotalDiscount = currencyFormatter.FormatDouble(Math.Round(shoppingCart.TotalDiscount, 2));
+                TotalPrice = currencyFormatter.FormatDouble(Math.Round(shoppingCart.FullPrice - shoppingCart.TotalDiscount, 2));
 
                 if (shoppingCart.ShoppingCartItems != null)
                 {
@@ -121,24 +161,38 @@ namespace Kona.UILogic.ViewModels
                     CheckoutCommand.RaiseCanExecuteChanged();
                 }
             }
+            else
+            {
+                FullPrice = string.Empty;
+                TotalDiscount = string.Empty;
+                TotalPrice = string.Empty;
+                ShoppingCartItemViewModels = null;
+            }
         }
 
         public async void Checkout()
         {
-            var navigationServiceReference = _navigationService;
-            Action navigateAction = () => navigationServiceReference.Navigate("CheckoutHub", null);
-
-            if ( await _accountService.CheckIfUserSignedIn() != null)
+            if (await _accountService.GetSignedInUserAsync() != null)
             {
-                navigateAction();
+                _navigateAction();
             }
             else
             {
                 if (ApplicationView.Value == ApplicationViewState.Snapped)
                 {
+                    _isUnsnapping = true;
                     ApplicationView.TryUnsnap();
                 }
-                _accountService.DisplaySignIn(navigateAction, null);
+                _settingsCharmService.ShowFlyout("signIn", null, _navigateAction);
+            }
+        }
+
+        public void WindowCurrentSizeChanged()
+        {
+            if (_isUnsnapping)
+            {
+                _settingsCharmService.ShowFlyout("signIn", null, _navigateAction);
+                _isUnsnapping = false;
             }
         }
 
@@ -147,10 +201,39 @@ namespace Kona.UILogic.ViewModels
             return _shoppingCartItemViewModels != null && _shoppingCartItemViewModels.Count > 0;
         }
 
-        public async void Remove(ShoppingCartItemViewModel item)
+        public void Remove(ShoppingCartItemViewModel item)
         {
-            await _shoppingCartRepository.RemoveShoppingCartItemAsync(item.Id.ToString());
+            if (item != null)
+            {
+                _shoppingCartRepository.RemoveShoppingCartItemAsync(item.Id);
+            }
             ShoppingCartItemViewModels.Remove(item);
+        }
+
+        private void OpenEditAmountFlyout()
+        {
+            IsEditPopupOpened = true;
+        }
+
+        private bool CanDecrementCount()
+        {
+            if (SelectedItem != null && SelectedItem.Quantity > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private void DecrementCount()
+        {
+            SelectedItem.Quantity = SelectedItem.Quantity - 1;
+            DecrementCountCommand.RaiseCanExecuteChanged();
+        }
+
+        private void IncrementCount()
+        {
+            SelectedItem.Quantity = SelectedItem.Quantity + 1;
+            DecrementCountCommand.RaiseCanExecuteChanged();
         }
     }
 }

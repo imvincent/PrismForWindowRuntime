@@ -15,6 +15,7 @@ namespace Kona.UILogic.Services
 {
     public class RoamingCredentialStore : ICredentialStore
     {
+        // <snippet505>
         public void SaveCredentials(string resource, string userName, string password)
         {
             var vault = new PasswordVault();
@@ -25,6 +26,7 @@ namespace Kona.UILogic.Services
             var passwordCredential = new PasswordCredential(resource, userName, password);
             vault.Add(passwordCredential); 
         }
+        // </snippet505>
 
         private static void RemoveAllCredentialsByResource(string resource, PasswordVault vault)
         {

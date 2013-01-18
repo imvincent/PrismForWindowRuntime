@@ -15,95 +15,65 @@ namespace Kona.UILogic.Services
 {
     public class AccountService : IAccountService
     {
-        private readonly ISettingsCharmService _settingsCharmService;
+        private const string STATE_TOKEN = "AccountService_ServerCookieHeader";
+
         private readonly IIdentityService _identityService;
         private readonly IRestorableStateService _stateService;
         private readonly ICredentialStore _credentialStore;
-        private Action _signInSuccessful;
-        private Action _signInFailed;
-        private string _userId;
         private string _serverCookieHeader;
-        const string _stateToken = "AccountService_ServerCookieHeader";
         private UserInfo _signedInUser;
 
-        public AccountService(IIdentityService identityService, ISettingsCharmService settingsCharmService, IRestorableStateService stateService, ICredentialStore credentialStore)
+        public AccountService(IIdentityService identityService, IRestorableStateService stateService, ICredentialStore credentialStore)
         {
-            _userId = Guid.NewGuid().ToString();
             _identityService = identityService;
-            _settingsCharmService = settingsCharmService;
             _stateService = stateService;
             _credentialStore = credentialStore;
-            if (_stateService != null) _stateService.AppRestored += (s, e) => { if (_stateService != null) _serverCookieHeader = _stateService.GetState(_stateToken) as string; };
+            if (_stateService != null) _stateService.AppRestored += (s, e) => { if (_stateService != null) _serverCookieHeader = _stateService.GetState(STATE_TOKEN) as string; };
         }
 
-        public string UserId
+        /// <summary>
+        /// Gets the current active user signed in the app.
+        /// </summary>
+        /// <returns>A Task that, when complete, stores an active user that is ready to be used for any operation agains the service.</returns>
+        public async Task<UserInfo> GetSignedInUserAsync()
         {
-            get
-            {
-                if (_signedInUser != null)
-                {
-                    return _signedInUser.UserName;
-                }
-                return _userId;
-            }
-        }
-
-        protected UserInfo SignedInUser
-        {
-            get { return _signedInUser; }
-            set { _signedInUser = value; }
-        }
-
-        public async Task<UserInfo> CheckIfUserSignedIn()
-        {
-            //If user has logged in, verify session is still active
-            if (_signedInUser != null && await _identityService.VerifyActiveSession(_signedInUser.UserName, _serverCookieHeader))
+            // If user is logged in, verify that the session in the service is still active
+            if (_signedInUser != null && _serverCookieHeader != null && await _identityService.VerifyActiveSession(_signedInUser.UserName, _serverCookieHeader))
             {
                 return _signedInUser;
             }
             
-            //Attempt to sign in using saved credentials
+            // Attempt to sign in using credentials stored locally
+            // If succeeds, ask for a new active session
             var savedCredentials = _credentialStore.GetSavedCredentials("KonaRI");
-            if (savedCredentials != null)
+            if (savedCredentials != null && await SignInUserAsync(savedCredentials.UserName, savedCredentials.Password))
             {
-                var result = await _identityService.LogOnAsync(savedCredentials.UserName, savedCredentials.Password);
-                if (result != null && result.UserValidationResult.IsValid)
-                {
-                    _signedInUser = result.UserValidationResult.UserInfo;
-                    return _signedInUser;
-                }
+                return _signedInUser;
             }
+
             return null;
         }
 
-        public void DisplaySignIn(Action signInSuccessful, Action signInFailed)
-        {
-            _signInSuccessful = signInSuccessful;
-            _signInFailed = signInFailed;
-
-            _settingsCharmService.ShowFlyout("signIn");
-        }
-
+        // <snippet507>
         public async Task<bool> SignInUserAsync(string userName, string password)
         {
-            var loginResult = await _identityService.LogOnAsync(userName, password);
-            if (loginResult.UserValidationResult.IsValid)
+            var result = await _identityService.LogOnAsync(userName, password);
+            if (result.UserValidationResult.IsValid)
             {
-                _serverCookieHeader = loginResult.ServerCookieHeader;
-                _stateService.SaveState(_stateToken, _serverCookieHeader);
-                _signedInUser = loginResult.UserValidationResult.UserInfo;
-                RaiseUserChanged(loginResult.UserValidationResult.UserInfo);
-                if (_signInSuccessful != null) _signInSuccessful();
+                _serverCookieHeader = result.ServerCookieHeader;
+                _stateService.SaveState(STATE_TOKEN, _serverCookieHeader);
+                _signedInUser = result.UserValidationResult.UserInfo;
+                RaiseUserChanged(result.UserValidationResult.UserInfo);
             }
             else
             {
-                if (_signInFailed != null) _signInFailed();
                 _serverCookieHeader = string.Empty;
-                _stateService.SaveState(_stateToken, _serverCookieHeader);
+                _stateService.SaveState(STATE_TOKEN, _serverCookieHeader);
             }
 
-            return loginResult.UserValidationResult.IsValid;
+            return result.UserValidationResult.IsValid;
         }
+        // </snippet507>
 
         public event EventHandler<UserChangedEventArgs> UserChanged;
 

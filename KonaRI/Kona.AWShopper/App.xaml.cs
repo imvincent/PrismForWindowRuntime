@@ -11,8 +11,10 @@ using Kona.AWShopper.Common;
 using Kona.Infrastructure;
 using Kona.UILogic.Repositories;
 using Kona.UILogic.Services;
+using Microsoft.Practices.Prism.Events;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -29,8 +31,11 @@ namespace Kona.AWShopper
         private ISettingsCharmService _settingsCharmService;
         private FrameNavigationService _navigationService;
         private IShoppingCartRepository _shoppingCartRepository;
+        private IProductCatalogRepository _productCatalogRepository;
         private IRestorableStateService _stateService;
         private ICredentialStore _credentialStore;
+        private IEventAggregator _eventAggregator;
+        private IResourceLoader _resourceLoader;
 
         public bool IsSuspending { get; private set; }
 
@@ -41,7 +46,9 @@ namespace Kona.AWShopper
         public App()
         {
             this.InitializeComponent();
+            // <snippet700>
             this.Suspending += OnSuspending;
+            // </snippet700>
         }
 
         /// <summary>
@@ -50,6 +57,7 @@ namespace Kona.AWShopper
         /// search results, and so forth.
         /// </summary>
         /// <param name="args">Details about the launch request and process.</param>
+        // <snippet704>
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
             Frame rootFrame = Window.Current.Content as Frame;
@@ -68,12 +76,15 @@ namespace Kona.AWShopper
                 Window.Current.Content = rootFrame;
             }
 
+            _resourceLoader = new ResourceLoaderAdapter(new ResourceLoader());
             _settingsCharmService = CreateSettingsCharmService();
             _stateService = new RestorableStateService();
             _credentialStore = new RoamingCredentialStore();
-            _accountService = CreateAccountService(_settingsCharmService, _stateService, _credentialStore);
+            _accountService = CreateAccountService(_stateService, _credentialStore);
             _navigationService = CreateNavigationService(rootFrame);
-            _shoppingCartRepository = new ShoppingCartRepository(new ShoppingCartServiceProxy(), _accountService);
+            _eventAggregator = new EventAggregator();
+            _productCatalogRepository = new ProductCatalogRepository(new ProductCatalogServiceProxy(), new TemporaryFolderCacheService(new RequestService()));
+            _shoppingCartRepository = new ShoppingCartRepository(new ShoppingCartServiceProxy(), _accountService, _eventAggregator, _productCatalogRepository);
 
             BootstrapApplication(_navigationService);
 
@@ -112,6 +123,7 @@ namespace Kona.AWShopper
             // Ensure the current window is active
             Window.Current.Activate();
         }
+        // </snippet704>
 
         /// <summary>
         /// Invoked when application execution is being suspended.  Application state is saved
@@ -120,6 +132,7 @@ namespace Kona.AWShopper
         /// </summary>
         /// <param name="sender">The source of the suspend request.</param>
         /// <param name="e">Details about the suspend request.</param>
+        // <snippet701>
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             IsSuspending = true;
@@ -139,7 +152,7 @@ namespace Kona.AWShopper
             {
                 IsSuspending = false;
             }
-
         }
+        // </snippet701>
     }
 }

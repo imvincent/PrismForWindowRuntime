@@ -6,14 +6,15 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System;
 using Kona.WebServices.Models;
 
 namespace Kona.WebServices.Repositories
 {
-    public interface IShoppingCartRepository
+    public interface IShoppingCartRepository : IRepository<ShoppingCart>
     {
-        ShoppingCart GetShoppingCart(string userId);
-        bool Remove(string userId, string itemId);
-        ShoppingCartItem AddProductToCart(string userId, string productId);
+        ShoppingCart GetByUserId(string userId);
+        ShoppingCartItem AddProductToCart(string userId, Product product);
+        bool RemoveItemFromCart(ShoppingCart shoppingCart, int itemId);
     }
 }

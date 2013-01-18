@@ -421,6 +421,22 @@
         <Setter Property="AutomationProperties.Name" Value="Add"/>
         <Setter Property="Content" Value="&#xE109;"/>
     </Style>
+    <Style x:Key="RemoveAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
+        <Setter Property="AutomationProperties.AutomationId" Value="RemoveAppBarButton"/>
+        <Setter Property="AutomationProperties.Name" Value="Remove"/>
+        <Setter Property="Content" Value="&#xE108;"/>
+    </Style>
+    <Style x:Key="HomeAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
+        <Setter Property="AutomationProperties.AutomationId" Value="HomeAppBarButton"/>
+        <Setter Property="AutomationProperties.Name" Value="Home"/>
+        <Setter Property="Content" Value="&#xE10F;"/>
+    </Style>
+
+    <Style x:Key="ShopAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
+        <Setter Property="AutomationProperties.AutomationId" Value="ShopAppBarButton"/>
+        <Setter Property="AutomationProperties.Name" Value="Shopping Cart"/>
+        <Setter Property="Content" Value="&#xE14D;"/>
+    </Style>
     <!--
     
     <Style x:Key="SkipBackAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
@@ -493,11 +509,7 @@
         <Setter Property="AutomationProperties.Name" Value="Undo"/>
         <Setter Property="Content" Value="&#xE10E;"/>
     </Style>
-    <Style x:Key="HomeAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
-        <Setter Property="AutomationProperties.AutomationId" Value="HomeAppBarButton"/>
-        <Setter Property="AutomationProperties.Name" Value="Home"/>
-        <Setter Property="Content" Value="&#xE10F;"/>
-    </Style>
+
     <Style x:Key="OutAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="OutAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Out"/>

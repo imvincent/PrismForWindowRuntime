@@ -21,7 +21,7 @@ namespace Kona.UILogic.Models
 
         public ICollection<ShoppingCartItem> ShoppingCartItems { get; private set; }
 
-        public Guid Id {get; set; }
+        public string Id { get; set; }
 
         public double FullPrice { get; set; }
 

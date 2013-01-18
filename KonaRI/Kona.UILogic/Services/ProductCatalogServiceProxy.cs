@@ -19,39 +19,41 @@ namespace Kona.UILogic.Services
         private string _productsBaseUrl = string.Format("{0}/api/Product/", Constants.ServerAddress);
         private string _categoriesBaseUrl = string.Format("{0}/api/Category/", Constants.ServerAddress);
 
-        public async Task<ObservableCollection<Category>> GetCategoriesAsync(int depth)
+        // <snippet513>
+        public async Task<ReadOnlyCollection<Category>> GetCategoriesAsync(int depth)
         {
             using (var httpClient = new HttpClient())
             {
                 var response = await httpClient.GetAsync(string.Format("{0}?depth={1}", _categoriesBaseUrl, depth));
                 response.EnsureSuccessStatusCode();
-                var result = await response.Content.ReadAsAsync<ObservableCollection<Category>>();
+                var result = await response.Content.ReadAsAsync<ReadOnlyCollection<Category>>();
 
                 return result;
             }
         }
+        // </snippet513>
 
-        public async Task<ObservableCollection<Category>> GetSubcategoriesAsync(int categoryId)
+        public async Task<ReadOnlyCollection<Category>> GetSubcategoriesAsync(int categoryId)
         {
             using (var httpClient = new HttpClient())
             {
                 var response =
                     await httpClient.GetAsync(string.Format("{0}?categoryId={1}", _categoriesBaseUrl, categoryId));
                 response.EnsureSuccessStatusCode();
-                var result = await response.Content.ReadAsAsync<ObservableCollection<Category>>();
+                var result = await response.Content.ReadAsAsync<ReadOnlyCollection<Category>>();
 
                 return result;
             }
         }
 
-        public async Task<ObservableCollection<Product>> GetProductsAsync(int categoryId)
+        public async Task<ReadOnlyCollection<Product>> GetProductsAsync(int categoryId)
         {
             using (var httpClient = new HttpClient())
             {
                 var response =
                     await httpClient.GetAsync(string.Format("{0}?categoryId={1}", _productsBaseUrl, categoryId));
                 response.EnsureSuccessStatusCode();
-                var result = await response.Content.ReadAsAsync<ObservableCollection<Product>>();
+                var result = await response.Content.ReadAsAsync<ReadOnlyCollection<Product>>();
 
                 return result;
             }

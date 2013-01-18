@@ -17,20 +17,13 @@ namespace Kona.UILogic.Tests.Mocks
     {
         public Func<Task<ShoppingCart>> GetShoppingCartAsyncDelegate { get; set; }
 
-        public Func<string, Task> AddProductToShoppingCartAsyncDelegate { get; set; }
+        public Action<string> AddProductToShoppingCartAsyncDelegate { get; set; }
 
-        public Func<string, Task> RemoveShoppingCartItemAsyncDelegate { get; set; }
-
-        public Action<Address, Address, PaymentInfo> AddAddressAndPurchaseInfoDelegate { get; set; }
+        public Action<int> RemoveShoppingCartItemDelegate { get; set; }
 
         public Task ClearCartAsync()
         {
             return Task.Factory.StartNew(() => { });
-        }
-
-        public MockShoppingCartRepository()
-        {
-            AddAddressAndPurchaseInfoDelegate = (address, address1, arg3) => { };
         }
 
         public Task<ShoppingCart> GetShoppingCartAsync()
@@ -38,30 +31,15 @@ namespace Kona.UILogic.Tests.Mocks
             return this.GetShoppingCartAsyncDelegate();
         }
 
-        public Task AddProductToShoppingCartAsync(string productId)
+        public void AddProductToShoppingCartAsync(string productId)
         {
-            return this.AddProductToShoppingCartAsyncDelegate(productId);
+            AddProductToShoppingCartAsyncDelegate(productId);
         }
 
-        public Task RemoveShoppingCartItemAsync(string itemId)
+        public void RemoveShoppingCartItemAsync(int itemId)
         {
-            return this.RemoveShoppingCartItemAsyncDelegate(itemId);
-
+            RemoveShoppingCartItemDelegate(itemId);
         }
-
-        public void AddAddressAndPurchaseInfo(Address shippingAddress, Address billingAddress, PaymentInfo paymentInfo)
-        {
-            AddAddressAndPurchaseInfoDelegate(shippingAddress, billingAddress, paymentInfo);
-        }
-
-        public AddressAndPaymentInfo AddressAndPurchaseInfo { get; set;}
-        
-        public void RaiseShoppingCartUpdatedEvent()
-        {
-            ShoppingCartUpdated(this, null);
-        }
-
-        public event EventHandler ShoppingCartUpdated;
 
         public UserInfo CurrentUser { get; set; }
     }

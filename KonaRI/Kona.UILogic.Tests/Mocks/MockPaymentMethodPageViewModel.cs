@@ -20,22 +20,16 @@ namespace Kona.UILogic.Tests.Mocks
 {
     public class MockPaymentMethodPageViewModel : IPaymentMethodUserControlViewModel
     {
-        public string CardNumber { get; set; }
-        public string CardholderName { get; set; }
-        public string ExpirationMonth { get; set; }
-        public string ExpirationYear { get; set; }
-        public string Phone { get; set; }
-        public string CardVerificationCode { get; set; }
+        public PaymentInfo PaymentInfo { get; set; }
         public bool SaveInformation { get; set; }
         public bool SetAsDefault { get; set; }
         public string FirstError { get; set; }
         public int CurrentFormStatus { get; set; }
-        public EntityValidator Validator { get; private set; }
+        public BindableValidator Errors { get; private set; }
         public ICommand GoBackCommand { get; private set; }
         public ICommand RegisterCommand { get; private set; }
         public string EntityId { get; set; }
-
-        public Func<Task<bool>> ValidateFormAsyncDelegate { get; set; }
+        public Func<bool> ValidateFormDelegate { get; set; }
 
         public Action ProcessFormDelegate { get; set; }
 
@@ -59,18 +53,11 @@ namespace Kona.UILogic.Tests.Mocks
             ProcessFormDelegate();
         }
 
-        public Task<bool> ValidateFormAsync()
+        public bool ValidateForm()
         {
-            return ValidateFormAsyncDelegate();
-        }
-
-        public PaymentInfo GetPaymentInfo()
-        {
-            return GetPaymentInfoDelegate;
+            return ValidateFormDelegate();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public PaymentInfo GetPaymentInfoDelegate { get; set; }
     }
 }

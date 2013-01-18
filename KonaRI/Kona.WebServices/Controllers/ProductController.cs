@@ -12,21 +12,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
+using System;
 
 namespace Kona.WebServices.Controllers
 {
     public class ProductController : ApiController
     {
+        private IRepository<Product> _productRepository;
+
+        public ProductController()
+            : this(new ProductRepository())
+        { }
+
+        public ProductController(IRepository<Product> productRepository)
+        {
+            _productRepository = productRepository;
+        }
+
         // GET /api/Product
         public IEnumerable<Product> GetProducts()
         {
-            return ProductRepository.Products;
+            return _productRepository.GetAll();
         }
 
         // GET /api/Product/id
         public Product GetProduct(string id)
         {
-            var item = ProductRepository.Products.Where(p => p.ProductNumber == id).FirstOrDefault();
+            var item = _productRepository.GetAll().FirstOrDefault(c => c.ProductNumber == id);
+            
             if (item == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -38,7 +51,7 @@ namespace Kona.WebServices.Controllers
         // GET /api/Product?categoryId={categoryId}
         public IEnumerable<Product> GetProducts(int categoryId)
         {
-            return ProductRepository.Products.Where(p => p.SubcategoryId == categoryId);
+            return _productRepository.GetAll().Where(c => c.SubcategoryId == categoryId);
         }
     }
 }

@@ -15,29 +15,12 @@ namespace Kona.UILogic.Tests.Mocks
 {
     public class MockBillingAddressPageViewModel : IBillingAddressUserControlViewModel
     {
-        public Func<Task<bool>> ValidateFormAsyncDelegate { get; set; }
-        public Address GetAddressDelegate { get; set; }
+        public Func<bool> ValidateFormDelegate { get; set; }
         public Action ProcessFormDelegate { get; set; }
 
-        public string FirstName { get; set; }
-
-        public string MiddleInitial { get; set; }
-
-        public string LastName { get; set; }
-
-        public string StreetAddress { get; set; }
-
-        public string OptionalAddress { get; set; }
-
-        public string City { get; set; }
+        public Address Address { get; set; }        
 
         public IReadOnlyCollection<ComboBoxItemValue> States { get; set; }
-
-        public string State { get; set; }
-
-        public string ZipCode { get; set; }
-
-        public string Phone { get; set; }
 
         public bool SaveAddress { get; set; }
 
@@ -47,12 +30,7 @@ namespace Kona.UILogic.Tests.Mocks
 
         public int CurrentFormStatus { get; set; }
 
-        public Address GetAddress()
-        {
-            return GetAddressDelegate;
-        }
-
-        public Infrastructure.EntityValidator Validator
+        public Infrastructure.BindableValidator Errors
         {
             get { throw new System.NotImplementedException(); }
         }
@@ -90,11 +68,23 @@ namespace Kona.UILogic.Tests.Mocks
             ProcessFormDelegate();
         }
 
-        public Task<bool> ValidateFormAsync()
+        public bool ValidateForm()
         {
-            return ValidateFormAsyncDelegate();
+            return ValidateFormDelegate();
         }
 
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        public bool IsEnabled { get; set; }
+
+        public Task PopulateStatesAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void UpdateAddressInformation(Address address)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

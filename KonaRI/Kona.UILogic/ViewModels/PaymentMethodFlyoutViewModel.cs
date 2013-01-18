@@ -19,25 +19,27 @@ namespace Kona.UILogic.ViewModels
         private readonly ICheckoutDataRepository _checkoutDataRepository;
         private readonly IPaymentMethodUserControlViewModel _viewModel;
 
-        public PaymentMethodFlyoutViewModel(IPaymentMethodUserControlViewModel paymentMethodPageViewModel, ICheckoutDataRepository checkoutDataRepository)
+        public PaymentMethodFlyoutViewModel(IPaymentMethodUserControlViewModel paymentMethodUserControlViewModel, ICheckoutDataRepository checkoutDataRepository)
         {
             _checkoutDataRepository = checkoutDataRepository;
-            _viewModel = paymentMethodPageViewModel;
+            _viewModel = paymentMethodUserControlViewModel;
             AddCommand = new DelegateCommand(AddPaymentInfo);
+            GoBackCommand = new DelegateCommand(() => GoBack(), () => true);
         }
 
         public IPaymentMethodUserControlViewModel PaymentMethodPageViewModel { get { return _viewModel; } }
         public ICommand AddCommand { get; set; }
         public Action CloseFlyout { get; set; }
         public Action GoBack { get; set; }
+        public ICommand GoBackCommand { get; private set; }
 
-        public void Open() { }
+        public void Open(object parameter, Action successAction) { }
 
-        private async void AddPaymentInfo()
+        private void AddPaymentInfo()
         {
-            if (await PaymentMethodPageViewModel.ValidateFormAsync())
+            if (PaymentMethodPageViewModel.ValidateForm())
             {
-                _checkoutDataRepository.SavePaymentInfo(PaymentMethodPageViewModel.GetPaymentInfo());
+                _checkoutDataRepository.SavePaymentInfo(PaymentMethodPageViewModel.PaymentInfo);
                 CloseFlyout();
                 //TODO: Set this as the payment info to use
             }

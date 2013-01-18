@@ -10,10 +10,12 @@ using Windows.Security.Credentials;
 
 namespace Kona.Infrastructure
 {
+    // <snippet504>
     public interface ICredentialStore
     {
         void SaveCredentials(string resource, string userName, string password);
         PasswordCredential GetSavedCredentials(string resource);
         void RemovedSavedCredentials(string resource);
     }
+    // </snippet504>
 }

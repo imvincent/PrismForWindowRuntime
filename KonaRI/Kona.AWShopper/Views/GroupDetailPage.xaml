@@ -18,6 +18,12 @@
                               Source="{Binding Items}" />
     </Page.Resources>
 
+    <Page.TopAppBar>
+        <AppBar Style="{StaticResource AppBarStyle}">
+            <Views:TopAppBarUserControl />
+        </AppBar>
+    </Page.TopAppBar>
+    
     <!--
         This grid acts as a root panel for the page that defines two rows:
         * Row 0 contains the back button and page title
@@ -28,6 +34,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="140" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="50" />
         </Grid.RowDefinitions>
 
         <!-- Back button and page title -->
@@ -44,10 +51,11 @@
                        Text="{Binding Title}"
                        Style="{StaticResource PageHeaderTextStyle}"
                        Grid.Column="1" />
-            <Views:ShoppingCartTab Grid.Column="2" VerticalAlignment="Top" />
+            <Views:ShoppingCartTabUserControl Grid.Column="2" />
         </Grid>
 
         <!-- Horizontal scrolling grid used in most view states -->
+        <!-- <snippet606> -->
         <GridView x:Name="itemGridView"
                   AutomationProperties.AutomationId="ItemGridView"
                   AutomationProperties.Name="Items In Group"
@@ -61,6 +69,7 @@
                   IsItemClickEnabled="True"
                   Loaded="itemGridView_Loaded"
                   behaviors:ListViewItemClickedToAction.Action="{Binding ProductNavigationAction}">
+        <!-- </snippet606> -->
             <GridView.Header>
                 <StackPanel Width="480"
                             Margin="0,4,14,0">
@@ -84,7 +93,9 @@
                 </Style>
             </GridView.ItemContainerStyle>
         </GridView>
-
+        
+        <Button Content="Scroll to saved HorizontalOffset" Click="Button_Click" Grid.Row="2" />
+        
         <!-- Vertical scrolling list only used when snapped -->
         <ListView x:Name="itemListView"
                   AutomationProperties.AutomationId="ItemListView"

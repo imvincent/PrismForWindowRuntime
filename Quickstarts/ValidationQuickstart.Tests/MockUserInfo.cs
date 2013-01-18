@@ -6,12 +6,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using ValidationQuickStart.Models;
 
 namespace ValidationQuickstart.Tests
 {
-    public class MockUserInfo : IUserInfo
+    public class MockUserInfo : IUserInfo, INotifyPropertyChanged
     {
         [Required]
         public string FirstName { get; set; }
@@ -21,5 +22,7 @@ namespace ValidationQuickstart.Tests
 
         [Required]
         public string LastName { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

@@ -7,29 +7,21 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Net.Http;
-using System.Net;
 using Kona.UILogic.Models;
 
 namespace Kona.UILogic.Services
 {
     public interface IAccountService
     {
-        string UserId { get; }
-
-        Task<UserInfo> CheckIfUserSignedIn();
-
-        void DisplaySignIn(Action signInSuccessful, Action signInFailed);
-
-        Task<bool> SignInUserAsync(string userName, string password);
-
-        event EventHandler<UserChangedEventArgs> UserChanged;
-
         string ServerCookieHeader { get; }
+        
+        Task<UserInfo> GetSignedInUserAsync();
+        
+        Task<bool> SignInUserAsync(string userName, string password);
+        
         void SignOut();
+        
+        event EventHandler<UserChangedEventArgs> UserChanged;
     }
 }

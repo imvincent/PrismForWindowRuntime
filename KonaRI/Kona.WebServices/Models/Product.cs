@@ -6,10 +6,14 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System;
+
 namespace Kona.WebServices.Models
 {
     public class Product
     {
+        public int Id { get; set; }
+
         public string ProductNumber { get; set; }
 
         public string Title { get; set; }

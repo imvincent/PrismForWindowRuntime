@@ -18,7 +18,7 @@ namespace Kona.UILogic.ViewModels
     public interface IShippingAddressUserControlViewModel
     {
         [RestorableState]
-        Address Address { get; }
+        Address Address { get; set; }
 
         [RestorableState]
         bool SaveAddress { get; set; }
@@ -29,13 +29,14 @@ namespace Kona.UILogic.ViewModels
         [RestorableState]
         int CurrentFormStatus { get; set; }
 
-        EntityValidator Validator { get; }
+        BindableValidator Errors { get; }
         IReadOnlyCollection<ComboBoxItemValue> States { get; set; }
         string EntityId { get; set; }
         void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState);
         void OnNavigatedFrom(Dictionary<string, object> viewState, bool suspending);
         void ProcessForm();
-        Task<bool> ValidateFormAsync();
+        bool ValidateForm();
+        Task PopulateStatesAsync();
         event PropertyChangedEventHandler PropertyChanged;
     }
 }

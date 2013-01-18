@@ -7,7 +7,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:infrastructure="using:Kona.Infrastructure"
       xmlns:behaviors="using:Kona.AWShopper.Behaviors" xmlns:Views="using:Kona.AWShopper.Views"
-                                     infrastructure:ViewModelLocator.AutoWireViewModel="true"   
+      infrastructure:ViewModelLocator.AutoWireViewModel="true"
       mc:Ignorable="d">
 
     <Page.Resources>
@@ -16,12 +16,22 @@
             Collection of grouped items displayed by this page, bound to a subset
             of the complete item list because items in groups cannot be virtualized
         -->
+        <!-- <snippet603> -->
         <CollectionViewSource x:Name="groupedItemsViewSource"
                               Source="{Binding Path=RootCategories}"
                               IsSourceGrouped="true"
                               ItemsPath="Subcategories" />
+        <!-- </snippet603> -->
     </Page.Resources>
 
+    <!-- <snippet601> -->
+    <Page.TopAppBar>
+        <AppBar Style="{StaticResource AppBarStyle}">
+            <Views:TopAppBarUserControl />
+        </AppBar>
+    </Page.TopAppBar>
+    <!-- </snippet601> -->
+    
     <!--
         This grid acts as a root panel for the page that defines two rows:
         * Row 0 contains the back button and page title
@@ -32,20 +42,25 @@
             <RowDefinition Height="140" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-
         <Grid>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
+            <Button x:Name="backButton"
+                    Command="{Binding GoBackCommand}"
+                    Style="{StaticResource BackButtonStyle}" />
             <TextBlock x:Name="pageTitle"
-                       Text="Kona Reference Implementation"
-                       Style="{StaticResource PageHeaderTextStyle}" />
-            <Views:ShoppingCartTab Grid.Column="1" VerticalAlignment="Top"/>
+                       Text="AdventureWorks Shopper"
+                       Style="{StaticResource PageHeaderTextStyle}"
+                       Grid.Column="1" />
+            <Views:ShoppingCartTabUserControl Grid.Column="2" />
         </Grid>
 
         <SemanticZoom Grid.Row="1"
                       x:Name="semanticZoom">
+            <!-- <snippet604> -->
             <SemanticZoom.ZoomedOutView>
                 <GridView Foreground="White"
                           ScrollViewer.IsHorizontalScrollChainingEnabled="False">
@@ -61,6 +76,7 @@
                             </StackPanel>
                         </DataTemplate>
                     </GridView.ItemTemplate>
+                    <!-- </snippet604> -->
                     <GridView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapGrid ItemWidth="200"
@@ -89,19 +105,22 @@
 
             </SemanticZoom.ZoomedOutView>
 
+            <!--  <snippet602> -->
             <SemanticZoom.ZoomedInView>
                 <!-- Horizontal scrolling grid used in most view states -->
+                <!-- <snippet311> -->
                 <GridView x:Name="itemGridView"
                           AutomationProperties.AutomationId="ItemGridView"
                           AutomationProperties.Name="Grouped Items"
                           Margin="0,-3,0,0"
                           Padding="116,0,40,46"
                           ItemsSource="{Binding Source={StaticResource groupedItemsViewSource}}"
-                          ItemTemplate="{StaticResource Standard250x250ItemTemplate}"
+                          ItemTemplate="{StaticResource KonaRI250x250ItemTemplate}"
                           SelectionMode="None"
                           IsItemClickEnabled="True"
                           behaviors:ListViewItemClickedToAction.Action="{Binding CategoryNavigationAction}">
-
+                    <!-- </snippet311> -->
+                    <!-- </snippet602> -->
                     <GridView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <VirtualizingStackPanel Orientation="Horizontal" Loaded="virtualizingStackPanel_Loaded" />
@@ -170,7 +189,7 @@
                 <!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
                 <VisualState x:Name="FullScreenPortrait">
                     <Storyboard>
-                        
+
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemGridView"
                                                        Storyboard.TargetProperty="Padding">
                             <DiscreteObjectKeyFrame KeyTime="0"

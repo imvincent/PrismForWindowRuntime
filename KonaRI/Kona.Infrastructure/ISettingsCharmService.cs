@@ -7,15 +7,12 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Kona.Infrastructure
 {
     public interface ISettingsCharmService
     {
         void ShowFlyout(string flyoutId);
+        void ShowFlyout(string flyoutId, object parameter, Action successAction);
     }
 }

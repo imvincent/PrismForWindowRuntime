@@ -111,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="Events\ShoppingCartUpdatedEvent.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\AddressAndPaymentInfo.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="Models\ComboBoxItemValue.cs" />
     <Compile Include="Models\LoginResult.cs" />
     <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderSubmissionResult.cs" />
     <Compile Include="Models\PaymentInfo.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ShippingMethod.cs" />
@@ -131,16 +133,20 @@
     <Compile Include="Repositories\IShoppingCartRepository.cs" />
     <Compile Include="Repositories\ShoppingCartRepository.cs" />
     <Compile Include="Services\AccountService.cs" />
+    <Compile Include="Services\ShippingMethodServiceProxy.cs" />
     <Compile Include="Services\IAccountService.cs" />
     <Compile Include="Services\ICacheService.cs" />
     <Compile Include="Services\IdentityServiceProxy.cs" />
     <Compile Include="Services\ILocationService.cs" />
     <Compile Include="Services\IOrderService.cs" />
+    <Compile Include="Services\IResourceLoader.cs" />
     <Compile Include="Services\ISettingsStoreService.cs" />
+    <Compile Include="Services\IShippingMethodService.cs" />
     <Compile Include="Services\LocationServiceProxy.cs" />
     <Compile Include="Services\OrderServiceProxy.cs" />
     <Compile Include="Services\ProductCatalogServiceProxy.cs" />
     <Compile Include="Services\ErrorMessagesHelper.cs" />
+    <Compile Include="Services\ResourceLoaderAdapter.cs" />
     <Compile Include="Services\ResumableStateService.cs" />
     <Compile Include="Services\RoamingCredentialStore.cs" />
     <Compile Include="Services\SettingsCharmService.cs" />
@@ -154,12 +160,19 @@
     <Compile Include="Services\ShoppingCartServiceProxy.cs" />
     <Compile Include="Services\TemporaryFolderCacheService.cs" />
     <Compile Include="ViewModels\BillingAddressUserControlViewModel.cs" />
+    <Compile Include="ViewModels\CategoryViewModel.cs" />
     <Compile Include="ViewModels\CheckoutDataViewModel.cs" />
     <Compile Include="ViewModels\CheckoutHubPageViewModel.cs" />
     <Compile Include="ViewModels\CheckoutSummaryPageViewModel.cs" />
+    <Compile Include="ViewModels\ChangeDefaultsFlyoutViewModel.cs" />
+    <Compile Include="ViewModels\EditBillingAddressFlyoutViewModel.cs" />
+    <Compile Include="ViewModels\EditShippingAddressFlyoutViewModel.cs" />
+    <Compile Include="ViewModels\EditPaymentMethodFlyoutViewModel.cs" />
+    <Compile Include="ViewModels\IHandleWindowSizeChanged.cs" />
+    <Compile Include="ViewModels\ProductViewModel.cs" />
     <Compile Include="ViewModels\ShippingAddressFlyoutViewModel.cs" />
     <Compile Include="ViewModels\BillingAddressFlyoutViewModel.cs" />
-    <Compile Include="ViewModels\ShoppingCartTabViewModel.cs" />
+    <Compile Include="ViewModels\ShoppingCartTabUserControlViewModel.cs" />
     <Compile Include="ViewModels\SignOutFlyoutViewModel.cs" />
     <Compile Include="ViewModels\FormStatus.cs" />
     <Compile Include="ViewModels\IBillingAddressUserControlViewModel.cs" />
@@ -171,10 +184,10 @@
     <Compile Include="ViewModels\HubPageViewModel.cs" />
     <Compile Include="ViewModels\ItemDetailPageViewModel.cs" />
     <Compile Include="ViewModels\ShippingAddressUserControlViewModel.cs" />
-    <Compile Include="ViewModels\ShippingMethodViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartItemViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartPageViewModel.cs" />
     <Compile Include="ViewModels\SignInFlyoutViewModel.cs" />
+    <Compile Include="ViewModels\TopAppBarUserControlViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="KonaRI.snk" />
