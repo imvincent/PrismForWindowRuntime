@@ -7,6 +7,7 @@
 
 
 using System.Threading.Tasks;
+using Kona.UILogic.Models;
 using Kona.UILogic.Tests.Mocks;
 using Kona.UILogic.ViewModels;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
@@ -92,6 +93,19 @@ namespace Kona.UILogic.Tests.ViewModels
             target.SignInCommand.Execute();
 
             Assert.IsTrue(successActionCalled);
+        }
+
+        [TestMethod]
+        public void UserName_ReturnsLastSignedInUser_IfAvailable()
+        {
+            var accountService = new MockAccountService();
+            accountService.LastSignedInUser = new UserInfo { UserName = "TestUserName" };
+
+            var target = new SignInFlyoutViewModel(accountService, null);
+
+            Assert.AreEqual("TestUserName", target.UserName);
+            Assert.IsFalse(target.IsNewSignIn);
+
         }
     }
 }

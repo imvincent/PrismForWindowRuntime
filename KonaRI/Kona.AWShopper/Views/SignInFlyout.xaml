@@ -30,9 +30,9 @@
                 <StackPanel Orientation="Horizontal"
                             Grid.Column="0"
                             Margin="40, 32, 17, 13">
-                    <Button Command="{Binding GoBackCommand}"
+                    <Button Command="{Binding GoBackCommand}" x:Uid="SignInFlyoutBackButton"
                             Margin="0,3,0,0"
-                            Style="{StaticResource SettingsBackButtonStyle}" />
+                            Style="{StaticResource SettingsBackButtonStyle}" AutomationProperties.AutomationId="SignInFlyoutBackButton"/>
                     <TextBlock x:Uid="LoginTitle" Margin="10,0,0,0"
                                FontFamily="Segoe UI"
                                FontWeight="SemiLight"
@@ -50,32 +50,33 @@
                       Grid.RowSpan="3">
 
                     <StackPanel x:Name="FlyoutContent">
-                        <TextBlock Style="{StaticResource BasicTextStyle}" TextWrapping="Wrap"
-                                   Text="Lorem ipsum dolor sit amet, consectetur in semper eros libero egestas elit." />
+                        <TextBlock x:Uid="PleaseSignInTextBlock" Style="{StaticResource BasicTextStyle}" TextWrapping="Wrap"
+                                   Text="Please sign in." />
                         <TextBlock x:Uid="EmailAddressLabel" Margin="0,25, 0, 0"
                                        Text="Email address" 
                                        HorizontalAlignment="Left"
                                        Style="{StaticResource BasicTextStyle}"  />
-                        <TextBox HorizontalAlignment="Left"
-                                     Width="280"
-                                     Text="{Binding UserName, Mode=TwoWay}" />
+                        <TextBox HorizontalAlignment="Left" AutomationProperties.AutomationId="UserNameTextBox"
+                                     Width="280" AutomationProperties.IsRequiredForForm="True"
+                                     Text="{Binding UserName, Mode=TwoWay}" 
+                                     IsEnabled="{Binding IsNewSignIn}"/>
                         <TextBlock x:Uid="PasswordLabel" Margin="0,25, 0, 0"
                                        Text="Password"
                                        HorizontalAlignment="Left"
                                         Width="280"
                                        Style="{StaticResource BasicTextStyle}"/>
-                        <PasswordBox  Width="280"
+                        <PasswordBox  Width="280" AutomationProperties.IsRequiredForForm="True"
                                          HorizontalAlignment="Left"
-                                         Password="{Binding Password,Mode=TwoWay}" />
+                                         Password="{Binding Password,Mode=TwoWay}" AutomationProperties.AutomationId="PasswordBox"/>
                         <TextBlock x:Uid="SaveCredentialsLabel" Margin="0,25, 0, 0"
                                        Text="Save credentials?"
                                        HorizontalAlignment="Left"
                                         Width="280"
                                        Style="{StaticResource BasicTextStyle}"/>
-                        <CheckBox HorizontalAlignment="Left" IsChecked="{Binding SaveCredentials,Mode=TwoWay}" />
+                        <CheckBox HorizontalAlignment="Left" IsChecked="{Binding SaveCredentials,Mode=TwoWay}" AutomationProperties.AutomationId="SaveCredentialsCheckBox"/>
                         <!-- <snippet310> -->
                         <Button x:Uid="SubmitButton" Background="{StaticResource AWShopperAccentBrush}" Content="Submit" Width="280" Margin="0,25,0,0"
-                                    Command="{Binding SignInCommand}" />
+                                    Command="{Binding SignInCommand}" AutomationProperties.AutomationId="SignInSubmitButton" />
                         <!-- </snippet310> -->
                         <TextBlock Style="{StaticResource BasicTextStyle}" Margin="0,10,0,0" TextWrapping="Wrap" Foreground="Red"
                                    Text="{Binding IsSignInInvalid, Converter={StaticResource IsSignInInvalidConverter}}" />

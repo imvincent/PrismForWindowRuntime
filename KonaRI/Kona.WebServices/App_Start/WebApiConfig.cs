@@ -17,15 +17,9 @@ namespace Kona.WebServices
             if (config == null || config.Routes == null) return;
 
             config.Routes.MapHttpRoute(
-                name: "OrderApi",
-                routeTemplate: "api/order/{action}",
-                defaults: new { controller = "order" },
-                constraints: new { action = @"[^\d]+" });
-
-            config.Routes.MapHttpRoute(
                 name: "ShippingMethodApi",
                 routeTemplate: "api/shippingmethod/{action}",
-                defaults: new { controller = "shippingmethod" },
+                defaults: new { controller = "shippingmethod", action = "defaultAction" },
                 constraints: new { action = @"[^\d]+" });
 
             config.Routes.MapHttpRoute(
@@ -33,9 +27,7 @@ namespace Kona.WebServices
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional });
 
-            config.Routes.MapHttpRoute(
-                name: "DefaultApiWithAction",
-                routeTemplate: "api/{controller}/{action}");
+ 
         }
     }
 }

@@ -7,9 +7,11 @@
 
 
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Kona.UILogic.Events;
 using Kona.UILogic.Models;
+using Kona.UILogic.Services;
 using Kona.UILogic.Tests.Mocks;
 using Kona.UILogic.ViewModels;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
@@ -30,9 +32,14 @@ namespace Kona.UILogic.Tests.ViewModels
                                                });
             var shoppingCartRepository = new MockShoppingCartRepository();
             var eventAggregator = new MockEventAggregator();
-            eventAggregator.GetEventDelegate = type => new ShoppingCartUpdatedEvent();
+            eventAggregator.GetEventDelegate = type =>
+            {
+                if (type == typeof(ShoppingCartUpdatedEvent)) return new ShoppingCartUpdatedEvent();
+                if (type == typeof(ShoppingCartItemUpdatedEvent)) return new ShoppingCartItemUpdatedEvent();
+                return null;
+            };
             shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult(shoppingCart);
-            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, null);
+            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, null, new AlertMessageService(), null);
 
             Assert.AreEqual(3, target.ItemCount);
         }
@@ -46,9 +53,13 @@ namespace Kona.UILogic.Tests.ViewModels
             shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult(shoppingCart);
             var shoppingCartUpdatedEvent = new ShoppingCartUpdatedEvent();
             var eventAggregator = new MockEventAggregator();
-            eventAggregator.GetEventDelegate = type => shoppingCartUpdatedEvent;
-            shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult(shoppingCart);
-            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, null);
+            eventAggregator.GetEventDelegate = type =>
+            {
+                if (type == typeof(ShoppingCartUpdatedEvent)) return shoppingCartUpdatedEvent;
+                if (type == typeof(ShoppingCartItemUpdatedEvent)) return new ShoppingCartItemUpdatedEvent();
+                return null;
+            };
+            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, null, new AlertMessageService(), null);
 
             shoppingCart = new ShoppingCart(new List<ShoppingCartItem>()
                                                {
@@ -58,7 +69,7 @@ namespace Kona.UILogic.Tests.ViewModels
 
             Assert.AreEqual(0, target.ItemCount);
 
-            shoppingCartUpdatedEvent.Publish("payload");
+            shoppingCartUpdatedEvent.Publish();
 
             Assert.AreEqual(3, target.ItemCount);
 
@@ -76,13 +87,62 @@ namespace Kona.UILogic.Tests.ViewModels
                                                          return true;
                                                      };
             var eventAggregator = new MockEventAggregator();
-            eventAggregator.GetEventDelegate = type => { return new ShoppingCartUpdatedEvent(); };
+            eventAggregator.GetEventDelegate = type =>
+            {
+                if (type == typeof(ShoppingCartUpdatedEvent)) return new ShoppingCartUpdatedEvent();
+                if (type == typeof(ShoppingCartItemUpdatedEvent)) return new ShoppingCartItemUpdatedEvent();
+                return null;
+            };
             var shoppingCartRepository = new MockShoppingCartRepository();
             shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult(new ShoppingCart(null));
-            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, navigationService);
+            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, navigationService, new AlertMessageService(), null);
             target.ShoppingCartTabCommand.Execute();
 
             Assert.IsTrue(navigateCalled);
+        }
+
+        [TestMethod]
+        public void ShoppingCartUpdated_WithNullCart_SetsItemCountZero()
+        {
+            var shoppingCartRepository = new MockShoppingCartRepository();
+            shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult<ShoppingCart>(null);
+            var eventAggregator = new MockEventAggregator();
+            var shoppingCartUpdatedEvent = new ShoppingCartUpdatedEvent();
+            eventAggregator.GetEventDelegate = type =>
+            {
+                if (type == typeof(ShoppingCartUpdatedEvent)) return shoppingCartUpdatedEvent;
+                if (type == typeof(ShoppingCartItemUpdatedEvent)) return new ShoppingCartItemUpdatedEvent();
+                return null;
+            };
+            
+            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, null, new AlertMessageService(), null);
+            target.ItemCount = 99;
+
+            shoppingCartUpdatedEvent.Publish();
+
+            Assert.AreEqual(0, target.ItemCount);
+        }
+
+        [TestMethod]
+        public void FailedCallToShoppingCartRepository_ShowsAlert()
+        {
+            var alertCalled = false;
+            var shoppingCartRepository = new MockShoppingCartRepository();
+            shoppingCartRepository.GetShoppingCartAsyncDelegate = () =>
+                                                                      {
+                                                                          throw new HttpRequestException();
+                                                                      };
+            var alertMessageService = new MockAlertMessageService();
+            alertMessageService.ShowAsyncDelegate = (s, s1) =>
+                                                        {
+                                                            alertCalled = true;
+                                                            Assert.AreEqual("Error", s1);
+                                                            return Task.FromResult(string.Empty);
+                                                        };
+            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, null, null,
+                                                                 alertMessageService, new MockResourceLoader());
+
+            Assert.IsTrue(alertCalled);
         }
     }
 }

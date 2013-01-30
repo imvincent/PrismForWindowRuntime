@@ -14,7 +14,7 @@ namespace Kona.UILogic.Repositories
 {
     public interface IProductCatalogRepository
     {
-        Task<ReadOnlyCollection<Category>> GetCategoriesAsync();
+        Task<ReadOnlyCollection<Category>> GetCategoriesAsync(int maxAmountOfProducts);
 
         Task<ReadOnlyCollection<Category>> GetSubcategoriesAsync(int categoryId);
 

@@ -12,12 +12,23 @@ using System.Threading.Tasks;
 using Kona.UILogic.Models;
 using System.Net;
 using System;
+using Windows.Security.Cryptography;
+using Windows.Security.Cryptography.Core;
+using Windows.Storage.Streams;
+using Kona.Infrastructure;
 
 namespace Kona.UILogic.Services
 {
     public class IdentityServiceProxy : IIdentityService
     {
         private readonly string _clientBaseUrl = string.Format("{0}/api/Identity/", Constants.ServerAddress);
+
+        private static string GenerateRequestId()
+        {
+            byte[] randomBytes;
+            CryptographicBuffer.CopyToByteArray(CryptographicBuffer.GenerateRandom(4), out randomBytes);
+            return CryptographicBuffer.EncodeToHexString(CryptographicBuffer.CreateFromByteArray(randomBytes));
+        }
 
         // <snippet508>
         public async Task<LogOnResult> LogOnAsync(string userId, string password)
@@ -26,12 +37,31 @@ namespace Kona.UILogic.Services
             {
                 using (var client = new HttpClient(handler))
                 {
-                    //The password is intentionally not sent to the IdentityController to simplify the deployment of this app.
-                    var response = await client.GetAsync(_clientBaseUrl + userId + "?password=");
+                    client.AddCurrentCultureHeader();
+                    // Ask the server for a password challenge string
+                    var requestId = GenerateRequestId();
+                    var response1 = await client.GetAsync(_clientBaseUrl + "GetPasswordChallenge?requestId=" + requestId);
+                    response1.EnsureSuccessStatusCode();
+                    var challengeEncoded = await response1.Content.ReadAsAsync<string>();
+                    var challengeBuffer = CryptographicBuffer.DecodeFromHexString(challengeEncoded);
+
+                    // Use HMAC_MD5 hash to encode the challenge string using the password being authenticated as the key.
+                    var provider = MacAlgorithmProvider.OpenAlgorithm(MacAlgorithmNames.HmacMd5);
+                    var passwordBuffer = CryptographicBuffer.ConvertStringToBinary(password, BinaryStringEncoding.Utf8);
+                    var hmacKey = provider.CreateKey(passwordBuffer);
+                    var buffHmac = CryptographicEngine.Sign(hmacKey, challengeBuffer);
+                    var hmacString = CryptographicBuffer.EncodeToHexString(buffHmac);
+
+                    // Send the encoded challenge to the server for authentication (to avoid sending the password itself)
+                    var response = await client.GetAsync(_clientBaseUrl + userId + "?requestID=" + requestId +"&passwordHash=" + hmacString);
+
+                    // Raise exception if sign in failed
                     response.EnsureSuccessStatusCode();
-                    var result = await response.Content.ReadAsAsync<UserValidationResult>();
+
+                    // On success, return sign in results from the server response packet
+                    var result = await response.Content.ReadAsAsync<UserInfo>();
                     var serverUri = new Uri(Constants.ServerAddress);
-                    return new LogOnResult { ServerCookieHeader = handler.CookieContainer.GetCookieHeader(serverUri), UserValidationResult = result };
+                    return new LogOnResult { ServerCookieHeader = handler.CookieContainer.GetCookieHeader(serverUri), UserInfo = result };
                 }
             }
         }
@@ -43,6 +73,7 @@ namespace Kona.UILogic.Services
             {
                 using (var client = new HttpClient(handler))
                 {
+                    client.AddCurrentCultureHeader();
                     var serverUri = new Uri(Constants.ServerAddress);
                     handler.CookieContainer.SetCookies(serverUri, serverCookieHeader);
                     var response = await client.GetAsync(_clientBaseUrl + "GetIsValidSession");

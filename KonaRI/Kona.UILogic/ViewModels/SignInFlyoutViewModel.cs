@@ -10,6 +10,7 @@ using System;
 using System.Threading.Tasks;
 using Kona.Infrastructure;
 using Kona.Infrastructure.Flyouts;
+using Kona.UILogic.Models;
 using Kona.UILogic.Services;
 
 namespace Kona.UILogic.ViewModels
@@ -23,11 +24,15 @@ namespace Kona.UILogic.ViewModels
         private readonly ICredentialStore _credentialStore;
         private bool _saveCredentials;
         private Action _successAction;
+        private UserInfo _lastSignedInUser;
 
         public SignInFlyoutViewModel(IAccountService accountService, ICredentialStore credentialStore)
         {
             _accountService = accountService;
             _credentialStore = credentialStore;
+
+            _lastSignedInUser = _accountService.LastSignedInUser;
+
             // <snippet308>
             SignInCommand = new DelegateCommand(async () => await SignInAsync(), () => CanSignIn());
             // </snippet308>
@@ -36,7 +41,14 @@ namespace Kona.UILogic.ViewModels
 
         public string UserName
         {
-            get { return _userName; }
+            get
+            {
+                if (!IsNewSignIn)
+                {
+                    return _lastSignedInUser.UserName;
+                }
+                return _userName;
+            }
             set
             {
                 if (SetProperty(ref _userName, value))
@@ -44,6 +56,11 @@ namespace Kona.UILogic.ViewModels
                     SignInCommand.RaiseCanExecuteChanged();
                 }
             }
+        }
+
+        public bool IsNewSignIn
+        {
+            get { return _lastSignedInUser == null; }
         }
 
         public string Password

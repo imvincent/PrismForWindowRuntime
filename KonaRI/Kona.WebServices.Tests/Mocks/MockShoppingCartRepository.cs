@@ -18,6 +18,8 @@ namespace Kona.WebServices.Tests.Mocks
 
         public Func<string, Product, ShoppingCartItem> AddProductToCartDelegate { get; set; }
 
+        public Func<string, string, bool> RemoveProductFromCartDelegate { get; set; }
+
         public Func<ShoppingCart, string, bool> RemoveItemFromCartDelegate { get; set; }
 
         public Func<string, ShoppingCartItem> CreateShoppingCartItemDelegate { get; set; }
@@ -37,6 +39,11 @@ namespace Kona.WebServices.Tests.Mocks
         public ShoppingCartItem AddProductToCart(string userId, Product productId)
         {
             return AddProductToCartDelegate(userId, productId);
+        }
+
+        public bool RemoveProductFromCart(string shoppingCartId, string productId)
+        {
+            return RemoveProductFromCartDelegate(shoppingCartId, productId);
         }
 
         public bool DeleteCart(string userId)
@@ -84,7 +91,7 @@ namespace Kona.WebServices.Tests.Mocks
             throw new NotImplementedException();
         }
 
-        ShoppingCart IShoppingCartRepository.GetByUserId(string userId)
+        ShoppingCart IShoppingCartRepository.GetById(string userId)
         {
             throw new NotImplementedException();
         }
@@ -94,7 +101,7 @@ namespace Kona.WebServices.Tests.Mocks
             throw new NotImplementedException();
         }
 
-        bool IShoppingCartRepository.RemoveItemFromCart(ShoppingCart shoppingCart, int itemId)
+        bool IShoppingCartRepository.RemoveItemFromCart(ShoppingCart shoppingCart, string itemId)
         {
             throw new NotImplementedException();
         }

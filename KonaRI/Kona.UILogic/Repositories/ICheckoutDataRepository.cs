@@ -16,9 +16,9 @@ namespace Kona.UILogic.Repositories
         ICollection<Address> RetrieveAllShippingAddresses();
         ICollection<Address> RetrieveAllBillingAddresses();
         ICollection<PaymentInfo> RetrieveAllPaymentInformation();
-        void SaveShippingAddress(Address address);
-        void SaveBillingAddress(Address address);
-        void SavePaymentInfo(PaymentInfo paymentInfo);
+        Address SaveShippingAddress(Address address);
+        Address SaveBillingAddress(Address address);
+        PaymentInfo SavePaymentInfo(PaymentInfo paymentInfo);
         bool ContainsDefaultValue(string container);
         void SetAsDefaultShippingAddress(string id);
         void SetAsDefaultBillingAddress(string id);

@@ -39,35 +39,35 @@
             <!-- First Name -->
             <TextBlock x:Name="TitleFirstName" x:Uid="TitleFirstName" Style="{StaticResource FormTitleStyle}"
                         Grid.Row="0" Grid.Column="0" Text="First Name*" />
-            <controls:FormFieldTextBox x:Name="FirstName" Style="{StaticResource FormFieldStyle}"
-                                        Grid.Row="1" Grid.Column="0"
+            <controls:FormFieldTextBox x:Name="FirstName" AutomationProperties.AutomationId="FirstNameTextBox" Style="{StaticResource FormFieldStyle}"
+                                        Grid.Row="1" Grid.Column="0" AutomationProperties.IsRequiredForForm="True"
                                         Text="{Binding Address.FirstName, Mode=TwoWay}"
                                         IsEnabled="{Binding IsEnabled}"
-                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Errors[FirstName]}" />
+                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[FirstName]}" />
             <TextBlock  x:Name="ErrorsFirstName" Style="{StaticResource ErrorMessageStyle}"
 			            Grid.Row="2" Grid.Column="0"
-						Text="{Binding Errors[FirstName], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
+						Text="{Binding Address.Errors[FirstName], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
 
             <!-- Middle Initial -->
             <TextBlock x:Name="TitleMiddleInitial" x:Uid="TitleMiddleInitial" Style="{StaticResource FormTitleStyle}"
                            Grid.Row="0" Grid.Column="1" Text="Middle Initial" />
-            <controls:FormFieldTextBox x:Name="MiddleInitial" Style="{StaticResource FormFieldStyle}"
+            <controls:FormFieldTextBox x:Name="MiddleInitial" AutomationProperties.AutomationId="MiddleInitialTextBox" Style="{StaticResource FormFieldStyle}"
                                         Grid.Row="1" Grid.Column="1" 
                                         Text="{Binding Address.MiddleInitial, Mode=TwoWay}"
                                         IsEnabled="{Binding IsEnabled}"
-                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Errors[MiddleInitial]}" Height="32" VerticalAlignment="Top" />
+                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[MiddleInitial]}" Height="32" VerticalAlignment="Top" />
 
             <!-- Last Name -->
             <TextBlock x:Name="TitleLastName" x:Uid="TitleLastName" Style="{StaticResource FormTitleStyle}"
                            Grid.Row="0" Grid.Column="2" Text="Last Name*" />
-            <controls:FormFieldTextBox x:Name="LastName" Style="{StaticResource FormFieldStyle}"
-                                        Grid.Row="1" Grid.Column="2" 
+            <controls:FormFieldTextBox x:Name="LastName" AutomationProperties.AutomationId="LastNameTextBox" Style="{StaticResource FormFieldStyle}"
+                                        Grid.Row="1" Grid.Column="2" AutomationProperties.IsRequiredForForm="True"
                                         Text="{Binding Address.LastName, Mode=TwoWay}"
                                         IsEnabled="{Binding IsEnabled}"
-                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Errors[LastName]}" />
+                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[LastName]}" />
             <TextBlock  x:Name="ErrorsLastName" Style="{StaticResource ErrorMessageStyle}"
 			            Grid.Row="2" Grid.Column="2"
-						Text="{Binding Errors[LastName], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
+						Text="{Binding Address.Errors[LastName], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
         </Grid>
 
         <!-- Address -->
@@ -87,18 +87,18 @@
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="TitleAddress" x:Uid="TitleAddress" Style="{StaticResource FormTitleStyle}"
                            Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Text="Address*" />
-            <controls:FormFieldTextBox x:Name="Address" Style="{StaticResource FormFieldStyle}"
+            <controls:FormFieldTextBox x:Name="Address" AutomationProperties.AutomationId="AddressTextBox" Style="{StaticResource FormFieldStyle}"
                                         Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
                                         Text="{Binding Address.StreetAddress, Mode=TwoWay}"
-                                        IsEnabled="{Binding IsEnabled}"
-                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Errors[StreetAddress]}"  />
+                                        IsEnabled="{Binding IsEnabled}" AutomationProperties.IsRequiredForForm="True"
+                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[StreetAddress]}"  />
             <TextBlock  x:Name="ErrorsAddress" Style="{StaticResource ErrorMessageStyle}"
 			            Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
-						Text="{Binding Errors[StreetAddress], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
+						Text="{Binding Address.Errors[StreetAddress], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
 
             <TextBlock x:Name="TitleOptionalAddress" x:Uid="TitleOptionalAddress" Style="{StaticResource FormTitleStyle}"
                        Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" Text="Optional Address" />
-            <controls:FormFieldTextBox x:Name="OptionalAddress" Style="{StaticResource FormFieldStyle}"  
+            <controls:FormFieldTextBox x:Name="OptionalAddress" AutomationProperties.AutomationId="OptionalAddressTextBox" Style="{StaticResource FormFieldStyle}"  
                                            Grid.Row="4" Grid.Column="0"
                                            IsEnabled="{Binding IsEnabled}"
                                            Text="{Binding Address.OptionalAddress, Mode=TwoWay}" Grid.ColumnSpan="4" />
@@ -124,18 +124,19 @@
             <!--City-->
             <TextBlock x:Name="TitleArea" x:Uid="TitleArea" Style="{StaticResource FormTitleStyle}"
                            Grid.Row="0" Grid.Column="0" Text="Area" />
-            <controls:FormFieldTextBox x:Name="City" Style="{StaticResource FormFieldStyle}"
+            <controls:FormFieldTextBox x:Name="City" x:Uid="City" AutomationProperties.AutomationId="CityTextBox" Style="{StaticResource FormFieldStyle}"
                                         Grid.Row="1" Grid.Column="0"
                                         Text="{Binding Address.City, Mode=TwoWay}"
                                         IsEnabled="{Binding IsEnabled}"
-                                        Watermark="City"
-                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Errors[City]}" />
+                                        Watermark="City" AutomationProperties.IsRequiredForForm="True"
+                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[City]}" />
             <TextBlock  x:Name="ErrorsCity" Style="{StaticResource ErrorMessageStyle}"
 			            Grid.Row="2" Grid.Column="0"
-						Text="{Binding Errors[City], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
+						Text="{Binding Address.Errors[City], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
 
             <!-- State -->
-            <ComboBox x:Name="State" Style="{StaticResource FormComboStyle}"
+            <ComboBox x:Name="State" AutomationProperties.AutomationId="StateComboBox"
+                        Style="{StaticResource FormComboStyle}"
                         Grid.Row="1" Grid.Column="1"
                         ItemsSource="{Binding States}"
                         DisplayMemberPath="Value"
@@ -143,21 +144,23 @@
                         SelectedValue="{Binding Address.State, Mode=TwoWay}"
                         behaviors:ComboBoxKeyboardSelection.Enabled="True"
                         IsEnabled="{Binding IsEnabled}"
-                        behaviors:HighlightFormComboOnErrors.PropertyErrors="{Binding Errors[State]}" />
+                        AutomationProperties.IsRequiredForForm="True"
+                        behaviors:HighlightFormComboOnErrors.PropertyErrors="{Binding Address.Errors[State]}" />
             <TextBlock  x:Name="ErrorsState" Style="{StaticResource ErrorMessageStyle}"
 			            Grid.Row="2" Grid.Column="1"
-                        Text="{Binding Errors[State], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
+                        Text="{Binding Address.Errors[State], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
 
             <!-- ZipCode -->
-            <controls:FormFieldTextBox x:Name="ZipCode" Style="{StaticResource FormFieldStyle}"
+            <controls:FormFieldTextBox x:Name="ZipCode" x:Uid="PostalCode" AutomationProperties.AutomationId="PostalCodeTextBox"
+                                       Style="{StaticResource FormFieldStyle}"
                                         Grid.Row="1" Grid.Column="2"
                                         Text="{Binding Address.ZipCode, Mode=TwoWay}"
                                         IsEnabled="{Binding IsEnabled}"
-                                        Watermark="Zip Code"
-                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Errors[ZipCode]}" />
+                                        Watermark="Zip Code" AutomationProperties.IsRequiredForForm="True"
+                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[ZipCode]}" />
             <TextBlock  x:Name="ErrorZipCode" Style="{StaticResource ErrorMessageStyle}"
 			            Grid.Row="2" Grid.Column="2"
-						Text="{Binding Errors[ZipCode], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
+						Text="{Binding Address.Errors[ZipCode], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
 
         </Grid>
 
@@ -173,21 +176,17 @@
             </Grid.RowDefinitions>
             <TextBlock x:Name="TitlePhone" x:Uid="TitlePhone" Style="{StaticResource FormTitleStyle}"
 					   Grid.Row="0" Grid.Column="0" Text="Phone*" />
-            <controls:FormFieldTextBox x:Name="Phone" Style="{StaticResource FormFieldStyle}"
-											Grid.Row="1" Grid.Column="0"
+            <controls:FormFieldTextBox x:Name="Phone" AutomationProperties.AutomationId="PhoneTextBox" Style="{StaticResource FormFieldStyle}"
+											Grid.Row="1" Grid.Column="0" AutomationProperties.IsRequiredForForm="True"
 											Text="{Binding Address.Phone, Mode=TwoWay}"
                                             IsEnabled="{Binding IsEnabled}"
-											behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Errors[Phone]}" />
+											behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[Phone]}" />
             <TextBlock  x:Name="ErrorPhone" Style="{StaticResource ErrorMessageStyle}"
 			            Grid.Row="2" Grid.Column="0"
-						Text="{Binding Errors[Phone], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
+						Text="{Binding Address.Errors[Phone], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
         </Grid>
 
-        <!-- Save Address | Set as default -->
-        <StackPanel x:Name="stackPanel" Grid.Row="4" Orientation="Horizontal" Style="{StaticResource FormMenuStyle}">
-            <CheckBox IsChecked="{Binding SaveAddress, Mode=TwoWay}" Content="Save billing address" Margin="0,0,20,0" IsEnabled="{Binding IsEnabled}" />
-            <CheckBox IsChecked="{Binding SetAsDefault, Mode=TwoWay}" Content="Set as default" IsEnabled="{Binding IsEnabled}" />
-        </StackPanel>
+        <CheckBox x:Name="SetAsDefaultCheckbox" x:Uid="SetAsDefaultCheckbox" AutomationProperties.AutomationId="SetAsDefaultCheckBox" Grid.Row="4" IsChecked="{Binding SetAsDefault, Mode=TwoWay}" Content="Set as default" />
 
         <VisualStateManager.VisualStateGroups>
 
@@ -376,13 +375,6 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(StackPanel.Orientation)" Storyboard.TargetName="stackPanel">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<Orientation>Vertical</Orientation>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
                 <VisualState x:Name="Flyout">
@@ -565,7 +557,7 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="stackPanel">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="SetAsDefaultCheckbox">
                 			<DiscreteObjectKeyFrame KeyTime="0">
                 				<DiscreteObjectKeyFrame.Value>
                 					<Visibility>Collapsed</Visibility>

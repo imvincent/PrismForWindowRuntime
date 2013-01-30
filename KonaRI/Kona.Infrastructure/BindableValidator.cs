@@ -132,8 +132,9 @@ namespace Kona.Infrastructure
 
             if (propertyInfo == null)
             {
-                var resourceLoader = new ResourceLoader();
-                throw new ArgumentException(resourceLoader.GetString("InvalidPropertyNameException"), propertyName);
+                var resourceLoader = new ResourceLoader("Kona.Infrastructure");
+                var errorString = resourceLoader.GetString("InvalidPropertyNameException");
+                throw new ArgumentException(errorString, propertyName);
             }
 
             var propertyErrors = new List<string>();

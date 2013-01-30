@@ -62,7 +62,7 @@ namespace Kona.UILogic.ViewModels
             var productViewModels = new List<ProductViewModel>();
             foreach (var product in products)
             {
-                productViewModels.Add(new ProductViewModel(product));   
+                productViewModels.Add(new ProductViewModel(product, _shoppingCartRepository));   
             }
             Items = new ReadOnlyCollection<ProductViewModel>(productViewModels);
             SelectedProduct = Items.First(p => p.ProductNumber == productNumber);

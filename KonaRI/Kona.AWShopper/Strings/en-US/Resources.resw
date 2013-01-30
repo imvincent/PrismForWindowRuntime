@@ -135,7 +135,7 @@
   <data name="Editing" xml:space="preserve">
     <value>Editing {0}</value>
   </data>
-  <data name="Payment" xml:space="preserve">
+  <data name="PaymentInfo" xml:space="preserve">
     <value>Payment</value>
   </data>
   <data name="ShippingAddress" xml:space="preserve">
@@ -185,9 +185,6 @@
   </data>
   <data name="ErrorCardNumberInvalidLength" xml:space="preserve">
     <value>Card number must contain between 4 and 20 characters</value>
-  </data>
-  <data name="ErrorCardYearInvalidLength" xml:space="preserve">
-    <value>Card year must be 4 digits</value>
   </data>
   <data name="ErrorCardMonthInvalid" xml:space="preserve">
     <value>Invalid expiration month</value>
@@ -329,5 +326,80 @@
   </data>
   <data name="ShippingAddressIncompleteMessage.Text" xml:space="preserve">
     <value>Shipping address incomplete</value>
+  </data>
+  <data name="ErrorProcessingOrder" xml:space="preserve">
+    <value>There was an error processing your order.</value>
+  </data>
+  <data name="GeneralServiceErrorMessage" xml:space="preserve">
+    <value>The following error messages were received from the service: {0} {1}</value>
+  </data>
+  <data name="ErrorShoppingCartServiceUnreachable" xml:space="preserve">
+    <value>Shopping cart service is unreachable.</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="ErrorProductCatalogServiceUnreachable" xml:space="preserve">
+    <value>Product catalog service is unreachable.</value>
+  </data>
+  <data name="HomeAppBarButton.Content" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="ShoppingCartAppBarButton.Content" xml:space="preserve">
+    <value>Shopping Cart</value>
+  </data>
+  <data name="CheckoutAppBarButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Checkout</value>
+  </data>
+  <data name="City.Watermark" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="EditAmountAppBarButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Edit amount</value>
+  </data>
+  <data name="EditAppBarButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="ExpirationMonth.Watermark" xml:space="preserve">
+    <value>Month</value>
+  </data>
+  <data name="ExpirationYear.Watermark" xml:space="preserve">
+    <value>Year</value>
+  </data>
+  <data name="PostalCode.Watermark" xml:space="preserve">
+    <value>Zip Code</value>
+  </data>
+  <data name="RemoveAppBarButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Remove item</value>
+  </data>
+  <data name="SetAsDefaultCheckbox.Content" xml:space="preserve">
+    <value>Set as default</value>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="PleaseSignInTextBlock.Text" xml:space="preserve">
+    <value>Please sign in. Valid usernames are 'user' and 'JohnDoe'. Valid password is 'pwd'.</value>
+  </data>
+  <data name="ShoppingCartItemsGridView.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Shopping Cart Items</value>
+  </data>
+  <data name="DialogOkButtonLabel" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="OrderPurchasedMessage" xml:space="preserve">
+    <value>Your order has been submitted. Thank you for your purchase.</value>
+  </data>
+  <data name="OrderPurchasedTitle" xml:space="preserve">
+    <value>Order purchased</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>QTY</value>
+  </data>
+  <data name="SelectAppBarButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value />
   </data>
 </root>

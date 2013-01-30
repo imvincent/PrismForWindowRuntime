@@ -28,14 +28,16 @@ namespace Kona.UILogic.Tests.Mocks
             return await this.SignInUserAsyncDelegate(userName, password);
         }
 
+        public UserInfo LastSignedInUser { get; set; }
+
         public async Task<UserInfo> GetSignedInUserAsync()
         {
             return await GetSignedInUserAsyncDelegate();
         }
 
-        public void RaiseUserChanged(UserInfo userInfo)
+        public void RaiseUserChanged(UserInfo newUserInfo, UserInfo oldUserInfo)
         {
-            UserChanged(this, new UserChangedEventArgs(userInfo));
+            UserChanged(this, new UserChangedEventArgs(newUserInfo, oldUserInfo));
         }
 
         public event EventHandler<UserChangedEventArgs> UserChanged;

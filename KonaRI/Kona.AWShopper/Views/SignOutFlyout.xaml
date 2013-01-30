@@ -31,7 +31,7 @@
                             Grid.Column="0"
                             Margin="40, 32, 17, 13">
                     <Button Command="{Binding GoBackCommand}"
-                            Margin="0,3,0,0"
+                            Margin="0,3,0,0" AutomationProperties.AutomationId="SignOutFlyoutBackButton"
                             Style="{StaticResource SettingsBackButtonStyle}" />
                     <TextBlock x:Uid="LogoutTitle" Margin="10,0,0,0"
                                FontFamily="Segoe UI"
@@ -55,7 +55,7 @@
                         <TextBlock Style="{StaticResource BasicTextStyle}" TextWrapping="Wrap"
                                    Text="{Binding UserName}" />
                         <Button x:Uid="LogoutButton" Background="{StaticResource AWShopperAccentBrush}" Content="Logout" Width="280" Margin="0,25,0,0"
-                                    Command="{Binding SignOutCommand}" />
+                                    Command="{Binding SignOutCommand}" AutomationProperties.AutomationId="LogoutButton" />
                     </StackPanel>
                 </Grid>
             </ScrollViewer>

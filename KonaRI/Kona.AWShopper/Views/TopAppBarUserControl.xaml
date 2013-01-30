@@ -6,13 +6,15 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:infrastructure="using:Kona.Infrastructure" mc:Ignorable="d"
     infrastructure:ViewModelLocator.AutoWireViewModel="true"
-    d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignHeight="120"
+    d:DesignWidth="195">
 
     <!-- <snippet600> -->
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-        <Button Command="{Binding HomeNavigationCommand}" Margin="10" Style="{StaticResource HouseStyle}" />
-        <Button Command="{Binding ShoppingCartNavigationCommand}" Margin="10" Style="{StaticResource CartStyle}" />
+    <!-- <snippet401> -->
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Height="Auto" Margin="0,15,0,0">
+        <Button Command="{Binding HomeNavigationCommand}" Margin="5,0" Style="{StaticResource HouseStyle}" Content="Home"  x:Uid="HomeAppBarButton" x:Name="HomeAppBarButton" AutomationProperties.AutomationId="HomeAppBarButton" />
+        <Button Command="{Binding ShoppingCartNavigationCommand}" Margin="0,0,5,0" Style="{StaticResource CartStyle}" Content="Shopping Cart" x:Uid="ShoppingCartAppBarButton" x:Name="ShoppingCartAppBarButton" AutomationProperties.AutomationId="ShoppingCartAppBarButton" />
     </StackPanel>
+    <!-- </snippet401> -->
     <!-- </snippet600> -->
 </UserControl>

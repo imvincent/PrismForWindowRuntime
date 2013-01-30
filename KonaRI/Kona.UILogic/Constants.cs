@@ -10,6 +10,8 @@ namespace Kona.UILogic
 {
     public static class Constants
     {
-        public const string ServerAddress = "http://localhost.:2112";
+        //May need to change this to http://localhost.:2112 in order to use a web debugger.
+        public const string ServerAddress = "http://localhost:2112";
+
     }
 }

@@ -78,7 +78,7 @@ namespace Kona.UILogic.Services
             var resourceBytes = await this._requestService.GetExternalResourceAsync(fullUrl);
 
             await FileIO.WriteBytesAsync(file, resourceBytes);
-
+            
             return new Uri(file.Path, UriKind.Absolute);
         }
 

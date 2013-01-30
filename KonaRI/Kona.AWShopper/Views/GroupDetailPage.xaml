@@ -15,7 +15,9 @@
 
         <!-- Collection of items displayed by this page -->
         <CollectionViewSource x:Name="itemsViewSource"
-                              Source="{Binding Items}" />
+                              Source="{Binding Items}"
+                              IsSourceGrouped="true"
+                              ItemsPath="Products"/>
     </Page.Resources>
 
     <Page.TopAppBar>
@@ -23,7 +25,7 @@
             <Views:TopAppBarUserControl />
         </AppBar>
     </Page.TopAppBar>
-    
+
     <!--
         This grid acts as a root panel for the page that defines two rows:
         * Row 0 contains the back button and page title
@@ -34,7 +36,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="140" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="50" />
         </Grid.RowDefinitions>
 
         <!-- Back button and page title -->
@@ -42,61 +43,107 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Button x:Name="backButton"
+            <Button x:Name="backButton" AutomationProperties.AutomationId="GroupDetailsPageBackButton"
                     Command="{Binding GoBackCommand}"
                     Style="{StaticResource BackButtonStyle}" />
             <TextBlock x:Name="pageTitle"
                        Text="{Binding Title}"
                        Style="{StaticResource PageHeaderTextStyle}"
                        Grid.Column="1" />
-            <Views:ShoppingCartTabUserControl Grid.Column="2" />
+            <Views:ShoppingCartTabUserControl x:Name="shoppingCartTabUserControl" Grid.Column="2" Margin="20" RenderTransformOrigin="0.5,0.5">
+            	<Views:ShoppingCartTabUserControl.RenderTransform>
+            		<CompositeTransform/>
+            	</Views:ShoppingCartTabUserControl.RenderTransform>
+            </Views:ShoppingCartTabUserControl>
         </Grid>
 
-        <!-- Horizontal scrolling grid used in most view states -->
-        <!-- <snippet606> -->
-        <GridView x:Name="itemGridView"
-                  AutomationProperties.AutomationId="ItemGridView"
+        <SemanticZoom Grid.Row="1"
+                      x:Name="GroupDetailssemanticZoom">
+            <SemanticZoom.ZoomedOutView>
+                <GridView Padding="120,0,0,0" Foreground="White"
+                          ScrollViewer.IsHorizontalScrollChainingEnabled="False">
+                    <GridView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="100" />
+                                </Grid.RowDefinitions>
+                                <Image Stretch="UniformToFill" Source="{Binding Group.Image}" />
+                                <StackPanel Background="{StaticResource AWShopperSemanticZoomOverlayBackground}" Grid.Row="1" Height="100">
+                                    <TextBlock Text="{Binding Group.Title}"
+                                           TextTrimming="WordEllipsis"
+                                           FontFamily="Segoe UI Light"
+                                           FontSize="26" FontWeight="Bold" Margin="10"/>
+                                    <StackPanel Orientation="Horizontal" Margin="10,0,10,0" HorizontalAlignment="Center">
+                                        <TextBlock Text="{Binding Group.Products.Count}"
+                                           FontFamily="Segoe UI Light"
+                                           FontSize="20"
+                                           FontWeight="SemiLight"/>
+                                        <TextBlock Text="Product(s)" Margin="10,0,10,0" FontFamily="Segoe UI Light"
+                                           FontSize="20" HorizontalAlignment="Center" FontWeight="SemiLight" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapGrid ItemWidth="250"
+                                      ItemHeight="250"
+                                      MaximumRowsOrColumns="2"
+                                      VerticalChildrenAlignment="Center" />
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                </GridView>
+            </SemanticZoom.ZoomedOutView>
+            <SemanticZoom.ZoomedInView>
+                <!-- Horizontal scrolling grid used in most view states -->
+                <GridView x:Name="itemGridView"
+                  ScrollViewer.IsHorizontalScrollChainingEnabled="False"
+                  AutomationProperties.AutomationId="GroupItemsGridView"
                   AutomationProperties.Name="Items In Group"
                   TabIndex="1"
-                  Grid.Row="1"
                   Margin="0,-14,0,0"
                   Padding="120,0,120,50"
                   ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
-                  ItemTemplate="{StaticResource Standard500x130ItemTemplate}"
+                  ItemTemplate="{StaticResource KonaRIItemTemplate}"
                   SelectionMode="None"
                   IsItemClickEnabled="True"
                   Loaded="itemGridView_Loaded"
                   behaviors:ListViewItemClickedToAction.Action="{Binding ProductNavigationAction}">
-        <!-- </snippet606> -->
-            <GridView.Header>
-                <StackPanel Width="480"
-                            Margin="0,4,14,0">
-                    <TextBlock Text="{Binding Subtitle}"
-                               Margin="0,0,18,20"
-                               Style="{StaticResource SubheaderTextStyle}"
-                               MaxHeight="60" />
-                    <Image Source="{Binding Image}"
-                           Height="400"
-                           Margin="0,0,18,20"
-                           Stretch="UniformToFill" />
-                    <TextBlock Text="{Binding Description}"
-                               Margin="0,0,18,0"
-                               Style="{StaticResource BodyTextStyle}" />
-                </StackPanel>
-            </GridView.Header>
-            <GridView.ItemContainerStyle>
-                <Style TargetType="FrameworkElement">
-                    <Setter Property="Margin"
-                            Value="52,0,0,10" />
-                </Style>
-            </GridView.ItemContainerStyle>
-        </GridView>
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                    <GridView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="1,0,0,6">
+                                        <Button AutomationProperties.Name="Group Title"
+                                                Foreground="{StaticResource AWShopperAccentBrush}"
+                                                FontSize="28"
+                                                FontWeight="SemiLight"
+                                                Content="{Binding Title}"
+                                                Style="{StaticResource TextButtonStyle}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                            <GroupStyle.Panel>
+                                <ItemsPanelTemplate>
+                                    <VariableSizedWrapGrid ItemWidth="250" ItemHeight="250" Orientation="Vertical" Margin="0,0,80,0"/>
+                                </ItemsPanelTemplate>
+                            </GroupStyle.Panel>
+                        </GroupStyle>
+                    </GridView.GroupStyle>
+                </GridView>
+            </SemanticZoom.ZoomedInView>
+        </SemanticZoom>
         
-        <Button Content="Scroll to saved HorizontalOffset" Click="Button_Click" Grid.Row="2" />
-        
-        <!-- Vertical scrolling list only used when snapped -->
         <ListView x:Name="itemListView"
                   AutomationProperties.AutomationId="ItemListView"
                   AutomationProperties.Name="Items In Group"
@@ -109,22 +156,23 @@
                   SelectionMode="None"
                   IsItemClickEnabled="True"
                   behaviors:ListViewItemClickedToAction.Action="{Binding ProductNavigationAction}">
+            <ListView.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid Margin="7,7,0,0">
+                                <Button AutomationProperties.Name="Group Title"
+                                        Content="{Binding Title}"
+                                        FontSize="24"
+                                        FontWeight="SemiLight"
+                                        Foreground="{StaticResource AWShopperAccentBrush}"
+                                        Style="{StaticResource TextButtonStyle}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </ListView.GroupStyle>
 
-            <ListView.Header>
-                <StackPanel>
-                    <TextBlock Text="{Binding Subtitle}"
-                               Margin="20,0,18,20"
-                               Style="{StaticResource TitleTextStyle}"
-                               MaxHeight="60" />
-                    <Image Source="{Binding Image}"
-                           Margin="20,0,18,0"
-                           MaxHeight="160"
-                           Stretch="UniformToFill" />
-                    <TextBlock Margin="20,20,18,30"
-                               Text="{Binding Description}"
-                               Style="{StaticResource BodyTextStyle}" />
-                </StackPanel>
-            </ListView.Header>
         </ListView>
 
         <VisualStateManager.VisualStateGroups>
@@ -157,22 +205,44 @@
                 -->
                 <VisualState x:Name="Snapped">
                     <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton"
+                                                       Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="{StaticResource SnappedBackButtonStyle}" />
+                        </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle"
                                                        Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="{StaticResource SnappedPageHeaderTextStyle}" />
-                        </ObjectAnimationUsingKeyFrames>
-
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemGridView"
-                                                       Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="Collapsed" />
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemListView"
                                                        Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="Visible" />
                         </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="GroupDetailssemanticZoom">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<Visibility>Collapsed</Visibility>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="shoppingCartTabUserControl">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<Thickness>0</Thickness>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    	<DoubleAnimation Duration="0" To="0.75" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="shoppingCartTabUserControl" d:IsOptimized="True"/>
+                    	<DoubleAnimation Duration="0" To="0.75" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="shoppingCartTabUserControl" d:IsOptimized="True"/>
+                    	<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="pageTitle">
+                    		<DiscreteObjectKeyFrame KeyTime="0">
+                    			<DiscreteObjectKeyFrame.Value>
+                    				<Thickness>0,0,0,40</Thickness>
+                    			</DiscreteObjectKeyFrame.Value>
+                    		</DiscreteObjectKeyFrame>
+                    	</ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
             </VisualStateGroup>

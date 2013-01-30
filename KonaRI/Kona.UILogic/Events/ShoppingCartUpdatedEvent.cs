@@ -6,11 +6,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using Microsoft.Practices.Prism.Events;
+using Microsoft.Practices.PubSubEvents;
 
 namespace Kona.UILogic.Events
 {
-    public class ShoppingCartUpdatedEvent : CompositePresentationEvent<string>
+    // <snippet1502>
+    public class ShoppingCartUpdatedEvent : PubSubEvent
     {
     }
+    // </snippet1502>
 }

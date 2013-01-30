@@ -43,6 +43,7 @@ namespace Kona.AWShopper.Views
         protected override void OnNavigatedFrom(Windows.UI.Xaml.Navigation.NavigationEventArgs e)
         {
             Window.Current.SizeChanged -= Current_SizeChanged;
+            base.OnNavigatedFrom(e);
         }
     }
 }

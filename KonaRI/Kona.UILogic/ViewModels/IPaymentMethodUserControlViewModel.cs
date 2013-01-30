@@ -24,15 +24,11 @@ namespace Kona.UILogic.ViewModels
         PaymentInfo PaymentInfo { get; set; }
 
         [RestorableState]
-        bool SaveInformation { get; set; }
-
-        [RestorableState]
         bool SetAsDefault { get; set; }
 
         [RestorableState]
         int CurrentFormStatus { get; set; }
 
-        BindableValidator Errors { get; }
         string EntityId { get; set; }
         void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState);
         void OnNavigatedFrom(Dictionary<string, object> viewState, bool suspending);

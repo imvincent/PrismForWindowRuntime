@@ -28,17 +28,17 @@ namespace Kona.UILogic.Tests.Mocks
             throw new System.NotImplementedException();
         }
 
-        public void SaveShippingAddress(Address address)
+        public Address SaveShippingAddress(Address address)
         {
             throw new System.NotImplementedException();
         }
 
-        public void SaveBillingAddress(Address address)
+        public Address SaveBillingAddress(Address address)
         {
             throw new System.NotImplementedException();
         }
 
-        public void SavePaymentInfo(PaymentInfo paymentInfo)
+        public PaymentInfo SavePaymentInfo(PaymentInfo paymentInfo)
         {
             throw new System.NotImplementedException();
         }

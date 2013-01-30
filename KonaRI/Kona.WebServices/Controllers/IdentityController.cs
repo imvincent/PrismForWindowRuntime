@@ -6,44 +6,93 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System;
+using System.Globalization;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 using System.Collections.Generic;
 using System.Web.Http;
 using System.Web.Security;
 using Kona.WebServices.Models;
+using System.Runtime.Caching;
 using System.Net;
-using System.Net.Http;
-using System;
 
 namespace Kona.WebServices.Controllers
 {
     public class IdentityController : ApiController
     {
-        private static readonly Dictionary<string, string> identities = new Dictionary<string, string>
+        // Credentials store
+        private static readonly Dictionary<string, string> Identities = new Dictionary<string, string>
             {
                 {"JohnDoe", "pwd"},
                 {"user", "pwd"}
             };
 
-        // GET /api/Identity/id?password={password}
-        // <snippet509>
-        public UserValidationResult GetIsValid(string id, string password)
+        // Recently sent password challenges, use cache for thread safety and time-based expiration
+        private static MemoryCache ChallengeCache = new MemoryCache("Challenges");
+
+        // GET /api/Identity/GetPasswordChallenge?requestId={requestId}
+        public string GetPasswordChallenge(string requestId)
         {
-            var result = new UserValidationResult();
-
-            //To properly validate user credentials, you must validate both username and password.
-            //Password validation is intentially omitted here to simplify the deployment of this sample service.
-            result.IsValid = identities.ContainsKey(id);
-
-            if (result.IsValid)
+            if (requestId == null)
+                return null;
+            using (var generator = new RNGCryptoServiceProvider())
             {
-                if (HttpContext.Current != null) // TODO - hack to avoid null ref in unit test, should find way to make this happy in the unit test instead
-                    FormsAuthentication.SetAuthCookie(id, false);
+                var challengeBytes = new byte[16];
+                generator.GetBytes(challengeBytes);
+                if (ChallengeCache.Contains(requestId))
+                {
+                    ChallengeCache[requestId] = challengeBytes;
+                }
+                else
+                {
+                    CacheItemPolicy policy = new CacheItemPolicy
+                        {
+                            AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(10)
+                        };
+                    ChallengeCache.Add(requestId, challengeBytes, policy);
+                }
+                return EncodeToHexString(challengeBytes);
+            }
+        }
 
-                result.UserInfo = new UserInfo { UserName = id };
+        // GET /api/Identity/id?requestId={requestId}&passwordHash={passwordHash}
+        // <snippet509>
+        public UserInfo GetIsValid(string id, string requestId, string passwordHash)
+        {
+            byte[] challenge = null;
+            if (requestId != null && ChallengeCache.Contains(requestId))
+            {
+                // Retrieve the saved challenge bytes
+                challenge = (byte[])ChallengeCache[requestId];
+                // Delete saved challenge (each challenge is used just one time).
+                ChallengeCache.Remove(requestId);
             }
 
-            return result;
+            // Check that credentials are valid.
+            if (challenge != null && id != null && passwordHash != null && Identities.ContainsKey(id))
+            {
+                // Compute hash for the previously issued challenge string using the password from the server's credentials store as the key.
+                var serverPassword = Encoding.UTF8.GetBytes(Identities[id]);
+                using (var provider = new HMACMD5(serverPassword))
+                {
+                    var serverHashBytes = provider.ComputeHash(challenge);
+                    // Authentication succeeds only if client and server have computed the same hash for the challenge string.
+                    var clientHashBytes = DecodeFromHexString(passwordHash);
+                    if (!serverHashBytes.SequenceEqual(clientHashBytes))
+                        throw new HttpResponseException(HttpStatusCode.Unauthorized);
+                }
+
+                if (HttpContext.Current != null) // TODO - hack to avoid null ref in unit test, should find way to make this happy in the unit test instead
+                    FormsAuthentication.SetAuthCookie(id, false);
+                return new UserInfo { UserName = id };
+            }
+            else
+            {
+                throw new HttpResponseException(HttpStatusCode.Unauthorized);
+            }
         }
         // </snippet509>
 
@@ -52,6 +101,28 @@ namespace Kona.WebServices.Controllers
         public bool GetIsValidSession()
         {
             return true;
+        }
+
+        // Output matches CryptographicBuffer.DecodeFromHexString in Windows Runtime.
+        private static byte[] DecodeFromHexString(string hex)
+        {
+            var raw = new byte[hex.Length / 2];
+            for (var i = 0; i < raw.Length; i++)
+            {
+                raw[i] = Convert.ToByte(hex.Substring(i * 2, 2), 16);
+            }
+            return raw;
+        }
+
+        // Output matches CryptographicBuffer.EncodeToHexString in Windows Runtime.
+        private static string EncodeToHexString(byte[] hexBytes)
+        {
+            var sb = new StringBuilder(hexBytes.Length * 2);
+            foreach (var b in hexBytes)
+            {
+                sb.Append(b.ToString("x2", CultureInfo.InvariantCulture));
+            }
+            return sb.ToString();
         }
     }
 }

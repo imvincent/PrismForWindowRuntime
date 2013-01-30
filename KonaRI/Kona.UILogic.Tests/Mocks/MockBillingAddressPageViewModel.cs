@@ -22,13 +22,9 @@ namespace Kona.UILogic.Tests.Mocks
 
         public IReadOnlyCollection<ComboBoxItemValue> States { get; set; }
 
-        public bool SaveAddress { get; set; }
-
         public bool SetAsDefault { get; set; }
 
         public string FirstError { get; set; }
-
-        public int CurrentFormStatus { get; set; }
 
         public Infrastructure.BindableValidator Errors
         {
@@ -77,12 +73,6 @@ namespace Kona.UILogic.Tests.Mocks
         public bool IsEnabled { get; set; }
 
         public Task PopulateStatesAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public void UpdateAddressInformation(Address address)
         {
             throw new NotImplementedException();
         }

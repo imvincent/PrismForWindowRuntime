@@ -66,33 +66,39 @@ namespace Kona.WebServices.Models
 
         public static ValidationResult ValidateZipCodeState(object value, ValidationContext validationContext)
         {
-            if (value == null)
-            {
-                throw new ArgumentNullException("value");
-            }
-
-            if (validationContext == null)
-            {
-                throw new ArgumentNullException("validationContext");
-            }
-
-            string stateName = ((Address)validationContext.ObjectInstance).State;
-            State state = new StateRepository().GetAll().FirstOrDefault(c => c.Name == stateName);
-            int zipCode = Convert.ToInt32(((Address)validationContext.ObjectInstance).ZipCode.Substring(0,3), CultureInfo.InvariantCulture);
-
             bool isValid = false;
-
-            foreach (var range in state.ValidZipCodeRanges)
+            try
             {
-                // If the first 3 digits of the Zip Code falls within the given range, it is valid.
-                int minValue = Convert.ToInt32(range.Split('-')[0], CultureInfo.InvariantCulture);
-                int maxValue = Convert.ToInt32(range.Split('-')[1], CultureInfo.InvariantCulture);
+                if (value == null)
+                {
+                    throw new ArgumentNullException("value");
+                }
 
-                isValid = zipCode >= minValue && zipCode <= maxValue;
+                if (validationContext == null)
+                {
+                    throw new ArgumentNullException("validationContext");
+                }
 
-                if (isValid) break;
+                string stateName = ((Address)validationContext.ObjectInstance).State;
+                State state = new StateRepository().GetAll().FirstOrDefault(c => c.Name == stateName);
+                int zipCode = Convert.ToInt32(((Address)validationContext.ObjectInstance).ZipCode.Substring(0, 3), CultureInfo.InvariantCulture);
+
+
+                foreach (var range in state.ValidZipCodeRanges)
+                {
+                    // If the first 3 digits of the Zip Code falls within the given range, it is valid.
+                    int minValue = Convert.ToInt32(range.Split('-')[0], CultureInfo.InvariantCulture);
+                    int maxValue = Convert.ToInt32(range.Split('-')[1], CultureInfo.InvariantCulture);
+
+                    isValid = zipCode >= minValue && zipCode <= maxValue;
+
+                    if (isValid) break;
+                }
             }
-
+            catch
+            {
+                isValid = false;
+            }
             if (isValid)
             {
                 return ValidationResult.Success;

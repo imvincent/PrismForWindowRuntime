@@ -38,28 +38,28 @@ namespace Kona.UILogic.Tests.ViewModels
                 return Task.FromResult(category);
             };
 
-            repository.GetProductsAsyncDelegate = (categoryId) =>
+            repository.GetSubcategoriesAsyncDelegate = (categoryId) =>
             {
-                ReadOnlyCollection<Product> products = null;
+                ReadOnlyCollection<Category> categories = null;
 
                 if (categoryId == 1)
                 {
-                    products = new ReadOnlyCollection<Product>(new List<Product>
+                    categories = new ReadOnlyCollection<Category>(new List<Category>
                     {
-                        new Product(),
-                        new Product(),
-                        new Product()
+                        new Category(),
+                        new Category(),
+                        new Category()
                     });
                 }
 
-                return Task.FromResult(products);
+                return Task.FromResult(categories);
             };
 
             var viewModel = new GroupDetailPageViewModel(repository, navigationService);
             viewModel.OnNavigatedTo(1, NavigationMode.New, null);
 
             Assert.IsNotNull(viewModel.Items);
-            Assert.AreEqual(3, ((ICollection<ProductViewModel>)viewModel.Items).Count);
+            Assert.AreEqual(3, ((ICollection<CategoryViewModel>)viewModel.Items).Count);
             Assert.AreEqual("CategoryTitle", viewModel.Title);
         }
 

@@ -67,11 +67,20 @@ namespace Kona.UILogic.ViewModels
             var defaultPaymentMethod = _checkoutDataRepository.GetDefaultPaymentInfoValue();
             var defaultShippingAddress = _checkoutDataRepository.GetDefaultShippingAddressValue();
             var defaultBillingAddress = _checkoutDataRepository.GetDefaultBillingAddressValue();
-            SelectedShippingAddress = ShippingAddresses.FirstOrDefault(s => s.EntityId == defaultShippingAddress.Id);
-            SelectedBillingAddress = BillingAddresses.FirstOrDefault(b => b.EntityId == defaultBillingAddress.Id);
-            SelectedPaymentInfo = PaymentInfos.FirstOrDefault(p => p.EntityId == defaultPaymentMethod.Id);
+            if (ShippingAddresses != null)
+            {
+                SelectedShippingAddress = ShippingAddresses.FirstOrDefault(s => s.EntityId == defaultShippingAddress.Id);
+            }
+            if (BillingAddresses != null)
+            {
+                SelectedBillingAddress = BillingAddresses.FirstOrDefault(b => b.EntityId == defaultBillingAddress.Id);
+            }
+            if (PaymentInfos != null)
+            {
+                SelectedPaymentInfo = PaymentInfos.FirstOrDefault(p => p.EntityId == defaultPaymentMethod.Id);
+            }
         }
-         
+
         private void PopulateCollections()
         {
             var resourceLoader = new ResourceLoader();
@@ -119,39 +128,25 @@ namespace Kona.UILogic.ViewModels
             }
 
             var paymentInfosViewModels = new List<CheckoutDataViewModel>();
-            var tempDateTimeFormatter = new DateTimeFormatter("shortdate");
-            var yearMonthDateTimeFormatter = new DateTimeFormatter(YearFormat.Full, MonthFormat.Abbreviated,
-                                                                   DayFormat.None, DayOfWeekFormat.None, HourFormat.None,
-                                                                   MinuteFormat.None, SecondFormat.None,
-                                                                   tempDateTimeFormatter.Languages,
-                                                                   tempDateTimeFormatter.GeographicRegion,
-                                                                   CalendarIdentifiers.Gregorian,
-                                                                   tempDateTimeFormatter.Clock);
+
             var paymentInfos = _checkoutDataRepository.RetrieveAllPaymentInformation();
             foreach (var paymentInfo in paymentInfos)
             {
-                var creditCardExpirationDateOffset =
-                    new DateTimeOffset(new DateTime(int.Parse(paymentInfo.ExpirationYear, CultureInfo.CurrentUICulture),
-                                                    int.Parse(paymentInfo.ExpirationMonth, CultureInfo.CurrentUICulture), 2));
-                paymentInfosViewModels.Add(
-                    new CheckoutDataViewModel(
+
+                paymentInfosViewModels.Add(new CheckoutDataViewModel(
                         new
-                            {
-                                EntityId = paymentInfo.Id,
-                                FirstLine =
-                            string.Format(CultureInfo.CurrentUICulture, resourceLoader.GetString("CardEndingIn"),
-                                          paymentInfo.CardNumber.Substring(paymentInfo.CardNumber.Length - 4)),
-                                SecondLine =
-                            string.Format(CultureInfo.CurrentUICulture, resourceLoader.GetString("CardExpiringOn"),
-                                          yearMonthDateTimeFormatter.Format(creditCardExpirationDateOffset)),
-                                Name = paymentInfo.CardholderName,
-                                DataType = resourceLoader.GetString("Payment"),
-                                Content = paymentInfo
-                            }, null));
-                PaymentInfos = new ReadOnlyCollection<CheckoutDataViewModel>(paymentInfosViewModels);
-                ShippingAddresses = new ReadOnlyCollection<CheckoutDataViewModel>(shippingAddressesViewModels);
-                BillingAddresses = new ReadOnlyCollection<CheckoutDataViewModel>(billingAddressesViewModels);
+                        {
+                            EntityId = paymentInfo.Id,
+                            FirstLine = string.Format(CultureInfo.CurrentUICulture, resourceLoader.GetString("CardEndingIn"), paymentInfo.CardNumber.Substring(paymentInfo.CardNumber.Length - 4)),
+                            SecondLine = string.Format(CultureInfo.CurrentUICulture, resourceLoader.GetString("CardExpiringOn"), string.Format(CultureInfo.CurrentCulture, "{0}/{1}", paymentInfo.ExpirationMonth, paymentInfo.ExpirationYear)),
+                            Name = paymentInfo.CardholderName,
+                            DataType = resourceLoader.GetString("PaymentInfo")
+                        }, null));
             }
+
+            PaymentInfos = new ReadOnlyCollection<CheckoutDataViewModel>(paymentInfosViewModels);
+            ShippingAddresses = new ReadOnlyCollection<CheckoutDataViewModel>(shippingAddressesViewModels);
+            BillingAddresses = new ReadOnlyCollection<CheckoutDataViewModel>(billingAddressesViewModels);
         }
 
         private void SaveDefaults()

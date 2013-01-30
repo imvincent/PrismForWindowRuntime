@@ -12,11 +12,9 @@ namespace Kona.UILogic.Models
 {
     public class ShoppingCartItem
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public Product Product{ get; set;}
-
-        public bool IsGift { get; set; }
 
         public int Quantity { get; set; }
 

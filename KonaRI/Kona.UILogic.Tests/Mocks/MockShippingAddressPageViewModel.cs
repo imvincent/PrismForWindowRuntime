@@ -22,7 +22,6 @@ namespace Kona.UILogic.Tests.Mocks
     {
         public Address Address { get; set; }
         public IReadOnlyCollection<ComboBoxItemValue> States { get; set; }
-        public bool SaveAddress { get; set; }
         public bool SetAsDefault { get; set; }
         public string FirstError { get; set; }
         public int CurrentFormStatus { get; set; }

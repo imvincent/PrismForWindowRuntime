@@ -7,7 +7,7 @@
 
 
 using System;
-using Microsoft.Practices.Prism.Events;
+using Microsoft.Practices.PubSubEvents;
 
 namespace Kona.UILogic.Tests.Mocks
 {

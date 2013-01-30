@@ -6,12 +6,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System.Net.Http.Formatting;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net.Http;
+using System.Threading.Tasks;
+using Kona.Infrastructure;
 using Kona.UILogic.Models;
-using Kona.UILogic.Repositories;
 
 namespace Kona.UILogic.Services
 {
@@ -23,6 +21,7 @@ namespace Kona.UILogic.Services
         {
             using (var shoppingCartClient = new HttpClient())
             {
+                shoppingCartClient.AddCurrentCultureHeader();
                 var response = await shoppingCartClient.GetAsync(_shoppingCartBaseUrl + shoppingCartId);
                 response.EnsureSuccessStatusCode();
                 var result = await response.Content.ReadAsAsync<ShoppingCart>();
@@ -31,22 +30,35 @@ namespace Kona.UILogic.Services
             }
         }
 
-        public async Task<ShoppingCartItem> AddProductToShoppingCartAsync(string shoppingCartId, string productId)
+        public async Task AddProductToShoppingCartAsync(string shoppingCartId, string productIdToIncrement)
         {
             using (var shoppingCartClient = new HttpClient())
             {
-                string requestUri = _shoppingCartBaseUrl + shoppingCartId;
-                var response = await shoppingCartClient.PostAsJsonAsync<string>(requestUri, productId);
+                shoppingCartClient.AddCurrentCultureHeader();
+                string requestUrl = _shoppingCartBaseUrl + shoppingCartId + "?productIdToIncrement=" + productIdToIncrement;
+                var response = await shoppingCartClient.PutAsync(requestUrl, null);
                 response.EnsureSuccessStatusCode();
-                return await response.Content.ReadAsAsync<ShoppingCartItem>();
             }
         }
 
-        public async void RemoveShoppingCartItemAsync(string shoppingCartId, int itemId)
+        public async Task RemoveProductFromShoppingCartAsync(string shoppingCartId, string productIdToDecrement)
         {
             using (var shoppingCartClient = new HttpClient())
             {
-                var response = await shoppingCartClient.DeleteAsync(_shoppingCartBaseUrl + shoppingCartId + "?itemId=" + itemId);
+                shoppingCartClient.AddCurrentCultureHeader();
+                string requestUrl = _shoppingCartBaseUrl + shoppingCartId + "?productIdToDecrement=" + productIdToDecrement;
+                var response = await shoppingCartClient.PutAsync(requestUrl, null);
+                response.EnsureSuccessStatusCode();
+            }
+        }
+
+        public async Task RemoveShoppingCartItemAsync(string shoppingCartId, string itemIdToRemove)
+        {
+            using (var shoppingCartClient = new HttpClient())
+            {
+                shoppingCartClient.AddCurrentCultureHeader();
+                string requestUrl = _shoppingCartBaseUrl + shoppingCartId + "?itemIdToRemove=" + itemIdToRemove;
+                var response = await shoppingCartClient.PutAsync(requestUrl, null);
                 response.EnsureSuccessStatusCode();
             }
         }
@@ -55,7 +67,19 @@ namespace Kona.UILogic.Services
         {
             using (var shoppingCartClient = new HttpClient())
             {
+                shoppingCartClient.AddCurrentCultureHeader();
                 var response = await shoppingCartClient.DeleteAsync(_shoppingCartBaseUrl + shoppingCartId);
+                response.EnsureSuccessStatusCode();
+            }
+        }
+
+        public async Task MergeShoppingCartsAsync(string oldShoppingCartId, string newShoppingCartId)
+        {
+            using (var shoppingCartClient = new HttpClient())
+            {
+                shoppingCartClient.AddCurrentCultureHeader();
+                string requestUrl = _shoppingCartBaseUrl + newShoppingCartId + "?oldShoppingCartId=" + oldShoppingCartId;
+                var response = await shoppingCartClient.PutAsync(requestUrl, null);
                 response.EnsureSuccessStatusCode();
             }
         }

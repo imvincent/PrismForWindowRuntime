@@ -21,7 +21,6 @@ namespace Kona.UILogic.Tests.Mocks
     public class MockPaymentMethodPageViewModel : IPaymentMethodUserControlViewModel
     {
         public PaymentInfo PaymentInfo { get; set; }
-        public bool SaveInformation { get; set; }
         public bool SetAsDefault { get; set; }
         public string FirstError { get; set; }
         public int CurrentFormStatus { get; set; }

@@ -108,9 +108,14 @@
       <Project>{a2303152-0f67-4ca5-8639-0a16e64a8b6d}</Project>
       <Name>Kona.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Microsoft.Practices.PubSubEvents\Microsoft.Practices.PubSubEvents.csproj">
+      <Project>{d5d2645c-03eb-48b0-9873-0904fcdb2ced}</Project>
+      <Name>Microsoft.Practices.PubSubEvents</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="Events\ShoppingCartItemUpdatedEvent.cs" />
     <Compile Include="Events\ShoppingCartUpdatedEvent.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Models\Address.cs" />
@@ -118,8 +123,8 @@
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\ComboBoxItemValue.cs" />
     <Compile Include="Models\LoginResult.cs" />
+    <Compile Include="Models\ModelValidationResult.cs" />
     <Compile Include="Models\Order.cs" />
-    <Compile Include="Models\OrderSubmissionResult.cs" />
     <Compile Include="Models\PaymentInfo.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ShippingMethod.cs" />
@@ -133,20 +138,22 @@
     <Compile Include="Repositories\IShoppingCartRepository.cs" />
     <Compile Include="Repositories\ShoppingCartRepository.cs" />
     <Compile Include="Services\AccountService.cs" />
+    <Compile Include="Services\AlertMessageService.cs" />
+    <Compile Include="Services\HttpResponseMessageExtensions.cs" />
+    <Compile Include="Services\IAlertMessageService.cs" />
+    <Compile Include="Services\ModelValidationException.cs" />
     <Compile Include="Services\ShippingMethodServiceProxy.cs" />
     <Compile Include="Services\IAccountService.cs" />
     <Compile Include="Services\ICacheService.cs" />
     <Compile Include="Services\IdentityServiceProxy.cs" />
     <Compile Include="Services\ILocationService.cs" />
     <Compile Include="Services\IOrderService.cs" />
-    <Compile Include="Services\IResourceLoader.cs" />
     <Compile Include="Services\ISettingsStoreService.cs" />
     <Compile Include="Services\IShippingMethodService.cs" />
     <Compile Include="Services\LocationServiceProxy.cs" />
     <Compile Include="Services\OrderServiceProxy.cs" />
     <Compile Include="Services\ProductCatalogServiceProxy.cs" />
     <Compile Include="Services\ErrorMessagesHelper.cs" />
-    <Compile Include="Services\ResourceLoaderAdapter.cs" />
     <Compile Include="Services\ResumableStateService.cs" />
     <Compile Include="Services\RoamingCredentialStore.cs" />
     <Compile Include="Services\SettingsCharmService.cs" />

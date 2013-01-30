@@ -39,7 +39,7 @@ namespace Kona.UILogic.Tests.Repositories
             productCatalogService.GetSubcategoriesAsyncDelegate = (i) => Task.FromResult(new ReadOnlyCollection<Category>(null));
             
             var target = new ProductCatalogRepository(productCatalogService, cacheService);
-            var returnedCategories = await target.GetCategoriesAsync();
+            var returnedCategories = await target.GetCategoriesAsync(0);
 
             Assert.AreEqual(2, returnedCategories.Count);
             Assert.AreEqual(1, returnedCategories[0].Id);
@@ -71,7 +71,7 @@ namespace Kona.UILogic.Tests.Repositories
 
             var target = new ProductCatalogRepository(productCatalogService, cacheService);
 
-            var returnedCategories = await target.GetCategoriesAsync();
+            var returnedCategories = await target.GetCategoriesAsync(0);
 
             Assert.AreEqual(2, returnedCategories.Count);
             Assert.AreEqual(1, returnedCategories[0].Id);
@@ -107,7 +107,7 @@ namespace Kona.UILogic.Tests.Repositories
 
             var target = new ProductCatalogRepository(productCatalogService, cacheService);
 
-            await target.GetCategoriesAsync();
+            await target.GetCategoriesAsync(0);
         }
 
         [TestMethod]

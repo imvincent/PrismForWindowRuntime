@@ -11,6 +11,6 @@ namespace Kona.UILogic.Models
     public class LogOnResult
     {
         public string ServerCookieHeader { get; set; }
-        public UserValidationResult UserValidationResult { get; set; }
+        public UserInfo UserInfo { get; set; }
     }
 }

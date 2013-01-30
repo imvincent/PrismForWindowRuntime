@@ -13,8 +13,9 @@ namespace Kona.WebServices.Repositories
 {
     public interface IShoppingCartRepository : IRepository<ShoppingCart>
     {
-        ShoppingCart GetByUserId(string userId);
-        ShoppingCartItem AddProductToCart(string userId, Product product);
-        bool RemoveItemFromCart(ShoppingCart shoppingCart, int itemId);
+        ShoppingCart GetById(string shoppingCartId);
+        ShoppingCartItem AddProductToCart(string shoppingCartId, Product product);
+        bool RemoveProductFromCart(string shoppingCartId, string productId);
+        bool RemoveItemFromCart(ShoppingCart shoppingCart, string itemId);
     }
 }

@@ -17,9 +17,11 @@ namespace Kona.UILogic.Tests.Mocks
     {
         public Func<Task<ShoppingCart>> GetShoppingCartAsyncDelegate { get; set; }
 
-        public Action<string> AddProductToShoppingCartAsyncDelegate { get; set; }
+        public Func<string, Task> AddProductToShoppingCartAsyncDelegate { get; set; }
 
-        public Action<int> RemoveShoppingCartItemDelegate { get; set; }
+        public Func<string, Task> RemoveProductFromShoppingCartAsyncDelegate { get; set; } 
+
+        public Func<string, Task> RemoveShoppingCartItemDelegate { get; set; }
 
         public Task ClearCartAsync()
         {
@@ -31,14 +33,19 @@ namespace Kona.UILogic.Tests.Mocks
             return this.GetShoppingCartAsyncDelegate();
         }
 
-        public void AddProductToShoppingCartAsync(string productId)
+        public Task AddProductToShoppingCartAsync(string productId)
         {
-            AddProductToShoppingCartAsyncDelegate(productId);
+            return AddProductToShoppingCartAsyncDelegate(productId);
         }
 
-        public void RemoveShoppingCartItemAsync(int itemId)
+        public Task RemoveProductFromShoppingCartAsync(string productId)
         {
-            RemoveShoppingCartItemDelegate(itemId);
+            return RemoveProductFromShoppingCartAsyncDelegate(productId);
+        }
+
+        public Task RemoveShoppingCartItemAsync(string itemId)
+        {
+            return RemoveShoppingCartItemDelegate(itemId);
         }
 
         public UserInfo CurrentUser { get; set; }

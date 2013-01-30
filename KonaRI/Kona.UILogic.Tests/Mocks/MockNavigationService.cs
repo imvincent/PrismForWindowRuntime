@@ -16,6 +16,7 @@ namespace Kona.UILogic.Tests.Mocks
         public Func<string, object, bool> NavigateDelegate { get; set; }
         public Action GoBackDelegate { get; set; }
         public Func<bool> CanGoBackDelegate { get; set; }
+        public Action ClearHistoryDelegate { get; set; }
 
         public bool Navigate(string pageToken, object parameter)
         {
@@ -30,6 +31,11 @@ namespace Kona.UILogic.Tests.Mocks
         public bool CanGoBack()
         {
             return this.CanGoBackDelegate();
+        }
+
+        public void ClearHistory()
+        {
+            ClearHistoryDelegate();
         }
     }
 }

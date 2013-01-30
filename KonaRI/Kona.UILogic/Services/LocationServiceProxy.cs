@@ -11,9 +11,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using Kona.UILogic.Models;
+using Kona.Infrastructure;
 
 namespace Kona.UILogic.Services
 {
@@ -25,6 +24,7 @@ namespace Kona.UILogic.Services
         {
             using (var client = new HttpClient())
             {
+                client.AddCurrentCultureHeader();
                 var response = await client.GetAsync(_clientBaseUrl);
                 response.EnsureSuccessStatusCode();
                 var result = await response.Content.ReadAsAsync<ReadOnlyCollection<string>>();

@@ -7,9 +7,7 @@
 
 
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 using Kona.Infrastructure;
-using Kona.UILogic.Models;
 using Kona.UILogic.Repositories;
 using System;
 using System.Collections.Generic;
@@ -44,13 +42,13 @@ namespace Kona.UILogic.ViewModels
         public async override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState)
         {
             var categoryId = navigationParameter is int ? (int)navigationParameter : 0;
-            var products = await _productCatalogRepository.GetProductsAsync(categoryId);
-            var productViewModels = new List<ProductViewModel>();
-            foreach (var product in products)
+            var subcategories = await _productCatalogRepository.GetSubcategoriesAsync(categoryId);
+            var categorytViewModels = new List<CategoryViewModel>();
+            foreach (var subcategory in subcategories)
             {
-                productViewModels.Add(new ProductViewModel(product));
+                categorytViewModels.Add(new CategoryViewModel(subcategory, _navigationService));
             }
-            Items = new ReadOnlyCollection<ProductViewModel>(productViewModels);
+            Items = new ReadOnlyCollection<CategoryViewModel>(categorytViewModels);
 
             var category = await _productCatalogRepository.GetCategoryAsync(categoryId);
             Title = category.Title;

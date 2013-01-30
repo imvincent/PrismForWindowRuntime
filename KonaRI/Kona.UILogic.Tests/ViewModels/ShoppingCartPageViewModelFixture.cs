@@ -6,8 +6,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Security;
 using System.Threading.Tasks;
+using Kona.UILogic.Events;
 using Kona.UILogic.Models;
 using Kona.UILogic.Services;
 using Kona.UILogic.Tests.Mocks;
@@ -23,44 +26,46 @@ namespace Kona.UILogic.Tests.ViewModels
         [TestMethod]
         public void OnNavigatedTo_Fill_Properties_No_Shopping_Cart_Items()
         {
-            var shoppingCartRepository = new MockShoppingCartRepository();
             var navigationService = new MockNavigationService();
-
+            var shoppingCartRepository = new MockShoppingCartRepository();
             shoppingCartRepository.GetShoppingCartAsyncDelegate = () =>
             {
-                ShoppingCart shoppingCart = new ShoppingCart(new ObservableCollection<ShoppingCartItem>()) { FullPrice = 200, TotalDiscount = 100, Currency = "USD"};
+                var shoppingCartItems = new List<ShoppingCartItem>();
+                shoppingCartItems.Add(new ShoppingCartItem{DiscountPercentage = .5,Quantity = 1,Product = new Product{ListPrice = 200}, Currency = "USD"});
+                ShoppingCart shoppingCart = new ShoppingCart(new ObservableCollection<ShoppingCartItem>(shoppingCartItems)) { Currency = "USD" };
                 return Task.FromResult(shoppingCart);
             };
+            var eventAggregator = new MockEventAggregator();
+            eventAggregator.GetEventDelegate = type => new MockShoppingCartUpdatedEvent();
 
-            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, new MockAccountService(), null);
+            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, new MockAccountService(), null, eventAggregator);
             target.OnNavigatedTo(null, NavigationMode.New, null);
 
             Assert.AreEqual("$200.00", target.FullPrice);
             Assert.AreEqual("$100.00", target.TotalDiscount);
-            Assert.AreEqual(0, target.ShoppingCartItemViewModels.Count);
+            Assert.AreEqual(1, target.ShoppingCartItemViewModels.Count);
         }
 
         [TestMethod]
         public void OnNavigatedTo_Fill_Properties_With_Shopping_Cart_Items()
         {
-            var shoppingCartRepository = new MockShoppingCartRepository();
             var navigationService = new MockNavigationService();
-            var productCatalogRepository = new MockProductCatalogRepository();
-
+            var shoppingCartRepository = new MockShoppingCartRepository();
             shoppingCartRepository.GetShoppingCartAsyncDelegate = () =>
             {
                 ShoppingCart shoppingCart = null;
                 var shoppingCartItems = new ObservableCollection<ShoppingCartItem>
                                             {
-                                                new ShoppingCartItem() { Product = new Product { ImageName = "http://image" }, Currency = "USD"}, 
-                                                new ShoppingCartItem() { Product = new Product { ImageName = "http://image" }, Currency = "USD"}
+                                                new ShoppingCartItem() { DiscountPercentage = .5, Product = new Product { ListPrice = 100, ProductNumber = "p1", ImageName = "http://image"}, Currency = "USD", Quantity = 1}, 
+                                                new ShoppingCartItem() { DiscountPercentage = .5, Product = new Product { ListPrice = 100, ProductNumber = "p2", ImageName = "http://image"}, Currency = "USD", Quantity = 1}
                                             };
-                shoppingCart = new ShoppingCart(shoppingCartItems) { FullPrice = 200, TotalDiscount = 100, Currency = "USD"};
+                shoppingCart = new ShoppingCart(shoppingCartItems) { Currency = "USD"};
 
                 return Task.FromResult(shoppingCart);
             };
-
-            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, new MockAccountService(), null);
+            var eventAggregator = new MockEventAggregator();
+            eventAggregator.GetEventDelegate = type => new MockShoppingCartUpdatedEvent();
+            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, new MockAccountService(), null, eventAggregator);
             target.OnNavigatedTo(null, NavigationMode.New, null);
 
             Assert.AreEqual("$200.00", target.FullPrice);
@@ -69,32 +74,35 @@ namespace Kona.UILogic.Tests.ViewModels
         }
 
         [TestMethod]
-        public void ShoppingCartUpdated_WhenUserChanged()
+        public void ShoppingCartUpdated_WhenShoppingCartChanged()
         {
-            var shoppingCartRepository = new MockShoppingCartRepository();
             var navigationService = new MockNavigationService();
             var accountService = new MockAccountService();
-
-            accountService.GetUserIdDelegate = () => "User1";
-
+            var shoppingCartRepository = new MockShoppingCartRepository();
             shoppingCartRepository.GetShoppingCartAsyncDelegate = () =>
             {
-                ShoppingCart shoppingCart = new ShoppingCart(new ObservableCollection<ShoppingCartItem>()) { FullPrice = 100, TotalDiscount = 100, Currency = "USD"};
+                ShoppingCart shoppingCart = new ShoppingCart(new ObservableCollection<ShoppingCartItem>()) { Currency = "USD"};
                 return Task.FromResult(shoppingCart);
             };
-
-            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, accountService, null);
+            var eventAggregator = new MockEventAggregator();
+            var shoppingCartUpdatedEvent = new ShoppingCartUpdatedEvent();
+            eventAggregator.GetEventDelegate = type => shoppingCartUpdatedEvent;
+            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, accountService, null, eventAggregator);
             target.OnNavigatedTo(null, NavigationMode.New, null);  
 
-            Assert.AreEqual("$100.00", target.FullPrice);
+            Assert.AreEqual("$0.00", target.FullPrice);
 
             shoppingCartRepository.GetShoppingCartAsyncDelegate = () =>
             {
-                ShoppingCart shoppingCart = new ShoppingCart(new ObservableCollection<ShoppingCartItem>()) { FullPrice = 200, TotalDiscount = 200, Currency = "USD"};
+                var shoppingCartItems = new ObservableCollection<ShoppingCartItem>
+                                            {
+                                                new ShoppingCartItem() { Product = new Product { ListPrice = 100, ProductNumber = "p1", ImageName = "http://image"}, Currency = "USD", Quantity = 2}, 
+                                            };
+                ShoppingCart shoppingCart = new ShoppingCart(new ObservableCollection<ShoppingCartItem>(shoppingCartItems)) { Currency = "USD" };
                 return Task.FromResult(shoppingCart);
             };
 
-            accountService.RaiseUserChanged(new UserInfo {UserName = "User2"});
+            shoppingCartUpdatedEvent.Publish();
 
             Assert.AreEqual("$200.00", target.FullPrice);
 
@@ -104,19 +112,85 @@ namespace Kona.UILogic.Tests.ViewModels
         public void UpdateShoppingCart_ClearsFields_WhenShoppingCartEmpty()
         {
             var shoppingCartRepository = new MockShoppingCartRepository();
-            shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult((ShoppingCart)null);
-
+            shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult<ShoppingCart>(null);
+            var eventAggregator = new MockEventAggregator();
+            eventAggregator.GetEventDelegate = type => new MockShoppingCartUpdatedEvent();
             var target = new ShoppingCartPageViewModel(shoppingCartRepository, new MockNavigationService(),
-                                                       new MockAccountService(), new MockSettingsCharmService());
+                                                       new MockAccountService(), new MockSettingsCharmService(), eventAggregator);
 
-            target.TotalPrice = "TotalPrice";
-            target.TotalDiscount = "TotalDiscount";
-            target.FullPrice = "FullPrice";
             target.OnNavigatedTo(null, NavigationMode.New, null);
 
             Assert.AreEqual(string.Empty, target.TotalPrice);
             Assert.AreEqual(string.Empty, target.TotalDiscount);
             Assert.AreEqual(string.Empty, target.FullPrice);
+        }
+
+        [TestMethod]
+        public void Checkout_WhenAnonymous_ShowsSignInFlyout()
+        {
+            var showFlyoutCalled = false;
+            var navigationService = new MockNavigationService();
+            var accountService = new MockAccountService();
+            accountService.GetSignedInUserAsyncDelegate = () => Task.FromResult<UserInfo>(null);
+            var settingsCharmService = new MockSettingsCharmService();
+            settingsCharmService.ShowFlyoutDelegate = (s, o, arg3) =>
+                                                          {
+                                                              showFlyoutCalled = true;
+                                                              Assert.AreEqual("signIn", s);
+                                                          };
+            var eventAggregator = new MockEventAggregator();
+            eventAggregator.GetEventDelegate = type => new MockShoppingCartUpdatedEvent();
+            var target = new ShoppingCartPageViewModel(null, navigationService, accountService, settingsCharmService, eventAggregator);
+
+            target.CheckoutCommand.Execute();
+
+            Assert.IsTrue(showFlyoutCalled);
+        }
+
+        [TestMethod]
+        public void CheckoutCommand_NotExecutable_IfNoItemsInCart()
+        {
+            var navigationService = new MockNavigationService();
+            var shoppingCartRepository = new MockShoppingCartRepository();
+            shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult<ShoppingCart>(null);
+            var eventAggregator = new MockEventAggregator();
+            eventAggregator.GetEventDelegate = type => new MockShoppingCartUpdatedEvent();
+            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, null, null, eventAggregator);
+            target.UpdateShoppingCartAsync();
+            
+            Assert.IsFalse(target.CheckoutCommand.CanExecute());
+
+            shoppingCartRepository.GetShoppingCartAsyncDelegate = 
+                () => Task.FromResult(new ShoppingCart(new Collection<ShoppingCartItem>()){Currency = "USD", FullPrice = 0, TaxRate = 0, TotalDiscount = 0, TotalPrice = 0});
+            target.UpdateShoppingCartAsync();
+            
+            Assert.IsFalse(target.CheckoutCommand.CanExecute());
+
+            shoppingCartRepository.GetShoppingCartAsyncDelegate =
+                () => Task.FromResult(new ShoppingCart(new Collection<ShoppingCartItem> { new ShoppingCartItem{Product = new Product(), Currency = "USD", DiscountPercentage = 0, Quantity = 0} }) 
+                { Currency = "USD", FullPrice = 0, TaxRate = 0, TotalDiscount = 0, TotalPrice = 0 });
+            target.UpdateShoppingCartAsync();
+
+            Assert.IsTrue(target.CheckoutCommand.CanExecute());
+
+        }
+
+        [TestMethod]
+        public void DecrementCountCommand_NotExecutable()
+        {
+            var navigationService = new MockNavigationService();
+            var shoppingCartRepository = new MockShoppingCartRepository();
+            var eventAggregator = new MockEventAggregator();
+            eventAggregator.GetEventDelegate = type => new MockShoppingCartUpdatedEvent();
+            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, null, null, eventAggregator);
+
+            target.SelectedItem = new ShoppingCartItemViewModel(new ShoppingCartItem(){ Quantity = 2, Currency = "USD", Product = new Product(), });
+
+            Assert.IsTrue(target.DecrementCountCommand.CanExecute());
+
+            target.SelectedItem = new ShoppingCartItemViewModel(new ShoppingCartItem() { Quantity = 1, Currency = "USD", Product = new Product() });
+
+            Assert.IsFalse(target.DecrementCountCommand.CanExecute());
         }
 
         // Note: The remove method is a WIP

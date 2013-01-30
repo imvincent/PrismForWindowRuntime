@@ -32,7 +32,7 @@
                 <StackPanel Orientation="Horizontal"
                             Grid.Column="0"
                             Margin="40, 32, 17, 13">
-                    <Button Command="{Binding GoBackCommand}"
+                    <Button Command="{Binding GoBackCommand}" AutomationProperties.AutomationId="EditShippingAddressFlyoutBackButton"
                             Margin="0,3,0,0"
                             Style="{StaticResource SettingsBackButtonStyle}" />
                     <TextBlock x:Uid="EditShippingAddressTitle" Margin="10,0,0,0"
@@ -53,7 +53,7 @@
 
                     <StackPanel x:Name="FlyoutContent">
                         <local:ShippingAddressUserControl  behaviors:ChangeVisualState.VisualState="Flyout" x:Name="shippingAddressUC" DataContext="{Binding ShippingAddressUserControlViewModel}" Grid.Column="2" Grid.Row="1"/>
-                        <Button x:Uid="SaveButton" Content="Save" Background="{StaticResource AWShopperAccentBrush}" HorizontalAlignment="Stretch" Margin="20,20,20,0"
+                        <Button x:Uid="SaveButton" AutomationProperties.AutomationId="SaveButton" Content="Save" Background="{StaticResource AWShopperAccentBrush}" HorizontalAlignment="Stretch" Margin="20,20,20,0"
                                     Command="{Binding SaveCommand}" />
                     </StackPanel>
                 </Grid>

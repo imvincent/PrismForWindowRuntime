@@ -6,6 +6,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System.Security;
 using System.Threading.Tasks;
 using Kona.UILogic.Services;
 using Kona.UILogic.Tests.Mocks;
@@ -13,6 +14,7 @@ using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System.Net;
 using Kona.UILogic.Models;
 using Windows.Security.Credentials;
+using System.Net.Http;
 
 namespace Kona.UILogic.Tests
 {
@@ -28,13 +30,7 @@ namespace Kona.UILogic.Tests
             var stateService = new MockRestorableStateService();
             identityService.LogOnAsyncDelegate = (userId, password) =>
                 {
-                    var userValidationResult =
-                        new UserValidationResult
-                            {
-                                IsValid = true,
-                                UserInfo = new UserInfo{UserName = userId}
-                            };
-                    return Task.FromResult(new LogOnResult { ServerCookieHeader = string.Empty, UserValidationResult = userValidationResult });
+                    return Task.FromResult(new LogOnResult { ServerCookieHeader = string.Empty, UserInfo = new UserInfo{UserName = userId} });
                 };
 
             var target = new AccountService(identityService, stateService, null);
@@ -54,12 +50,7 @@ namespace Kona.UILogic.Tests
             var stateService = new MockRestorableStateService();
             identityService.LogOnAsyncDelegate = (userId, password) =>
             {
-                var userValidationResult =
-                    new UserValidationResult
-                    {
-                        IsValid = false
-                    };
-                return Task.FromResult(new LogOnResult { ServerCookieHeader = string.Empty, UserValidationResult = userValidationResult });
+                throw new HttpRequestException();
             };
 
             var target = new AccountService(identityService, stateService, null);
@@ -81,12 +72,7 @@ namespace Kona.UILogic.Tests
                     return Task.FromResult(new LogOnResult()
                         {
                             ServerCookieHeader = "cookie",
-                            UserValidationResult =
-                                new UserValidationResult()
-                                    {
-                                        IsValid = true,
-                                        UserInfo = new UserInfo() {UserName = "TestUsername"}
-                                    }
+                            UserInfo = new UserInfo() {UserName = "TestUsername"}
                         });
                 };
 
@@ -128,8 +114,7 @@ namespace Kona.UILogic.Tests
                         Assert.AreEqual("TestPassword", password);
                         return Task.FromResult(new LogOnResult()
                                             {
-                                                UserValidationResult =
-                                                    new UserValidationResult() { IsValid = true, UserInfo = new UserInfo(){UserName = "ReturnedUserName"}}
+                                                UserInfo = new UserInfo(){UserName = "ReturnedUserName"}
                                             });
                     };
             var credentialStore = new MockCredentialStore();
@@ -153,11 +138,7 @@ namespace Kona.UILogic.Tests
                 {
                     Assert.AreEqual("TestUserName", userName);
                     Assert.AreEqual("TestPassword", password);
-                    return Task.FromResult(new LogOnResult()
-                    {
-                        UserValidationResult =
-                            new UserValidationResult() { IsValid = false }
-                    });
+                    throw new HttpRequestException();
                 };
             var credentialStore = new MockCredentialStore();
             credentialStore.GetSavedCredentialsDelegate = s => new PasswordCredential("KonaRI", "TestUserName", "TestPassword");
@@ -166,6 +147,48 @@ namespace Kona.UILogic.Tests
             var userInfo = await target.GetSignedInUserAsync();
 
             Assert.IsNull(userInfo);
+        }
+
+        [TestMethod]
+        public async Task SignOut_RaisesUserChangedEvent()
+        {
+            var userChangedRaised = false;
+            var credentialStore = new MockCredentialStore();
+            credentialStore.GetSavedCredentialsDelegate = s => null;
+            var target = new AccountService(null, null, credentialStore);
+            target.UserChanged += (sender, args) =>
+                                      {
+                                          userChangedRaised = true;
+                                          Assert.IsNull(args.NewUserInfo);
+                                      };
+
+            target.SignOut();
+
+            Assert.IsTrue(userChangedRaised);
+
+            var signedInUser = await target.GetSignedInUserAsync();
+
+            Assert.IsNull(signedInUser);
+        }
+
+        [TestMethod]
+        public async Task GetSignedInUserAsync_WhenSessionTimedOut_ReturnsNull()
+        {
+            var identityService = new MockIdentityService();
+            identityService.LogOnAsyncDelegate = (s, s1) => Task.FromResult(new LogOnResult {UserInfo = new UserInfo(), ServerCookieHeader = string.Empty});
+            var restorableStateService = new MockRestorableStateService();
+            var target = new AccountService(identityService, restorableStateService, null);
+
+            target.SignInUserAsync("testusername", "testpassword");
+
+            identityService.VerifyActiveSessionDelegate = (s, s1) =>
+                                                              {
+                                                                  throw new SecurityException();
+                                                              };
+            var userInfo = await target.GetSignedInUserAsync();
+
+            Assert.IsNull(userInfo);
+
         }
     }
 }

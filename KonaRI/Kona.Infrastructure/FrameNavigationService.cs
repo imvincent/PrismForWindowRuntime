@@ -73,11 +73,13 @@ namespace Kona.Infrastructure
         }
         // </snippet702>
 
+        // <snippet413>
         public bool Navigate(string pageToken, object parameter)
         {
             Type pageType = this.navigationResolver(pageToken);
             return frame.Navigate(pageType, parameter);
         }
+        // </snippet413>
 
         public void GoBack()
         {
@@ -87,6 +89,11 @@ namespace Kona.Infrastructure
         public bool CanGoBack()
         {
             return frame.CanGoBack;
+        }
+
+        public void ClearHistory()
+        {
+            frame.SetNavigationState("1,0");
         }
     }
 }

@@ -14,11 +14,13 @@ namespace Kona.UILogic.Models
     {
         public UserChangedEventArgs() { }
 
-        public UserChangedEventArgs(UserInfo userInfo)
+        public UserChangedEventArgs(UserInfo newUserInfo, UserInfo oldUserInfo)
         {
-            UserInfo = userInfo;
+            NewUserInfo = newUserInfo;
+            OldUserInfo = oldUserInfo;
         }
 
-        public UserInfo UserInfo { get; set; }
+        public UserInfo NewUserInfo { get; set; }
+        public UserInfo OldUserInfo { get; set; }
     }
 }

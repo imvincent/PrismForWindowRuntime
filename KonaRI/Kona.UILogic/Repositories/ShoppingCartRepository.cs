@@ -9,21 +9,24 @@
 using Kona.UILogic.Events;
 using Kona.UILogic.Models;
 using Kona.UILogic.Services;
-using Microsoft.Practices.Prism.Events;
+using Microsoft.Practices.PubSubEvents;
 using System;
 using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace Kona.UILogic.Repositories
 {
     public class ShoppingCartRepository : IShoppingCartRepository
     {
-        public static readonly string HighPriorityRoamingSettingKey = "HighPriority";
+        public const string ShoppingCartIdSettingKey = "ShoppingCartId";
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IAccountService _accountService;
         private readonly IEventAggregator _eventAggregator;
         private readonly IProductCatalogRepository _productCatalogRepository;
+        private readonly ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
 
         private string _shoppingCartId;
+        private ShoppingCart _cachedShoppingCart = null;
         
         public ShoppingCartRepository(IShoppingCartService shoppingCartService, IAccountService accountService, IEventAggregator eventAggregator, IProductCatalogRepository productCatalogRepository)
         {
@@ -36,42 +39,47 @@ namespace Kona.UILogic.Repositories
             {
                 _accountService.UserChanged += _accountService_UserChanged;
             }
-            Windows.Storage.ApplicationData.Current.DataChanged += Current_DataChanged;
-            var roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
 
-            if (roamingSettings.Values.ContainsKey(HighPriorityRoamingSettingKey))
-                _shoppingCartId = roamingSettings.Values[HighPriorityRoamingSettingKey].ToString();
+            if (_localSettings.Values.ContainsKey(ShoppingCartIdSettingKey))
+                _shoppingCartId = _localSettings.Values[ShoppingCartIdSettingKey].ToString();
             else
             {
                 _shoppingCartId = Guid.NewGuid().ToString();
-                roamingSettings.Values[HighPriorityRoamingSettingKey] = _shoppingCartId;
+                _localSettings.Values[ShoppingCartIdSettingKey] = _shoppingCartId;
             }
         }
 
-        public Task ClearCartAsync()
+        public async Task ClearCartAsync()
         {
-            var task = _shoppingCartService.DeleteShoppingCartAsync(_shoppingCartId);
+            _cachedShoppingCart = null;
+            await _shoppingCartService.DeleteShoppingCartAsync(_shoppingCartId);
             RaiseShoppingCartUpdated();
-            return task;
         }
 
-        void _accountService_UserChanged(object sender, UserChangedEventArgs e)
+        async void _accountService_UserChanged(object sender, UserChangedEventArgs e)
         {
-            var roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
-            _shoppingCartId = e.UserInfo.UserName;
-            roamingSettings.Values[HighPriorityRoamingSettingKey] = _shoppingCartId;
-        }
+            _cachedShoppingCart = null;
+            if (e.NewUserInfo != null)
+            {
+                if (e.OldUserInfo == null)
+                {
+                    await _shoppingCartService.MergeShoppingCartsAsync(_shoppingCartId, e.NewUserInfo.UserName);
+                }
+                _shoppingCartId = e.NewUserInfo.UserName;                
+            }
+            else
+            {
+                _shoppingCartId = Guid.NewGuid().ToString();
+            }
 
-        void Current_DataChanged(Windows.Storage.ApplicationData sender, object args)
-        {
-            var roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
-
-            if (roamingSettings.Values.ContainsKey(HighPriorityRoamingSettingKey))
-                _shoppingCartId = roamingSettings.Values[HighPriorityRoamingSettingKey].ToString();
+            _localSettings.Values[ShoppingCartIdSettingKey] = _shoppingCartId;
+            RaiseShoppingCartUpdated();
         }
 
         public async Task<ShoppingCart> GetShoppingCartAsync()
         {
+            if (_cachedShoppingCart != null) return _cachedShoppingCart;
+
             ShoppingCart cart = await _shoppingCartService.GetShoppingCartAsync(_shoppingCartId);
             if (cart == null) return null;
 
@@ -81,24 +89,41 @@ namespace Kona.UILogic.Repositories
                 var product = await _productCatalogRepository.GetProductAsync(shoppingCartItem.Product.ProductNumber);
                 shoppingCartItem.Product.ImageName = product.ImageName;
             }
+            _cachedShoppingCart = cart;
             return cart;
         }
 
-        public async void AddProductToShoppingCartAsync(string productId)
+        public async Task AddProductToShoppingCartAsync(string productId)
         {
+            _cachedShoppingCart = null;
             await _shoppingCartService.AddProductToShoppingCartAsync(_shoppingCartId, productId);
-            RaiseShoppingCartUpdated();
+            RaiseShoppingCartItemUpdated();
         }
 
-        public void RemoveShoppingCartItemAsync(int itemId)
+        public async Task RemoveProductFromShoppingCartAsync(string productId)
         {
-            _shoppingCartService.RemoveShoppingCartItemAsync(_shoppingCartId, itemId);
-            RaiseShoppingCartUpdated();
+            _cachedShoppingCart = null;
+            await _shoppingCartService.RemoveProductFromShoppingCartAsync(_shoppingCartId, productId);
+            RaiseShoppingCartItemUpdated();
         }
 
+        public async Task RemoveShoppingCartItemAsync(string itemId)
+        {
+            _cachedShoppingCart = null;
+            await _shoppingCartService.RemoveShoppingCartItemAsync(_shoppingCartId, itemId);
+            RaiseShoppingCartItemUpdated();
+        }
+
+        // <snippet1501>
         private void RaiseShoppingCartUpdated()
         {
-            _eventAggregator.GetEvent<ShoppingCartUpdatedEvent>().Publish("payload");
+            _eventAggregator.GetEvent<ShoppingCartUpdatedEvent>().Publish();
+        }
+        // </snippet1501>
+
+        private void RaiseShoppingCartItemUpdated()
+        {
+            _eventAggregator.GetEvent<ShoppingCartItemUpdatedEvent>().Publish();
         }
     }
 }

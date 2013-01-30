@@ -8,13 +8,14 @@
 
 using System;
 using Kona.UILogic.Services;
+using Kona.Infrastructure;
 namespace Kona.UILogic.Tests.Mocks
 {
     public class MockResourceLoader : IResourceLoader
     {
         public MockResourceLoader()
         {
-            GetStringDelegate = s => string.Empty;
+            GetStringDelegate = s => s;
         }
 
         public Func<string, string> GetStringDelegate { get; set; }

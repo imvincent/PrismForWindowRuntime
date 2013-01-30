@@ -31,7 +31,7 @@
                 <StackPanel Orientation="Horizontal"
                             Grid.Column="0"
                             Margin="40, 32, 17, 13">
-                    <Button Command="{Binding GoBackCommand}"
+                    <Button Command="{Binding GoBackCommand}" AutomationProperties.AutomationId="PaymentMethodFlyoutBackButton"
                             Margin="0,3,0,0"
                             Style="{StaticResource SettingsBackButtonStyle}" />
                     <TextBlock x:Uid="AddPaymentMethodTitle" Margin="10,0,0,0"
@@ -51,7 +51,7 @@
 
                     <StackPanel x:Name="FlyoutContent">
                         <local:PaymentMethodUserControl  behaviors:ChangeVisualState.VisualState="Flyout" x:Name="paymentMethodUC" DataContext="{Binding PaymentMethodPageViewModel}" Grid.Column="2" Grid.Row="1"/>
-                        <Button x:Uid="AddButton" Content="Add" Background="{StaticResource AWShopperAccentBrush}" HorizontalAlignment="Stretch" Margin="20,20,20,0"
+                        <Button x:Uid="AddButton" AutomationProperties.AutomationId="AddButton" Content="Add" Background="{StaticResource AWShopperAccentBrush}" HorizontalAlignment="Stretch" Margin="20,20,20,0"
                                     Command="{Binding AddCommand}" />
                     </StackPanel>
                 </Grid>

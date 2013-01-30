@@ -7,14 +7,14 @@
 
 
 using System;
-using Kona.AWShopper.Common;
 using Kona.Infrastructure;
 using Kona.UILogic.Repositories;
 using Kona.UILogic.Services;
-using Microsoft.Practices.Prism.Events;
+using Microsoft.Practices.PubSubEvents;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Resources;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -76,6 +76,10 @@ namespace Kona.AWShopper
                 Window.Current.Content = rootFrame;
             }
 
+            if (args.PreviousExecutionState == ApplicationExecutionState.NotRunning)
+            {
+                ApplicationData.Current.LocalSettings.Values.Remove(ShoppingCartRepository.ShoppingCartIdSettingKey);                
+            }
             _resourceLoader = new ResourceLoaderAdapter(new ResourceLoader());
             _settingsCharmService = CreateSettingsCharmService();
             _stateService = new RestorableStateService();
@@ -105,7 +109,9 @@ namespace Kona.AWShopper
                 }
             }
             else
+            {
                 _stateService.SetFrameState(SuspensionManager.SessionStateForFrame(rootFrame));
+            }
 
             // <snippet404>
             if (rootFrame.Content == null)

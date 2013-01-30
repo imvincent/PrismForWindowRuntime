@@ -19,7 +19,7 @@ using Kona.WebServices.Repositories;
 
 namespace Kona.WebServices.Controllers
 {
-    
+    [Authorize]
     public class OrderController : ApiController
     {
         private IRepository<Order> _orderRepository;
@@ -49,82 +49,34 @@ namespace Kona.WebServices.Controllers
 
         // POST /api/order/create
         [HttpPost]
-        [ActionName("Create")]
         public HttpResponseMessage CreateOrder(Order order)
         {
             if (order == null)
             {
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Invalid order");
             }
-
-            object responseContent = null;
-            HttpStatusCode statusCode = HttpStatusCode.Created;
 
             if (ModelState.IsValid)
             {
                 order = _orderRepository.Create(order);
-                responseContent = new { IsValid = true, Order = order };
+                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, order);
+                response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = order.Id }));
+                return response;
             }
             else
             {
-                statusCode = HttpStatusCode.BadRequest;
-                var errorMessages = ModelState.Select(c => new { Property = c.Key, Messages = c.Value.Errors.Select(d => d.ErrorMessage) });
-                responseContent = new { IsValid = false, Order = order, Message = errorMessages };
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
             }
-
-            // Send the response to the client
-            HttpResponseMessage response = Request.CreateResponse(statusCode, responseContent);
-            string uri = Url.Link("DefaultApi", null);
-            response.Headers.Location = new Uri(uri);
-
-            return response;
         }
 
-        // POST /api/order/id
+        // PUT /api/order/process 
         [HttpPut]
-        [ActionName("Update")]
-        public HttpResponseMessage UpdateOrder(Order order)
+        public HttpResponseMessage ProcessOrder(int id, Order order)
         {
-            if (order == null)
+            if (order == null || id != order.Id)
             {
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Invalid order");
             }
-
-            object responseContent = null;
-            HttpStatusCode statusCode = HttpStatusCode.OK;
-
-            if (ModelState.IsValid)
-            {
-                _orderRepository.Update(order);
-                responseContent = new { IsValid = true, Order = order };
-            }
-            else
-            {
-                statusCode = HttpStatusCode.BadRequest;
-                var errorMessages = ModelState.Select(c => new { Property = c.Key, Messages = c.Value.Errors });
-                responseContent = new { IsValid = true, Order = order, Message = errorMessages };
-            }
-
-            // Send the response to the client
-            HttpResponseMessage response = Request.CreateResponse(statusCode, responseContent);
-            string uri = Url.Link("DefaultApi", null);
-            response.Headers.Location = new Uri(uri);
-
-            return response;
-        }
-
-        // POST /api/order/process 
-        [HttpPost]
-        [ActionName("Process")]
-        public HttpResponseMessage ProcessOrder(Order order)
-        {
-            if (order == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
-            }
-
-            object responseContent = null;
-            HttpStatusCode statusCode = HttpStatusCode.OK;
 
             if (ModelState.IsValid)
             {
@@ -136,27 +88,16 @@ namespace Kona.WebServices.Controllers
                 {
                     // TODO: Process the order
                     _orderRepository.Delete(order);
-                    responseContent = new { IsValid = true };
+                    return Request.CreateResponse();
                 }
                 else
                 {
-                    statusCode = HttpStatusCode.BadRequest;
-                    responseContent = new { IsValid = false, Order = order, Message = result };
+                    ModelState.AddModelError("order.PaymentInfo", result);
                 }
             }
-            else
-            {
-                statusCode = HttpStatusCode.BadRequest;
-                var errorMessages = ModelState.Values.SelectMany(c => c.Errors).Select(c => c.ErrorMessage);
-                responseContent = new { IsValid = false, Order = order, Message = string.Join(Environment.NewLine, errorMessages) };
-            }
 
-            // Send the response to the client
-            HttpResponseMessage response = Request.CreateResponse(statusCode, responseContent);
-            string uri = Url.Link("DefaultApi", null);
-            response.Headers.Location = new Uri(uri);
-
-            return response;
+            // Only get here if there are modelstate errors
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
         }
     }
 }

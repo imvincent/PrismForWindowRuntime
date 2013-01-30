@@ -7,6 +7,7 @@
 
 
 using System.Collections.Generic;
+using System.Security;
 using System.Threading.Tasks;
 using Kona.UILogic.Models;
 using Kona.UILogic.Tests.Mocks;
@@ -19,6 +20,26 @@ namespace Kona.UILogic.Tests.ViewModels
     [TestClass]
     public class CheckoutSummaryPageViewModelFixture
     {
+        [TestMethod]
+        public void Checkout_WhenAnonymous_ShowsSignInFlyout()
+        {
+            var showFlyoutCalled = false;
+            var navigationService = new MockNavigationService();
+            var accountService = new MockAccountService();
+            accountService.GetSignedInUserAsyncDelegate = () => Task.FromResult<UserInfo>(null);
+            var settingsCharmService = new MockSettingsCharmService();
+            settingsCharmService.ShowFlyoutDelegate = (s, o, arg3) =>
+            {
+                showFlyoutCalled = true;
+                Assert.AreEqual("signIn", s);
+            };
+            var target = new CheckoutSummaryPageViewModel(navigationService, null, null, null, null, accountService, settingsCharmService, null);
+
+            target.SubmitCommand.Execute();
+
+            Assert.IsTrue(showFlyoutCalled);
+        }
+
         [TestMethod]
         public void UnselectingShippingMethod_CalculatesTotalCostWithZeroShipping()
         {

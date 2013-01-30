@@ -9,34 +9,32 @@
 using System;
 using System.Windows.Input;
 using Kona.Infrastructure;
+using Windows.ApplicationModel.Resources;
 
 namespace Kona.UILogic.ViewModels
 {
-    // DP: The content property is not used yet, we have to determine if it is needed
     public class CheckoutDataViewModel : ViewModel
     {
         private string _name;
         private string _dataType;
         private string _firstLine;
         private string _secondLine;
-        private object _content;
         private ISettingsCharmService _settingsCharmService;
 
         public CheckoutDataViewModel()
         {
-            this.EditDataCommand = new DelegateCommand(EditData);
+            EditDataCommand = new DelegateCommand(EditData);
         }
 
         public CheckoutDataViewModel(dynamic checkoutData, ISettingsCharmService settingsCharmService)
             : this()
         {
-            this.EntityId = checkoutData.EntityId;
-            this.DataType = checkoutData.DataType;
-            this.FirstLine = checkoutData.FirstLine;
-            this.SecondLine = checkoutData.SecondLine;
-            this.Name = checkoutData.Name;
-            this.Content = checkoutData.Content;
-            this._settingsCharmService = settingsCharmService;
+            EntityId = checkoutData.EntityId;
+            DataType = checkoutData.DataType;
+            FirstLine = checkoutData.FirstLine;
+            SecondLine = checkoutData.SecondLine;
+            Name = checkoutData.Name;
+            _settingsCharmService = settingsCharmService;
         }
 
         public string DataType
@@ -63,48 +61,36 @@ namespace Kona.UILogic.ViewModels
             set { SetProperty(ref _secondLine, value); }
         }
 
-        public object Content
-        {
-            get { return _content; }
-            set { SetProperty(ref _content, value); }
-        }
-
-        public Uri ImageUrl
-        {
-            get
-            {
-                switch (DataType)
-                {
-                    case "Shipping Address":
-                        return null;
-                    case "Billing Address":
-                        return null;
-                    case "PaymentInfo":
-                        return null;
-                    default:
-                        return null;
-                }
-            }
-        }
-
         public ICommand EditDataCommand { get; set; }
 
         public void EditData()
         {
-            // Navigate to edit page{
-
             if (DataType == null) return;
 
-            switch (DataType)
+            var resourceLoader = new ResourceLoader();
+            string flyoutName = string.Empty;
+            
+            // We cannot use a switch here because we're comparing the DataType with a dynamic value
+            if (DataType == resourceLoader.GetString("ShippingAddress"))
             {
-                case "Billing Address": _settingsCharmService.ShowFlyout("editBillingAddress", EntityId, null);
-                    break;
-                case "Shipping Address": _settingsCharmService.ShowFlyout("editShippingAddress", EntityId, null);
-                    break;
-                case "Payment": _settingsCharmService.ShowFlyout("editPaymentMethod", EntityId, null);
-                    break;
+                flyoutName = "editShippingAddress";
             }
-        
+
+            if (DataType == resourceLoader.GetString("BillingAddress"))
+            {
+               flyoutName = "editBillingAddress";
+            }
+
+            if (DataType == resourceLoader.GetString("PaymentInfo"))
+            {
+                flyoutName = "editPaymentMethod";
+            }
+
+            // Display EditFlyout
+            if (string.IsNullOrEmpty(flyoutName))
+            {
+                _settingsCharmService.ShowFlyout(flyoutName, EntityId, null);
+            }
         }
     }
 }

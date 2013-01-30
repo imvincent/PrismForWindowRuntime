@@ -6,7 +6,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System.ComponentModel;
 using Kona.Infrastructure;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 // The Group Detail Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234229
@@ -24,26 +26,63 @@ namespace Kona.AWShopper.Views
 
         public GroupDetailPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
-        void itemGridView_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        protected override void OnNavigatedTo(Windows.UI.Xaml.Navigation.NavigationEventArgs e)
         {
+            base.OnNavigatedTo(e);
+            var viewModel = this.DataContext as INotifyPropertyChanged;
+            if (viewModel != null)
+            {
+                viewModel.PropertyChanged += viewModel_PropertyChanged;
+            }
+        }
+
+        protected override void OnNavigatedFrom(Windows.UI.Xaml.Navigation.NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            var viewModel = this.DataContext as INotifyPropertyChanged;
+            var adventureWorksApp = Application.Current as App;
+            if (adventureWorksApp != null && (!adventureWorksApp.IsSuspending && viewModel != null))
+            {
+                viewModel.PropertyChanged -= viewModel_PropertyChanged;
+            }
+        }
+
+        void viewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Items")
+            {
+                var listViewBase = GroupDetailssemanticZoom.ZoomedOutView as ListViewBase;
+                if (listViewBase != null)
+                    listViewBase.ItemsSource = itemsViewSource.View.CollectionGroups;
+            }
+        }
+
+
+        void itemGridView_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Find the ScrollViewer inside the GridView
             itemGridViewScrollViewer = VisualTreeUtilities.GetVisualChild<ScrollViewer>(itemGridView);
-            ScrollToSavedHorizontalOffset();
-
-            itemGridViewScrollViewer.Loaded += itemGridViewScrollViewer_Loaded;
-
+            if (itemGridViewScrollViewer != null)
+            {
+                // Use a helper that lets you watch a dependency property on an object for changes
+                // In this case, watching for the horizontal scroll bar to become visible
+                DependencyPropertyChangedHelper helper = new DependencyPropertyChangedHelper(itemGridViewScrollViewer, "ComputedHorizontalScrollBarVisibility");
+                // When the scrollbar becomes visible - update scroll location to last scroll location before we scrolled away
+                helper.PropertyChanged += (s, e2) =>
+                {
+                    var isVisible = ((Visibility)e2.NewValue) == Windows.UI.Xaml.Visibility.Visible;
+                    if (isVisible)
+                        ScrollToSavedHorizontalOffset();
+                };
+            }
         }
 
         private void ScrollToSavedHorizontalOffset()
         {
             itemGridViewScrollViewer.ScrollToHorizontalOffset(itemGridViewScrollViewerHorizontalOffset);
-        }
-
-        void itemGridViewScrollViewer_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            ScrollToSavedHorizontalOffset();
         }
 
         protected override void SaveState(System.Collections.Generic.Dictionary<string, object> pageState)
@@ -67,9 +106,5 @@ namespace Kona.AWShopper.Views
             }
         }
 
-        private void Button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            ScrollToSavedHorizontalOffset();
-        }
     }
 }

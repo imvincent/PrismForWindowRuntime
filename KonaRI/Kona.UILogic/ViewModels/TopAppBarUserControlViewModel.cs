@@ -12,6 +12,7 @@ namespace Kona.UILogic.ViewModels
 {
     public class TopAppBarUserControlViewModel : BindableBase
     {
+        // <snippet402>
         public TopAppBarUserControlViewModel(INavigationService navigationService)
         {
             HomeNavigationCommand = new DelegateCommand(() => navigationService.Navigate("Hub", null));
@@ -20,5 +21,6 @@ namespace Kona.UILogic.ViewModels
 
         public DelegateCommand HomeNavigationCommand { get; private set; }
         public DelegateCommand ShoppingCartNavigationCommand { get; private set; }
+        // </snippet402>
     }
 }

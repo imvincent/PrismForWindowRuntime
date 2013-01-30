@@ -19,7 +19,6 @@ namespace Kona.UILogic.ViewModels
 {
     public class PaymentMethodUserControlViewModel : ViewModel, INavigationAware, IPaymentMethodUserControlViewModel
     {
-        private bool _saveInformation;
         private bool _setAsDefault;
         private readonly ICheckoutDataRepository _checkoutDataRepository;
         private int _currentFormStatus;
@@ -29,28 +28,13 @@ namespace Kona.UILogic.ViewModels
         {
             _paymentInfo = new PaymentInfo() { Id = Guid.NewGuid().ToString() };
             _checkoutDataRepository = checkoutDataRepository;
-            _paymentInfo.ErrorsChanged += ValidatorErrorsChanged;
         }
         
         [RestorableState]
         public PaymentInfo PaymentInfo
         {
             get { return _paymentInfo; }
-            set
-            {
-                if (SetProperty(ref _paymentInfo, value))
-                {
-                    _paymentInfo.ErrorsChanged += ValidatorErrorsChanged;
-                    OnPropertyChanged("Errors");
-                }
-            }
-        }
-
-        [RestorableState]
-        public bool SaveInformation
-        {
-            get { return _saveInformation; }
-            set { SetProperty(ref _saveInformation, value); }
+            set { SetProperty(ref _paymentInfo, value); }
         }
 
         [RestorableState]
@@ -65,14 +49,6 @@ namespace Kona.UILogic.ViewModels
         {
             get { return _currentFormStatus; }
             set { SetProperty(ref _currentFormStatus, value); }
-        }
-
-        public BindableValidator Errors
-        {
-            get
-            {
-                return _paymentInfo.Errors;
-            }
         }
 
         public override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState)
@@ -100,19 +76,13 @@ namespace Kona.UILogic.ViewModels
                     PaymentInfo = _checkoutDataRepository.GetDefaultPaymentInfoValue();
 
                     // Validate form fields
-                    bool isValid = _paymentInfo.ValidateProperties();
-                    CurrentFormStatus = isValid ? FormStatus.Complete : FormStatus.Invalid;
+                    ValidateForm();
                 }
             }
         }
 
         public override void OnNavigatedFrom(Dictionary<string, object> viewState, bool suspending)
         {
-            if (!suspending)
-            {
-                _paymentInfo.ErrorsChanged -= ValidatorErrorsChanged;
-            }
-
             base.OnNavigatedFrom(viewState, suspending);
 
             // Store the errors collection manually
@@ -124,28 +94,23 @@ namespace Kona.UILogic.ViewModels
 
         public void ProcessForm()
         {
-            if (SaveInformation)
+            var savedPaymentInformation =  _checkoutDataRepository.SavePaymentInfo(PaymentInfo);
+
+            //If matching saved payment information found, use saved payment information
+            if (savedPaymentInformation.Id != PaymentInfo.Id)
             {
-                _checkoutDataRepository.SavePaymentInfo(PaymentInfo);
+                PaymentInfo = savedPaymentInformation;
             }
 
             if (SetAsDefault)
             {
-                _checkoutDataRepository.SetAsDefaultPaymentInfo(PaymentInfo.Id);
+                _checkoutDataRepository.SetAsDefaultPaymentInfo(savedPaymentInformation.Id);
             }
         }
 
         public bool ValidateForm()
         {
-            bool isValid = _paymentInfo.ValidateProperties();
-            CurrentFormStatus = isValid ? FormStatus.Complete : FormStatus.Invalid;
-            return isValid;
-        }
-
-        private void ValidatorErrorsChanged(object sender, DataErrorsChangedEventArgs e)
-        {
-            var allErrors = _paymentInfo.GetAllErrors();
-            CurrentFormStatus = allErrors.Values.Count > 0 ? FormStatus.Invalid : FormStatus.Incomplete;
+            return _paymentInfo.ValidateProperties();
         }
     }
 }

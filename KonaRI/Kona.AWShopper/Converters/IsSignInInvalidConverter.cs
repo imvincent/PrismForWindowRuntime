@@ -21,13 +21,12 @@ namespace Kona.AWShopper.Converters
 
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return (value is bool && (bool)value) ? resourceLoader.GetString("InvalidSignInErrorMessage") : string.Empty;
+            return (value is bool && (bool)value) ? resourceLoader.GetString("ErrorInvalidSignInErrorMessage") : string.Empty;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            var valueAsString = value as string;
-            return (valueAsString != null) && valueAsString == resourceLoader.GetString("InvalidSignInErrorMessage");
+            throw new NotImplementedException();
         }
     }
 }

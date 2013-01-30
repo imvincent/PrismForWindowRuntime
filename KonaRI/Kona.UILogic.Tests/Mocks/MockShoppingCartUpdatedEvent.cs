@@ -13,11 +13,16 @@ namespace Kona.UILogic.Tests.Mocks
 {
     public class MockShoppingCartUpdatedEvent : ShoppingCartUpdatedEvent
     {
-        public Action<string> PublishDelegate { get; set; }
-
-        public override void Publish(string payload)
+        public MockShoppingCartUpdatedEvent()
         {
-            PublishDelegate(payload);
+            PublishDelegate = () => { };
+        }
+
+        public Action PublishDelegate { get; set; }
+
+        public override void Publish()
+        {
+            PublishDelegate();
         }
     }
 }

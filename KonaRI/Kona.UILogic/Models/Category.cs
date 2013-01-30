@@ -24,5 +24,8 @@ namespace Kona.UILogic.Models
         public Uri ImageLocalUri { get; set; }
 
         public IEnumerable<Category> Subcategories { get; set; }
+
+        public IEnumerable<Product> Products { get; set; }
+
     }
 }

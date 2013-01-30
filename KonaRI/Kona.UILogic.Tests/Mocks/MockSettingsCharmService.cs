@@ -6,19 +6,22 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System;
 using Kona.Infrastructure;
 namespace Kona.UILogic.Tests.Mocks
 {
     public class MockSettingsCharmService : ISettingsCharmService
     {
+        public Action<string, object, Action> ShowFlyoutDelegate { get; set; }
+
         public void ShowFlyout(string flyoutId)
         {
-            throw new System.NotImplementedException();
+            ShowFlyoutDelegate(flyoutId, null, null);
         }
 
         public void ShowFlyout(string flyoutId, object parameter, System.Action successAction)
         {
-            throw new System.NotImplementedException();
+            ShowFlyoutDelegate(flyoutId, parameter, successAction);
         }
     }
 }

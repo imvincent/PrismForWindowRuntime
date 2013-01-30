@@ -6,6 +6,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Kona.UILogic.Models;
@@ -14,7 +15,7 @@ namespace Kona.UILogic.Services
 {
     public interface IShippingMethodService
     {
-        Task<ObservableCollection<ShippingMethod>> GetShippingMethodsAsync();
-        Task<ShippingMethod> GetDefaultShippingMethodAsync();
+        Task<IEnumerable<ShippingMethod>> GetShippingMethodsAsync();
+        Task<ShippingMethod> GetBasicShippingMethodAsync();
     }
 }

@@ -20,12 +20,12 @@ namespace Kona.WebServices.Tests.Repositories
         public void AddProductToCart_AddsNewShoppingCartItem()
         {
             var target = new ShoppingCartRepository();
-            var preAddcart = target.GetByUserId("TestUser");
+            var preAddcart = target.GetById("TestUser");
             Assert.IsNull(preAddcart);
 
             var shoppingCartItem = target.AddProductToCart("TestUser", new Product() { ProductNumber ="BB-7421"});
 
-            var postAddcart = target.GetByUserId("TestUser");
+            var postAddcart = target.GetById("TestUser");
             Assert.IsNotNull(postAddcart);
             Assert.AreEqual(1, postAddcart.ShoppingCartItems.Count);
             Assert.AreEqual("BB-7421", postAddcart.ShoppingCartItems.First().Product.ProductNumber);
@@ -38,7 +38,7 @@ namespace Kona.WebServices.Tests.Repositories
             var target = new ShoppingCartRepository();
             target.AddProductToCart("TestUser", new Product() { ProductNumber ="BB-7421"});
             target.AddProductToCart("TestUser", new Product() { ProductNumber = "BB-8107" });
-            var cart = target.GetByUserId("TestUser");
+            var cart = target.GetById("TestUser");
             Assert.IsNotNull(cart);
             Assert.AreEqual(2, cart.ShoppingCartItems.Count);
             Assert.IsNotNull(cart.ShoppingCartItems.First(item => item.Product.ProductNumber == "BB-7421"));
@@ -49,14 +49,14 @@ namespace Kona.WebServices.Tests.Repositories
         public void AddProductToCart_AddsNewShoppingCartItemToExistingCart_WithSameProduct()
         {
             var target = new ShoppingCartRepository();
-            var cart = target.GetByUserId("TestUser");
+            var cart = target.GetById("TestUser");
 
             if (cart != null) target.Delete(cart);
             
             target.AddProductToCart("TestUser", new Product() { ProductNumber = "123" });
             target.AddProductToCart("TestUser", new Product() { ProductNumber = "123" });
 
-            cart = target.GetByUserId("TestUser");
+            cart = target.GetById("TestUser");
             Assert.IsNotNull(cart);
             Assert.AreEqual(1, cart.ShoppingCartItems.Count);
 
@@ -72,14 +72,14 @@ namespace Kona.WebServices.Tests.Repositories
             var target = new ShoppingCartRepository();
             target.AddProductToCart("TestUser", new Product() { ProductNumber = "BB-7421" });
 
-            var cart = target.GetByUserId("TestUser");
+            var cart = target.GetById("TestUser");
             Assert.IsNotNull(cart);
 
             var success = target.Delete(cart);
 
             Assert.IsTrue(success);
 
-            var emptyCart = target.GetByUserId("TestUser");
+            var emptyCart = target.GetById("TestUser");
             Assert.IsNull(emptyCart);
         }
 
@@ -89,7 +89,7 @@ namespace Kona.WebServices.Tests.Repositories
         {
             var target = new ShoppingCartRepository();
 
-            var emptyCart = target.GetByUserId("TestUser");
+            var emptyCart = target.GetById("TestUser");
             Assert.IsNull(emptyCart);
 
             var success = target.Delete(emptyCart);

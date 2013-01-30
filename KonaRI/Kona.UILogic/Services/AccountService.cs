@@ -10,6 +10,8 @@ using System;
 using System.Threading.Tasks;
 using Kona.Infrastructure;
 using Kona.UILogic.Models;
+using System.Security;
+using System.Net.Http;
 
 namespace Kona.UILogic.Services
 {
@@ -31,18 +33,32 @@ namespace Kona.UILogic.Services
             if (_stateService != null) _stateService.AppRestored += (s, e) => { if (_stateService != null) _serverCookieHeader = _stateService.GetState(STATE_TOKEN) as string; };
         }
 
+        public string ServerCookieHeader
+        {
+            get { return _serverCookieHeader; }
+        }
+
+        public UserInfo LastSignedInUser { get { return _signedInUser; } }
+
         /// <summary>
         /// Gets the current active user signed in the app.
         /// </summary>
         /// <returns>A Task that, when complete, stores an active user that is ready to be used for any operation agains the service.</returns>
         public async Task<UserInfo> GetSignedInUserAsync()
         {
-            // If user is logged in, verify that the session in the service is still active
-            if (_signedInUser != null && _serverCookieHeader != null && await _identityService.VerifyActiveSession(_signedInUser.UserName, _serverCookieHeader))
+            try
             {
-                return _signedInUser;
+                // If user is logged in, verify that the session in the service is still active
+                if (_signedInUser != null && _serverCookieHeader != null && await _identityService.VerifyActiveSession(_signedInUser.UserName, _serverCookieHeader))
+                {
+                    return _signedInUser;
+                }
             }
-            
+            catch (SecurityException)
+            {
+                return null;
+            }
+
             // Attempt to sign in using credentials stored locally
             // If succeeds, ask for a new active session
             var savedCredentials = _credentialStore.GetSavedCredentials("KonaRI");
@@ -57,44 +73,43 @@ namespace Kona.UILogic.Services
         // <snippet507>
         public async Task<bool> SignInUserAsync(string userName, string password)
         {
-            var result = await _identityService.LogOnAsync(userName, password);
-            if (result.UserValidationResult.IsValid)
+            try
             {
+                var result = await _identityService.LogOnAsync(userName, password);
                 _serverCookieHeader = result.ServerCookieHeader;
                 _stateService.SaveState(STATE_TOKEN, _serverCookieHeader);
-                _signedInUser = result.UserValidationResult.UserInfo;
-                RaiseUserChanged(result.UserValidationResult.UserInfo);
+                var previousSignedInUser = _signedInUser;
+                _signedInUser = result.UserInfo;
+                RaiseUserChanged(result.UserInfo, previousSignedInUser);
+                return true;
             }
-            else
+            catch (HttpRequestException)
             {
                 _serverCookieHeader = string.Empty;
                 _stateService.SaveState(STATE_TOKEN, _serverCookieHeader);
             }
 
-            return result.UserValidationResult.IsValid;
+            return false;
         }
         // </snippet507>
 
         public event EventHandler<UserChangedEventArgs> UserChanged;
 
-        private void RaiseUserChanged(UserInfo userInfo)
+        private void RaiseUserChanged(UserInfo newUserInfo, UserInfo oldUserInfo)
         {
             var handler = UserChanged;
             if (handler != null)
             {
-                handler(this, new UserChangedEventArgs(userInfo));
+                handler(this, new UserChangedEventArgs(newUserInfo, oldUserInfo));
             }
-        }
-
-        public string ServerCookieHeader
-        {
-            get { return _serverCookieHeader; }
         }
 
         public void SignOut()
         {
             _serverCookieHeader = null;
+            var previousSignedInUser = _signedInUser;
             _signedInUser = null;
+            RaiseUserChanged(null, previousSignedInUser);
         }
     }
 }

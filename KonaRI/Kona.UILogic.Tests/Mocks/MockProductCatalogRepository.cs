@@ -16,15 +16,15 @@ namespace Kona.UILogic.Tests.Mocks
 {
     public class MockProductCatalogRepository : IProductCatalogRepository
     {
-        public Func<Task<ReadOnlyCollection<Category>>> GetCategoriesAsyncDelegate { get; set; }
+        public Func<int, Task<ReadOnlyCollection<Category>>> GetCategoriesAsyncDelegate { get; set; }
         public Func<int, Task<ReadOnlyCollection<Category>>> GetSubcategoriesAsyncDelegate { get; set; }
         public Func<int, Task<ReadOnlyCollection<Product>>> GetProductsAsyncDelegate { get; set; }
         public Func<int, Task<Category>> GetCategoryAsyncDelegate { get; set; }
         public Func<string, Task<Product>> GetProductAsyncDelegate { get; set; }
 
-        public Task<ReadOnlyCollection<Category>> GetCategoriesAsync()
+        public Task<ReadOnlyCollection<Category>> GetCategoriesAsync(int maxAmountOfProducts)
         {
-            return this.GetCategoriesAsyncDelegate();
+            return this.GetCategoriesAsyncDelegate(maxAmountOfProducts);
         }
 
         public Task<ReadOnlyCollection<Category>> GetSubcategoriesAsync(int categoryId)
@@ -46,5 +46,6 @@ namespace Kona.UILogic.Tests.Mocks
         {
             return this.GetProductAsyncDelegate(productNumber);
         }
+
     }
 }

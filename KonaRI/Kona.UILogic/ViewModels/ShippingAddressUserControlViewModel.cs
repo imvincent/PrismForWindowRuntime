@@ -10,7 +10,6 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Kona.Infrastructure;
 using System.Collections.Generic;
 using Kona.UILogic.Models;
@@ -25,34 +24,24 @@ namespace Kona.UILogic.ViewModels
     {
         private Address _address;
         private IReadOnlyCollection<ComboBoxItemValue> _states;
-        private bool _saveAddress;
         private bool _setAsDefault;
         private readonly ICheckoutDataRepository _checkoutDataRepository;
         private readonly ILocationService _locationService;
-        private int _currentFormStatus;
+        private readonly IResourceLoader _resourceLoader;
 
-        public ShippingAddressUserControlViewModel(ICheckoutDataRepository checkoutDataRepository, ILocationService locationService)
+        public ShippingAddressUserControlViewModel(ICheckoutDataRepository checkoutDataRepository, ILocationService locationService, IResourceLoader resourceLoader)
         {
             _address = new Address() { Id = Guid.NewGuid().ToString() };
-            _address.ErrorsChanged += ValidatorErrorsChanged;
-
             _checkoutDataRepository = checkoutDataRepository;
             _locationService = locationService;
-            _currentFormStatus = FormStatus.Incomplete;
+            _resourceLoader = resourceLoader;
         }
 
         [RestorableState]
         public Address Address
         {
             get { return _address; }
-            set
-            {
-                if (SetProperty(ref _address, value))
-                {
-                    _address.ErrorsChanged += ValidatorErrorsChanged;
-                    OnPropertyChanged("Errors");
-                }
-            }
+            set { SetProperty(ref _address, value); }
         }
 
         public IReadOnlyCollection<ComboBoxItemValue> States
@@ -62,29 +51,10 @@ namespace Kona.UILogic.ViewModels
         }
 
         [RestorableState]
-        public bool SaveAddress
-        {
-            get { return _saveAddress; }
-            set { SetProperty(ref _saveAddress, value); }
-        }
-
-        [RestorableState]
         public bool SetAsDefault
         {
             get { return _setAsDefault; }
             set { SetProperty(ref _setAsDefault, value); }
-        }
-
-        [RestorableState]
-        public int CurrentFormStatus
-        {
-            get { return _currentFormStatus; }
-            set { SetProperty(ref _currentFormStatus, value); }
-        }
-
-        public BindableValidator Errors
-        {
-            get { return _address.Errors; }
         }
 
         public override async void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState)
@@ -115,19 +85,13 @@ namespace Kona.UILogic.ViewModels
                     Address = _checkoutDataRepository.GetDefaultShippingAddressValue();
 
                     // Validate form fields
-                    bool isValid = _address.ValidateProperties();
-                    CurrentFormStatus = isValid ? FormStatus.Complete : FormStatus.Invalid;
+                    ValidateForm();
                 }
             }
         }
 
         public override void OnNavigatedFrom(Dictionary<string, object> viewState, bool suspending)
         {
-            if (!suspending)
-            {
-                _address.ErrorsChanged -= ValidatorErrorsChanged;
-            }
-
             base.OnNavigatedFrom(viewState, suspending);
 
             // Store the errors collection manually
@@ -139,7 +103,7 @@ namespace Kona.UILogic.ViewModels
 
         public async Task PopulateStatesAsync()
         {
-            var items = new List<ComboBoxItemValue> { new ComboBoxItemValue() { Id = string.Empty, Value = "State" } };
+            var items = new List<ComboBoxItemValue> { new ComboBoxItemValue() { Id = string.Empty, Value = _resourceLoader.GetString("State") } };
             var states = await _locationService.GetStatesAsync();
 
             items.AddRange(states.Select(state => new ComboBoxItemValue() { Id = state, Value = state }));
@@ -154,28 +118,23 @@ namespace Kona.UILogic.ViewModels
 
         public bool ValidateForm()
         {
-            bool isValid = _address.ValidateProperties();
-            CurrentFormStatus = isValid ? FormStatus.Complete : FormStatus.Invalid;
-            return isValid;
+            return _address.ValidateProperties();
         }
 
         public void ProcessForm()
         {
-            if (SaveAddress)
+            var savedAddress = _checkoutDataRepository.SaveShippingAddress(Address);
+            
+            //If matching saved address found, use saved address
+            if (savedAddress.Id != Address.Id)
             {
-                _checkoutDataRepository.SaveShippingAddress(Address);
+                Address = savedAddress;
             }
 
             if (SetAsDefault)
             {
-                _checkoutDataRepository.SetAsDefaultShippingAddress(Address.Id);
+                _checkoutDataRepository.SetAsDefaultShippingAddress(savedAddress.Id);
             }
-        }
-
-        private void ValidatorErrorsChanged(object sender, DataErrorsChangedEventArgs e)
-        {
-            var allErrors = _address.GetAllErrors();
-            CurrentFormStatus = allErrors.Values.Count > 0 ? FormStatus.Invalid : FormStatus.Incomplete;
         }
     }
 }

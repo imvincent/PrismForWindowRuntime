@@ -55,11 +55,12 @@ namespace Kona.WebServices.Repositories
         {
             _categories = new List<Category>
              {
+                 new Category {Title = "Today's Deals", Id = 0, ImageExternalUri = new Uri("/Images/water_bottle_cage_small.gif", UriKind.Relative) },
                  new Category {Title = "Accessories", Id = 4000, ImageExternalUri = new Uri("/Images/water_bottle_cage_small.gif", UriKind.Relative) },
                  new Category {Title = "Bikes", Id = 1000, ImageExternalUri = new Uri("/Images/racer02_yellow_f_small.gif", UriKind.Relative) },
-                 new Category {Title = "Clothing", Id = 2000, ImageExternalUri = new Uri("/Images/awc_jersey_male_small.gif", UriKind.Relative) },
-                 new Category {Title = "Components", Id = 3000, ImageExternalUri = new Uri("/Images/silver_chain_small.gif", UriKind.Relative) },
-                 new Category { Title = "Mountain Bikes", Id=1, ParentId=1000, ImageExternalUri = new Uri("/Images/hotrodbike_f_large.gif", UriKind.Relative) },
+                 new Category {Title = "Clothing", Id = 3000, ImageExternalUri = new Uri("/Images/awc_jersey_male_small.gif", UriKind.Relative) },
+                 new Category {Title = "Components", Id = 2000, ImageExternalUri = new Uri("/Images/silver_chain_small.gif", UriKind.Relative) },
+new Category { Title = "Mountain Bikes", Id=1, ParentId=1000, ImageExternalUri = new Uri("/Images/hotrodbike_f_large.gif", UriKind.Relative) },
 new Category { Title = "Road Bikes", Id=2, ParentId=1000, ImageExternalUri = new Uri("/Images/roadster_black_large.gif", UriKind.Relative) },
 new Category { Title = "Touring Bikes", Id=3, ParentId=1000, ImageExternalUri = new Uri("/Images/julianax_r_02_blue_large.gif", UriKind.Relative) },
 new Category { Title = "Handlebars", Id=4, ParentId=2000, ImageExternalUri = new Uri("/Images/handlebar_large.gif", UriKind.Relative) },

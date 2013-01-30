@@ -10,22 +10,19 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Kona.Infrastructure;
-using Kona.UILogic.Services;
-using Kona.UILogic.Repositories;
-using Windows.ApplicationModel.Resources;
-using Windows.Globalization.NumberFormatting;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Navigation;
+using Kona.UILogic.Events;
 using Kona.UILogic.Models;
+using Kona.UILogic.Repositories;
+using Kona.UILogic.Services;
+using Windows.Globalization.NumberFormatting;
 using Windows.UI.ViewManagement;
+using Windows.UI.Xaml.Navigation;
+using Microsoft.Practices.PubSubEvents;
 
 namespace Kona.UILogic.ViewModels
 {
     public class ShoppingCartPageViewModel : ViewModel, INavigationAware, IHandleWindowSizeChanged
     {
-        private string _fullPrice;
-        private string _totalDiscount;
-        private string _totalPrice;
         private ShoppingCartItemViewModel _selectedItem;
         private ObservableCollection<ShoppingCartItemViewModel> _shoppingCartItemViewModels;
         private IShoppingCartRepository _shoppingCartRepository;
@@ -35,15 +32,19 @@ namespace Kona.UILogic.ViewModels
         private bool _isUnsnapping = false;
         private bool _isEditPopupOpened;
         private bool _isBottomAppBarOpened;
+        private ShoppingCart _shoppingCart;
 
         public ShoppingCartPageViewModel(IShoppingCartRepository shoppingCartRepository,
                                          INavigationService navigationService,
                                          IAccountService accountService,
-                                         ISettingsCharmService settingsCharmService)
+                                         ISettingsCharmService settingsCharmService,
+                                         IEventAggregator eventAggregator)
         {
             _shoppingCartRepository = shoppingCartRepository;
             _accountService = accountService;
             _settingsCharmService = settingsCharmService;
+
+            eventAggregator.GetEvent<ShoppingCartUpdatedEvent>().Subscribe(() => UpdateShoppingCartAsync());
 
             CheckoutCommand = new DelegateCommand(Checkout, CanCheckout);
             EditAmountCommand = new DelegateCommand(OpenEditAmountFlyout);
@@ -57,20 +58,52 @@ namespace Kona.UILogic.ViewModels
 
         public string FullPrice
         {
-            get { return _fullPrice; }
-            set { SetProperty(ref _fullPrice, value); }
+            get
+            {
+                if (_shoppingCart == null || _shoppingCart.Currency == null) return string.Empty;
+                var currencyFormatter = new CurrencyFormatter(_shoppingCart.Currency);
+                return currencyFormatter.FormatDouble(Math.Round(CalculateFullPrice(), 2));
+            }
         }
 
         public string TotalDiscount
         {
-            get { return _totalDiscount; }
-            set { SetProperty(ref _totalDiscount, value); }
+            get
+            {
+                if (_shoppingCart == null || _shoppingCart.Currency == null) return string.Empty;
+                var currencyFormatter = new CurrencyFormatter(_shoppingCart.Currency);
+                return currencyFormatter.FormatDouble(Math.Round(CalculateDiscount(), 2));
+            }
         }
 
         public string TotalPrice
         {
-            get { return _totalPrice; }
-            set { SetProperty(ref _totalPrice, value); }
+            get
+            {
+                if (_shoppingCart == null || _shoppingCart.Currency == null) return string.Empty;
+                var currencyFormatter = new CurrencyFormatter(_shoppingCart.Currency);
+                return currencyFormatter.FormatDouble(Math.Round(CalculateFullPrice() - CalculateDiscount(), 2));
+            }
+        }
+
+        private double CalculateFullPrice()
+        {
+            double fullPrice = 0;
+            foreach (var shoppingCartItemViewModel in _shoppingCartItemViewModels)
+            {
+                fullPrice += shoppingCartItemViewModel.FullPriceDouble;
+            }
+            return fullPrice;
+        }
+
+        private double CalculateDiscount()
+        {
+            double discount = 0;
+            foreach (var shoppingCartItemViewModel in _shoppingCartItemViewModels)
+            {
+                discount += shoppingCartItemViewModel.FullPriceDouble - shoppingCartItemViewModel.DiscountedPriceDouble;
+            }
+            return discount;
         }
 
         public ShoppingCartItemViewModel SelectedItem
@@ -82,6 +115,8 @@ namespace Kona.UILogic.ViewModels
                 {
                     if (_selectedItem != null)
                     {
+                        IncrementCountCommand.RaiseCanExecuteChanged();
+                        DecrementCountCommand.RaiseCanExecuteChanged();
                         IsBottomAppBarOpened = true;
                     }
                 }
@@ -120,63 +155,41 @@ namespace Kona.UILogic.ViewModels
 
         public override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState)
         {
-            _accountService.UserChanged += _accountService_UserChanged;
             UpdateShoppingCartAsync();
 
             base.OnNavigatedTo(navigationParameter, navigationMode, viewState);
         }
 
-        public override void OnNavigatedFrom(Dictionary<string, object> viewState, bool suspending)
+        public async void UpdateShoppingCartAsync()
         {
-            if (!suspending)
+            _shoppingCart = await _shoppingCartRepository.GetShoppingCartAsync();
+
+            if (_shoppingCart != null && _shoppingCart.ShoppingCartItems != null)
             {
-                _accountService.UserChanged -= _accountService_UserChanged;
-            }
-            base.OnNavigatedFrom(viewState, suspending);
-        }
-
-        void _accountService_UserChanged(object sender, UserChangedEventArgs e)
-        {
-            UpdateShoppingCartAsync();
-        }
-
-        private async void UpdateShoppingCartAsync()
-        {
-            var shoppingCart = await _shoppingCartRepository.GetShoppingCartAsync();
-
-            if (shoppingCart != null)
-            {
-                var currencyFormatter = new CurrencyFormatter(shoppingCart.Currency);
-                FullPrice = currencyFormatter.FormatDouble(Math.Round(shoppingCart.FullPrice, 2));
-                TotalDiscount = currencyFormatter.FormatDouble(Math.Round(shoppingCart.TotalDiscount, 2));
-                TotalPrice = currencyFormatter.FormatDouble(Math.Round(shoppingCart.FullPrice - shoppingCart.TotalDiscount, 2));
-
-                if (shoppingCart.ShoppingCartItems != null)
+                ShoppingCartItemViewModels = new ObservableCollection<ShoppingCartItemViewModel>();
+                foreach (var item in _shoppingCart.ShoppingCartItems)
                 {
-                    ShoppingCartItemViewModels = new ObservableCollection<ShoppingCartItemViewModel>();
-                    foreach (var item in shoppingCart.ShoppingCartItems)
-                    {
-                        ShoppingCartItemViewModels.Add(new ShoppingCartItemViewModel(item));
-                    }
-                    CheckoutCommand.RaiseCanExecuteChanged();
+                    var shoppingCartItemViewModel = new ShoppingCartItemViewModel(item);
+                    shoppingCartItemViewModel.PropertyChanged += shoppingCartItemViewModel_PropertyChanged;
+                    ShoppingCartItemViewModels.Add(shoppingCartItemViewModel);
                 }
-            }
-            else
-            {
-                FullPrice = string.Empty;
-                TotalDiscount = string.Empty;
-                TotalPrice = string.Empty;
-                ShoppingCartItemViewModels = null;
+                CheckoutCommand.RaiseCanExecuteChanged();
             }
         }
 
-        public async void Checkout()
+        void shoppingCartItemViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (await _accountService.GetSignedInUserAsync() != null)
+            if (e.PropertyName == "Quantity")
             {
-                _navigateAction();
+                OnPropertyChanged("FullPrice");
+                OnPropertyChanged("TotalDiscount");
+                OnPropertyChanged("TotalPrice");
             }
-            else
+        }
+
+        private async void Checkout()
+        {
+            if (await _accountService.GetSignedInUserAsync() == null)
             {
                 if (ApplicationView.Value == ApplicationViewState.Snapped)
                 {
@@ -184,6 +197,10 @@ namespace Kona.UILogic.ViewModels
                     ApplicationView.TryUnsnap();
                 }
                 _settingsCharmService.ShowFlyout("signIn", null, _navigateAction);
+            }
+            else
+            {
+                _navigateAction();                
             }
         }
 
@@ -196,7 +213,7 @@ namespace Kona.UILogic.ViewModels
             }
         }
 
-        public bool CanCheckout()
+        private bool CanCheckout()
         {
             return _shoppingCartItemViewModels != null && _shoppingCartItemViewModels.Count > 0;
         }
@@ -208,6 +225,10 @@ namespace Kona.UILogic.ViewModels
                 _shoppingCartRepository.RemoveShoppingCartItemAsync(item.Id);
             }
             ShoppingCartItemViewModels.Remove(item);
+            CheckoutCommand.RaiseCanExecuteChanged();
+            OnPropertyChanged("FullPrice");
+            OnPropertyChanged("TotalDiscount");
+            OnPropertyChanged("TotalPrice");
         }
 
         private void OpenEditAmountFlyout()
@@ -217,7 +238,7 @@ namespace Kona.UILogic.ViewModels
 
         private bool CanDecrementCount()
         {
-            if (SelectedItem != null && SelectedItem.Quantity > 0)
+            if (SelectedItem != null && SelectedItem.Quantity > 1)
             {
                 return true;
             }
@@ -228,12 +249,14 @@ namespace Kona.UILogic.ViewModels
         {
             SelectedItem.Quantity = SelectedItem.Quantity - 1;
             DecrementCountCommand.RaiseCanExecuteChanged();
+            _shoppingCartRepository.RemoveProductFromShoppingCartAsync(SelectedItem.ProductId);
         }
 
         private void IncrementCount()
         {
             SelectedItem.Quantity = SelectedItem.Quantity + 1;
             DecrementCountCommand.RaiseCanExecuteChanged();
+            _shoppingCartRepository.AddProductToShoppingCartAsync(SelectedItem.ProductId);
         }
     }
 }

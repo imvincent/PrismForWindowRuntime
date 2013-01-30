@@ -12,19 +12,21 @@ using Kona.UILogic.Models;
 using Windows.Globalization.NumberFormatting;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+using System.Runtime.Serialization;
 
 namespace Kona.UILogic.ViewModels
 {
+    [DataContract]
     public class ShoppingCartItemViewModel : ViewModel
     {
-        private int _id;
+        private string _id;
         private string _title;
         private string _description;
         private int _quantity;
-        private string _totalPrice;
-        private string _discountPrice;
+        private double _listPrice;
         private double _discountPercentage;
         private string _imagePath;
+        private CurrencyFormatter _currencyFormatter;
 
         public ShoppingCartItemViewModel(ShoppingCartItem shoppingCartItem)
         {
@@ -37,19 +39,17 @@ namespace Kona.UILogic.ViewModels
             Title = shoppingCartItem.Product.Title;
             Description = shoppingCartItem.Product.Description;
             Quantity = shoppingCartItem.Quantity;
+            _listPrice = shoppingCartItem.Product.ListPrice;
             DiscountPercentage = shoppingCartItem.DiscountPercentage;
             _imagePath = shoppingCartItem.Product.ImageName;
-            EntityId = shoppingCartItem.Id.ToString();
-
-            var totalPrice = Math.Round(shoppingCartItem.Quantity * shoppingCartItem.Product.ListPrice * (100 - shoppingCartItem.DiscountPercentage) / 100, 2);
-            var discountedPrice = Math.Round(totalPrice * (1 - (shoppingCartItem.DiscountPercentage / 100)),2);
-
-            var currencyFormatter = new CurrencyFormatter(shoppingCartItem.Currency);
-            TotalPrice = currencyFormatter.FormatDouble(totalPrice);
-            DiscountedPrice = currencyFormatter.FormatDouble(discountedPrice);
+            EntityId = shoppingCartItem.Id;
+            ProductId = shoppingCartItem.Product.ProductNumber;
+            _currencyFormatter = new CurrencyFormatter(shoppingCartItem.Currency);
         }
 
-        public int Id
+        public string ProductId { get; private set; }
+
+        public string Id
         {
             get { return _id; }
             set { SetProperty(ref _id, value); }
@@ -70,13 +70,21 @@ namespace Kona.UILogic.ViewModels
         public int Quantity
         {
             get { return _quantity; }
-            set { SetProperty(ref _quantity, value); }
+            set
+            {
+                if (SetProperty(ref _quantity, value))
+                {
+                    OnPropertyChanged("TotalPrice");
+                    OnPropertyChanged("DiscountedPrice");
+                }
+            }
         }
-        
-        public string TotalPrice
+
+        public double FullPriceDouble { get { return Math.Round(Quantity*_listPrice, 2); } }
+
+        public string FullPrice
         {
-            get { return _totalPrice; }
-            set { SetProperty(ref _totalPrice, value); }
+            get { return _currencyFormatter.FormatDouble(FullPriceDouble); }
         }
 
         public double DiscountPercentage
@@ -90,10 +98,16 @@ namespace Kona.UILogic.ViewModels
             get { return new BitmapImage(new Uri(_imagePath, UriKind.Absolute)); }
         }
 
+        public double DiscountedPriceDouble { get { return Math.Round(FullPriceDouble*(1 - DiscountPercentage), 2); } }
+
         public string DiscountedPrice 
         {
-            get { return _discountPrice; }
-            set { SetProperty(ref _discountPrice, value); }
+            get { return _currencyFormatter.FormatDouble(DiscountedPriceDouble); }
+        }
+
+        public override string ToString()
+        {
+            return Id;
         }
     }
 }

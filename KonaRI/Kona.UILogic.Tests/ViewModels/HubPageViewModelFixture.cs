@@ -7,8 +7,10 @@
 
 
 using System.Collections.ObjectModel;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Kona.UILogic.Models;
+using Kona.UILogic.Services;
 using Kona.UILogic.Tests.Mocks;
 using Kona.UILogic.ViewModels;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
@@ -26,7 +28,7 @@ namespace Kona.UILogic.Tests.ViewModels
             var repository = new MockProductCatalogRepository();
             var navigationService = new MockNavigationService();
 
-            repository.GetCategoriesAsyncDelegate = () =>
+            repository.GetCategoriesAsyncDelegate = (maxAmmountOfProducts) =>
             {
                 var categories = new ReadOnlyCollection<Category>(new List<Category>{
                     new Category(),
@@ -37,7 +39,7 @@ namespace Kona.UILogic.Tests.ViewModels
                 return Task.FromResult(categories);
             };
 
-            var viewModel = new HubPageViewModel(repository, navigationService);
+            var viewModel = new HubPageViewModel(repository, navigationService, null, null);
             viewModel.OnNavigatedTo(null, NavigationMode.New, null);
 
             Assert.IsNotNull(viewModel.RootCategories);
@@ -45,7 +47,7 @@ namespace Kona.UILogic.Tests.ViewModels
         }
 
         [TestMethod]
-        public void CategoryNav_With_Valid_Parameter()
+        public void ProductNav_With_Valid_Parameter()
         {
             var repository = new MockProductCatalogRepository();
             var navigationService = new MockNavigationService();
@@ -57,12 +59,12 @@ namespace Kona.UILogic.Tests.ViewModels
                 return true;
             };
 
-            var viewModel = new HubPageViewModel(repository, navigationService);
-            viewModel.CategoryNavigationAction.Invoke(1);
+            var viewModel = new HubPageViewModel(repository, navigationService, null, null);
+            viewModel.ProductNavigationAction.Invoke(1);
         }
 
         [TestMethod]
-        public void CategoryNav_With_Null_Parameter()
+        public void ProductNav_With_Null_Parameter()
         {
             var repository = new MockProductCatalogRepository();
             var navigationService = new MockNavigationService();
@@ -73,8 +75,31 @@ namespace Kona.UILogic.Tests.ViewModels
                 return false;
             };
                 
-            var viewModel = new HubPageViewModel(repository, navigationService);
-            viewModel.CategoryNavigationAction.Invoke(null);
+            var viewModel = new HubPageViewModel(repository, navigationService, null, null);
+            viewModel.ProductNavigationAction.Invoke(null);
+        }
+
+        [TestMethod]
+        public void FailedCallToProductCatalogRepository_ShowsAlert()
+        {
+            var alertCalled = false;
+            var productCatalogRepository = new MockProductCatalogRepository();
+            productCatalogRepository.GetCategoriesAsyncDelegate = (maxAmmountOfProducts) =>
+            {
+                throw new HttpRequestException();
+            };
+            var alertMessageService = new MockAlertMessageService();
+            alertMessageService.ShowAsyncDelegate = (s, s1) =>
+            {
+                alertCalled = true;
+                Assert.AreEqual("Error", s1);
+                return Task.FromResult(string.Empty);
+            };
+            var target = new HubPageViewModel(productCatalogRepository, null,
+                                                                 alertMessageService, new MockResourceLoader());
+            target.OnNavigatedTo(null, NavigationMode.New, null);
+            
+            Assert.IsTrue(alertCalled);
         }
     }
 }

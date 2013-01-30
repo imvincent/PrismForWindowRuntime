@@ -1,0 +1,33 @@
+﻿<Page x:Class="EventAggregatorQuickstart.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:EventAggregatorQuickstart"
+      xmlns:kona="using:Kona.Infrastructure"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d"
+      kona:ViewModelLocator.AutoWireViewModel="True">
+    <Page.Resources>
+        <DataTemplate x:Key="SubscriberTemplate">
+            <local:SubscriberView />
+        </DataTemplate>
+        <DataTemplate x:Key="PublisherTemplate">
+            <local:PublisherView />
+        </DataTemplate>
+    </Page.Resources>
+    <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <ContentControl Content="{Binding PublisherViewModel}"
+                        ContentTemplate="{StaticResource PublisherTemplate}"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center" />
+        <ContentControl Grid.Column="1"
+                        Content="{Binding SubscriberViewModel}"
+                        ContentTemplate="{StaticResource SubscriberTemplate}"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center" />
+    </Grid>
+</Page>

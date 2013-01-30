@@ -13,9 +13,10 @@ using System;
 
 namespace Kona.WebServices.Repositories
 {
-    public class ProductRepository : IRepository<Product>
+    public class ProductRepository : IProductRepository
     {
         private static ICollection<Product> _products;
+        private static IEnumerable<Product> _todaysDealsProducts;
 
         public ProductRepository()
         {
@@ -23,11 +24,26 @@ namespace Kona.WebServices.Repositories
             {
                 PopulateProducts();
             }
+            if (_todaysDealsProducts == null)
+            {
+                var promotedProducts = new List<Product>();
+                promotedProducts.Add(_products.First(p => p.ProductNumber == "BK-M38S-42"));
+                promotedProducts.Add(_products.First(p => p.ProductNumber == "BK-R19B-52"));
+                promotedProducts.Add(_products.First(p => p.ProductNumber == "FK-9939"));
+                promotedProducts.Add(_products.First(p => p.ProductNumber == "FR-M94S-42"));
+                promotedProducts.Add(_products.First(p => p.ProductNumber == "HB-M243"));
+                _todaysDealsProducts = promotedProducts;
+            }
         }
 
         public IEnumerable<Product> GetAll()
         {
             return _products;
+        }
+
+        public IEnumerable<Product> GetProductsFromCategory(int subcategoryId)
+        {
+            return _products.Where(p => p.SubcategoryId == subcategoryId);
         }
 
         public Product Create(Product item)
@@ -40,6 +56,12 @@ namespace Kona.WebServices.Repositories
             item.Id = _products.Any() ? _products.Max(c => c.Id) : 1;
             _products.Add(item);
             return item;    
+        }
+
+        public IEnumerable<Product> TodaysDealsProducts
+        {
+            get { return _todaysDealsProducts; }
+            set { _todaysDealsProducts = value; }
         }
 
         public Product GetItem(int id)

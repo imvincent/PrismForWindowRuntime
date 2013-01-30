@@ -29,18 +29,18 @@ namespace Kona.WebServices.Controllers
             _shippingMethodRepository = shippingMethodRepository;
         }
 
-        // GET /api/ShippingMethod
+        // GET /api/ShippingMethod/
         [HttpGet]
-        [ActionName("getall")]
+        [ActionName("defaultAction")]
         public IEnumerable<ShippingMethod> GetShippingMethods()
         {
             return _shippingMethodRepository.GetAll();
         }
 
-        // GET /api/ShippingMethod/default
+        // GET /api/ShippingMethod/basic
         [HttpGet]
-        [ActionName("default")]
-        public ShippingMethod GetDefaultShippingMethod()
+        [ActionName("basic")]
+        public ShippingMethod GetBasicShippingMethod()
         {
             return _shippingMethodRepository.GetAll().FirstOrDefault(c => c.Description.Contains("Standard"));
         }

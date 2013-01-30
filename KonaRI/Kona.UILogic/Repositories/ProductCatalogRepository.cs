@@ -27,7 +27,7 @@ namespace Kona.UILogic.Repositories
         }
 
         // <snippet512>
-        public async Task<ReadOnlyCollection<Category>> GetCategoriesAsync()
+        public async Task<ReadOnlyCollection<Category>> GetCategoriesAsync(int maxAmountOfProducts)
         {
             string cacheFileName = "Categories";
 
@@ -39,7 +39,7 @@ namespace Kona.UILogic.Repositories
             else
             {
                 // Retrieve the items from the service
-                var items = await _productCatalogService.GetCategoriesAsync(depth: 1);
+                var items = await _productCatalogService.GetCategoriesAsync(maxAmountOfProducts);
 
                 // Save the images locally
                 // Update the item's local URI
@@ -50,13 +50,16 @@ namespace Kona.UILogic.Repositories
                         string imageFileName = item.ImageExternalUri.ToString().Substring(item.ImageExternalUri.ToString().LastIndexOf('/') + 1);
                         item.ImageLocalUri = await _cacheService.SaveExternalDataAsync(imageFileName, item.ImageExternalUri);
 
-                        //Save the images locally for each subcategory & update the item's local URI
-                        foreach (var subItem in item.Subcategories)
+                        // TODO Save the images locally for each subcategory & update the item's local URI
+                        if (item.Products != null)
                         {
-                            if (subItem.ImageExternalUri != null)
+                            foreach (var subItem in item.Products)
                             {
-                                string subItemImageFileName = subItem.ImageExternalUri.ToString().Substring(subItem.ImageExternalUri.ToString().LastIndexOf('/') + 1);
-                                subItem.ImageLocalUri = await _cacheService.SaveExternalDataAsync(subItemImageFileName, subItem.ImageExternalUri);
+                                if (subItem.ImageName != null)
+                                {
+                                    var localUri = await _cacheService.SaveExternalDataAsync(subItem.ImageName, new Uri("/Images/" + subItem.ImageName, UriKind.Relative));
+                                    subItem.ImageName = localUri.ToString();
+                                }
                             }
                         }
                     }
@@ -92,6 +95,17 @@ namespace Kona.UILogic.Repositories
                     {
                         string imageFileName = item.ImageExternalUri.ToString().Substring(item.ImageExternalUri.ToString().LastIndexOf('/') + 1);
                         item.ImageLocalUri = await _cacheService.SaveExternalDataAsync(imageFileName, item.ImageExternalUri);
+                    }
+                    if (item.Products != null)
+                    {
+                        foreach (var product in item.Products)
+                        {
+                            if (product.ImageName != null)
+                            {
+                                var localUri = await _cacheService.SaveExternalDataAsync(product.ImageName, new Uri("/Images/" + product.ImageName, UriKind.Relative));
+                                product.ImageName = localUri.ToString();
+                            }
+                        }
                     }
                 }
 

@@ -102,39 +102,27 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BindableBase.cs" />
-    <Compile Include="DelegateCommand.cs" />
-    <Compile Include="DelegateCommandBase.cs" />
+    <Compile Include="BooleanToVisibilityConverter.cs" />
+    <Compile Include="Commands\DelegateCommand.cs" />
+    <Compile Include="Commands\DelegateCommandBase.cs" />
     <Compile Include="BindableValidator.cs" />
-    <Compile Include="Events\BackgroundEventSubscription.cs" />
-    <Compile Include="Events\CompositePresentationEvent.cs" />
-    <Compile Include="Events\DataEventArgs.cs" />
-    <Compile Include="Events\DefaultDispatcher.Metro.cs" />
-    <Compile Include="Events\DelegateReference.cs" />
-    <Compile Include="Events\DispatcherEventSubscription.cs" />
-    <Compile Include="Events\EventAggregator.cs" />
-    <Compile Include="Events\EventBase.cs" />
-    <Compile Include="Events\EventSubscription.cs" />
-    <Compile Include="Events\IDelegateReference.cs" />
-    <Compile Include="Events\IDispatcherFacade.cs" />
-    <Compile Include="Events\IEventAggregator.cs" />
-    <Compile Include="Events\IEventSubscription.cs" />
-    <Compile Include="Events\SubscriptionToken.cs" />
-    <Compile Include="Events\ThreadOption.cs" />
-    <Compile Include="Events\WeakDelegatesManager.cs" />
+    <Compile Include="DependencyPropertyChangedHelper.cs" />
     <Compile Include="Flyouts\FlyoutSize.cs" />
     <Compile Include="Flyouts\FlyOutView.cs" />
     <Compile Include="FrameNavigationService.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="ICredentialStore.cs" />
+    <Compile Include="HttpClientExtensions.cs" />
+    <Compile Include="Interfaces\ICredentialStore.cs" />
     <Compile Include="Flyouts\IFlyoutViewModel.cs" />
-    <Compile Include="INavigationAware.cs" />
-    <Compile Include="INavigationService.cs" />
-    <Compile Include="IRequestService.cs" />
-    <Compile Include="IFrameSessionState.cs" />
-    <Compile Include="IResumableStateService.cs" />
-    <Compile Include="ISettingsCharmService.cs" />
+    <Compile Include="Interfaces\INavigationAware.cs" />
+    <Compile Include="Interfaces\INavigationService.cs" />
+    <Compile Include="Interfaces\IRequestService.cs" />
+    <Compile Include="Interfaces\IFrameSessionState.cs" />
+    <Compile Include="Interfaces\IResourceLoader.cs" />
+    <Compile Include="Interfaces\IResumableStateService.cs" />
+    <Compile Include="Interfaces\ISettingsCharmService.cs" />
     <Compile Include="FrameSessionStateWrapper.cs" />
-    <Compile Include="Resources.cs" />
+    <Compile Include="ResourceLoaderAdapter.cs" />
     <Compile Include="SuspensionManager.cs" />
     <Compile Include="ValidatableBindableBase.cs" />
     <Compile Include="VisualStateAwarePage.cs" />
@@ -148,6 +136,7 @@
     <None Include="KonaRI.snk" />
     <PRIResource Include="Strings\en-US\Resources.resw" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>

@@ -85,39 +85,60 @@ namespace Kona.UILogic.Repositories
         }
         // </snippet503>
 
-        public void SaveShippingAddress(Address address)
+        public Address SaveShippingAddress(Address address)
         {
             if (_shippingAddresses == null)
             {
                 _shippingAddresses = _settingsStoreService.RetrieveAllValues<Address>("ShippingAddress");
             }
 
+            foreach (var shippingAddress in _shippingAddresses)
+            {
+                if (IsMatchingAddress(shippingAddress, address))
+                    return shippingAddress;
+            }
+
             _shippingAddresses.Add(address);
             _settingsStoreService.SaveValue("ShippingAddress", address);
+            return address;
         }
 
         // <snippet502>
-        public void SaveBillingAddress(Address address)
+        public Address SaveBillingAddress(Address address)
         {
             if (_billingAddresses == null)
             {
                 _billingAddresses = _settingsStoreService.RetrieveAllValues<Address>("BillingAddress");
             }
-            
+
+            foreach (var billingAddress in _billingAddresses)
+            {
+                if (IsMatchingAddress(billingAddress, address))
+                    return billingAddress;
+            }
+
             _billingAddresses.Add(address);
             _settingsStoreService.SaveValue("BillingAddress", address);
+            return address;
         }
         // </snippet502>
 
-        public void SavePaymentInfo(PaymentInfo paymentInfo)
+        public PaymentInfo SavePaymentInfo(PaymentInfo paymentInfo)
         {
             if (_paymentInfos == null)
             {
                 _paymentInfos = _settingsStoreService.RetrieveAllValues<PaymentInfo>("PaymentInfo");
             }
 
+            foreach (var savedPaymentInfo in _paymentInfos)
+            {
+                if (IsMatchingPaymentInformation(savedPaymentInfo, paymentInfo))
+                    return savedPaymentInfo;
+            }
+
             _paymentInfos.Add(paymentInfo);
             _settingsStoreService.SaveValue("PaymentInfo", paymentInfo);
+            return paymentInfo;
         }
 
         public bool ContainsDefaultValue(string container)
@@ -197,6 +218,33 @@ namespace Kona.UILogic.Repositories
         public void DeleteContainer(string container)
         {
             _settingsStoreService.DeleteContainer(container);
+        }
+
+        private bool IsMatchingAddress(Address firstAddress, Address secondAddress)
+        {
+            if (firstAddress.FirstName != secondAddress.FirstName) return false;
+            if (firstAddress.MiddleInitial != secondAddress.MiddleInitial) return false;
+            if (firstAddress.LastName != secondAddress.LastName) return false;
+            if (firstAddress.StreetAddress != secondAddress.StreetAddress) return false;
+            if (firstAddress.OptionalAddress != secondAddress.OptionalAddress) return false;
+            if (firstAddress.City != secondAddress.City) return false;
+            if (firstAddress.State != secondAddress.State) return false;
+            if (firstAddress.ZipCode != secondAddress.ZipCode) return false;
+            if (firstAddress.Phone != secondAddress.Phone) return false;
+
+            return true;
+        }
+
+        private bool IsMatchingPaymentInformation(PaymentInfo firstPaymentInfo, PaymentInfo secondPaymentInfo)
+        {
+            if (firstPaymentInfo.CardNumber != secondPaymentInfo.CardNumber) return false;
+            if (firstPaymentInfo.CardVerificationCode != secondPaymentInfo.CardVerificationCode) return false;
+            if (firstPaymentInfo.CardholderName != secondPaymentInfo.CardholderName) return false;
+            if (firstPaymentInfo.ExpirationMonth != secondPaymentInfo.ExpirationMonth) return false;
+            if (firstPaymentInfo.ExpirationYear != secondPaymentInfo.ExpirationYear) return false;
+            if (firstPaymentInfo.Phone != secondPaymentInfo.Phone) return false;
+
+            return true;
         }
     }
 }

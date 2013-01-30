@@ -101,7 +101,7 @@ namespace Kona.WebServices.Repositories
                 new State(new [] { "750-799","885-885" }) { Code = "TX", Name = "Texas"},
                 new State(new [] { "840-847" }) { Code = "UT", Name = "Utah"},
                 new State(new [] { "050-059" }) { Code ="VT", Name = "Vermont"},
-                new State(new [] { "201","220-246" }) { Code = "VA", Name = "Virginia"},
+                new State(new [] { "201-201","220-246" }) { Code = "VA", Name = "Virginia"},
                 new State(new [] { "980-994" }) { Code = "WA", Name = "Washington"},
                 new State(new [] { "530-549" }) { Code = "WI", Name = "Wisconsin"},
                 new State(new [] { "247-268" }) { Code = "WV", Name = "West Virginia"},

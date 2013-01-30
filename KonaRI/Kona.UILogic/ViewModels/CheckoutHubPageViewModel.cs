@@ -9,14 +9,19 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Kona.Infrastructure;
 using Kona.UILogic.Models;
 using Kona.UILogic.Repositories;
 using Kona.UILogic.Services;
+using System.Net.Http;
+using Windows.UI.Popups;
+using System.Globalization;
+using Windows.UI.ViewManagement;
 
 namespace Kona.UILogic.ViewModels
 {
-    public class CheckoutHubPageViewModel : ViewModel, INavigationAware
+    public class CheckoutHubPageViewModel : ViewModel, INavigationAware, IHandleWindowSizeChanged
     {
         private readonly INavigationService _navigationService;
         private readonly IAccountService _accountService;
@@ -26,13 +31,15 @@ namespace Kona.UILogic.ViewModels
         private readonly IShippingAddressUserControlViewModel _shippingAddressViewModel;
         private readonly IBillingAddressUserControlViewModel _billingAddressViewModel;
         private readonly IPaymentMethodUserControlViewModel _paymentMethodViewModel;
+        private readonly ISettingsCharmService _settingsCharmService;
         private bool _useSameAddressAsShipping;
-        private bool _shippingInvalid;
-        private bool _billingInvalid;
-        private bool _paymentInvalid;
+        private bool _isShippingInfoInvalid;
+        private bool _isBillingInfoInvalid;
+        private bool _isPaymentInfoInvalid;
+        private bool _isUnsnapping;
 
         public CheckoutHubPageViewModel(INavigationService navigationService, IAccountService accountService, IOrderService orderService, ShippingMethodServiceProxy shippingMethodService, IShoppingCartRepository shoppingCartRepository,
-                                        IShippingAddressUserControlViewModel shippingAddressViewModel, IBillingAddressUserControlViewModel billingAddressViewModel, IPaymentMethodUserControlViewModel paymentMethodViewModel)
+                                        IShippingAddressUserControlViewModel shippingAddressViewModel, IBillingAddressUserControlViewModel billingAddressViewModel, IPaymentMethodUserControlViewModel paymentMethodViewModel, ISettingsCharmService settingsCharmService)
         {
             _navigationService = navigationService;
             _accountService = accountService;
@@ -43,6 +50,7 @@ namespace Kona.UILogic.ViewModels
             _shippingAddressViewModel = shippingAddressViewModel;
             _billingAddressViewModel = billingAddressViewModel;
             _paymentMethodViewModel = paymentMethodViewModel;
+            _settingsCharmService = settingsCharmService;
 
             GoBackCommand = new DelegateCommand(() => navigationService.GoBack(), () => navigationService.CanGoBack());
             GoNextCommand = new DelegateCommand(() => GoNext());
@@ -62,29 +70,36 @@ namespace Kona.UILogic.ViewModels
             set
             {
                 SetProperty(ref _useSameAddressAsShipping, value);
+
+                if (!_useSameAddressAsShipping)
+                {
+                    // Clean the Billing Address values & errors
+                    BillingAddressViewModel.Address = new Address { Id = Guid.NewGuid().ToString() };
+                }
+
                 BillingAddressViewModel.IsEnabled = !value;
             }
         }
 
         [RestorableState]
-        public bool ShippingInvalid
+        public bool IsShippingInfoInvalid
         {
-            get { return _shippingInvalid; }
-            set { SetProperty(ref _shippingInvalid, value); }
+            get { return _isShippingInfoInvalid; }
+            set { SetProperty(ref _isShippingInfoInvalid, value); }
         }
 
         [RestorableState]
-        public bool BillingInvalid
+        public bool IsBillingInfoInvalid
         {
-            get { return _billingInvalid; }
-            set { SetProperty(ref _billingInvalid, value); }
+            get { return _isBillingInfoInvalid; }
+            set { SetProperty(ref _isBillingInfoInvalid, value); }
         }
 
         [RestorableState]
-        public bool PaymentInvalid
+        public bool IsPaymentInfoInvalid
         {
-            get { return _paymentInvalid; }
-            set { SetProperty(ref _paymentInvalid, value); }
+            get { return _isPaymentInfoInvalid; }
+            set { SetProperty(ref _isPaymentInfoInvalid, value); }
         }
 
         public override void OnNavigatedTo(object navigationParameter, Windows.UI.Xaml.Navigation.NavigationMode navigationMode, System.Collections.Generic.Dictionary<string, object> viewState)
@@ -105,76 +120,101 @@ namespace Kona.UILogic.ViewModels
 
         private async void GoNext()
         {
-            var billingAddressValid = false;
-            if (!UseSameAddressAsShipping)
-            {
-                billingAddressValid = BillingAddressViewModel.ValidateForm();
-            }
-            else
-            {
-                billingAddressValid = true;
-                BillingAddressViewModel.UpdateAddressInformation(ShippingAddressViewModel.Address);
-            }
-            var shippingAddressValid = ShippingAddressViewModel.ValidateForm();
-            var paymentMethodValid = PaymentMethodViewModel.ValidateForm();
+            IsShippingInfoInvalid = ShippingAddressViewModel.ValidateForm() == false;
+            IsBillingInfoInvalid = UseSameAddressAsShipping ? false : BillingAddressViewModel.ValidateForm() == false;
+            IsPaymentInfoInvalid = PaymentMethodViewModel.ValidateForm() == false;
 
-            BillingInvalid = !billingAddressValid;
-            ShippingInvalid = !shippingAddressValid;
-            PaymentInvalid = !paymentMethodValid;
-
-            if (shippingAddressValid && billingAddressValid && paymentMethodValid)
+            if (!IsShippingInfoInvalid && !IsBillingInfoInvalid && !IsPaymentInfoInvalid)
             {
-                ShippingAddressViewModel.ProcessForm();
-                BillingAddressViewModel.ProcessForm();
-                PaymentMethodViewModel.ProcessForm();
-
-                Order order = new Order
+                if (await _accountService.GetSignedInUserAsync() == null)
                 {
-                    ShoppingCart = await _shoppingCartRepository.GetShoppingCartAsync(),
-                    UserId = (await _accountService.GetSignedInUserAsync()).UserName,
-                    ShippingAddress = ShippingAddressViewModel.Address,
-                    BillingAddress = BillingAddressViewModel.Address,
-                    PaymentInfo = PaymentMethodViewModel.PaymentInfo,
-                    ShippingMethod = (await _shippingMethodService.GetDefaultShippingMethodAsync())
-                };
-
-                var result = await _orderService.CreateOrderAsync(order, _accountService.ServerCookieHeader);
-
-                if (result.IsValid)
-                {
-                    _navigationService.Navigate("CheckoutSummary", result.Order);
+                    if (ApplicationView.Value == ApplicationViewState.Snapped)
+                    {
+                        _isUnsnapping = true;
+                        ApplicationView.TryUnsnap();
+                    }
+                    _settingsCharmService.ShowFlyout("signIn", null, successAction: async () => await ProcessFormAsync());
                 }
                 else
                 {
-                    // we receive a custom message from the service
-                    // we manage it in a way it fits best in our validation strategy
-                    DisplayErrorMessages(result.Message);
+                    await ProcessFormAsync();
                 }
             }
         }
 
-        private void DisplayErrorMessages(dynamic errorMessages)
+        private async Task ProcessFormAsync()
         {
-            // error messages, from the order perspective
-            // [{ PropertyName: string, Message: [{ string }] }]
+            // Create an order with the values entered in the form 
+            Order order = new Order
+                {
+                    UserId = (await _accountService.GetSignedInUserAsync()).UserName,
+                    ShippingAddress = ShippingAddressViewModel.Address,
+                    BillingAddress = UseSameAddressAsShipping ? ShippingAddressViewModel.Address : BillingAddressViewModel.Address,
+                    PaymentInfo = PaymentMethodViewModel.PaymentInfo,
+                    ShippingMethod = await _shippingMethodService.GetBasicShippingMethodAsync(),
+                    ShoppingCart = await _shoppingCartRepository.GetShoppingCartAsync()
+                };
+
+            try
+            {
+                // Call the service to create the order
+                Order createdOrder = await _orderService.CreateOrderAsync(order, _accountService.ServerCookieHeader);
+
+                // If everything is OK, process the form information
+                if (UseSameAddressAsShipping)
+                {
+                    BillingAddressViewModel.Address = ShippingAddressViewModel.Address;
+                }
+
+                ShippingAddressViewModel.ProcessForm();
+                BillingAddressViewModel.ProcessForm();
+                PaymentMethodViewModel.ProcessForm();
+
+                _navigationService.Navigate("CheckoutSummary", createdOrder);
+            }
+            catch (ModelValidationException mvex)
+            {
+                DisplayOrderErrorMessages(mvex.ValidationResult);
+            }
+            catch (HttpRequestException ex)
+            {
+                MessageDialog dlg =
+                    new MessageDialog(
+                        string.Format(CultureInfo.CurrentCulture, ErrorMessagesHelper.GeneralServiceErrorMessage,
+                                      Environment.NewLine, ex.Message), ErrorMessagesHelper.ErrorProcessingOrder);
+            }
+        }
+
+        private void DisplayOrderErrorMessages(ModelValidationResult validationResult)
+        {
             var shippingAddressErrors = new Dictionary<string, ReadOnlyCollection<string>>();
             var billingAddressErrors = new Dictionary<string, ReadOnlyCollection<string>>();
             var paymentMethodErrors = new Dictionary<string, ReadOnlyCollection<string>>();
 
-            foreach (dynamic propertyErrors in errorMessages)
+            // Property keys of the form. Format: order.{ShippingAddress/BillingAddress/PaymentInfo}.{Property}
+            foreach (var propkey in validationResult.ModelState.Keys)
             {
-                string orderProperty = propertyErrors.Property.Value;
-                string entityProperty = orderProperty.Substring(orderProperty.LastIndexOf('.') + 1);
-                IList<string> messages = propertyErrors.Messages.ToObject<List<string>>();
+                string orderPropAndEntityProp = propkey.Substring(propkey.IndexOf('.') + 1); // strip off order. prefix
+                string orderProperty = orderPropAndEntityProp.Substring(0, orderPropAndEntityProp.IndexOf('.') + 1);
+                string entityProperty = orderPropAndEntityProp.Substring(orderProperty.IndexOf('.') + 1);
 
-                if (orderProperty.ToLower().Contains("shipping")) shippingAddressErrors.Add(entityProperty, new ReadOnlyCollection<string>(messages));
-                if (orderProperty.ToLower().Contains("billing")) billingAddressErrors.Add(entityProperty, new ReadOnlyCollection<string>(messages));
-                if (orderProperty.ToLower().Contains("payment")) paymentMethodErrors.Add(entityProperty, new ReadOnlyCollection<string>(messages));
+                if (orderProperty.ToLower().Contains("shipping")) shippingAddressErrors.Add(entityProperty, new ReadOnlyCollection<string>(validationResult.ModelState[propkey]));
+                if (orderProperty.ToLower().Contains("billing") && !UseSameAddressAsShipping) billingAddressErrors.Add(entityProperty, new ReadOnlyCollection<string>(validationResult.ModelState[propkey]));
+                if (orderProperty.ToLower().Contains("payment")) paymentMethodErrors.Add(entityProperty, new ReadOnlyCollection<string>(validationResult.ModelState[propkey]));
             }
 
-            if (shippingAddressErrors.Count > 0) _shippingAddressViewModel.Errors.SetAllErrors(shippingAddressErrors);
-            if (billingAddressErrors.Count > 0) _billingAddressViewModel.Errors.SetAllErrors(billingAddressErrors);
-            if (paymentMethodErrors.Count > 0) _paymentMethodViewModel.Errors.SetAllErrors(paymentMethodErrors);
+            if (shippingAddressErrors.Count > 0) _shippingAddressViewModel.Address.Errors.SetAllErrors(shippingAddressErrors);
+            if (billingAddressErrors.Count > 0) _billingAddressViewModel.Address.Errors.SetAllErrors(billingAddressErrors);
+            if (paymentMethodErrors.Count > 0) _paymentMethodViewModel.PaymentInfo.Errors.SetAllErrors(paymentMethodErrors);
+        }
+
+        public void WindowCurrentSizeChanged()
+        {
+            if (_isUnsnapping)
+            {
+                _settingsCharmService.ShowFlyout("signIn", null, successAction: async () => await ProcessFormAsync());
+                _isUnsnapping = false;
+            }
         }
     }
 }

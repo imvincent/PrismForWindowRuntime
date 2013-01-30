@@ -6,11 +6,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System.Threading.Tasks;
-using System.Net.Http;
 using System.Collections.ObjectModel;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Kona.Infrastructure;
 using Kona.UILogic.Models;
-using Kona.UILogic.Repositories;
 
 namespace Kona.UILogic.Services
 {
@@ -20,11 +20,12 @@ namespace Kona.UILogic.Services
         private string _categoriesBaseUrl = string.Format("{0}/api/Category/", Constants.ServerAddress);
 
         // <snippet513>
-        public async Task<ReadOnlyCollection<Category>> GetCategoriesAsync(int depth)
+        public async Task<ReadOnlyCollection<Category>> GetCategoriesAsync(int maxAmountOfProducts)
         {
             using (var httpClient = new HttpClient())
             {
-                var response = await httpClient.GetAsync(string.Format("{0}?depth={1}", _categoriesBaseUrl, depth));
+                httpClient.AddCurrentCultureHeader();
+                var response = await httpClient.GetAsync(string.Format("{0}?maxAmountOfProducts={1}", _categoriesBaseUrl, maxAmountOfProducts));
                 response.EnsureSuccessStatusCode();
                 var result = await response.Content.ReadAsAsync<ReadOnlyCollection<Category>>();
 
@@ -37,6 +38,7 @@ namespace Kona.UILogic.Services
         {
             using (var httpClient = new HttpClient())
             {
+                httpClient.AddCurrentCultureHeader();
                 var response =
                     await httpClient.GetAsync(string.Format("{0}?categoryId={1}", _categoriesBaseUrl, categoryId));
                 response.EnsureSuccessStatusCode();
@@ -50,6 +52,7 @@ namespace Kona.UILogic.Services
         {
             using (var httpClient = new HttpClient())
             {
+                httpClient.AddCurrentCultureHeader();
                 var response =
                     await httpClient.GetAsync(string.Format("{0}?categoryId={1}", _productsBaseUrl, categoryId));
                 response.EnsureSuccessStatusCode();
@@ -63,6 +66,7 @@ namespace Kona.UILogic.Services
         {
             using (var httpClient = new HttpClient())
             {
+                httpClient.AddCurrentCultureHeader();
                 var response = await httpClient.GetAsync(_categoriesBaseUrl + categoryId.ToString());
                 response.EnsureSuccessStatusCode();
                 var result = await response.Content.ReadAsAsync<Category>();
@@ -75,6 +79,7 @@ namespace Kona.UILogic.Services
         {
             using (var httpClient = new HttpClient())
             {
+                httpClient.AddCurrentCultureHeader();
                 var response = await httpClient.GetAsync(_productsBaseUrl + productNumber);
                 response.EnsureSuccessStatusCode();
                 var result = await response.Content.ReadAsAsync<Product>();

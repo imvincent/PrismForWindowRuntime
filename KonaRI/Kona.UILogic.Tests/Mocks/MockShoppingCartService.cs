@@ -15,28 +15,40 @@ namespace Kona.UILogic.Tests.Mocks
     public class MockShoppingCartService : IShoppingCartService
     {
         public Func<string, Task<ShoppingCart>> GetShoppingCartAsyncDelegate { get; set; }
-        public Func<string, string, Task<ShoppingCartItem>> AddProductToShoppingCartAsyncDelegate { get; set; }
-        public Action<string, int> RemoveShoppingCartItemDelegate { get; set; }
+        public Func<string, string, Task> AddProductToShoppingCartAsyncDelegate { get; set; }
+        public Func<string, string, Task> RemoveProductFromShoppingCartAsyncDelegate { get; set; }
+        public Func<string, string, Task> RemoveShoppingCartItemDelegate { get; set; }
         public Func<string, Task> DeleteShoppingCartAsyncDelegate { get; set; }
+        public Func<string, string, Task> MergeShoppingCartsAsyncDelegate { get; set; }
 
         public Task<ShoppingCart> GetShoppingCartAsync(string shoppingCartId)
         {
             return GetShoppingCartAsyncDelegate(shoppingCartId);
         }
 
-        public Task<ShoppingCartItem> AddProductToShoppingCartAsync(string shoppingCartId, string productId)
+        public Task AddProductToShoppingCartAsync(string shoppingCartId, string productId)
         {
             return AddProductToShoppingCartAsyncDelegate(shoppingCartId, productId);
         }
 
-        public void RemoveShoppingCartItemAsync(string shoppingCartId, int itemId)
+        public Task RemoveProductFromShoppingCartAsync(string shoppingCartId, string productId)
         {
-            RemoveShoppingCartItemDelegate(shoppingCartId, itemId);
+            return RemoveProductFromShoppingCartAsyncDelegate(shoppingCartId, productId);
+        }
+
+        public Task RemoveShoppingCartItemAsync(string shoppingCartId, string itemId)
+        {
+            return RemoveShoppingCartItemDelegate(shoppingCartId, itemId);
         }
 
         public Task DeleteShoppingCartAsync(string shoppingCartId)
         {
             return DeleteShoppingCartAsyncDelegate(shoppingCartId);
+        }
+
+        public Task MergeShoppingCartsAsync(string oldShoppingCartId, string newShoppingCartId)
+        {
+            return MergeShoppingCartsAsyncDelegate(oldShoppingCartId, newShoppingCartId);
         }
     }
 }

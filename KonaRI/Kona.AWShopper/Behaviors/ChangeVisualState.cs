@@ -6,11 +6,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -43,7 +38,7 @@ namespace Kona.AWShopper.Behaviors
 
         private static void OnVisualStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
-            var userControl = (UserControl)d;
+            var userControl = (Control)d;
             var visualState = args.NewValue.ToString();
 
             if (userControl != null && !string.IsNullOrEmpty(visualState))

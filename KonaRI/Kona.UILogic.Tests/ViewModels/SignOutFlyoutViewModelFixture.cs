@@ -22,6 +22,8 @@ namespace Kona.UILogic.Tests.ViewModels
         {
             var closeFlyoutCalled = false;
             var accountServiceSignOutCalled = false;
+            var clearHistoryCalled = false;
+            var navigateCalled = false;
             var accountService = new MockAccountService();
             accountService.SignOutDelegate = () =>
                                                  {
@@ -35,7 +37,15 @@ namespace Kona.UILogic.Tests.ViewModels
                                                                       credentialStoreRemoveCredsCalled = true;
                                                                       Assert.AreEqual("KonaRI", s);
                                                                   };
-            var target = new SignOutFlyoutViewModel(accountService, credentialStore);
+            var navigationService = new MockNavigationService();
+            navigationService.ClearHistoryDelegate = () => { clearHistoryCalled = true; };
+            navigationService.NavigateDelegate = (s, o) =>
+                                                     {
+                                                         navigateCalled = true;
+                                                         Assert.AreEqual("Hub", s);
+                                                         return true;
+                                                     };
+            var target = new SignOutFlyoutViewModel(accountService, credentialStore, navigationService);
             target.CloseFlyout = () =>
                                      {
                                          closeFlyoutCalled = true;
@@ -47,6 +57,8 @@ namespace Kona.UILogic.Tests.ViewModels
             Assert.IsTrue(accountServiceSignOutCalled);
             Assert.IsTrue(credentialStoreRemoveCredsCalled);
             Assert.IsTrue(closeFlyoutCalled);
+            Assert.IsTrue(clearHistoryCalled);
+            Assert.IsTrue(navigateCalled);
         }
     }
 }

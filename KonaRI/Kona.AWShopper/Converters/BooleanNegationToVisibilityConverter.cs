@@ -13,8 +13,8 @@ using Windows.UI.Xaml.Data;
 namespace Kona.AWShopper.Converters
 {
     /// <summary>
-    /// Value converter that translates true to <see cref="Visibility.Visible"/> and false to
-    /// <see cref="Visibility.Collapsed"/>.
+    /// Value converter that translates true to <see cref="Visibility.Collapsed"/> 
+    /// and false to <see cref="Visibility.Visible"/>.
     /// </summary>
     public sealed class BooleanNegationToVisibilityConverter : IValueConverter
     {

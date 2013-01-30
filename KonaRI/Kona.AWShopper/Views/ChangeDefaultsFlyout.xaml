@@ -131,7 +131,7 @@
                 <StackPanel Orientation="Horizontal"
                             Grid.Column="0"
                             Margin="40, 32, 17, 13">
-                    <Button Command="{Binding GoBackCommand}"
+                    <Button Command="{Binding GoBackCommand}" AutomationProperties.AutomationId="ChangeDefaultsFlyoutBackButton"
                             Margin="0,3,0,0"
                             Style="{StaticResource SettingsBackButtonStyle}" />
                     <TextBlock x:Uid="ChangeDefaultsTitle" Margin="10,0,0,0"
@@ -154,9 +154,9 @@
                                 <ColumnDefinition Width="60" />
                             </Grid.ColumnDefinitions>
                             <TextBlock x:Uid="ShippingAddressLabel" Text="Shipping Address" FontSize="22" VerticalAlignment="Center"></TextBlock>
-                            <Button x:Name="expandShippingAddressButton" Grid.Column="1" Content="" FontFamily="Segoe UI Symbol" FontSize="22" Click="ShippingAddressToggleClick"></Button>
+                            <Button x:Name="expandShippingAddressButton" AutomationProperties.AutomationId="ExpandShippingAddressButton" Grid.Column="1" Content="" FontFamily="Segoe UI Symbol" FontSize="22" Click="ShippingAddressToggleClick"></Button>
                         </Grid>
-                        <ListView x:Name="ShippingAddressList" SelectionMode="Single" ItemTemplate="{StaticResource CheckoutDataTemplate}" ItemsSource="{Binding ShippingAddresses}" SelectedItem="{Binding SelectedShippingAddress, Mode=TwoWay}" HorizontalAlignment="Stretch">
+                        <ListView x:Name="ShippingAddressList" AutomationProperties.AutomationId="ShippingAddressList" SelectionMode="Single" ItemTemplate="{StaticResource CheckoutDataTemplate}" ItemsSource="{Binding ShippingAddresses}" SelectedItem="{Binding SelectedShippingAddress, Mode=TwoWay}" HorizontalAlignment="Stretch">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
@@ -169,9 +169,9 @@
                                 <ColumnDefinition Width="60" />
                             </Grid.ColumnDefinitions>
                             <TextBlock x:Uid="BillingAddressLabel" Text="Billing Address" FontSize="22" VerticalAlignment="Center"></TextBlock>
-                            <Button x:Name="expandBillingAddressButton" Grid.Column="1" Content="" FontFamily="Segoe UI Symbol" FontSize="22" Click="BillingAddressToggleClick"></Button>
+                            <Button x:Name="expandBillingAddressButton" AutomationProperties.AutomationId="ExpandBillingAddressButton" Grid.Column="1" Content="" FontFamily="Segoe UI Symbol" FontSize="22" Click="BillingAddressToggleClick"></Button>
                         </Grid>
-                        <ListView x:Name="BillingAddressList" SelectionMode="Single" ItemTemplate="{StaticResource CheckoutDataTemplate}" ItemsSource="{Binding BillingAddresses}" SelectedItem="{Binding SelectedBillingAddress, Mode=TwoWay}" HorizontalAlignment="Stretch">
+                        <ListView x:Name="BillingAddressList" AutomationProperties.AutomationId="BillingAddressList" SelectionMode="Single" ItemTemplate="{StaticResource CheckoutDataTemplate}" ItemsSource="{Binding BillingAddresses}" SelectedItem="{Binding SelectedBillingAddress, Mode=TwoWay}" HorizontalAlignment="Stretch">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
@@ -184,16 +184,16 @@
                                 <ColumnDefinition Width="60" />
                             </Grid.ColumnDefinitions>
                             <TextBlock x:Uid="PaymentMethodLabel" Text="Payment Method" FontSize="22" VerticalAlignment="Center"></TextBlock>
-                            <Button x:Name="expandPaymentInfoButton" Grid.Column="1" Content="" FontFamily="Segoe UI Symbol" FontSize="22" Click="PaymentInfoToggleClick"></Button>
+                            <Button x:Name="expandPaymentInfoButton" AutomationProperties.AutomationId="ExpandPaymentInfoButton" Grid.Column="1" Content="" FontFamily="Segoe UI Symbol" FontSize="22" Click="PaymentInfoToggleClick"></Button>
                         </Grid>
-                        <ListView x:Name="PaymentInfoList" SelectionMode="Single" ItemTemplate="{StaticResource CheckoutDataTemplate}" ItemsSource="{Binding PaymentInfos}" SelectedItem="{Binding SelectedPaymentInfo, Mode=TwoWay}" HorizontalAlignment="Stretch">
+                        <ListView x:Name="PaymentInfoList" AutomationProperties.AutomationId="PaymentInfoList" SelectionMode="Single" ItemTemplate="{StaticResource CheckoutDataTemplate}" ItemsSource="{Binding PaymentInfos}" SelectedItem="{Binding SelectedPaymentInfo, Mode=TwoWay}" HorizontalAlignment="Stretch">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
                                 </Style>
                             </ListView.ItemContainerStyle>
                         </ListView>
-                        <Button x:Uid="SaveDefaultsButton" Background="{StaticResource AWShopperAccentBrush}" Content="Save Defaults" HorizontalAlignment="Stretch" Command="{Binding SaveDefaultsCommand}" />
+                        <Button x:Uid="SaveDefaultsButton" AutomationProperties.AutomationId="SaveDefaultsButton" Background="{StaticResource AWShopperAccentBrush}" Content="Save Defaults" HorizontalAlignment="Stretch" Command="{Binding SaveDefaultsCommand}" />
                     </StackPanel>
                 </Grid>
             </ScrollViewer>

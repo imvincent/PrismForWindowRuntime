@@ -115,6 +115,36 @@ namespace Kona.UILogic.Tests.Repositories
             Assert.AreEqual("John Doe", defaultPaymentInfo.CardholderName);
         }
 
+        [TestMethod]
+        public void SaveShippingAddress_SavesIfNew()
+        {
+            var service = SetupService();
+            var target = new CheckoutDataRepository(service);
+
+            var savedAddress = target.SaveShippingAddress(new Address { Id = "NewAddressId" });
+
+            Assert.AreEqual("NewAddressId", savedAddress.Id);
+        }
+
+        [TestMethod]
+        public void SaveShippingAddress_DoesNotSaveAndReturnsSavedId()
+        {
+            var service = SetupService();
+            var target = new CheckoutDataRepository(service);
+
+            var savedAddress = target.SaveShippingAddress(new Address
+            {
+                Id = "NewShippingAddressId",
+                FirstName = "John",
+                MiddleInitial = "S",
+                LastName = "Doe",
+                City = "Redmond",
+                State = "Washington"
+            });
+
+            Assert.AreEqual("1", savedAddress.Id);
+        }
+
 
 
         private static MockSettingsStoreService SetupService()

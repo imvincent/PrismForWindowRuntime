@@ -117,6 +117,7 @@
     <Compile Include="Behaviors\HighlightFormFieldOnErrors.cs" />
     <Compile Include="Behaviors\ListViewItemClickedToAction.cs" />
     <Compile Include="Controls\FormFieldTextBox.cs" />
+    <Compile Include="Controls\MultipleSizedGridView.cs" />
     <Compile Include="Converters\BooleanNegationToVisibilityConverter.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\NullToVisibleConverter.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="Converters\IsGiftContentConverter.cs" />
     <Compile Include="Converters\IsSignInInvalidConverter.cs" />
     <Compile Include="Converters\NotNullToVisibleConverter.cs" />
+    <Compile Include="DesignViewModels\ShoppingCartPageDesignViewModel.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Views\BillingAddressFlyout.xaml.cs">
       <DependentUpon>BillingAddressFlyout.xaml</DependentUpon>
@@ -207,6 +209,7 @@
     <PRIResource Include="Strings\en-US\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\BannerLogo.png" />
     <Content Include="Assets\Logo.png" />
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
@@ -315,6 +318,10 @@
     <ProjectReference Include="..\Kona.UILogic\Kona.UILogic.csproj">
       <Project>{5B10DC48-600B-4F27-84D8-F041FEE71A34}</Project>
       <Name>Kona.UILogic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Microsoft.Practices.PubSubEvents\Microsoft.Practices.PubSubEvents.csproj">
+      <Project>{d5d2645c-03eb-48b0-9873-0904fcdb2ced}</Project>
+      <Name>Microsoft.Practices.PubSubEvents</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

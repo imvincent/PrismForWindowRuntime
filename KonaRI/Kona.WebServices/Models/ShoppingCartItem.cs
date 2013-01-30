@@ -12,7 +12,7 @@ namespace Kona.WebServices.Models
 {
     public class ShoppingCartItem
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public Product Product{ get; set;}
 

@@ -15,6 +15,8 @@ namespace Kona.UILogic.Services
     public interface IAccountService
     {
         string ServerCookieHeader { get; }
+
+        UserInfo LastSignedInUser { get; }
         
         Task<UserInfo> GetSignedInUserAsync();
         

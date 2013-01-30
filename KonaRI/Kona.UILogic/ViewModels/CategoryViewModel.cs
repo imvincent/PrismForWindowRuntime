@@ -8,6 +8,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Windows.Input;
+using Kona.Infrastructure;
 using Kona.UILogic.Models;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
@@ -18,19 +20,24 @@ namespace Kona.UILogic.ViewModels
     {
         private readonly Category _category;
         private ImageSource _image;
-        private List<CategoryViewModel> _subCategoryViewModels;
+        private List<ProductViewModel> _productsViewModels;
+        private INavigationService _navigationService;
 
-        public CategoryViewModel(Category category)
+        public CategoryViewModel(Category category, INavigationService navigationService)
         {
             _category = category;
-            _subCategoryViewModels = new List<CategoryViewModel>();
-            if (category != null && category.Subcategories != null)
+            _navigationService = navigationService;
+            CategoryNavigationCommand = new DelegateCommand(NavigateToCategory);
+            _productsViewModels = new List<ProductViewModel>();
+            if (category != null && category.Products != null)
             {
-                foreach (var subCategory in category.Subcategories)
+                var position = 0;
+                foreach (var product in category.Products)
                 {
-                    _subCategoryViewModels.Add(new CategoryViewModel(subCategory));
+                    _productsViewModels.Add(new ProductViewModel(product) { ItemPosition = position });
+                    position++;
                 }
-                Subcategories = _subCategoryViewModels;
+                Products = _productsViewModels;
             }
 
         }
@@ -41,7 +48,11 @@ namespace Kona.UILogic.ViewModels
 
         public string Title { get { return _category.Title; } }
 
-        public IEnumerable<CategoryViewModel> Subcategories { get; private set; } 
+        public IEnumerable<CategoryViewModel> Subcategories { get; private set; }
+
+        public IEnumerable<ProductViewModel> Products { get; private set; }
+
+        public ICommand CategoryNavigationCommand { get; private set; }
 
         public ImageSource Image
         {
@@ -53,6 +64,11 @@ namespace Kona.UILogic.ViewModels
                 }
                 return this._image;
             }
+        }
+
+        private void NavigateToCategory()
+        {
+            _navigationService.Navigate("GroupDetail", CategoryId);
         }
     }
 }

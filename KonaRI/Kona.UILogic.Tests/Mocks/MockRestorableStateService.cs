@@ -18,6 +18,7 @@ namespace Kona.UILogic.Tests.Mocks
     public class MockRestorableStateService : IRestorableStateService
     {
         Dictionary<string, object> _stateBag = new Dictionary<string, object>();
+
         public void SaveState(string key, object state)
         {
             _stateBag[key] = state;

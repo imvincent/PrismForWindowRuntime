@@ -9,26 +9,33 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Net.Http;
 using Kona.Infrastructure;
 using Kona.UILogic.Models;
 using Kona.UILogic.Repositories;
+using Kona.UILogic.Services;
+using Windows.UI.Popups;
 using Windows.UI.Xaml.Navigation;
 using System.Windows.Input;
 
 namespace Kona.UILogic.ViewModels
 {
-    public class HubPageViewModel :ViewModel, INavigationAware
+    public class HubPageViewModel : ViewModel, INavigationAware
     {
         private IProductCatalogRepository _productCatalogRepository;
         private INavigationService _navigationService;
+        private readonly IAlertMessageService _alertMessageService;
+        private readonly IResourceLoader _resourceLoader;
         private IReadOnlyCollection<CategoryViewModel> _rootCategories;
 
         // <snippet303>
-        public HubPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService)
+        public HubPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService, IAlertMessageService alertMessageService, IResourceLoader resourceLoader)
         {
             _productCatalogRepository = productCatalogRepository; 
             _navigationService = navigationService;
-            CategoryNavigationAction = NavigateToCategory;
+            _alertMessageService = alertMessageService;
+            _resourceLoader = resourceLoader;
+            ProductNavigationAction = NavigateToItem;
             GoBackCommand = new DelegateCommand(() => navigationService.GoBack(), () => navigationService.CanGoBack());
         }
         // </snippet303>
@@ -43,25 +50,43 @@ namespace Kona.UILogic.ViewModels
 
         public ICommand GoBackCommand { get; private set; }
 
-        public Action<object> CategoryNavigationAction { get; private set; }
+        public Action<object> ProductNavigationAction { get; private set; }
 
-        private void NavigateToCategory(object parameter)
+        // <snippet412>
+        private void NavigateToItem(object parameter)
         {
-            var category = parameter as CategoryViewModel;
-            if (category != null)
+            var product = parameter as ProductViewModel;
+            if (product != null)
             {
-                _navigationService.Navigate("GroupDetail", category.CategoryId);                
+                _navigationService.Navigate("ItemDetail", product.ProductNumber);
             }
         }
+        // </snippet412>
 
         // <snippet511>
         public async override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState)
         {
-            var rootCategories = await _productCatalogRepository.GetCategoriesAsync();
+            ReadOnlyCollection<Category> rootCategories = null;
+            var getCategoriesCallFailed = false;
+            try
+            {
+                rootCategories = await _productCatalogRepository.GetCategoriesAsync(5);
+            }
+            catch (HttpRequestException)
+            {
+                getCategoriesCallFailed = true;
+            }
+
+            if (getCategoriesCallFailed)
+            {
+                await _alertMessageService.ShowAsync(_resourceLoader.GetString("ErrorProductCatalogServiceUnreachable"), _resourceLoader.GetString("Error"));
+                return;
+            }
+            
             var rootCategoryViewModels = new List<CategoryViewModel>();
             foreach (var rootCategory in rootCategories)
             {
-                rootCategoryViewModels.Add(new CategoryViewModel(rootCategory));
+                rootCategoryViewModels.Add(new CategoryViewModel(rootCategory, _navigationService));
             }
             RootCategories = new ReadOnlyCollection<CategoryViewModel>(rootCategoryViewModels);
         }
