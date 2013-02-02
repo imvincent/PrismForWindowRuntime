@@ -54,9 +54,9 @@ namespace Kona.UILogic.Services
                     return _signedInUser;
                 }
             }
-            catch (SecurityException)
+            catch (SecurityException){}
             {
-                return null;
+                //User's session has expired.
             }
 
             // Attempt to sign in using credentials stored locally

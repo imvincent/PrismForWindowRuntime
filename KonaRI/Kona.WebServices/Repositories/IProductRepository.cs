@@ -11,9 +11,10 @@ using Kona.WebServices.Models;
 
 namespace Kona.WebServices.Repositories
 {
-    public interface IProductRepository : IRepository<Product>
+    public interface IProductRepository
     {
         IEnumerable<Product> TodaysDealsProducts { get; set; }
         IEnumerable<Product> GetProductsFromCategory(int subcategoryId);
+        IEnumerable<Product> GetAll();
     }
 }

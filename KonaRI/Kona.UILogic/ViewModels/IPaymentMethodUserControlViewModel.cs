@@ -21,13 +21,10 @@ namespace Kona.UILogic.ViewModels
     public interface IPaymentMethodUserControlViewModel
     {
         [RestorableState]
-        PaymentInfo PaymentInfo { get; set; }
+        PaymentMethod PaymentMethod { get; set; }
 
         [RestorableState]
         bool SetAsDefault { get; set; }
-
-        [RestorableState]
-        int CurrentFormStatus { get; set; }
 
         string EntityId { get; set; }
         void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState);

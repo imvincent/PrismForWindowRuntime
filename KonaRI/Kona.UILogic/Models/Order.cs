@@ -20,7 +20,7 @@ namespace Kona.UILogic.Models
 
         public Address BillingAddress { get; set; }
 
-        public PaymentInfo PaymentInfo { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
 
         public ShippingMethod ShippingMethod { get; set; }
     }

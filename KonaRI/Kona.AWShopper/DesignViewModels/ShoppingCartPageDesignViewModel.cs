@@ -31,7 +31,7 @@ namespace Kona.AWShopper.DesignViewModels
 
         public string TotalPrice { get; set; }
 
-        public ObservableCollection<ShoppingCartItemViewModel> ShoppingCartItemViewModels { get; set; }
+        public ObservableCollection<ShoppingCartItemViewModel> ShoppingCartItemViewModels { get; private set; }
 
         public ShoppingCartItemViewModel SelectedItem { get; set; }
 
@@ -46,41 +46,36 @@ namespace Kona.AWShopper.DesignViewModels
                     new ShoppingCartItemViewModel(new ShoppingCartItem()
                         {
                             Id = Guid.NewGuid().ToString(),
-                            Product = new Product() {  Title = "Product 1",  Description = "Description of Product 1", ListPrice = 25.10, ProductNumber = "1", ImageName = (new Uri("ms-appx:///Assets/StoreLogo.png")).AbsoluteUri },
+                            Product = new Product() {  Title = "Product 1",  Description = "Description of Product 1", ListPrice = 25.10, DiscountPercentage = 10, ProductNumber = "1", ImageName = (new Uri("ms-appx:///Assets/StoreLogo.png")).AbsoluteUri },
                             Quantity = 1,
-                            DiscountPercentage = 10,
                             Currency = "USD"
                         }),
                    new ShoppingCartItemViewModel(new ShoppingCartItem()
                         {
                             Id = Guid.NewGuid().ToString(),
-                           Product = new Product() {  Title = "Product 2",  Description = "Description of Product 2", ListPrice = 25.10, ProductNumber = "2", ImageName = (new Uri("ms-appx:///Assets/StoreLogo.png")).AbsoluteUri },
+                           Product = new Product() {  Title = "Product 2",  Description = "Description of Product 2", ListPrice = 25.10, DiscountPercentage = 10, ProductNumber = "2", ImageName = (new Uri("ms-appx:///Assets/StoreLogo.png")).AbsoluteUri },
                             Quantity = 1,
-                            DiscountPercentage = 10,
                             Currency = "USD"
                         }), 
                    new ShoppingCartItemViewModel(new ShoppingCartItem()
                         {
                             Id = Guid.NewGuid().ToString(),
-                           Product = new Product() {  Title = "Product 3",  Description = "Description of Product 3", ListPrice = 25.10, ProductNumber = "3", ImageName = (new Uri("ms-appx:///Assets/StoreLogo.png")).AbsoluteUri },
+                           Product = new Product() {  Title = "Product 3",  Description = "Description of Product 3", ListPrice = 25.10, DiscountPercentage = 10, ProductNumber = "3", ImageName = (new Uri("ms-appx:///Assets/StoreLogo.png")).AbsoluteUri },
                             Quantity = 1,
-                            DiscountPercentage = 10,
                             Currency = "USD"
                         }), 
                    new ShoppingCartItemViewModel(new ShoppingCartItem()
                         {
                             Id = Guid.NewGuid().ToString(),
-                            Product = new Product() {  Title = "Product 4",  Description = "Description of Product 4", ListPrice = 25.10, ProductNumber = "4", ImageName = (new Uri("ms-appx:///Assets/StoreLogo.png")).AbsoluteUri },
+                            Product = new Product() {  Title = "Product 4",  Description = "Description of Product 4", ListPrice = 25.10, DiscountPercentage = 10, ProductNumber = "4", ImageName = (new Uri("ms-appx:///Assets/StoreLogo.png")).AbsoluteUri },
                             Quantity = 1,
-                            DiscountPercentage = 10,
                             Currency = "USD"
                         }), 
                    new ShoppingCartItemViewModel(new ShoppingCartItem()
                         {
                             Id = Guid.NewGuid().ToString(),
-                            Product = new Product() {  Title = "Product 5",  Description = "Description of Product 5", ListPrice = 25.10, ProductNumber = "5", ImageName = (new Uri("ms-appx:///Assets/StoreLogo.png")).AbsoluteUri },
+                            Product = new Product() {  Title = "Product 5",  Description = "Description of Product 5", ListPrice = 25.10, DiscountPercentage = 10, ProductNumber = "5", ImageName = (new Uri("ms-appx:///Assets/StoreLogo.png")).AbsoluteUri },
                             Quantity = 1,
-                            DiscountPercentage = 10,
                             Currency = "USD"
                         }), 
                 };

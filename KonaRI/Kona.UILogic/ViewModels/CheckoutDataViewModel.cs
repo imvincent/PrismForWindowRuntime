@@ -7,46 +7,38 @@
 
 
 using System;
-using System.Windows.Input;
 using Kona.Infrastructure;
-using Windows.ApplicationModel.Resources;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace Kona.UILogic.ViewModels
 {
     public class CheckoutDataViewModel : ViewModel
     {
-        private string _name;
-        private string _dataType;
+        private string _title;
         private string _firstLine;
         private string _secondLine;
-        private ISettingsCharmService _settingsCharmService;
+        private string _bottomLine;
+        private Uri _logoUri;
+        private string _dataType;
+        private object _context;
 
-        public CheckoutDataViewModel()
+        public CheckoutDataViewModel(string entityId, string title, string firstLine, string secondLine, string bottomLine, Uri logoUri, string dataType, object context)
         {
-            EditDataCommand = new DelegateCommand(EditData);
+            EntityId = entityId;
+            _title = title;
+            _firstLine = firstLine;
+            _secondLine = secondLine;
+            _bottomLine = bottomLine;
+            _logoUri = logoUri;
+            _dataType = dataType;
+            _context = context;
         }
 
-        public CheckoutDataViewModel(dynamic checkoutData, ISettingsCharmService settingsCharmService)
-            : this()
+        public string Title
         {
-            EntityId = checkoutData.EntityId;
-            DataType = checkoutData.DataType;
-            FirstLine = checkoutData.FirstLine;
-            SecondLine = checkoutData.SecondLine;
-            Name = checkoutData.Name;
-            _settingsCharmService = settingsCharmService;
-        }
-
-        public string DataType
-        {
-            get { return _dataType; }
-            set { SetProperty(ref _dataType, value); }
-        }
-
-        public string Name
-        {
-            get { return _name; }
-            set { SetProperty(ref _name, value); }
+            get { return _title; }
+            set { SetProperty(ref _title, value); }
         }
 
         public string FirstLine
@@ -61,36 +53,28 @@ namespace Kona.UILogic.ViewModels
             set { SetProperty(ref _secondLine, value); }
         }
 
-        public ICommand EditDataCommand { get; set; }
-
-        public void EditData()
+        public string BottomLine
         {
-            if (DataType == null) return;
+            get { return _bottomLine; }
+            set { SetProperty(ref _bottomLine, value); }
+        }
 
-            var resourceLoader = new ResourceLoader();
-            string flyoutName = string.Empty;
-            
-            // We cannot use a switch here because we're comparing the DataType with a dynamic value
-            if (DataType == resourceLoader.GetString("ShippingAddress"))
-            {
-                flyoutName = "editShippingAddress";
-            }
+        public Uri LogoUri
+        {
+            get { return _logoUri; }
+            set { SetProperty(ref _logoUri, value); }
+        }
 
-            if (DataType == resourceLoader.GetString("BillingAddress"))
-            {
-               flyoutName = "editBillingAddress";
-            }
+        public string DataType
+        {
+            get { return _dataType; }
+            set { SetProperty(ref _dataType, value); }
+        }
 
-            if (DataType == resourceLoader.GetString("PaymentInfo"))
-            {
-                flyoutName = "editPaymentMethod";
-            }
-
-            // Display EditFlyout
-            if (string.IsNullOrEmpty(flyoutName))
-            {
-                _settingsCharmService.ShowFlyout(flyoutName, EntityId, null);
-            }
+        public object Context
+        {
+            get { return _context; }
+            set { SetProperty(ref _context, value); }
         }
     }
 }

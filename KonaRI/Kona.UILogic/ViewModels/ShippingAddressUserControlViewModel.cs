@@ -31,7 +31,7 @@ namespace Kona.UILogic.ViewModels
 
         public ShippingAddressUserControlViewModel(ICheckoutDataRepository checkoutDataRepository, ILocationService locationService, IResourceLoader resourceLoader)
         {
-            _address = new Address() { Id = Guid.NewGuid().ToString() };
+            _address = new Address();
             _checkoutDataRepository = checkoutDataRepository;
             _locationService = locationService;
             _resourceLoader = resourceLoader;
@@ -80,11 +80,11 @@ namespace Kona.UILogic.ViewModels
 
             if (navigationMode == NavigationMode.New)
             {
-                if (_checkoutDataRepository.ContainsDefaultValue("ShippingAddress"))
+                var address = _checkoutDataRepository.GetDefaultShippingAddressValue();
+                if (address != null)
                 {
-                    Address = _checkoutDataRepository.GetDefaultShippingAddressValue();
-
-                    // Validate form fields
+                    // Update the information and validate the values
+                    Address = address;
                     ValidateForm();
                 }
             }

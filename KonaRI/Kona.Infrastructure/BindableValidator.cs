@@ -112,7 +112,6 @@ namespace Kona.Infrastructure
             OnErrorsChanged(string.Empty);
         }
 
-        // <snippet1309>
         /// <summary>
         /// Validates the property, based on the rules set in the property ValidationAttributes attributes. 
         /// It updates the errors collection with the new validation results (notifying if necessary). 
@@ -132,8 +131,9 @@ namespace Kona.Infrastructure
 
             if (propertyInfo == null)
             {
-                var resourceLoader = new ResourceLoader("Kona.Infrastructure");
+                var resourceLoader = new ResourceLoader(Constants.KonaInfrastructureResourceMapId);
                 var errorString = resourceLoader.GetString("InvalidPropertyNameException");
+
                 throw new ArgumentException(errorString, propertyName);
             }
 
@@ -149,13 +149,13 @@ namespace Kona.Infrastructure
 
             return isValid;
         }
-        // </snippet1309>
 
         /// <summary>
         /// Validates all the properties decorated with the ValidationAttribute attribute.
         /// It updates each property errors collection with the new validation results (notifying if necessary). 
         /// </summary>
         /// <returns>True if the property is valid. Otherwise, false.</returns>
+        // <snippet1301>
         public bool ValidateProperties()
         {
             var propertiesWithNewErrors = new List<string>();
@@ -187,6 +187,7 @@ namespace Kona.Infrastructure
 
             return _errors.Values.Count == 0;
         }
+        // </snippet1301>
 
         /// <summary>
         /// Performs a validation of a property, adding the results in the propertyErrors list. 
@@ -194,6 +195,7 @@ namespace Kona.Infrastructure
         /// <param name="propertyInfo">The PropertyInfo of the property to validate</param>
         /// <param name="propertyErrors">A list containing the current error messages of the property.</param>
         /// <returns>True if the property is valid. Otherwise, false.</returns>
+        // <snippet1302>
         private bool TryValidateProperty(PropertyInfo propertyInfo, List<string> propertyErrors)
         {
             var results = new List<ValidationResult>();
@@ -210,6 +212,7 @@ namespace Kona.Infrastructure
 
             return isValid;
         }
+        // </snippet1302>
 
         /// <summary>
         /// Updates the erros collection of the property.

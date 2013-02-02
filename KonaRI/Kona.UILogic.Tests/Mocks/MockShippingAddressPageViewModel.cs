@@ -24,7 +24,6 @@ namespace Kona.UILogic.Tests.Mocks
         public IReadOnlyCollection<ComboBoxItemValue> States { get; set; }
         public bool SetAsDefault { get; set; }
         public string FirstError { get; set; }
-        public int CurrentFormStatus { get; set; }
         public BindableValidator Errors { get; private set; }
         public ICommand GoBackCommand { get; private set; }
         public ICommand GoNextCommand { get; private set; }

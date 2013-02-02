@@ -127,13 +127,15 @@
     <Compile Include="Converters\IsGiftContentConverter.cs" />
     <Compile Include="Converters\IsSignInInvalidConverter.cs" />
     <Compile Include="Converters\NotNullToVisibleConverter.cs" />
+    <Compile Include="DesignViewModels\CheckoutHubPageDesignViewModel.cs" />
+    <Compile Include="DesignViewModels\CheckoutSummaryPageDesignViewModel.cs" />
     <Compile Include="DesignViewModels\ShoppingCartPageDesignViewModel.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Views\BillingAddressFlyout.xaml.cs">
-      <DependentUpon>BillingAddressFlyout.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\BillingAddressUserControl.xaml.cs">
       <DependentUpon>BillingAddressUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ChangeDefaultsFlyout.xaml.cs">
+      <DependentUpon>ChangeDefaultsFlyout.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CheckoutHubPage.xaml.cs">
       <DependentUpon>CheckoutHubPage.xaml</DependentUpon>
@@ -141,29 +143,20 @@
     <Compile Include="Views\CheckoutSummaryPage.xaml.cs">
       <DependentUpon>CheckoutSummaryPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ChangeDefaultsFlyout.xaml.cs">
-      <DependentUpon>ChangeDefaultsFlyout.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\EditBillingAddressFlyout.xaml.cs">
-      <DependentUpon>EditBillingAddressFlyout.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\EditShippingAddressFlyout.xaml.cs">
-      <DependentUpon>EditShippingAddressFlyout.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\EditPaymentMethodFlyout.xaml.cs">
-      <DependentUpon>EditPaymentMethodFlyout.xaml</DependentUpon>
+    <Compile Include="Views\BillingAddressFlyout.xaml.cs">
+      <DependentUpon>BillingAddressFlyout.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ShippingAddressFlyout.xaml.cs">
       <DependentUpon>ShippingAddressFlyout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PaymentMethodFlyout.xaml.cs">
+      <DependentUpon>PaymentMethodFlyout.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ShoppingCartTabUserControl.xaml.cs">
       <DependentUpon>ShoppingCartTabUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SignOutFlyout.xaml.cs">
       <DependentUpon>SignOutFlyout.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PaymentMethodFlyout.xaml.cs">
-      <DependentUpon>PaymentMethodFlyout.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PaymentMethodUserControl.xaml.cs">
       <DependentUpon>PaymentMethodUserControl.xaml</DependentUpon>
@@ -210,7 +203,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\BannerLogo.png" />
+    <Content Include="Assets\billingAddressLogo.png" />
     <Content Include="Assets\Logo.png" />
+    <Content Include="Assets\paymentMethodLogo.png" />
+    <Content Include="Assets\shippingAddressLogo.png" />
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
@@ -220,13 +216,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Views\BillingAddressFlyout.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\BillingAddressUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ChangeDefaultsFlyout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\CheckoutHubPage.xaml">
       <SubType>Designer</SubType>
@@ -236,23 +232,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\ChangeDefaultsFlyout.xaml">
+    <Page Include="Views\BillingAddressFlyout.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\EditBillingAddressFlyout.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\EditShippingAddressFlyout.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\EditPaymentMethodFlyout.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ShippingAddressFlyout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\PaymentMethodFlyout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -263,10 +251,6 @@
     <Page Include="Views\SignOutFlyout.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\PaymentMethodFlyout.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PaymentMethodUserControl.xaml">
       <SubType>Designer</SubType>
@@ -326,6 +310,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="obj\" />
     <Folder Include="Services\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">

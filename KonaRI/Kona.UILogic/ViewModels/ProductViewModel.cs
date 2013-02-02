@@ -37,8 +37,8 @@ namespace Kona.UILogic.ViewModels
             _shoppingCartRepository = shoppingCartRepository;
             AddToCartCommand = new DelegateCommand(AddToCart);
             PopulateColorsAndSizes();
-            SelectedColor = "";
-            SelectedSize = "";
+            _selectedColor = "";
+            _selectedSize = "";
         }
 
         public string SelectedColor
@@ -46,8 +46,8 @@ namespace Kona.UILogic.ViewModels
             get { return _selectedColor; }
             set { SetProperty(ref _selectedColor, value); }
         }
-        public ReadOnlyCollection<ComboBoxItemValue> Colors { get; set; }
-        public ReadOnlyCollection<ComboBoxItemValue> Sizes { get; set; }
+        public ReadOnlyCollection<ComboBoxItemValue> Colors { get; private set; }
+        public ReadOnlyCollection<ComboBoxItemValue> Sizes { get; private set; }
         public string SelectedSize
         {
             get { return _selectedSize; }
@@ -58,12 +58,12 @@ namespace Kona.UILogic.ViewModels
         public string ProductNumber { get { return _product.ProductNumber; } }
         public int ItemPosition { get; set; }
         public DelegateCommand AddToCartCommand { get; private set; }
-        public string ListPrice
+        public string SalePrice
         {
             get
             {
                 var currencyFormatter = new CurrencyFormatter(_product.Currency);
-                return currencyFormatter.FormatDouble(_product.ListPrice);
+                return currencyFormatter.FormatDouble(Math.Round(_product.ListPrice*(1-_product.DiscountPercentage/100), 2));
             }
         }
 

@@ -7,6 +7,7 @@
 
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
 using Kona.UILogic.Models;
@@ -41,44 +42,148 @@ namespace Kona.UILogic.Tests.ViewModels
         }
 
         [TestMethod]
-        public void UnselectingShippingMethod_CalculatesTotalCostWithZeroShipping()
+        public void SelectShippingMethod_Recalculates_Order()
         {
-            //var shoppingCartRepository = new MockShoppingCartRepository();
-            //shoppingCartRepository.GetShoppingCartAsyncDelegate = () =>
-            //                                                          {
-            //                                                              var shoppingCartItems =
-            //                                                                  new List<ShoppingCartItem>
-            //                                                                      {
-            //                                                                          new ShoppingCartItem
-            //                                                                              {
-            //                                                                                  Quantity = 1,
-            //                                                                                  Currency = "USD",
-            //                                                                                  Product = new Product()
-            //                                                                              }
-            //                                                                      };
-            //                                                              var shoppingCart =
-            //                                                                  new ShoppingCart(shoppingCartItems){Currency = "USD", FullPrice = 100};
-            //                                                              return Task.FromResult(shoppingCart);
-            //                                                          };
-            //shoppingCartRepository.AddressAndPurchaseInfo = new AddressAndPaymentInfo
-            //                                                    {
-            //                                                        BillingAddress = new Address(),
-            //                                                        ShippingAddress = new Address(),
-            //                                                        PaymentInfo = new PaymentInfo{ExpirationMonth = "11", ExpirationYear = "2222", CardNumber = "3333333"}
-            //                                                    };
+            var shippingMethods = new List<ShippingMethod>() { new ShippingMethod() { Id = 1,  Cost = 0 } };
+            var shoppingCartItems = new List<ShoppingCartItem>() { new ShoppingCartItem() {  Quantity = 1, Currency = "USD", Product = new Product() } };
+            var mockOrder = new Order()
+            {
+                ShoppingCart = new ShoppingCart(shoppingCartItems) { Currency = "USD", TotalPrice = 100 },
+                ShippingAddress = new Address(),
+                BillingAddress = new Address(),
+                PaymentMethod = new PaymentMethod() { CardNumber = "1234" },
+                ShippingMethod = shippingMethods.First()
+            };
+            var mockShippingMethodService = new MockShippingMethodService() 
+            {
+                GetShippingMethodsAsyncDelegate = () => Task.FromResult<IEnumerable<ShippingMethod>>(shippingMethods) 
+            };
 
-            //var target = new CheckoutSummaryPageViewModel(shoppingCartRepository, new MockNavigationService(),
-            //                                              new MockOrderService(), new MockCheckoutDataRepository(),
-            //                                              new MockAccountService(), new MockSettingsCharmService(),
-            //                                              new MockResourceLoader());
-            //target.OnNavigatedTo(null, NavigationMode.New, null);
-            //target.SelectedShippingMethodViewModel = new ShippingMethodViewModel(new ShippingMethod());
+            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), new MockOrderService(), mockShippingMethodService,
+                                                          new MockCheckoutDataRepository(), new MockShoppingCartRepository(), 
+                                                          new MockAccountService(), new MockSettingsCharmService(), new MockResourceLoader());
 
-            //target.SelectedShippingMethodViewModel = null;
+            target.OnNavigatedTo(mockOrder, NavigationMode.New, null);
 
-            //Assert.AreEqual("$0.00", target.ShippingCost);
-            //Assert.AreEqual("$100.00", target.OrderSubtotal);
-            //Assert.AreEqual("$100.00", target.GrandTotal);
+            Assert.AreEqual("$0.00", target.ShippingCost);
+            Assert.AreEqual("$100.00", target.OrderSubtotal);
+            Assert.AreEqual("$100.00", target.GrandTotal);
+
+            target.SelectedShippingMethod = new ShippingMethod() { Cost = 10 };
+
+            Assert.AreEqual("$10.00", target.ShippingCost);
+            Assert.AreEqual("$100.00", target.OrderSubtotal);
+            Assert.AreEqual("$110.00", target.GrandTotal);
+
+        }
+
+        [TestMethod]
+        public void SelectCheckoutData_Opens_AppBar()
+        {
+            var shippingMethods = new List<ShippingMethod>() { new ShippingMethod() { Id = 1, Cost = 0 } };
+            var shoppingCartItems = new List<ShoppingCartItem>() { new ShoppingCartItem() { Quantity = 1, Currency = "USD", Product = new Product() } };
+            var mockOrder = new Order()
+            {
+                ShoppingCart = new ShoppingCart(shoppingCartItems) { Currency = "USD", FullPrice = 100 },
+                ShippingAddress = new Address(),
+                BillingAddress = new Address(),
+                PaymentMethod = new PaymentMethod() { CardNumber = "1234" },
+                ShippingMethod = shippingMethods.First()
+            };
+            var mockShippingMethodService = new MockShippingMethodService()
+            {
+                GetShippingMethodsAsyncDelegate = () => Task.FromResult<IEnumerable<ShippingMethod>>(shippingMethods)
+            };
+            
+            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), new MockOrderService(), mockShippingMethodService,
+                                                          new MockCheckoutDataRepository(), new MockShoppingCartRepository(),
+                                                          new MockAccountService(), new MockSettingsCharmService(), new MockResourceLoader());
+
+            target.OnNavigatedTo(mockOrder, NavigationMode.New, null);
+            Assert.IsFalse(target.IsBottomAppBarOpened);
+
+            target.SelectedCheckoutData = target.CheckoutDataViewModels.First();
+            Assert.IsTrue(target.IsBottomAppBarOpened);
+        }
+
+        [TestMethod]
+        public void EditCheckoutData_Calls_Proper_Flyout()
+        {
+            string requestedFlyoutName = string.Empty;
+            var mockSettingsCharmService = new MockSettingsCharmService() { ShowFlyoutDelegate = (flyoutName, a, b) => Assert.IsTrue(flyoutName == requestedFlyoutName) };
+
+            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), null, null, null, null, null, mockSettingsCharmService, null);
+
+            requestedFlyoutName = "editShippingAddress";
+            target.EditCheckoutDataCommand.Execute(new CheckoutDataViewModel(null, null, null, null, null, null, Constants.ShippingAddress, null));
+
+            requestedFlyoutName = "editBillingAddress";
+            target.EditCheckoutDataCommand.Execute(new CheckoutDataViewModel(null, null, null, null, null, null, Constants.BillingAddress, null));
+
+            requestedFlyoutName = "editPaymentMethod";
+            target.EditCheckoutDataCommand.Execute(new CheckoutDataViewModel(null, null, null, null, null, null, Constants.PaymentMethod, null));
+        }
+
+        [TestMethod]
+        public void EditCheckoutData_Updates_Order()
+        {
+            var shippingMethods = new List<ShippingMethod>() { new ShippingMethod() { Id = 1, Cost = 0 } };
+            var shoppingCartItems = new List<ShoppingCartItem>() { new ShoppingCartItem() { Quantity = 1, Currency = "USD", Product = new Product() } };
+            var mockOrder = new Order()
+            {
+                ShoppingCart = new ShoppingCart(shoppingCartItems) { Currency = "USD", FullPrice = 100 },
+                ShippingAddress = new Address(),
+                BillingAddress = new Address(),
+                PaymentMethod = new PaymentMethod() { CardNumber = "1234" },
+                ShippingMethod = shippingMethods.First()
+            };
+            var mockShippingMethodService = new MockShippingMethodService()
+            {
+                GetShippingMethodsAsyncDelegate = () => Task.FromResult<IEnumerable<ShippingMethod>>(shippingMethods)
+            };
+            var mockSettingsCharmService = new MockSettingsCharmService();
+            mockSettingsCharmService.ShowFlyoutDelegate = (flyoutName, param, success) =>
+            { 
+                // Update CheckoutData information and call success
+                var paymentMethod = param as PaymentMethod;
+                paymentMethod.CardNumber = "5678";
+                success.Invoke();
+            };
+            
+            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), new MockOrderService(), mockShippingMethodService,
+                                                          new MockCheckoutDataRepository(), new MockShoppingCartRepository(),
+                                                          new MockAccountService(), mockSettingsCharmService, new MockResourceLoader());
+
+            target.OnNavigatedTo(mockOrder, NavigationMode.New, null);
+            target.EditCheckoutDataCommand.Execute(target.CheckoutDataViewModels[2]);
+
+            // Check if order information has changed
+            Assert.IsTrue(mockOrder.PaymentMethod.CardNumber == "5678");
+            Assert.IsTrue(((PaymentMethod)target.CheckoutDataViewModels[2].Context).CardNumber == "5678");
+        }
+
+        [TestMethod]
+        public void AddCheckoutData_Calls_Proper_Flyout()
+        {
+            string requestedFlyoutName = string.Empty;
+            var mockSettingsCharmService = new MockSettingsCharmService()
+            {
+                ShowFlyoutDelegate = (flyoutName, action, b) =>
+                {
+                    Assert.IsTrue(flyoutName == requestedFlyoutName);
+                }
+            };
+
+            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), null, null, null, null, null, mockSettingsCharmService, null);
+
+            requestedFlyoutName = "addShippingAddress";
+            target.AddCheckoutDataCommand.Execute(new CheckoutDataViewModel(null, null, null, null, null, null, Constants.ShippingAddress, null));
+
+            requestedFlyoutName = "addBillingAddress";
+            target.AddCheckoutDataCommand.Execute(new CheckoutDataViewModel(null, null, null, null, null, null, Constants.BillingAddress, null));
+
+            requestedFlyoutName = "addPaymentMethod";
+            target.AddCheckoutDataCommand.Execute(new CheckoutDataViewModel(null, null, null, null, null, null, Constants.PaymentMethod, null));
         }
     }
 }

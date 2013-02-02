@@ -7,6 +7,7 @@
 
 
 using System.ComponentModel;
+using System.Globalization;
 using Kona.Infrastructure;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -101,8 +102,7 @@ namespace Kona.AWShopper.Views
 
             if (pageState != null && pageState.ContainsKey("itemGridViewScrollViewerHorizontalOffset"))
             {
-                double.TryParse(pageState["itemGridViewScrollViewerHorizontalOffset"].ToString(),
-                                out itemGridViewScrollViewerHorizontalOffset);
+                itemGridViewScrollViewerHorizontalOffset = double.Parse(pageState["itemGridViewScrollViewerHorizontalOffset"].ToString(), CultureInfo.InvariantCulture.NumberFormat);
             }
         }
 

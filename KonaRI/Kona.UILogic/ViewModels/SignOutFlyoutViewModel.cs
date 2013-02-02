@@ -32,9 +32,9 @@ namespace Kona.UILogic.ViewModels
         }
 
 
-        public async void Open(object parameter, Action successAction)
+        public void Open(object parameter, Action successAction)
         {
-            _userInfo = await _accountService.GetSignedInUserAsync();
+            _userInfo = _accountService.LastSignedInUser;
 
             if (_userInfo != null)
             {
@@ -62,10 +62,10 @@ namespace Kona.UILogic.ViewModels
 
         private void SignOut()
         {
-            _accountService.SignOut();
             _credentialStore.RemovedSavedCredentials("KonaRI");
-            _navigationService.Navigate("Hub", null);
+            _accountService.SignOut();
             _navigationService.ClearHistory();
+            _navigationService.Navigate("Hub", null);
             CloseFlyout();
         }
 

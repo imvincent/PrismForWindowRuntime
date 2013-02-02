@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="FrameAlreadyRegisteredWithKey" xml:space="preserve">
+    <value>Frames can only be registered to one session state key</value>
+  </data>
+  <data name="FrameRegistrationRequirement" xml:space="preserve">
+    <value>Frames must be either be registered before accessing frame session state, or not registered at all</value>
+  </data>
   <data name="InvalidPropertyNameException" xml:space="preserve">
     <value>The entity does not contain a property with that name</value>
   </data>

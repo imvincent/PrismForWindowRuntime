@@ -10,7 +10,7 @@
     xmlns:designViewModels="using:Kona.AWShopper.DesignViewModels"
     mc:Ignorable="d"
     infrastructure:ViewModelLocator.AutoWireViewModel="true"
-    d:DataContext="{d:DesignInstance designViewModels:ShoppingCartPageDesignViewModel, IsDesignTimeCreatable=True}" >
+    d:DataContext="{d:DesignInstance designViewModels:ShoppingCartPageDesignViewModel, IsDesignTimeCreatable=True}">
 
     <Page.TopAppBar>
         <AppBar Style="{StaticResource AppBarStyle}">
@@ -70,7 +70,7 @@
                     <TextBlock x:Uid="TotalLabel" x:Name="textBlock4" Grid.Row="2" Grid.Column="0" Text="Total:" FontSize="24" Foreground="#A9B0B4" Margin="10"></TextBlock>
                     <TextBlock x:Name="textBlock7" Grid.Row="2" Grid.Column="1" Text="{Binding TotalPrice, Mode=TwoWay}" HorizontalAlignment="Right" FontSize="24" Foreground="{StaticResource AWShopperAccentBrush}" Margin="10"></TextBlock>
                 </Grid>
-                <Button x:Name="CheckoutButton" x:Uid="CheckoutButton" AutomationProperties.AutomationId="CheckoutButton" Content="CHECKOUT" Command="{Binding CheckoutCommand}" Margin="0,20,0,0" HorizontalAlignment="Stretch" FontSize="20" Background="{StaticResource AWShopperAccentBrush}" Foreground="Black" />
+                <Button x:Name="CheckoutButton" x:Uid="CheckoutButton" AutomationProperties.AutomationId="CheckoutButton" Content="CHECKOUT" Command="{Binding CheckoutCommand}" Margin="0,20,0,0" HorizontalAlignment="Stretch" FontSize="20" Background="{StaticResource AWShopperAccentBrush}" Foreground="White" />
             </StackPanel>
 
 
@@ -91,7 +91,7 @@
             </ScrollViewer>
         </Grid>
 
-        <Popup x:Name="pop" IsLightDismissEnabled="True" IsOpen="{Binding IsEditPopupOpened, Mode=TwoWay}" AutomationProperties.AutomationId="EditQuantityPopup">
+        <Popup x:Name="pop" x:Uid="EditQuantityPopup" AutomationProperties.AutomationId="EditQuantityPopup" IsLightDismissEnabled="True" IsOpen="{Binding IsEditPopupOpened, Mode=TwoWay}">
             <Grid x:Name="panel" Background="Black" Opacity=".8" Height="200">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="65"/>
@@ -106,11 +106,10 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Image Source="{Binding SelectedItem.Image}" />
+                    <Image x:Uid="SelectedProductImage" Source="{Binding SelectedItem.Image}" />
                     <Button Grid.Column="1" Style="{StaticResource RemoveAppBarButtonStyle}" Command="{Binding DecrementCountCommand}" AutomationProperties.AutomationId="DecrementAmountButton"></Button>
                     <TextBlock Grid.Column="2" Text="{Binding SelectedItem.Quantity}" FontSize="50" Foreground="#FFE2742F" />
                     <Button Grid.Column="3" Style="{StaticResource AddAppBarButtonStyle}" Command="{Binding IncrementCountCommand}" AutomationProperties.AutomationId="IncrementAmountButton"></Button>
-
                 </Grid>
             </Grid>
         </Popup>
@@ -154,7 +153,7 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="content">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
-                                	<Thickness>0</Thickness>
+                                    <Thickness>0</Thickness>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
@@ -237,7 +236,7 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="content">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
-                                	<x:Double>320</x:Double>
+                                    <x:Double>320</x:Double>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
@@ -295,72 +294,72 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="scrollViewer">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
-                                	<Thickness>0,10,0,0</Thickness>
+                                    <Thickness>0,10,0,0</Thickness>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.HorizontalAlignment)" Storyboard.TargetName="listView">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<HorizontalAlignment>Left</HorizontalAlignment>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <HorizontalAlignment>Left</HorizontalAlignment>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.HorizontalAlignment)" Storyboard.TargetName="scrollViewer">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<HorizontalAlignment>Left</HorizontalAlignment>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <HorizontalAlignment>Left</HorizontalAlignment>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="listView">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<x:Double>300</x:Double>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Double>300</x:Double>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.HorizontalAlignment)" Storyboard.TargetName="content">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<HorizontalAlignment>Left</HorizontalAlignment>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <HorizontalAlignment>Left</HorizontalAlignment>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.FontFamily)" Storyboard.TargetName="scrollViewer">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<FontFamily>Global User Interface</FontFamily>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <FontFamily>Global User Interface</FontFamily>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="stackPanel">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<x:Double>300</x:Double>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Double>300</x:Double>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="CheckoutButton">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<x:Double>280</x:Double>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Double>280</x:Double>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="scrollViewer">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<x:Double>320</x:Double>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Double>320</x:Double>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="listView">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<Thickness>10,0,0,0</Thickness>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Thickness>10,0,0,0</Thickness>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <!-- Content -->
                     </Storyboard>
@@ -381,10 +380,6 @@
                             Style="{StaticResource DeleteAppBarButtonStyle}" 
                             Visibility="{Binding SelectedItem, Converter={StaticResource NotNullToVisibleConverter}}"
                             Command="{Binding RemoveCommand}" CommandParameter="{Binding SelectedItem}" />
-                    <Button x:Name="CheckoutAppBarButton" x:Uid="CheckoutAppBarButton" AutomationProperties.AutomationId="CheckoutAppBarButton"
-                            Style="{StaticResource EditAppBarButtonStyle}" 
-                            Visibility="{Binding SelectedItem, Converter={StaticResource NullToVisibleConverter}}"
-                            Command="{Binding CheckoutCommand}"></Button>
                 </StackPanel>
             </Grid>
         </AppBar>

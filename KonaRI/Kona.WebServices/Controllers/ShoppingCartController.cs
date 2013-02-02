@@ -19,13 +19,13 @@ namespace Kona.WebServices.Controllers
     public class ShoppingCartController : ApiController
     {
         private IShoppingCartRepository _shoppingCartRepository;
-        private IRepository<Product> _productRepository;
+        private IProductRepository _productRepository;
 
         public ShoppingCartController()
             : this(new ShoppingCartRepository(), new ProductRepository())
         { }
 
-        public ShoppingCartController(IShoppingCartRepository shoppingCartRepository, IRepository<Product> productRepository)
+        public ShoppingCartController(IShoppingCartRepository shoppingCartRepository, IProductRepository productRepository)
         {
             _shoppingCartRepository = shoppingCartRepository;
             _productRepository = productRepository;
@@ -71,14 +71,10 @@ namespace Kona.WebServices.Controllers
         // DELETE /api/ShoppingCart/{id}
         public void DeleteShoppingCart(string id)
         {
-            ShoppingCart shoppingCart = _shoppingCartRepository.GetById(id);
-
-            if (shoppingCart == null)
+            if (!_shoppingCartRepository.Delete(id))
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-
-            _shoppingCartRepository.Delete(shoppingCart);
         }
 
         // PUT /api/ShoppingCart/{id}?itemIdToRemove={itemIdToRemove}
@@ -120,7 +116,7 @@ namespace Kona.WebServices.Controllers
                 }
 
                 //Delete old cart
-                _shoppingCartRepository.Delete(oldCart);
+                _shoppingCartRepository.Delete(oldShoppingCartId);
             }
             return Request.CreateResponse(HttpStatusCode.OK);
         }

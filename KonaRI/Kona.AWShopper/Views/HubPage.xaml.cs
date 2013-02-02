@@ -6,14 +6,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System;
 using System.ComponentModel;
+using System.Globalization;
 using Kona.Infrastructure;
-using Kona.UILogic.ViewModels;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
 
 // The Grouped Items Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234231
 
@@ -82,8 +78,7 @@ namespace Kona.AWShopper.Views
             base.LoadState(navigationParameter, pageState);
             if (pageState != null && pageState.ContainsKey("virtualizingStackPanelHorizontalOffset"))
             {
-                double.TryParse(pageState["virtualizingStackPanelHorizontalOffset"].ToString(),
-                                out virtualizingStackPanelHorizontalOffset);
+                virtualizingStackPanelHorizontalOffset = double.Parse(pageState["virtualizingStackPanelHorizontalOffset"].ToString(), CultureInfo.InvariantCulture.NumberFormat);
             }
 
         }

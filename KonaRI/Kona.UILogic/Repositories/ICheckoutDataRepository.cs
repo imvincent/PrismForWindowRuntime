@@ -13,25 +13,28 @@ namespace Kona.UILogic.Repositories
 {
     public interface ICheckoutDataRepository
     {
-        ICollection<Address> RetrieveAllShippingAddresses();
-        ICollection<Address> RetrieveAllBillingAddresses();
-        ICollection<PaymentInfo> RetrieveAllPaymentInformation();
-        Address SaveShippingAddress(Address address);
-        Address SaveBillingAddress(Address address);
-        PaymentInfo SavePaymentInfo(PaymentInfo paymentInfo);
-        bool ContainsDefaultValue(string container);
-        void SetAsDefaultShippingAddress(string id);
-        void SetAsDefaultBillingAddress(string id);
-        void SetAsDefaultPaymentInfo(string id);
+        Address GetShippingAddress(string id);
+        Address GetBillingAddress(string id);
+        PaymentMethod GetPaymentMethod(string id);
+
+        ICollection<Address> GetAllShippingAddresses();
+        ICollection<Address> GetAllBillingAddresses();
+        ICollection<PaymentMethod> GetAllPaymentMethods();
+
         Address GetDefaultShippingAddressValue();
         Address GetDefaultBillingAddressValue();
-        PaymentInfo GetDefaultPaymentInfoValue();
+        PaymentMethod GetDefaultPaymentMethodValue();
+
+        Address SaveShippingAddress(Address address);
+        Address SaveBillingAddress(Address address);
+        PaymentMethod SavePaymentMethod(PaymentMethod paymentMethod);
+        
+        void SetAsDefaultShippingAddress(string id);
+        void SetAsDefaultBillingAddress(string id);
+        void SetAsDefaultPaymentMethod(string id);
+        
         void DeleteShippingAddressValue(string id);
         void DeleteBillingAddressValue(string id);
-        void DeletePaymentInfoValue(string id);
-        void DeleteContainer(string container);
-        PaymentInfo RetrievePaymentInformation(string id);
-        Address RetrieveShippingAddress(string id);
-        Address RetrieveBillingAddress(string id);
+        void DeletePaymentMethodValue(string id);
     }
 }

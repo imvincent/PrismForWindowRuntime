@@ -15,7 +15,7 @@ namespace Kona.UILogic.Tests.Mocks
 {
     public class MockOrderService : IOrderService
     {
-        public Func<Order, string, Task> ProcessOrderDelegate { get; set; }
+        public Func<Order, string, Task> ProcessOrderAsyncDelegate { get; set; }
 
         public Task<Order> CreateOrderAsync(Order order, string serverCookieHeader)
         {
@@ -30,7 +30,7 @@ namespace Kona.UILogic.Tests.Mocks
 
         public Task ProcessOrderAsync(Order order, string serverCookieHeader)
         {
-            throw new NotImplementedException();
+            return ProcessOrderAsyncDelegate(order, serverCookieHeader);
         }
     }
 }

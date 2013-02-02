@@ -11,12 +11,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using System.ComponentModel;
+using Kona.Infrastructure.Interfaces;
 
 namespace Kona.Infrastructure
 {
-    public class ValidatableBindableBase : BindableBase
+    public class ValidatableBindableBase : BindableBase, IValidatableBindableBase
     {
-
         private readonly BindableValidator _bindableValidator;
 
         public ValidatableBindableBase()

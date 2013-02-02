@@ -11,9 +11,10 @@ using Kona.WebServices.Models;
 
 namespace Kona.WebServices.Repositories
 {
-    public interface IShoppingCartRepository : IRepository<ShoppingCart>
+    public interface IShoppingCartRepository
     {
         ShoppingCart GetById(string shoppingCartId);
+        bool Delete(string userId);
         ShoppingCartItem AddProductToCart(string shoppingCartId, Product product);
         bool RemoveProductFromCart(string shoppingCartId, string productId);
         bool RemoveItemFromCart(ShoppingCart shoppingCart, string itemId);

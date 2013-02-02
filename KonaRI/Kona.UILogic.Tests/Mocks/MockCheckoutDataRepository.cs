@@ -13,17 +13,17 @@ namespace Kona.UILogic.Tests.Mocks
 {
     public class MockCheckoutDataRepository : ICheckoutDataRepository
     {
-        public ICollection<Address> RetrieveAllShippingAddresses()
+        public ICollection<Address> GetAllShippingAddresses()
         {
             throw new System.NotImplementedException();
         }
 
-        public ICollection<Address> RetrieveAllBillingAddresses()
+        public ICollection<Address> GetAllBillingAddresses()
         {
             throw new System.NotImplementedException();
         }
 
-        public ICollection<PaymentInfo> RetrieveAllPaymentInformation()
+        public ICollection<PaymentMethod> GetAllPaymentMethods()
         {
             throw new System.NotImplementedException();
         }
@@ -38,7 +38,7 @@ namespace Kona.UILogic.Tests.Mocks
             throw new System.NotImplementedException();
         }
 
-        public PaymentInfo SavePaymentInfo(PaymentInfo paymentInfo)
+        public PaymentMethod SavePaymentMethod(PaymentMethod paymentMethod)
         {
             throw new System.NotImplementedException();
         }
@@ -58,7 +58,7 @@ namespace Kona.UILogic.Tests.Mocks
             throw new System.NotImplementedException();
         }
 
-        public void SetAsDefaultPaymentInfo(string id)
+        public void SetAsDefaultPaymentMethod(string id)
         {
             throw new System.NotImplementedException();
         }
@@ -73,7 +73,7 @@ namespace Kona.UILogic.Tests.Mocks
             throw new System.NotImplementedException();
         }
 
-        public PaymentInfo GetDefaultPaymentInfoValue()
+        public PaymentMethod GetDefaultPaymentMethodValue()
         {
             throw new System.NotImplementedException();
         }
@@ -88,7 +88,7 @@ namespace Kona.UILogic.Tests.Mocks
             throw new System.NotImplementedException();
         }
 
-        public void DeletePaymentInfoValue(string id)
+        public void DeletePaymentMethodValue(string id)
         {
             throw new System.NotImplementedException();
         }
@@ -98,17 +98,17 @@ namespace Kona.UILogic.Tests.Mocks
             throw new System.NotImplementedException();
         }
 
-        public PaymentInfo RetrievePaymentInformation(string id)
+        public PaymentMethod GetPaymentMethod(string id)
         {
             throw new System.NotImplementedException();
         }
 
-        public Address RetrieveShippingAddress(string id)
+        public Address GetShippingAddress(string id)
         {
             throw new System.NotImplementedException();
         }
 
-        public Address RetrieveBillingAddress(string id)
+        public Address GetBillingAddress(string id)
         {
             throw new System.NotImplementedException();
         }

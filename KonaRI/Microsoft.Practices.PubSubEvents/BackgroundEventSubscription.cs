@@ -8,9 +8,6 @@
 
 using System.Threading;
 using System;
-#if NETFX_CORE
-using Windows.System.Threading;
-#endif
 
 namespace Microsoft.Practices.PubSubEvents
 {
@@ -37,12 +34,7 @@ namespace Microsoft.Practices.PubSubEvents
         /// <param name="argument">The payload to pass <paramref name="action"/> while invoking it.</param>
         public override void InvokeAction(Action action)
         {
-#if NETFX_CORE
-            // Assign to local variable to avoid warning from not awaiting - intended to be fire and forget
-            var notUsed = ThreadPool.RunAsync( (o) => action());
-#else
             ThreadPool.QueueUserWorkItem((o) => action());
-#endif
         }
     }
 
@@ -72,12 +64,7 @@ namespace Microsoft.Practices.PubSubEvents
         /// <param name="argument">The payload to pass <paramref name="action"/> while invoking it.</param>
         public override void InvokeAction(Action<TPayload> action, TPayload argument)
         {
-#if NETFX_CORE
-            // Assign to local variable to avoid warning from not awaiting - intended to be fire and forget
-            var notUsed = ThreadPool.RunAsync( (o) => action(argument));
-#else
             ThreadPool.QueueUserWorkItem( (o) => action(argument) );
-#endif
         }
     }
 }

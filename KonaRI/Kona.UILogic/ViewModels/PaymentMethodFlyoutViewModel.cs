@@ -10,38 +10,74 @@ using System;
 using System.Windows.Input;
 using Kona.Infrastructure;
 using Kona.Infrastructure.Flyouts;
+using Kona.UILogic.Models;
 using Kona.UILogic.Repositories;
 
 namespace Kona.UILogic.ViewModels
 {
     public class PaymentMethodFlyoutViewModel : ViewModel, IFlyoutViewModel
     {
-        private readonly ICheckoutDataRepository _checkoutDataRepository;
-        private readonly IPaymentMethodUserControlViewModel _viewModel;
+        private readonly IPaymentMethodUserControlViewModel _paymentMethodViewModel;
+        private readonly IResourceLoader _resourceLoader;
+        private string _headerLabel;
+        private Action _successAction;
 
-        public PaymentMethodFlyoutViewModel(IPaymentMethodUserControlViewModel paymentMethodUserControlViewModel, ICheckoutDataRepository checkoutDataRepository)
+        public PaymentMethodFlyoutViewModel(IPaymentMethodUserControlViewModel paymentMethodViewModel, IResourceLoader resourceLoader)
         {
-            _checkoutDataRepository = checkoutDataRepository;
-            _viewModel = paymentMethodUserControlViewModel;
-            AddCommand = new DelegateCommand(AddPaymentInfo);
+            _paymentMethodViewModel = paymentMethodViewModel;
+            _resourceLoader = resourceLoader;
+            
+            SaveCommand = new DelegateCommand(SavePaymentMethod);
             GoBackCommand = new DelegateCommand(() => GoBack(), () => true);
         }
 
-        public IPaymentMethodUserControlViewModel PaymentMethodPageViewModel { get { return _viewModel; } }
-        public ICommand AddCommand { get; set; }
+        public IPaymentMethodUserControlViewModel PaymentMethodViewModel
+        { 
+            get { return _paymentMethodViewModel; } 
+        }
+
+        public string HeaderLabel
+        {
+            get { return _headerLabel; }
+            set { SetProperty(ref _headerLabel, value); }
+        }
+
+        public ICommand SaveCommand { get; set; }
+
         public Action CloseFlyout { get; set; }
+
         public Action GoBack { get; set; }
+
         public ICommand GoBackCommand { get; private set; }
 
-        public void Open(object parameter, Action successAction) { }
-
-        private void AddPaymentInfo()
+        public void Open(object parameter, Action successAction)
         {
-            if (PaymentMethodPageViewModel.ValidateForm())
+            _successAction = successAction;
+
+            var paymentMethod = parameter as PaymentMethod;
+
+            if (paymentMethod != null)
             {
-                _checkoutDataRepository.SavePaymentInfo(PaymentMethodPageViewModel.PaymentInfo);
+                PaymentMethodViewModel.PaymentMethod = paymentMethod;
+                HeaderLabel = _resourceLoader.GetString("EditPaymentMethodTitle");
+            }
+            else
+            {
+                HeaderLabel = _resourceLoader.GetString("AddPaymentMethodTitle");
+            }
+        }
+
+        private void SavePaymentMethod()
+        {
+            if (PaymentMethodViewModel.ValidateForm())
+            {
+                PaymentMethodViewModel.ProcessForm();
                 CloseFlyout();
-                //TODO: Set this as the payment info to use
+
+                if (_successAction != null)
+                {
+                    _successAction();
+                }
             }
         }
     }

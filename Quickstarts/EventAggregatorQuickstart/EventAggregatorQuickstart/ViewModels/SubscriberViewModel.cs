@@ -25,12 +25,12 @@ namespace EventAggregatorQuickstart
             AddPassiveSubscriberCommand = new DelegateCommand(AddWeakReferenceSubscriber);
             GCPassiveSubscriberCommand = new DelegateCommand(GCWeakReferenceSubscriber);
 
-            // <snippet3104>
+            // <snippet3103>
             // Subscribe indicating this handler should always be called on the UI Thread
             _eventAggregator.GetEvent<ShoppingCartChangedEvent>().Subscribe(HandleShoppingCartUpdate, ThreadOption.UIThread);
             // Subscribe indicating that this handler should always be called on UI thread, but only if more than 10 items in cart
             _eventAggregator.GetEvent<ShoppingCartChangedEvent>().Subscribe(HandleShoppingCartUpdateFiltered, ThreadOption.UIThread, false, sc => sc.Items.Count > 10);
-            // </snippet3104>
+            // </snippet3103>
         }
 
         public DelegateCommand AddPassiveSubscriberCommand { get; private set; }
@@ -58,7 +58,7 @@ namespace EventAggregatorQuickstart
             ShowWarning = true;
         }
 
-        // <snippet3105>
+        // <snippet3104>
         private void AddWeakReferenceSubscriber()
         {
             // Create subscriber and hold on to it so it does not get garbage collected
@@ -73,6 +73,6 @@ namespace EventAggregatorQuickstart
             _Subscriber = null;
             GC.Collect();
         }
-        // </snippet3105>
+        // </snippet3104>
     }
 }

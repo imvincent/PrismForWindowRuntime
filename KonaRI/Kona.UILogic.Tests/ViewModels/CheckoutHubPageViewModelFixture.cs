@@ -84,7 +84,7 @@ namespace Kona.UILogic.Tests.ViewModels
             //paymentMethodPageVM.ProcessFormDelegate = () => { };
             //var shoppingCartRepository = new MockShoppingCartRepository();
             //Address billingAddressParam = null;
-            //shoppingCartRepository.AddAddressAndPurchaseInfoDelegate = (shippingAddress, billingAddress, paymentInfo) =>
+            //shoppingCartRepository.AddAddressAndPurchaseInfoDelegate = (shippingAddress, billingAddress, paymentMethod) =>
             //                                                               {
             //                                                                   billingAddressParam = billingAddress;
             //                                                               };

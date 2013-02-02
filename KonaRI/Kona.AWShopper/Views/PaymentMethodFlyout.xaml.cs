@@ -7,25 +7,16 @@
 
 
 using Kona.Infrastructure.Flyouts;
+using Windows.UI.Xaml.Controls;
 
 namespace Kona.AWShopper.Views
 {
-    /// <summary>
-    /// Settings Flyout to add/Edit Payment Infos
-    /// </summary>
     public sealed partial class PaymentMethodFlyout : FlyoutView
     {
         public PaymentMethodFlyout(string commandId, string commandTitle)
             : base(commandId, commandTitle, StandardFlyoutSize.Narrow)
         {
             this.InitializeComponent();
-
-            var viewModel = this.DataContext as IFlyoutViewModel;
-            if (viewModel != null)
-            {
-                viewModel.CloseFlyout = this.Close;
-                viewModel.GoBack = this.GoBack;
-            }
         }
     }
 }

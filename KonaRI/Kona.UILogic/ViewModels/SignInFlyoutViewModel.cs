@@ -30,9 +30,10 @@ namespace Kona.UILogic.ViewModels
         {
             _accountService = accountService;
             _credentialStore = credentialStore;
-
-            _lastSignedInUser = _accountService.LastSignedInUser;
-
+            if (accountService != null)
+            {
+                _lastSignedInUser = _accountService.LastSignedInUser;
+            }
             // <snippet308>
             SignInCommand = new DelegateCommand(async () => await SignInAsync(), () => CanSignIn());
             // </snippet308>

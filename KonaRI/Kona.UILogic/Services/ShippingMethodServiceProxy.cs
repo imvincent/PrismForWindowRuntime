@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace Kona.UILogic.Services
 {
     public class ShippingMethodServiceProxy : IShippingMethodService
     {
-        private string _clientBaseUrl = string.Format("{0}/api/ShippingMethod/", Constants.ServerAddress);
+        private string _clientBaseUrl = string.Format(CultureInfo.InvariantCulture, "{0}/api/ShippingMethod/", Constants.ServerAddress);
 
         public async Task<IEnumerable<ShippingMethod>> GetShippingMethodsAsync()
         {

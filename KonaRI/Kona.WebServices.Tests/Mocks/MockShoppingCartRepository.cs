@@ -14,121 +14,36 @@ namespace Kona.WebServices.Tests.Mocks
 {
     public class MockShoppingCartRepository : IShoppingCartRepository
     {
-        public Func<string, ShoppingCart> GetShoppingCartDelegate { get; set; }
-
+        public Func<string, ShoppingCart> GetByIdDelegate { get; set; }
+        public Func<string, bool> DeleteDelegate { get; set; }
         public Func<string, Product, ShoppingCartItem> AddProductToCartDelegate { get; set; }
-
         public Func<string, string, bool> RemoveProductFromCartDelegate { get; set; }
-
         public Func<ShoppingCart, string, bool> RemoveItemFromCartDelegate { get; set; }
+        
 
-        public Func<string, ShoppingCartItem> CreateShoppingCartItemDelegate { get; set; }
-
-        public Func<string, bool> DeleteCartDelegate { get; set; }
-
-        public ShoppingCart GetShoppingCart(string id)
+        ShoppingCart IShoppingCartRepository.GetById(string shoppingCartId)
         {
-            return this.GetShoppingCartDelegate(id);
+            return GetByIdDelegate(shoppingCartId);
         }
 
-        public bool RemoveItemFromCart(ShoppingCart shoppingCart, string itemId)
+        bool IShoppingCartRepository.Delete(string userId)
         {
-            return this.RemoveItemFromCartDelegate(shoppingCart, itemId);
+            return DeleteDelegate(userId);
         }
 
-        public ShoppingCartItem AddProductToCart(string userId, Product productId)
+        ShoppingCartItem IShoppingCartRepository.AddProductToCart(string shoppingCartId, Product product)
         {
-            return AddProductToCartDelegate(userId, productId);
+            return AddProductToCartDelegate(shoppingCartId, product);
         }
 
-        public bool RemoveProductFromCart(string shoppingCartId, string productId)
+        bool IShoppingCartRepository.RemoveProductFromCart(string shoppingCartId, string productId)
         {
             return RemoveProductFromCartDelegate(shoppingCartId, productId);
         }
 
-        public bool DeleteCart(string userId)
-        {
-            return DeleteCartDelegate(userId);
-        }
-
-        public ShoppingCartItem CreateShoppingCartItem(string productId)
-        {
-            return CreateShoppingCartItemDelegate(productId);
-        }
-
-        public ShoppingCart GetByUserId(string userId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool RemoveItemFromCart(ShoppingCart shoppingCart, int itemId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public System.Collections.Generic.IEnumerable<ShoppingCart> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public ShoppingCart GetItem(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ShoppingCart Create(ShoppingCart item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Update(ShoppingCart item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Delete(ShoppingCart item)
-        {
-            throw new NotImplementedException();
-        }
-
-        ShoppingCart IShoppingCartRepository.GetById(string userId)
-        {
-            throw new NotImplementedException();
-        }
-
-        ShoppingCartItem IShoppingCartRepository.AddProductToCart(string userId, Product product)
-        {
-            throw new NotImplementedException();
-        }
-
         bool IShoppingCartRepository.RemoveItemFromCart(ShoppingCart shoppingCart, string itemId)
         {
-            throw new NotImplementedException();
-        }
-
-        System.Collections.Generic.IEnumerable<ShoppingCart> IRepository<ShoppingCart>.GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        ShoppingCart IRepository<ShoppingCart>.GetItem(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        ShoppingCart IRepository<ShoppingCart>.Create(ShoppingCart item)
-        {
-            throw new NotImplementedException();
-        }
-
-        bool IRepository<ShoppingCart>.Update(ShoppingCart item)
-        {
-            throw new NotImplementedException();
-        }
-
-        bool IRepository<ShoppingCart>.Delete(ShoppingCart item)
-        {
-            throw new NotImplementedException();
+            return RemoveItemFromCartDelegate(shoppingCart, itemId);
         }
     }
 }

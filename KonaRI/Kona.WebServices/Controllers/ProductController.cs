@@ -18,13 +18,13 @@ namespace Kona.WebServices.Controllers
 {
     public class ProductController : ApiController
     {
-        private IRepository<Product> _productRepository;
+        private IProductRepository _productRepository;
 
         public ProductController()
             : this(new ProductRepository())
         { }
 
-        public ProductController(IRepository<Product> productRepository)
+        public ProductController(IProductRepository productRepository)
         {
             _productRepository = productRepository;
         }

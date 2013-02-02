@@ -24,12 +24,12 @@ namespace Kona.UILogic.Tests.Repositories
         {
             var service = SetupService();
             var target = new CheckoutDataRepository(service);
-            var bilingAddresses = target.RetrieveAllBillingAddresses();
-            var shippingAddresses = target.RetrieveAllShippingAddresses();
-            var paymentInfos = target.RetrieveAllPaymentInformation();
+            var bilingAddresses = target.GetAllBillingAddresses();
+            var shippingAddresses = target.GetAllShippingAddresses();
+            var paymentMethods = target.GetAllPaymentMethods();
             Assert.AreEqual(3, shippingAddresses.Count());
             Assert.AreEqual(2, bilingAddresses.Count());
-            Assert.AreEqual(1, paymentInfos.Count());
+            Assert.AreEqual(1, paymentMethods.Count());
         }
 
         [TestMethod]
@@ -37,15 +37,15 @@ namespace Kona.UILogic.Tests.Repositories
         {
             var service = SetupService();
             var target = new CheckoutDataRepository(service);
-            var billingAddress = target.RetrieveBillingAddress("1");
-            var shippingAddress = target.RetrieveShippingAddress("1");
-            var paymentInfo = target.RetrievePaymentInformation("1");
+            var billingAddress = target.GetBillingAddress("1");
+            var shippingAddress = target.GetShippingAddress("1");
+            var paymentMethod = target.GetPaymentMethod("1");
             Assert.IsNotNull(billingAddress);
             Assert.IsNotNull(shippingAddress);
-            Assert.IsNotNull(paymentInfo);
+            Assert.IsNotNull(paymentMethod);
             Assert.AreEqual("John", billingAddress.FirstName);
             Assert.AreEqual("John", shippingAddress.FirstName);
-            Assert.AreEqual("John Doe", paymentInfo.CardholderName);
+            Assert.AreEqual("John Doe", paymentMethod.CardholderName);
         }
 
         [TestMethod]
@@ -55,13 +55,13 @@ namespace Kona.UILogic.Tests.Repositories
             var target = new CheckoutDataRepository(service);
             var billingAddress = new Address(){Id = "3", FirstName = "Jack", LastName = "Doe", City = "Springfield", State = "Illinois"};
             var shippingAddress = new Address() { Id = "4", FirstName = "Jill", LastName = "Doe", City = "Bellevue", State = "Washington" };
-            var paymentInfo = new PaymentInfo() {Id = "2", CardholderName = "Jill Doe"};
+            var paymentMethod = new PaymentMethod() {Id = "2", CardholderName = "Jill Doe"};
             target.SaveShippingAddress(shippingAddress);
             target.SaveBillingAddress(billingAddress);
-            target.SavePaymentInfo(paymentInfo);
-            Assert.AreEqual(3, target.RetrieveAllBillingAddresses().Count);
-            Assert.AreEqual(4, target.RetrieveAllShippingAddresses().Count);
-            Assert.AreEqual(2, target.RetrieveAllPaymentInformation().Count);
+            target.SavePaymentMethod(paymentMethod);
+            Assert.AreEqual(3, target.GetAllBillingAddresses().Count);
+            Assert.AreEqual(4, target.GetAllShippingAddresses().Count);
+            Assert.AreEqual(2, target.GetAllPaymentMethods().Count);
         }
 
         [TestMethod]
@@ -71,17 +71,17 @@ namespace Kona.UILogic.Tests.Repositories
             var target = new CheckoutDataRepository(service);
             target.DeleteBillingAddressValue("1");
             target.DeleteShippingAddressValue("1");
-            target.DeletePaymentInfoValue("1");
-            var billingAddresses = target.RetrieveAllBillingAddresses();
-            var shippingAddresses = target.RetrieveAllShippingAddresses();
-            var paymentInfos = target.RetrieveAllPaymentInformation();
+            target.DeletePaymentMethodValue("1");
+            var billingAddresses = target.GetAllBillingAddresses();
+            var shippingAddresses = target.GetAllShippingAddresses();
+            var paymentMethods = target.GetAllPaymentMethods();
            
             Assert.AreEqual(1, billingAddresses.Count);
             Assert.AreEqual(2, shippingAddresses.Count);
-            Assert.AreEqual(0, paymentInfos.Count);
+            Assert.AreEqual(0, paymentMethods.Count);
             Assert.IsNull(billingAddresses.FirstOrDefault(b => b.Id == "1"));
             Assert.IsNull(shippingAddresses.FirstOrDefault(s => s.Id == "1"));
-            Assert.IsNull(paymentInfos.FirstOrDefault(p => p.Id == "1"));
+            Assert.IsNull(paymentMethods.FirstOrDefault(p => p.Id == "1"));
         }
 
         [TestMethod] public void DefaultValuesForAllTypesOfCheckoutDataAreRetrievedAndSavedSuccessfully()
@@ -89,30 +89,30 @@ namespace Kona.UILogic.Tests.Repositories
             var service = SetupService();
             var target = new CheckoutDataRepository(service);
             var defaultBillingAddress = target.GetDefaultBillingAddressValue();
-            var defaultPaymentInfo = target.GetDefaultPaymentInfoValue();
+            var defaultPaymentMethod = target.GetDefaultPaymentMethodValue();
             var defaultShippingAddress = target.GetDefaultShippingAddressValue();
 
-            var isDefaultPaymentInfo = target.ContainsDefaultValue("PaymentInfo");
-            Assert.IsFalse(isDefaultPaymentInfo);
+            var defaultPaymentMethodExists = target.GetDefaultPaymentMethodValue() != null;
+            Assert.IsFalse(defaultPaymentMethodExists);
             Assert.IsNull(defaultBillingAddress);
             Assert.IsNull(defaultShippingAddress);
-            Assert.IsNull(defaultPaymentInfo);
+            Assert.IsNull(defaultPaymentMethod);
 
             target.SetAsDefaultShippingAddress("1");
             target.SetAsDefaultBillingAddress("1");
-            target.SetAsDefaultPaymentInfo("1");
-            isDefaultPaymentInfo = target.ContainsDefaultValue("PaymentInfo");
+            target.SetAsDefaultPaymentMethod("1");
+            defaultPaymentMethodExists = target.GetDefaultPaymentMethodValue() != null;
             defaultBillingAddress = target.GetDefaultBillingAddressValue();
-            defaultPaymentInfo = target.GetDefaultPaymentInfoValue();
+            defaultPaymentMethod = target.GetDefaultPaymentMethodValue();
             defaultShippingAddress = target.GetDefaultShippingAddressValue();
 
-            Assert.IsTrue(isDefaultPaymentInfo);
+            Assert.IsTrue(defaultPaymentMethodExists);
             Assert.IsNotNull(defaultBillingAddress);
             Assert.IsNotNull(defaultShippingAddress);
-            Assert.IsNotNull(defaultPaymentInfo);
+            Assert.IsNotNull(defaultPaymentMethod);
             Assert.AreEqual("John", defaultShippingAddress.FirstName);
             Assert.AreEqual("John", defaultBillingAddress.FirstName);
-            Assert.AreEqual("John Doe", defaultPaymentInfo.CardholderName);
+            Assert.AreEqual("John Doe", defaultPaymentMethod.CardholderName);
         }
 
         [TestMethod]
@@ -121,9 +121,10 @@ namespace Kona.UILogic.Tests.Repositories
             var service = SetupService();
             var target = new CheckoutDataRepository(service);
 
-            var savedAddress = target.SaveShippingAddress(new Address { Id = "NewAddressId" });
+            var savedAddress = target.SaveShippingAddress(new Address());
+            var address = target.GetShippingAddress(savedAddress.Id);
 
-            Assert.AreEqual("NewAddressId", savedAddress.Id);
+            Assert.IsNotNull(address);
         }
 
         [TestMethod]
@@ -153,11 +154,11 @@ namespace Kona.UILogic.Tests.Repositories
                 {
                     RetrieveAllValuesDelegate = container =>
                         {
-                            if (container == "PaymentInfo")
+                            if (container == "PaymentMethod")
                             {
                                 return new List<object>()
                                     {
-                                        new PaymentInfo()
+                                        new PaymentMethod()
                                             {
                                                 Id = "1",
                                                 CardholderName = "John Doe",

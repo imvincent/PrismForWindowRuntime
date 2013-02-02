@@ -99,7 +99,7 @@
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0" FontWeight="SemiLight" FontSize="28" Foreground="{StaticResource AWShopperAccentBrush}" Text="Overview" />
+                                    <TextBlock x:Uid="OverviewLabel" Grid.Row="0" FontWeight="SemiLight" FontSize="28" Foreground="{StaticResource AWShopperAccentBrush}" Text="Overview" />
                                     <Image Grid.Row="1" x:Name="image" Height="300" Width="300" Margin="0,20,0,20" Source="{Binding Image}" Stretch="UniformToFill" />
                                     <StackPanel Grid.Row="2" Orientation="Horizontal">
                                         <ComboBox x:Name="colorCombo" Width="145" Margin="10,0,0,0" ItemsSource="{Binding Colors}" DisplayMemberPath="Value" SelectedValuePath="Id" SelectedValue="{Binding SelectedColor, Mode=TwoWay}"/>
@@ -118,13 +118,13 @@
                                     </Grid.RowDefinitions>
                                     <TextBlock Grid.Row="0" Text="{Binding Title}" MaxHeight="160" Margin="10,50,10,0" FontWeight="SemiLight" FontSize="32" TextWrapping="Wrap" TextTrimming="WordEllipsis" />
                                     <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,10,10,0">
-                                        <TextBlock Text="Inventory Status:" FontStyle="Oblique" FontSize="16" />
+                                        <TextBlock x:Uid="InventoryStatusLabel" Text="Inventory Status:" FontStyle="Oblique" FontSize="16" />
                                         <TextBlock Text="In Stock" FontStyle="Oblique" FontSize="16" Margin="10,0,0,0" />
                                     </StackPanel>
-                                    <TextBlock Grid.Row="2" Text="Sale Price" FontWeight="Bold" Margin="10,5,5,0" FontSize="16" />
-                                    <TextBlock Grid.Row="3" Text="{Binding ListPrice}" FontWeight="ExtraBold" Margin="10,5,5,0" FontSize="48" />
+                                    <TextBlock x:Uid="SalePriceLabel" Grid.Row="2" Text="Sale Price" FontWeight="Bold" Margin="10,5,5,0" FontSize="16" />
+                                    <TextBlock Grid.Row="3" Text="{Binding SalePrice}" FontWeight="ExtraBold" Margin="10,5,5,0" FontSize="48" />
                                     <StackPanel Grid.Row="4" Margin="10,10,10,10">
-                                        <TextBlock Text="12 Reviews:" FontWeight="Bold" FontSize="16" />
+                                        <TextBlock x:Uid="ReviewsLabel" Text="12 Reviews:" FontWeight="Bold" FontSize="16" />
                                         <TextBlock Text="" FontFamily="Segoe UI Symbol" Foreground="Yellow" FontSize="20"></TextBlock>
                                     </StackPanel>
                                     <TextBlock Grid.Row="5" Text="{Binding Description}" MaxHeight="220" Margin="10,10,10,10" FontSize="20" TextWrapping="Wrap" TextTrimming="WordEllipsis" />
@@ -136,7 +136,7 @@
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0" FontWeight="SemiLight" FontSize="28" Foreground="{StaticResource AWShopperAccentBrush}" Text="Details" />
+                                    <TextBlock x:Uid="DetailsLabel" Grid.Row="0" FontWeight="SemiLight" FontSize="28" Foreground="{StaticResource AWShopperAccentBrush}" Text="Details" />
                                     <Grid Grid.Row="1" Background="{StaticResource AWShopperItemBackgroundBrush}" Margin="10,20,10,10">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="120" />
@@ -361,11 +361,11 @@
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="flipView">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<x:Double>320</x:Double>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Double>320</x:Double>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>

@@ -123,7 +123,7 @@
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Order.cs" />
-    <Compile Include="Models\PaymentInfo.cs" />
+    <Compile Include="Models\PaymentMethod.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ShippingMethod.cs" />
     <Compile Include="Models\ShoppingCart.cs" />

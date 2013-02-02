@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
@@ -29,7 +30,6 @@ namespace Kona.Infrastructure
     {
         private static Dictionary<string, object> _sessionState = new Dictionary<string, object>();
         private static List<Type> _knownTypes = new List<Type>();
-        private const string sessionStateFilename = "_sessionState.xml";
 
         private SuspensionManager()
         {
@@ -85,7 +85,7 @@ namespace Kona.Infrastructure
             serializer.WriteObject(sessionData, _sessionState);
             
                 // Get an output stream for the SessionState file and write the state asynchronously
-                StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(sessionStateFilename, CreationCollisionOption.ReplaceExisting);
+                StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(Constants.SessionStateFileName, CreationCollisionOption.ReplaceExisting);
                 using (Stream fileStream = await file.OpenStreamForWriteAsync())
                 {
                     sessionData.Seek(0, SeekOrigin.Begin);
@@ -115,7 +115,7 @@ namespace Kona.Infrastructure
             try
             {
                 // Get the input stream for the SessionState file
-                StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync(sessionStateFilename);
+                StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync(Constants.SessionStateFileName);
                 using (IInputStream inStream = await file.OpenSequentialReadAsync())
                 {
                     // Deserialize the Session State
@@ -160,14 +160,18 @@ namespace Kona.Infrastructure
         /// store navigation-related information.</param>
         public static void RegisterFrame(Frame frame, String sessionStateKey)
         {
+            var resourceLoader = new ResourceLoader(Constants.KonaInfrastructureResourceMapId);
+
             if (frame.GetValue(FrameSessionStateKeyProperty) != null)
             {
-                throw new InvalidOperationException("Frames can only be registered to one session state key");
+                var errorString = resourceLoader.GetString("FrameAlreadyRegisteredWithKey");
+                throw new InvalidOperationException(errorString);
             }
 
             if (frame.GetValue(FrameSessionStateProperty) != null)
             {
-                throw new InvalidOperationException("Frames must be either be registered before accessing frame session state, or not registered at all");
+                var errorString = resourceLoader.GetString("FrameRegistrationRequirement");
+                throw new InvalidOperationException(errorString);
             }
 
             // Use a dependency property to associate the session key with a frame, and keep a list of frames whose

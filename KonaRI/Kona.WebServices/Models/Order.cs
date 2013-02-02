@@ -29,7 +29,7 @@ namespace Kona.WebServices.Models
         public Address BillingAddress { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRequired")]
-        public PaymentInfo PaymentInfo { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRequired")]
         public ShippingMethod ShippingMethod { get; set; }

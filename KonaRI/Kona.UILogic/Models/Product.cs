@@ -21,7 +21,9 @@ namespace Kona.UILogic.Models
         public int SubcategoryId { get; set; }
 
         public double ListPrice { get; set; }
-        
+
+        public double DiscountPercentage { get; set; }
+
         public double Weight { get; set; }
 
         public string Color { get; set; }

@@ -437,6 +437,11 @@
         <Setter Property="AutomationProperties.Name" Value="Shopping Cart"/>
         <Setter Property="Content" Value="&#xE14D;"/>
     </Style>
+    <Style x:Key="ListAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
+        <Setter Property="AutomationProperties.AutomationId" Value="ListAppBarButton"/>
+        <Setter Property="AutomationProperties.Name" Value="List"/>
+        <Setter Property="Content" Value="&#xE14C;"/>
+    </Style>
     <!--
     
     <Style x:Key="SkipBackAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">

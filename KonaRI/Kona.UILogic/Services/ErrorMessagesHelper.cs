@@ -16,11 +16,7 @@ namespace Kona.UILogic.Services
     {
         static ErrorMessagesHelper()
         {
-            try
-            {
-                ResourceLoader = new ResourceLoaderAdapter(new ResourceLoader());    
-            }
-            catch(Exception){}
+            ResourceLoader = new ResourceLoaderAdapter(new ResourceLoader());    
         }
         public static IResourceLoader ResourceLoader { get; set; }
 

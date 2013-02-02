@@ -8,18 +8,13 @@
 
 using Kona.Infrastructure.Flyouts;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace Kona.AWShopper.Views
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class ChangeDefaultsFlyout : FlyoutView
     {
         private bool _isShippingAddressDisplayed = true;
         private bool _isBillingAddressDisplayed = true;
-        private bool _isPaymentInfoDisplayed = true;
+        private bool _isPaymentMethodDisplayed = true;
 
         public ChangeDefaultsFlyout(string commandId, string commandTitle)
             : base(commandId, commandTitle, StandardFlyoutSize.Narrow)
@@ -30,15 +25,8 @@ namespace Kona.AWShopper.Views
             UncollapseShippingAddress.Completed += (senderObject, arguments) => ShowShippingAddress.Begin();
             HideBillingAddress.Completed += (senderObject, arguments) => CollapseBillingAddress.Begin();
             UncollapseBillingAddress.Completed += (senderObject, arguments) => ShowBillingAddress.Begin();
-            HidePaymentInfo.Completed += (senderObject, arguments) => CollapsePaymentInfo.Begin();
-            UncollapsePaymentInfo.Completed += (senderObject, arguments) => ShowPaymentInfo.Begin();
-
-            var viewModel = this.DataContext as IFlyoutViewModel;
-            if (viewModel != null)
-            {
-                viewModel.CloseFlyout = this.Close;
-                viewModel.GoBack = this.GoBack;
-            }
+            HidePaymentMethod.Completed += (senderObject, arguments) => CollapsePaymentMethod.Begin();
+            UncollapsePaymentMethod.Completed += (senderObject, arguments) => ShowPaymentMethod.Begin();
         }
 
         private void ShippingAddressToggleClick(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -69,17 +57,17 @@ namespace Kona.AWShopper.Views
             }
         }
 
-        private void PaymentInfoToggleClick(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void PaymentMethodToggleClick(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            if (_isPaymentInfoDisplayed)
+            if (_isPaymentMethodDisplayed)
             {
-                HidePaymentInfo.Begin();
-                _isPaymentInfoDisplayed = false;
+                HidePaymentMethod.Begin();
+                _isPaymentMethodDisplayed = false;
             }
             else
             {
-                UncollapsePaymentInfo.Begin();
-                _isPaymentInfoDisplayed = true;
+                UncollapsePaymentMethod.Begin();
+                _isPaymentMethodDisplayed = true;
             }
         }
     }

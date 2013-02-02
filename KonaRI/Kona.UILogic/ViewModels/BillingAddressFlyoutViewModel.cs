@@ -10,41 +10,75 @@ using System;
 using System.Windows.Input;
 using Kona.Infrastructure;
 using Kona.Infrastructure.Flyouts;
+using Kona.UILogic.Models;
 using Kona.UILogic.Repositories;
 
 namespace Kona.UILogic.ViewModels
 {
     public class BillingAddressFlyoutViewModel : ViewModel, IFlyoutViewModel
     {
-        private readonly ICheckoutDataRepository _checkoutDataRepository;
-        private readonly IBillingAddressUserControlViewModel _viewModel;
+        private readonly IBillingAddressUserControlViewModel _billingAddressViewModel;
+        private readonly IResourceLoader _resourceLoader;
+        private string _headerLabel;
+        private Action _successAction;
 
-        public BillingAddressFlyoutViewModel(IBillingAddressUserControlViewModel billingAddressUserControlViewModel, ICheckoutDataRepository checkoutDataRepository)
+        public BillingAddressFlyoutViewModel(IBillingAddressUserControlViewModel billingAddressViewModel, IResourceLoader resourceLoader)
         {
-            _checkoutDataRepository = checkoutDataRepository;
-            _viewModel = billingAddressUserControlViewModel;
-            AddCommand = new DelegateCommand(AddBillingAddress);
+            _billingAddressViewModel = billingAddressViewModel;
+            _resourceLoader = resourceLoader;
+
+            SaveCommand = new DelegateCommand(SaveBillingAddress);
             GoBackCommand = new DelegateCommand(() => GoBack(), () => true);
         }
 
-        public IBillingAddressUserControlViewModel BillingAddressUserControlViewModel { get { return _viewModel; } }
-        public ICommand AddCommand { get; set; }
+        public IBillingAddressUserControlViewModel BillingAddressViewModel
+        {
+            get { return _billingAddressViewModel; } 
+        }
+
+        public string HeaderLabel
+        {
+            get { return _headerLabel; }
+            set { SetProperty(ref _headerLabel, value); }
+        }
+
         public Action CloseFlyout { get; set; }
+
         public Action GoBack { get; set; }
+
+        public ICommand SaveCommand { get; set; }
+
         public ICommand GoBackCommand { get; private set; }
 
         public async void Open(object parameter, Action successAction)
         {
-            await _viewModel.PopulateStatesAsync();
+            _successAction = successAction;
+            await BillingAddressViewModel.PopulateStatesAsync();
+
+            var billingAddress = parameter as Address;
+
+            if (billingAddress != null)
+            {
+                BillingAddressViewModel.Address = billingAddress;
+                HeaderLabel = _resourceLoader.GetString("EditBillingAddressTitle");
+            }
+            else
+            {
+                HeaderLabel = _resourceLoader.GetString("AddBillingAddressTitle");
+            }
         }
 
-        private void AddBillingAddress()
+        private void SaveBillingAddress()
         {
-            if (BillingAddressUserControlViewModel.ValidateForm())
+            if (BillingAddressViewModel.ValidateForm())
             {
-                _checkoutDataRepository.SaveBillingAddress(BillingAddressUserControlViewModel.Address);
+                BillingAddressViewModel.ProcessForm();
                 CloseFlyout();
-                //TODO: Set this as the Billing Address to use
+
+                if (_successAction != null)
+                {
+                    _successAction();
+                }
             }
         }
     }

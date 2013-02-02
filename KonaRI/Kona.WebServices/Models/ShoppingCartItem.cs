@@ -20,8 +20,6 @@ namespace Kona.WebServices.Models
 
         public int Quantity { get; set; }
 
-        public double DiscountPercentage { get; set; }
-
         public string Currency { get; set; }
     }
 }

@@ -21,20 +21,19 @@ namespace Kona.UILogic.ViewModels
     {
         private bool _setAsDefault;
         private readonly ICheckoutDataRepository _checkoutDataRepository;
-        private int _currentFormStatus;
-        private PaymentInfo _paymentInfo;
+        private PaymentMethod _paymentMethod;
 
         public PaymentMethodUserControlViewModel(ICheckoutDataRepository checkoutDataRepository)
         {
-            _paymentInfo = new PaymentInfo() { Id = Guid.NewGuid().ToString() };
+            _paymentMethod = new PaymentMethod();
             _checkoutDataRepository = checkoutDataRepository;
         }
         
         [RestorableState]
-        public PaymentInfo PaymentInfo
+        public PaymentMethod PaymentMethod
         {
-            get { return _paymentInfo; }
-            set { SetProperty(ref _paymentInfo, value); }
+            get { return _paymentMethod; }
+            set { SetProperty(ref _paymentMethod, value); }
         }
 
         [RestorableState]
@@ -42,13 +41,6 @@ namespace Kona.UILogic.ViewModels
         {
             get { return _setAsDefault; }
             set { SetProperty(ref _setAsDefault, value); }
-        }
-
-        [RestorableState]
-        public int CurrentFormStatus
-        {
-            get { return _currentFormStatus; }
-            set { SetProperty(ref _currentFormStatus, value); }
         }
 
         public override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState)
@@ -64,18 +56,18 @@ namespace Kona.UILogic.ViewModels
 
                     if (errorsCollection != null)
                     {
-                        _paymentInfo.SetAllErrors(errorsCollection);
+                        _paymentMethod.SetAllErrors(errorsCollection);
                     }
                 }
             }
 
             if (navigationMode == NavigationMode.New)
             {
-                if (_checkoutDataRepository.ContainsDefaultValue("PaymentInfo"))
+                var paymentMethod = _checkoutDataRepository.GetDefaultPaymentMethodValue();
+                if (paymentMethod != null)
                 {
-                    PaymentInfo = _checkoutDataRepository.GetDefaultPaymentInfoValue();
-
-                    // Validate form fields
+                    // Update the information and validate the values
+                    PaymentMethod = paymentMethod;
                     ValidateForm();
                 }
             }
@@ -88,29 +80,29 @@ namespace Kona.UILogic.ViewModels
             // Store the errors collection manually
             if (viewState != null)
             {
-                AddEntityStateValue("errorsCollection", _paymentInfo.GetAllErrors(), viewState);
+                AddEntityStateValue("errorsCollection", _paymentMethod.GetAllErrors(), viewState);
             }
         }
 
         public void ProcessForm()
         {
-            var savedPaymentInformation =  _checkoutDataRepository.SavePaymentInfo(PaymentInfo);
+            var savedPaymentMethod =  _checkoutDataRepository.SavePaymentMethod(PaymentMethod);
 
             //If matching saved payment information found, use saved payment information
-            if (savedPaymentInformation.Id != PaymentInfo.Id)
+            if (savedPaymentMethod.Id != PaymentMethod.Id)
             {
-                PaymentInfo = savedPaymentInformation;
+                PaymentMethod = savedPaymentMethod;
             }
 
             if (SetAsDefault)
             {
-                _checkoutDataRepository.SetAsDefaultPaymentInfo(savedPaymentInformation.Id);
+                _checkoutDataRepository.SetAsDefaultPaymentMethod(savedPaymentMethod.Id);
             }
         }
 
         public bool ValidateForm()
         {
-            return _paymentInfo.ValidateProperties();
+            return _paymentMethod.ValidateProperties();
         }
     }
 }

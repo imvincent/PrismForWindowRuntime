@@ -14,7 +14,7 @@ namespace Kona.UILogic.Services
 {
     public interface IProductCatalogService
     {
-        Task<ReadOnlyCollection<Category>> GetCategoriesAsync(int depth);
+        Task<ReadOnlyCollection<Category>> GetCategoriesAsync(int maxAmountOfProducts);
 
         Task<ReadOnlyCollection<Category>> GetSubcategoriesAsync(int categoryId);
 

@@ -21,6 +21,6 @@ namespace Kona.UILogic.Models
             ModelState = new Dictionary<string, List<string>>();
         }
         public string Message { get; set; }
-        public Dictionary<string,List<string>> ModelState { get; set; }
+        public Dictionary<string,List<string>> ModelState { get; private set; }
     }
 }

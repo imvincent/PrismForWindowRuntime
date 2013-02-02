@@ -31,7 +31,7 @@ namespace Kona.UILogic.Tests.ViewModels
             shoppingCartRepository.GetShoppingCartAsyncDelegate = () =>
             {
                 var shoppingCartItems = new List<ShoppingCartItem>();
-                shoppingCartItems.Add(new ShoppingCartItem{DiscountPercentage = .5,Quantity = 1,Product = new Product{ListPrice = 200}, Currency = "USD"});
+                shoppingCartItems.Add(new ShoppingCartItem { Quantity = 1, Product = new Product { ListPrice = 200, DiscountPercentage = 50}, Currency = "USD" });
                 ShoppingCart shoppingCart = new ShoppingCart(new ObservableCollection<ShoppingCartItem>(shoppingCartItems)) { Currency = "USD" };
                 return Task.FromResult(shoppingCart);
             };
@@ -56,8 +56,8 @@ namespace Kona.UILogic.Tests.ViewModels
                 ShoppingCart shoppingCart = null;
                 var shoppingCartItems = new ObservableCollection<ShoppingCartItem>
                                             {
-                                                new ShoppingCartItem() { DiscountPercentage = .5, Product = new Product { ListPrice = 100, ProductNumber = "p1", ImageName = "http://image"}, Currency = "USD", Quantity = 1}, 
-                                                new ShoppingCartItem() { DiscountPercentage = .5, Product = new Product { ListPrice = 100, ProductNumber = "p2", ImageName = "http://image"}, Currency = "USD", Quantity = 1}
+                                                new ShoppingCartItem() {Product = new Product { ListPrice = 100, DiscountPercentage = 50, ProductNumber = "p1", ImageName = "http://image"}, Currency = "USD", Quantity = 1}, 
+                                                new ShoppingCartItem() {Product = new Product { ListPrice = 100, DiscountPercentage = 50, ProductNumber = "p2", ImageName = "http://image"}, Currency = "USD", Quantity = 1}
                                             };
                 shoppingCart = new ShoppingCart(shoppingCartItems) { Currency = "USD"};
 
@@ -167,7 +167,7 @@ namespace Kona.UILogic.Tests.ViewModels
             Assert.IsFalse(target.CheckoutCommand.CanExecute());
 
             shoppingCartRepository.GetShoppingCartAsyncDelegate =
-                () => Task.FromResult(new ShoppingCart(new Collection<ShoppingCartItem> { new ShoppingCartItem{Product = new Product(), Currency = "USD", DiscountPercentage = 0, Quantity = 0} }) 
+                () => Task.FromResult(new ShoppingCart(new Collection<ShoppingCartItem> { new ShoppingCartItem{Product = new Product(), Currency = "USD", Quantity = 0} }) 
                 { Currency = "USD", FullPrice = 0, TaxRate = 0, TotalDiscount = 0, TotalPrice = 0 });
             target.UpdateShoppingCartAsync();
 

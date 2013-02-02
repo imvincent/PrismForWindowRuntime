@@ -41,7 +41,7 @@ namespace Kona.AWShopper.Views
         /// </summary>
         /// <param name="sender">Instance of <see cref="Control"/> that supports visual state
         /// management corresponding to view states.</param>
-        /// <param name="e">Event data that describes how the request was made.</param>
+        /// <param name="eventArgs">Event data that describes how the request was made.</param>
         /// <remarks>The current view state will immediately be used to set the corresponding
         /// visual state when layout updates are requested.  A corresponding
         /// <see cref="FrameworkElement.Unloaded"/> event handler connected to
@@ -50,7 +50,7 @@ namespace Kona.AWShopper.Views
         /// Unloaded events.</remarks>
         /// <seealso cref="DetermineVisualState"/>
         /// <seealso cref="InvalidateVisualState"/>
-        public void StartLayoutUpdates(object sender, RoutedEventArgs e)
+        public void StartLayoutUpdates(object sender, RoutedEventArgs eventArgs)
         {
             var control = sender as Control;
             if (control == null) return;
@@ -84,11 +84,11 @@ namespace Kona.AWShopper.Views
         /// </summary>
         /// <param name="sender">Instance of <see cref="Control"/> that supports visual state
         /// management corresponding to view states.</param>
-        /// <param name="e">Event data that describes how the request was made.</param>
+        /// <param name="eventArgs">Event data that describes how the request was made.</param>
         /// <remarks>The current view state will immediately be used to set the corresponding
         /// visual state when layout updates are requested.</remarks>
         /// <seealso cref="StartLayoutUpdates"/>
-        public void StopLayoutUpdates(object sender, RoutedEventArgs e)
+        public void StopLayoutUpdates(object sender, RoutedEventArgs eventArgs)
         {
             var control = sender as Control;
             if (control == null || this._visualStateAwareControls == null) return;
@@ -110,7 +110,7 @@ namespace Kona.AWShopper.Views
         /// <returns>Visual state name used to drive the
         /// <see cref="VisualStateManager"/></returns>
         /// <seealso cref="InvalidateVisualState"/>
-        private string DetermineVisualState(ApplicationViewState viewState)
+        private static string DetermineVisualState(ApplicationViewState viewState)
         {
             return viewState.ToString();
         }

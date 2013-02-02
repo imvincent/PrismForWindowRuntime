@@ -41,11 +41,7 @@ namespace Microsoft.Practices.PubSubEvents
             else
             {
                 _weakReference = new WeakReference(@delegate.Target);
-#if NETFX_CORE
-                _method = @delegate.GetMethodInfo();
-#else
                 _method = @delegate.Method;
-#endif
                 _delegateType = @delegate.GetType();
             }
         }
@@ -73,20 +69,12 @@ namespace Microsoft.Practices.PubSubEvents
         {
             if (_method.IsStatic)
             {
-#if NETFX_CORE
-                return _method.CreateDelegate(_delegateType);
-#else
                 return Delegate.CreateDelegate(_delegateType, null, _method);
-#endif
             }
             object target = _weakReference.Target;
             if (target != null)
             {
-#if NETFX_CORE
-                return _method.CreateDelegate(_delegateType, target);
-#else
                 return Delegate.CreateDelegate(_delegateType, target, _method);
-#endif
             }
             return null;
         }

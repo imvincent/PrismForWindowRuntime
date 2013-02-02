@@ -7,6 +7,7 @@
 
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 using Kona.WebServices.Models;
 using Kona.WebServices.Repositories;
@@ -16,6 +17,12 @@ namespace Kona.WebServices.Tests.Repositories
     [TestClass]
     public class ShoppingCartRepositoryFixture
     {
+        [TestInitialize]
+        public void Initialize()
+        {
+            ShoppingCartRepository.Reset();
+        }
+
         [TestMethod]
         public void AddProductToCart_AddsNewShoppingCartItem()
         {
@@ -49,19 +56,15 @@ namespace Kona.WebServices.Tests.Repositories
         public void AddProductToCart_AddsNewShoppingCartItemToExistingCart_WithSameProduct()
         {
             var target = new ShoppingCartRepository();
-            var cart = target.GetById("TestUser");
-
-            if (cart != null) target.Delete(cart);
             
-            target.AddProductToCart("TestUser", new Product() { ProductNumber = "123" });
-            target.AddProductToCart("TestUser", new Product() { ProductNumber = "123" });
+            target.AddProductToCart("TestUser", new Product { ProductNumber = "123" });
+            target.AddProductToCart("TestUser", new Product { ProductNumber = "123" });
 
-            cart = target.GetById("TestUser");
+            var cart = target.GetById("TestUser");
             Assert.IsNotNull(cart);
             Assert.AreEqual(1, cart.ShoppingCartItems.Count);
 
             var items = cart.ShoppingCartItems.Where(item => item.Product.ProductNumber == "123");
-            Assert.IsNotNull(items);
             Assert.AreEqual(1, items.Count());
             Assert.AreEqual(2, items.First().Quantity);
         }
@@ -70,12 +73,12 @@ namespace Kona.WebServices.Tests.Repositories
         public void DeleteCart_DeletesCart_AndReturnsTrue()
         {
             var target = new ShoppingCartRepository();
-            target.AddProductToCart("TestUser", new Product() { ProductNumber = "BB-7421" });
+            target.AddProductToCart("TestUser", new Product { ProductNumber = "BB-7421" });
 
             var cart = target.GetById("TestUser");
             Assert.IsNotNull(cart);
 
-            var success = target.Delete(cart);
+            var success = target.Delete("TestUser");
 
             Assert.IsTrue(success);
 
@@ -84,7 +87,6 @@ namespace Kona.WebServices.Tests.Repositories
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void DeleteCart_ReturnsFalse_WhenCartDoesNotExist()
         {
             var target = new ShoppingCartRepository();
@@ -92,7 +94,7 @@ namespace Kona.WebServices.Tests.Repositories
             var emptyCart = target.GetById("TestUser");
             Assert.IsNull(emptyCart);
 
-            var success = target.Delete(emptyCart);
+            var success = target.Delete("TestUser");
             Assert.IsFalse(success);
         }
     }

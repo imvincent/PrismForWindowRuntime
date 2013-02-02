@@ -35,12 +35,12 @@ namespace Kona.UILogic.ViewModels
                 throw new ArgumentNullException("shoppingCartItem", "shoppingCartItem cannot be null");
             }
 
-            Id = shoppingCartItem.Id;
-            Title = shoppingCartItem.Product.Title;
-            Description = shoppingCartItem.Product.Description;
-            Quantity = shoppingCartItem.Quantity;
+            _id = shoppingCartItem.Id;
+            _title = shoppingCartItem.Product.Title;
+            _description = shoppingCartItem.Product.Description;
+            _quantity = shoppingCartItem.Quantity;
             _listPrice = shoppingCartItem.Product.ListPrice;
-            DiscountPercentage = shoppingCartItem.DiscountPercentage;
+            _discountPercentage = shoppingCartItem.Product.DiscountPercentage;
             _imagePath = shoppingCartItem.Product.ImageName;
             EntityId = shoppingCartItem.Id;
             ProductId = shoppingCartItem.Product.ProductNumber;
@@ -74,6 +74,7 @@ namespace Kona.UILogic.ViewModels
             {
                 if (SetProperty(ref _quantity, value))
                 {
+                    OnPropertyChanged("FullPrice");
                     OnPropertyChanged("TotalPrice");
                     OnPropertyChanged("DiscountedPrice");
                 }
@@ -98,7 +99,7 @@ namespace Kona.UILogic.ViewModels
             get { return new BitmapImage(new Uri(_imagePath, UriKind.Absolute)); }
         }
 
-        public double DiscountedPriceDouble { get { return Math.Round(FullPriceDouble*(1 - DiscountPercentage), 2); } }
+        public double DiscountedPriceDouble { get { return Math.Round(FullPriceDouble*(1 - DiscountPercentage/100), 2); } }
 
         public string DiscountedPrice 
         {
@@ -107,7 +108,7 @@ namespace Kona.UILogic.ViewModels
 
         public override string ToString()
         {
-            return Id;
+            return Title + ProductId;
         }
     }
 }

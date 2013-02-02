@@ -1,14 +1,15 @@
 ﻿<infrastructure:VisualStateAwarePage
+    x:Class="Kona.AWShopper.Views.CheckoutHubPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:infrastructure="using:Kona.Infrastructure"
     xmlns:Views="using:Kona.AWShopper.Views" 
-    xmlns:behaviors="using:Kona.AWShopper.Behaviors"
-    x:Class="Kona.AWShopper.Views.CheckoutHubPage"
+    xmlns:designViewModels="using:Kona.AWShopper.DesignViewModels"
+    mc:Ignorable="d"
     infrastructure:ViewModelLocator.AutoWireViewModel="True"
-    mc:Ignorable="d">
+    d:DataContext="{d:DesignInstance designViewModels:CheckoutHubPageDesignViewModel, IsDesignTimeCreatable=True}">
 
     <Page.TopAppBar>
         <AppBar Style="{StaticResource AppBarStyle}">
@@ -68,7 +69,8 @@
                            Text="Billing Address" Grid.Row="0" Grid.Column="2"
                            Style="{StaticResource PageSubheaderTextStyle}" Foreground="{StaticResource AWShopperAccentBrush}" />
 
-                <CheckBox x:Name="checkBox" AutomationProperties.AutomationId="SameAsShippingAddressCheckBox" Grid.Row="1" Grid.Column="2" VerticalAlignment="Top"
+                <CheckBox x:Name="SameAsShippingAddressCheckBox" x:Uid="SameAsShippingAddressCheckBox" AutomationProperties.AutomationId="SameAsShippingAddressCheckBox" 
+                          Grid.Row="1" Grid.Column="2" VerticalAlignment="Top"
                           Content="Same as Shipping Address"
                           IsChecked="{Binding UseSameAddressAsShipping, Mode=TwoWay}" />
 
@@ -82,15 +84,15 @@
                            Text="Payment Method" Grid.Row="0" Grid.Column="4"
                            Style="{StaticResource PageSubheaderTextStyle}" Foreground="{StaticResource AWShopperAccentBrush}" />
 
-                <StackPanel x:Name="stackPanel" Orientation="Vertical" Grid.Row="2" Grid.Column="4" >
+                <StackPanel x:Name="PaymentMethodAndSubmitPanel" Orientation="Vertical" Grid.Row="2" Grid.Column="4" >
                     <Views:PaymentMethodUserControl x:Name="paymentMethodUC" Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates" DataContext="{Binding PaymentMethodViewModel}" Width="600" />
-                    <Button x:Uid="SubmitButton" x:Name="submitButton" AutomationProperties.AutomationId="SubmitButton" Command="{Binding GoNextCommand}" Content="Submit" Margin="0,50,0,0" Width="200" Background="{StaticResource AWShopperAccentBrush}"/>
+                    <Button x:Uid="SubmitButton" x:Name="submitButton" AutomationProperties.AutomationId="SubmitButton" Command="{Binding GoNextCommand}" Content="Submit" Width="200" Margin="0,50,0,0" Background="{StaticResource AWShopperAccentBrush}"/>
                     <TextBlock Text="Shipping address incomplete" x:Uid="ShippingAddressIncompleteMessage" Style="{StaticResource ErrorMessageStyle}"
-                               Visibility="{Binding IsShippingInfoInvalid, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                               Visibility="{Binding IsShippingAddressInvalid, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     <TextBlock Text="Billing address incomplete" x:Uid="BillingAddressIncompleteMessage" Style="{StaticResource ErrorMessageStyle}"
-                               Visibility="{Binding IsBillingInfoInvalid, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                    <TextBlock Text="Payment information incomplete" x:Uid="PaymentInformationIncompleteMessage" Style="{StaticResource ErrorMessageStyle}"
-                               Visibility="{Binding IsPaymentInfoInvalid, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                               Visibility="{Binding IsBillingAddressInvalid, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    <TextBlock Text="Payment method incomplete" x:Uid="PaymentMethodIncompleteMessage" Style="{StaticResource ErrorMessageStyle}"
+                               Visibility="{Binding IsPaymentMethodInvalid, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 </StackPanel>
             </Grid>
         </ScrollViewer>
@@ -119,89 +121,30 @@
                 -->
                 <VisualState x:Name="Snapped">
                     <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton"
-                                                       Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="{StaticResource SnappedBackButtonStyle}" />
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}" />
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle"
-                                                       Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="{StaticResource SnappedPageHeaderTextStyle}" />
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}" />
                         </ObjectAnimationUsingKeyFrames>
 
-
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HubGrid"
-                                                       Storyboard.TargetProperty="(Grid.RowDefinitions)[2].Height">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="*" />
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HubGrid" Storyboard.TargetProperty="(Grid.RowDefinitions)[2].Height">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="*" />
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HubGrid"
-                                                       Storyboard.TargetProperty="(Grid.RowDefinitions)[3].Height">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="*" />
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HubGrid" Storyboard.TargetProperty="(Grid.RowDefinitions)[3].Height">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="*" />
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HubGrid"
-                                                       Storyboard.TargetProperty="(Grid.RowDefinitions)[4].Height">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="*" />
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HubGrid" Storyboard.TargetProperty="(Grid.RowDefinitions)[4].Height">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="*" />
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HubGrid"
-                                                       Storyboard.TargetProperty="(Grid.RowDefinitions)[5].Height">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="*" />
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HubGrid" Storyboard.TargetProperty="(Grid.RowDefinitions)[5].Height">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="*" />
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HubGrid"
-                                                       Storyboard.TargetProperty="(Grid.ColumnDefinitions)[1].Width">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="0" />
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HubGrid" Storyboard.TargetProperty="(Grid.ColumnDefinitions)[1].Width">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="0" />
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HubGrid"
-                                                       Storyboard.TargetProperty="(Grid.ColumnDefinitions)[2].Width">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="0" />
-                        </ObjectAnimationUsingKeyFrames>
-
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="billingAddressTitle"
-                                                       Storyboard.TargetProperty="(Grid.Row)">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="2" />
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="billingAddressTitle"
-                                                       Storyboard.TargetProperty="(Grid.Column)">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="0" />
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="billingAddressUC"
-                                                       Storyboard.TargetProperty="(Grid.Row)">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="3" />
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="billingAddressUC"
-                                                       Storyboard.TargetProperty="(Grid.Column)">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="0" />
-                        </ObjectAnimationUsingKeyFrames>
-
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="paymentMethodTitle"
-                                                       Storyboard.TargetProperty="(Grid.Row)">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="4" />
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="paymentMethodTitle"
-                                                       Storyboard.TargetProperty="(Grid.Column)">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="0" />
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="paymentMethodUC"
-                                                       Storyboard.TargetProperty="(Grid.Row)">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="5" />
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="paymentMethodUC"
-                                                       Storyboard.TargetProperty="(Grid.Column)">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="0" />
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HubGrid" Storyboard.TargetProperty="(Grid.ColumnDefinitions)[2].Width">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="0" />
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="HubGrid">
                             <DiscreteObjectKeyFrame KeyTime="0">
@@ -217,33 +160,52 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="shippingAddressUC">
+                        
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="billingAddressTitle" Storyboard.TargetProperty="(Grid.Row)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="2" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="billingAddressTitle" Storyboard.TargetProperty="(Grid.Column)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="0" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="billingAddressUC" Storyboard.TargetProperty="(Grid.Row)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="3" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="billingAddressUC" Storyboard.TargetProperty="(Grid.Column)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="0" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="billingAddressUC" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Thickness>20,0,0,0</Thickness>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="billingAddressUC" Storyboard.TargetProperty="(FrameworkElement.Width)">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <x:Double>300</x:Double>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.HorizontalAlignment)" Storyboard.TargetName="shippingAddressUC">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="billingAddressUC" Storyboard.TargetProperty="(FrameworkElement.HorizontalAlignment)">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <HorizontalAlignment>Stretch</HorizontalAlignment>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="billingAddressUC">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Double>300</x:Double>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
+                        
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="paymentMethodTitle" Storyboard.TargetProperty="(Grid.Row)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="4" />
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.HorizontalAlignment)" Storyboard.TargetName="billingAddressUC">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <HorizontalAlignment>Stretch</HorizontalAlignment>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="paymentMethodTitle" Storyboard.TargetProperty="(Grid.Column)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="0" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="paymentMethodUC" Storyboard.TargetProperty="(Grid.Row)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="5" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="paymentMethodUC" Storyboard.TargetProperty="(Grid.Column)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="0" />
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="paymentMethodUC">
                             <DiscreteObjectKeyFrame KeyTime="0">
@@ -259,17 +221,55 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="stackPanel">
+                        
+                        
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="shippingAddressUC">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Double>300</x:Double>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.HorizontalAlignment)" Storyboard.TargetName="shippingAddressUC">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <HorizontalAlignment>Stretch</HorizontalAlignment>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="shippingAddressUC">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>1</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="shippingAddressUC">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Thickness>20,0,0,0</Thickness>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="PaymentMethodAndSubmitPanel">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <x:Int32>5</x:Int32>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="stackPanel">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="PaymentMethodAndSubmitPanel">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <x:Int32>0</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="PaymentMethodAndSubmitPanel">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Thickness>15,0,0,20</Thickness>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
@@ -283,56 +283,64 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="billingAddressTitle">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
-                                	<Thickness>0,0,0,40</Thickness>
+                                	<Thickness>20,20,0,40</Thickness>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="paymentMethodTitle">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
-                                    <Thickness>0,20</Thickness>
+                                	<Thickness>20,20,0,20</Thickness>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="shippingAddressTitle">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
-                                    <Thickness>0,0,0,20</Thickness>
+                                	<Thickness>20,0,0,20</Thickness>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="shippingAddressUC">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<x:Int32>1</x:Int32>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="checkBox">
+
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="SameAsShippingAddressCheckBox">
                         	<DiscreteObjectKeyFrame KeyTime="0">
                         		<DiscreteObjectKeyFrame.Value>
                         			<x:Int32>0</x:Int32>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="checkBox">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="SameAsShippingAddressCheckBox">
                         	<DiscreteObjectKeyFrame KeyTime="0">
                         		<DiscreteObjectKeyFrame.Value>
                         			<x:Int32>2</x:Int32>
                         		</DiscreteObjectKeyFrame.Value>
                         	</DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="checkBox">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="SameAsShippingAddressCheckBox">
                         	<DiscreteObjectKeyFrame KeyTime="0">
                         		<DiscreteObjectKeyFrame.Value>
-                        			<Thickness>0,50,0,0</Thickness>
+                        			<Thickness>20,50,0,0</Thickness>
                         		</DiscreteObjectKeyFrame.Value>
                         	</DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.VerticalAlignment)" Storyboard.TargetName="checkBox">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.VerticalAlignment)" Storyboard.TargetName="SameAsShippingAddressCheckBox">
                         	<DiscreteObjectKeyFrame KeyTime="0">
                         		<DiscreteObjectKeyFrame.Value>
                         			<VerticalAlignment>Bottom</VerticalAlignment>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="submitButton">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<x:Double>NaN</x:Double>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="submitButton">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                                    <x:String>0,50,40,0</x:String>
                         		</DiscreteObjectKeyFrame.Value>
                         	</DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>

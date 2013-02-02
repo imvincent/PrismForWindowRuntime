@@ -8,17 +8,17 @@
 
 using Kona.UILogic.Models;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Kona.UILogic.Services
 {
     public class ModelValidationException : Exception
     {
         public ModelValidationException() { }
+
+        public ModelValidationException(string message): base(message) { }
+
+        public ModelValidationException(string message, Exception innerException):base(message, innerException) { }
 
         public ModelValidationException(ModelValidationResult validationResult)
         {

@@ -10,7 +10,7 @@ using Microsoft.Practices.PubSubEvents;
 
 namespace EventAggregatorQuickstart
 {
-    // <snippet3102>
+    // <snippet3100>
     public class ShoppingCartChangedEvent : PubSubEvent<ShoppingCart> { }
-    // </snippet3102>
+    // </snippet3100>
 }

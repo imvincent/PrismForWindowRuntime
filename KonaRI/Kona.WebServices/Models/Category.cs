@@ -26,5 +26,8 @@ namespace Kona.WebServices.Models
         public IEnumerable<Category> Subcategories { get; set; }
 
         public IEnumerable<Product> Products { get; set; }
+
+        public int TotalNumberOfItems { get; set; }
+        
     }
 }

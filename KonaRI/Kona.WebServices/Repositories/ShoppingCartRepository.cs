@@ -16,36 +16,38 @@ namespace Kona.WebServices.Repositories
     public class ShoppingCartRepository : IShoppingCartRepository
     {
         // key: user | value: shopping cart items
-        private static Dictionary<string, ShoppingCart> _shoppingCarts = new Dictionary<string, ShoppingCart>();
+        private static Dictionary<string, ShoppingCart> _shoppingCarts = GetDefaultShoppingCarts();
 
-        static ShoppingCartRepository()
+        private static Dictionary<string, ShoppingCart> GetDefaultShoppingCarts()
         {
+            var shoppingCarts = new Dictionary<string, ShoppingCart>();
             var shoppingCartItems = new List<ShoppingCartItem>();
             shoppingCartItems.Add(new ShoppingCartItem { Currency = "USD", Quantity = 1, Product = new Product { Currency = "USD", Title = "Mountain-400-W Silver, 42", ProductNumber = "BK-M38S-42", SubcategoryId = 1, Description = "This bike delivers a high-level of performance on a budget. It is responsive and maneuverable, and offers peace-of-mind when you decide to go off-road.", ListPrice = 769.4900, Weight = 27.13, Color = "Silver", ImageName = "hotrodbike_f_large.gif" } });
             shoppingCartItems.Add(new ShoppingCartItem { Currency = "USD", Quantity = 1, Product = new Product { Currency = "USD", Title = "Touring Pedal", ProductNumber = "PD-T852", SubcategoryId = 13, Description = "A stable pedal for all-day riding.", ListPrice = 80.9900, Weight = 0, Color = "Silver/Black", ImageName = "clipless_pedals_large.gif" } });
             shoppingCartItems.Add(new ShoppingCartItem { Currency = "USD", Quantity = 1, Product = new Product { Currency = "USD", Title = "LL Touring Frame - Yellow, 62", ProductNumber = "FR-T67Y-62", SubcategoryId = 16, Description = "Lightweight butted aluminum frame provides a more upright riding position for a trip around town.  Our ground-breaking design provides optimum comfort.", ListPrice = 333.4200, Weight = 3.20, Color = "Yellow", ImageName = "frame_large.gif" } });
-            _shoppingCarts.Add("JohnDoe", new ShoppingCart(shoppingCartItems) { Currency = "USD", FullPrice = 1183.90, TotalPrice = 1183.90});
+            shoppingCarts.Add("JohnDoe", new ShoppingCart(shoppingCartItems) { Currency = "USD", FullPrice = 1183.90, TotalPrice = 1183.90 });
+            return shoppingCarts;
         }
 
-        public ShoppingCart GetById(string userId)
+        public ShoppingCart GetById(string shoppingCartId)
         {
-            return _shoppingCarts.ContainsKey(userId) ? _shoppingCarts[userId] : null;
+            return _shoppingCarts.ContainsKey(shoppingCartId) ? _shoppingCarts[shoppingCartId] : null;
         }
 
-        public ShoppingCartItem AddProductToCart(string userId, Product product)
+        public ShoppingCartItem AddProductToCart(string shoppingCartId, Product product)
         {
-            ShoppingCart shoppingCart = GetById(userId);
+            ShoppingCart shoppingCart = GetById(shoppingCartId);
 
             if (shoppingCart == null)
             {
                 shoppingCart = new ShoppingCart(new List<ShoppingCartItem>())
                 {
-                    UserId = userId,
+                    ShoppingCartId = shoppingCartId,
                     Currency = "USD",
                     TaxRate = .09
                 };
 
-                Create(shoppingCart);
+                _shoppingCarts[shoppingCartId] = shoppingCart;
             }
 
             ShoppingCartItem item = shoppingCart.ShoppingCartItems.FirstOrDefault(c => c.Product.ProductNumber == product.ProductNumber);
@@ -71,9 +73,9 @@ namespace Kona.WebServices.Repositories
             return item;
         }
 
-        public bool RemoveProductFromCart(string userId, string productId)
+        public bool RemoveProductFromCart(string shoppingCartId, string productId)
         {
-            ShoppingCart shoppingCart = GetById(userId);
+            ShoppingCart shoppingCart = GetById(shoppingCartId);
             if (shoppingCart == null) return false;
 
             var shoppingCartItem =
@@ -104,56 +106,14 @@ namespace Kona.WebServices.Repositories
             return itemRemoved;
         }
 
-        public ShoppingCart Create(ShoppingCart item)
+        public bool Delete(string userId)
         {
-            if (item == null)
+            if (_shoppingCarts.ContainsKey(userId))
             {
-                throw new ArgumentNullException("item");
-            }
-
-            item.Id = _shoppingCarts.Values.Any() ? _shoppingCarts.Values.Max(c => c.Id) : 1;
-
-            if (_shoppingCarts.ContainsKey(item.UserId))
-            {
-                _shoppingCarts.Add(item.UserId, item);
-            }
-            else
-            {
-                _shoppingCarts[item.UserId] = item;
-            }
-
-            return item;
-        }
-
-        public bool Delete(ShoppingCart item)
-        {
-            if (item == null)
-            {
-                throw new ArgumentNullException("item");
-            }
-
-            if (_shoppingCarts.ContainsKey(item.UserId))
-            {
-                _shoppingCarts.Remove(item.UserId);
+                _shoppingCarts.Remove(userId);
                 return true;
             }
-
             return false;
-        }
-
-        public IEnumerable<ShoppingCart> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public ShoppingCart GetItem(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Update(ShoppingCart item)
-        {
-            throw new NotImplementedException();
         }
 
         private static void UpdatePrices(ShoppingCart shoppingCart)
@@ -162,11 +122,16 @@ namespace Kona.WebServices.Repositories
             foreach (var shoppingCartItem in shoppingCart.ShoppingCartItems)
             {
                 fullPrice += shoppingCartItem.Product.ListPrice * shoppingCartItem.Quantity;
-                discount += fullPrice * shoppingCartItem.DiscountPercentage / 100;
+                discount += fullPrice * shoppingCartItem.Product.DiscountPercentage/100;
                 shoppingCart.FullPrice = fullPrice;
                 shoppingCart.TotalDiscount = discount;
                 shoppingCart.TotalPrice = fullPrice - discount;
             }
+        }
+
+        public static void Reset()
+        {
+            _shoppingCarts = GetDefaultShoppingCarts();
         }
     }
 }

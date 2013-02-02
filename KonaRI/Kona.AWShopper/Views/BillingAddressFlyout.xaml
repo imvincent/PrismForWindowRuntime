@@ -5,13 +5,14 @@
     xmlns:local="using:Kona.AWShopper.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:behaviors="using:Kona.AWShopper.Behaviors" xmlns:flyouts="using:Kona.Infrastructure.Flyouts"
+    xmlns:flyouts="using:Kona.Infrastructure.Flyouts" 
+    xmlns:behaviors="using:Kona.AWShopper.Behaviors"
     xmlns:Infrastructure="using:Kona.Infrastructure"
     mc:Ignorable="d"
-    d:DesignHeight="768"
-    d:DesignWidth="364"
+    d:DesignHeight="768" d:DesignWidth="364"
     Infrastructure:ViewModelLocator.AutoWireViewModel="true">
-    <Border BorderBrush="{StaticResource AWShopperFlyoutHeaderBackground}"
+
+    <Border BorderBrush="{StaticResource AWShopperFlyoutHeaderBackground }"
             BorderThickness="1,0,0,0">
         <Grid VerticalAlignment="Stretch" Background="{StaticResource AWShopperFlyoutContentBackground}">
 
@@ -23,7 +24,7 @@
 
             <!-- Header area for panel -->
             <Grid Background="{StaticResource AWShopperFlyoutHeaderBackground}"
-                  Grid.Row="0" HorizontalAlignment="Left" Width="363">
+                  Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
@@ -31,14 +32,14 @@
                 <StackPanel Orientation="Horizontal"
                             Grid.Column="0"
                             Margin="40, 32, 17, 13">
-                    <Button Command="{Binding GoBackCommand}" AutomationProperties.AutomationId="BillingAddressFlyoutBackButton"
+                    <Button Command="{Binding GoBackCommand}" AutomationProperties.AutomationId="EditBillingAddressFlyoutBackButton"
                             Margin="0,3,0,0"
                             Style="{StaticResource SettingsBackButtonStyle}" />
-                    <TextBlock x:Uid="AddBillingAddressTitle" Margin="10,0,0,0"
+                    <TextBlock Margin="10,0,0,0"
                                FontFamily="Segoe UI"
                                FontWeight="SemiLight"
                                FontSize="24"
-                               Text="Add Billling Address"
+                               Text="{Binding HeaderLabel}"
                                Foreground="White" />
                 </StackPanel>
             </Grid>
@@ -51,9 +52,11 @@
                       Grid.RowSpan="3">
 
                     <StackPanel x:Name="FlyoutContent">
-                        <local:BillingAddressUserControl behaviors:ChangeVisualState.VisualState="Flyout" x:Name="billingAddressUC" DataContext="{Binding BillingAddressUserControlViewModel}" Grid.Column="2" Grid.Row="1"/>
-                        <Button x:Uid="AddButton" AutomationProperties.AutomationId="AddButton" Content="Add" Background="{StaticResource AWShopperAccentBrush}" HorizontalAlignment="Stretch" Margin="20,20,20,0"
-                                    Command="{Binding AddCommand}" />
+                        <local:BillingAddressUserControl x:Name="billingAddressUC"  Grid.Column="2" Grid.Row="1" 
+                                                         behaviors:ChangeVisualState.VisualState="Flyout" 
+                                                         DataContext="{Binding BillingAddressViewModel}" />
+                        <Button x:Uid="SaveButton" AutomationProperties.AutomationId="SaveButton" Background="{StaticResource AWShopperAccentBrush}" Content="Save" HorizontalAlignment="Stretch" Margin="20,20,20,0"
+                                    Command="{Binding SaveCommand}" />
                     </StackPanel>
                 </Grid>
             </ScrollViewer>

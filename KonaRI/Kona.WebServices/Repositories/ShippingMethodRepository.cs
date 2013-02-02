@@ -45,7 +45,7 @@ namespace Kona.WebServices.Repositories
             throw new NotImplementedException();
         }
 
-        public bool Delete(ShippingMethod item)
+        public bool Delete(int id)
         {
             throw new NotImplementedException();
         }

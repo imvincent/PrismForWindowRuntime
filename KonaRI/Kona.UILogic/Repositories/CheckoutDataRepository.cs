@@ -6,6 +6,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Kona.UILogic.Models;
@@ -18,52 +19,14 @@ namespace Kona.UILogic.Repositories
         private readonly ISettingsStoreService _settingsStoreService;
         private ICollection<Address> _shippingAddresses;
         private ICollection<Address> _billingAddresses;
-        private ICollection<PaymentInfo> _paymentInfos;
+        private ICollection<PaymentMethod> _paymentMethods;
 
         public CheckoutDataRepository(ISettingsStoreService settingsStoreService)
         {
             _settingsStoreService = settingsStoreService;
         }
 
-        public ICollection<Address> RetrieveAllShippingAddresses()
-        {
-            if (_shippingAddresses == null)
-            {
-                _shippingAddresses = _settingsStoreService.RetrieveAllValues<Address>("ShippingAddress");
-            }
-            return _shippingAddresses;
-        }
-
-        public ICollection<Address> RetrieveAllBillingAddresses()
-        {
-            if (_billingAddresses == null)
-            {
-                _billingAddresses = _settingsStoreService.RetrieveAllValues<Address>("BillingAddress");
-            }
-            return _billingAddresses;
-        }
-
-        public ICollection<PaymentInfo> RetrieveAllPaymentInformation()
-        {
-            if (_paymentInfos == null)
-            {
-                _paymentInfos = _settingsStoreService.RetrieveAllValues<PaymentInfo>("PaymentInfo");
-            }
-
-            return _paymentInfos;
-        }
-
-        public PaymentInfo RetrievePaymentInformation(string id)
-        {
-            if (_paymentInfos == null)
-            {
-                _paymentInfos = _settingsStoreService.RetrieveAllValues<PaymentInfo>("PaymentInfo");
-            }
-            var paymentInfo = _paymentInfos.FirstOrDefault(p => p.Id == id);
-            return paymentInfo;
-        }
-
-        public Address RetrieveShippingAddress(string id)
+        public Address GetShippingAddress(string id)
         {
             if (_shippingAddresses == null)
             {
@@ -74,16 +37,69 @@ namespace Kona.UILogic.Repositories
         }
 
         // <snippet503>
-        public Address RetrieveBillingAddress(string id)
+        public Address GetBillingAddress(string id)
         {
             if (_billingAddresses == null)
             {
-               _billingAddresses = _settingsStoreService.RetrieveAllValues<Address>("BillingAddress");
+                _billingAddresses = _settingsStoreService.RetrieveAllValues<Address>("BillingAddress");
             }
             var billingAddress = _billingAddresses.FirstOrDefault(b => b.Id == id);
             return billingAddress;
         }
         // </snippet503>
+
+        public PaymentMethod GetPaymentMethod(string id)
+        {
+            if (_paymentMethods == null)
+            {
+                _paymentMethods = _settingsStoreService.RetrieveAllValues<PaymentMethod>("PaymentMethod");
+            }
+            var paymentMethod = _paymentMethods.FirstOrDefault(p => p.Id == id);
+            return paymentMethod;
+        }
+
+        public ICollection<Address> GetAllShippingAddresses()
+        {
+            if (_shippingAddresses == null)
+            {
+                _shippingAddresses = _settingsStoreService.RetrieveAllValues<Address>("ShippingAddress");
+            }
+            return _shippingAddresses;
+        }
+
+        public ICollection<Address> GetAllBillingAddresses()
+        {
+            if (_billingAddresses == null)
+            {
+               _billingAddresses = _settingsStoreService.RetrieveAllValues<Address>("BillingAddress");
+            }
+            return _billingAddresses;
+        }
+
+        public ICollection<PaymentMethod> GetAllPaymentMethods()
+        {
+            if (_paymentMethods == null)
+            {
+                _paymentMethods = _settingsStoreService.RetrieveAllValues<PaymentMethod>("PaymentMethod");
+            }
+
+            return _paymentMethods;
+        }
+
+        public Address GetDefaultShippingAddressValue()
+        {
+            return _settingsStoreService.GetDefaultValue<Address>("ShippingAddress");
+        }
+
+        public Address GetDefaultBillingAddressValue()
+        {
+            return _settingsStoreService.GetDefaultValue<Address>("BillingAddress");
+        }
+
+        public PaymentMethod GetDefaultPaymentMethodValue()
+        {
+            return _settingsStoreService.GetDefaultValue<PaymentMethod>("PaymentMethod");
+        }
 
         public Address SaveShippingAddress(Address address)
         {
@@ -92,12 +108,10 @@ namespace Kona.UILogic.Repositories
                 _shippingAddresses = _settingsStoreService.RetrieveAllValues<Address>("ShippingAddress");
             }
 
-            foreach (var shippingAddress in _shippingAddresses)
-            {
-                if (IsMatchingAddress(shippingAddress, address))
-                    return shippingAddress;
-            }
+            Address savedAddress = savedAddress = _shippingAddresses.FirstOrDefault(c => IsMatchingAddress(c, address));
+            if (savedAddress != null) return savedAddress;
 
+            address.Id = Guid.NewGuid().ToString();
             _shippingAddresses.Add(address);
             _settingsStoreService.SaveValue("ShippingAddress", address);
             return address;
@@ -111,39 +125,30 @@ namespace Kona.UILogic.Repositories
                 _billingAddresses = _settingsStoreService.RetrieveAllValues<Address>("BillingAddress");
             }
 
-            foreach (var billingAddress in _billingAddresses)
-            {
-                if (IsMatchingAddress(billingAddress, address))
-                    return billingAddress;
-            }
+            Address savedAddress = savedAddress = _billingAddresses.FirstOrDefault(c => IsMatchingAddress(c, address));
+            if (savedAddress != null) return savedAddress;
 
+            address.Id = Guid.NewGuid().ToString();
             _billingAddresses.Add(address);
             _settingsStoreService.SaveValue("BillingAddress", address);
             return address;
         }
         // </snippet502>
 
-        public PaymentInfo SavePaymentInfo(PaymentInfo paymentInfo)
+        public PaymentMethod SavePaymentMethod(PaymentMethod paymentMethod)
         {
-            if (_paymentInfos == null)
+            if (_paymentMethods == null)
             {
-                _paymentInfos = _settingsStoreService.RetrieveAllValues<PaymentInfo>("PaymentInfo");
+                _paymentMethods = _settingsStoreService.RetrieveAllValues<PaymentMethod>("PaymentMethod");
             }
 
-            foreach (var savedPaymentInfo in _paymentInfos)
-            {
-                if (IsMatchingPaymentInformation(savedPaymentInfo, paymentInfo))
-                    return savedPaymentInfo;
-            }
+            PaymentMethod savedPaymentMethod = _paymentMethods.FirstOrDefault(c => IsMatchingPaymentMethod(c, paymentMethod));
+            if (savedPaymentMethod != null) return savedPaymentMethod;
 
-            _paymentInfos.Add(paymentInfo);
-            _settingsStoreService.SaveValue("PaymentInfo", paymentInfo);
-            return paymentInfo;
-        }
-
-        public bool ContainsDefaultValue(string container)
-        {
-            return _settingsStoreService.ContainsDefaultValue(container);
+            paymentMethod.Id = Guid.NewGuid().ToString();
+            _paymentMethods.Add(paymentMethod);
+            _settingsStoreService.SaveValue("PaymentMethod", paymentMethod);
+            return paymentMethod;
         }
 
         public void SetAsDefaultShippingAddress(string id)
@@ -156,24 +161,9 @@ namespace Kona.UILogic.Repositories
             _settingsStoreService.SetAsDefaultValue("BillingAddress", id);
         }
 
-        public void SetAsDefaultPaymentInfo(string id)
+        public void SetAsDefaultPaymentMethod(string id)
         {
-            _settingsStoreService.SetAsDefaultValue("PaymentInfo", id);
-        }
-
-        public Address GetDefaultBillingAddressValue()
-        {
-            return _settingsStoreService.GetDefaultValue<Address>("BillingAddress");
-        }
-
-        public Address GetDefaultShippingAddressValue()
-        {
-            return _settingsStoreService.GetDefaultValue<Address>("ShippingAddress");
-        }
-
-        public PaymentInfo GetDefaultPaymentInfoValue()
-        {
-            return _settingsStoreService.GetDefaultValue<PaymentInfo>("PaymentInfo");
+            _settingsStoreService.SetAsDefaultValue("PaymentMethod", id);
         }
 
         public void DeleteShippingAddressValue(string id)
@@ -202,25 +192,20 @@ namespace Kona.UILogic.Repositories
             _settingsStoreService.DeleteValue("BillingAddress", id);
         }
 
-        public void DeletePaymentInfoValue(string id)
+        public void DeletePaymentMethodValue(string id)
         {
-            if (_paymentInfos == null)
+            if (_paymentMethods == null)
             {
-                _paymentInfos = _settingsStoreService.RetrieveAllValues<PaymentInfo>("PaymentInfo");
+                _paymentMethods = _settingsStoreService.RetrieveAllValues<PaymentMethod>("PaymentMethod");
             }
 
-            var elementToRemove = _paymentInfos.FirstOrDefault(p => p.Id == id);
+            var elementToRemove = _paymentMethods.FirstOrDefault(p => p.Id == id);
             if (elementToRemove == null) return;
-            _paymentInfos.Remove(elementToRemove);
-            _settingsStoreService.DeleteValue("PaymentInfo", id);
+            _paymentMethods.Remove(elementToRemove);
+            _settingsStoreService.DeleteValue("PaymentMethod", id);
         }
 
-        public void DeleteContainer(string container)
-        {
-            _settingsStoreService.DeleteContainer(container);
-        }
-
-        private bool IsMatchingAddress(Address firstAddress, Address secondAddress)
+        private static bool IsMatchingAddress(Address firstAddress, Address secondAddress)
         {
             if (firstAddress.FirstName != secondAddress.FirstName) return false;
             if (firstAddress.MiddleInitial != secondAddress.MiddleInitial) return false;
@@ -235,14 +220,14 @@ namespace Kona.UILogic.Repositories
             return true;
         }
 
-        private bool IsMatchingPaymentInformation(PaymentInfo firstPaymentInfo, PaymentInfo secondPaymentInfo)
+        private static bool IsMatchingPaymentMethod(PaymentMethod firstPaymentMethod, PaymentMethod secondPaymentMethod)
         {
-            if (firstPaymentInfo.CardNumber != secondPaymentInfo.CardNumber) return false;
-            if (firstPaymentInfo.CardVerificationCode != secondPaymentInfo.CardVerificationCode) return false;
-            if (firstPaymentInfo.CardholderName != secondPaymentInfo.CardholderName) return false;
-            if (firstPaymentInfo.ExpirationMonth != secondPaymentInfo.ExpirationMonth) return false;
-            if (firstPaymentInfo.ExpirationYear != secondPaymentInfo.ExpirationYear) return false;
-            if (firstPaymentInfo.Phone != secondPaymentInfo.Phone) return false;
+            if (firstPaymentMethod.CardNumber != secondPaymentMethod.CardNumber) return false;
+            if (firstPaymentMethod.CardVerificationCode != secondPaymentMethod.CardVerificationCode) return false;
+            if (firstPaymentMethod.CardholderName != secondPaymentMethod.CardholderName) return false;
+            if (firstPaymentMethod.ExpirationMonth != secondPaymentMethod.ExpirationMonth) return false;
+            if (firstPaymentMethod.ExpirationYear != secondPaymentMethod.ExpirationYear) return false;
+            if (firstPaymentMethod.Phone != secondPaymentMethod.Phone) return false;
 
             return true;
         }

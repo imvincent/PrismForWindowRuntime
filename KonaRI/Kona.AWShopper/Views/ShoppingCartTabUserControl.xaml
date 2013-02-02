@@ -87,7 +87,7 @@
     </UserControl.Resources>
 
     <Grid>
-        <Button Command="{Binding ShoppingCartTabCommand}" Width="100" Height="100" BorderBrush="White" Style="{StaticResource ButtonStyle1}" AutomationProperties.AutomationId="ShoppingCartButton">
+        <Button x:Uid="ShoppingCartButton" AutomationProperties.AutomationId="ShoppingCartButton" Command="{Binding ShoppingCartTabCommand}" Width="100" Height="100" BorderBrush="White" Style="{StaticResource ButtonStyle1}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding ItemCount}" Width="Auto" MaxWidth="27" HorizontalAlignment="Right"  FontSize="16" FontWeight="ExtraBold" VerticalAlignment="Center" />
                 <Viewbox Width="40" Height="40" Grid.Column="1" HorizontalAlignment="Left" Margin="-5,0,0,10">

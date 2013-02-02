@@ -16,7 +16,7 @@
     <!-- Application Background -->
     <Color x:Key="AWShopperBackground">#FF2C3339"</Color>
     <SolidColorBrush x:Name="ApplicationPageBackgroundThemeBrush" Color="{StaticResource AWShopperBackground}"/>
-    
+
     <!-- ListView Selection Color -->
     <Color x:Key="ItemSelectionColor">#FFE2742F</Color>
     <SolidColorBrush x:Name="AWShopperItemSelectionColor" Color="{StaticResource ItemSelectionColor}"/>
@@ -330,6 +330,7 @@
         <Setter Property="FontFamily" Value="{StaticResource ContentControlThemeFontFamily}"/>
     </Style>
 
+    <!-- Top AppBar style-->
     <Style x:Key="HouseStyle" TargetType="ContentControl">
         <Setter Property="Template">
             <Setter.Value>
@@ -530,6 +531,7 @@
         </Setter>
     </Style>
 
+    <!-- Bottom AppBar style-->
     <Style x:Name="AppBarStyle" TargetType="AppBar">
         <Setter Property="Background" Value="Black" />
         <Setter Property="Opacity" Value="0.8" />
@@ -537,6 +539,7 @@
         <Setter Property="Height" Value="Auto" />
     </Style>
 
+    <!-- Flyouts style -->
     <Style x:Key="BasicFlyoutTextStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="Black"/>
         <Setter Property="FontSize" Value="{StaticResource ControlContentThemeFontSize}"/>
@@ -745,6 +748,15 @@
         <Setter Property="BorderBrush" Value="Black" />
     </Style>
 
+    <Style x:Key="AddCheckoutDataButtonStyle" TargetType="Button">
+        <Setter Property="FontFamily" Value="Segoe UI Symbol"/>
+        <Setter Property="FontSize" Value="34"/>
+        <Setter Property="Width" Value="370" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Background" Value="{StaticResource AWShopperItemForegroundBrush}" />
+    </Style>
+
     <!-- Data Templates -->
     <DataTemplate x:Key="KonaRIItemTemplate">
         <Grid>
@@ -754,13 +766,13 @@
             </Grid.RowDefinitions>
             <Image Stretch="UniformToFill" Source="{Binding Image}" AutomationProperties.Name="{Binding Title}"/>
             <StackPanel VerticalAlignment="Bottom" Grid.Row="1" Background="{StaticResource ListViewItemOverlayBackgroundThemeBrush}" Height="100">
-                <TextBlock Text="{Binding ListPrice}" Foreground="White" FontSize="26" Margin="15,0,15,0" FontWeight="ExtraBold"></TextBlock>
+                <TextBlock Text="{Binding SalePrice}" Foreground="White" FontSize="26" Margin="15,0,15,0" FontWeight="ExtraBold"></TextBlock>
                 <TextBlock Text="{Binding Title}" Foreground="{StaticResource ListViewItemOverlayForegroundThemeBrush}" Style="{StaticResource TitleTextStyle}" TextWrapping="NoWrap" Margin="15,0,15,0"/>
                 <TextBlock Text="{Binding Description}" Foreground="{StaticResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextStyle}" TextWrapping="NoWrap" Margin="15,0,15,10"/>
             </StackPanel>
         </Grid>
     </DataTemplate>
-    
+
     <DataTemplate x:Key="ShoppingCartItemTemplate">
         <Grid Margin="0" Width="357" Height="162" Background="{StaticResource AWShopperItemBackgroundBrush}">
             <Grid.ColumnDefinitions>
@@ -841,8 +853,8 @@
                             <RowDefinition />
                             <RowDefinition />
                         </Grid.RowDefinitions>
-                    <TextBlock x:Uid="Quantity" Grid.Row="0" HorizontalAlignment="Center" FontSize="13" Foreground="White" Text="QTY" />
-                     <TextBlock Grid.Row="1" Text="{Binding Quantity}" Margin="0,-5,0,0" FontSize="18" HorizontalAlignment="Center" Foreground="{StaticResource AWShopperItemSelectionColor}"></TextBlock>
+                        <TextBlock x:Uid="Quantity" Grid.Row="0" HorizontalAlignment="Center" FontSize="13" Foreground="White" Text="QTY" />
+                        <TextBlock Grid.Row="1" Text="{Binding Quantity}" Margin="0,-5,0,0" FontSize="18" HorizontalAlignment="Center" Foreground="{StaticResource AWShopperItemSelectionColor}"></TextBlock>
                     </Grid>
                 </Border>
             </Grid>
@@ -872,19 +884,31 @@
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
-                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="60" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="20"/>
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <TextBlock Text="{Binding DataType}" Grid.Row="0" Grid.Column="0" Margin="5,0" FontSize="26"></TextBlock>
+                <TextBlock Text="{Binding Title}" Grid.Row="0" Margin="5,0" FontSize="26"></TextBlock>
                 <TextBlock Text="{Binding FirstLine, Mode=TwoWay}" Grid.Row="1" Foreground="{StaticResource AWShopperItemForegroundBrush}" Margin="5,0"></TextBlock>
                 <TextBlock Text="{Binding SecondLine, Mode=TwoWay}" Grid.Row="2" Foreground="{StaticResource AWShopperItemForegroundBrush}" Margin="5,0"></TextBlock>
-                <TextBlock Text="{Binding Name, Mode=TwoWay}" Grid.Row="3" Foreground="{StaticResource AWShopperItemForegroundLighterBrush}" Margin="5,0" VerticalAlignment="Bottom"></TextBlock>
+                <TextBlock Text="{Binding BottomLine, Mode=TwoWay}" Grid.Row="3" Margin="5,20,0,0" Foreground="{StaticResource AWShopperItemForegroundLighterBrush}" VerticalAlignment="Center"></TextBlock>
+                <Image Source="{Binding LogoUri}" Grid.Row="3" Grid.Column="1" Margin="0,10,15,0" VerticalAlignment="Center" />
             </Grid>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="SmallCheckoutDataTemplate">
+        <Grid Width="390" Height="50" Background="{StaticResource AWShopperItemForegroundBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25" />
+            </Grid.RowDefinitions>
+            <TextBlock Text="{Binding FirstLine, Mode=TwoWay}" Grid.Row="0" Margin="10,5,0,0"></TextBlock>
+            <TextBlock Text="{Binding SecondLine, Mode=TwoWay}" Grid.Row="1" Margin="10,0,0,0"></TextBlock>
         </Grid>
     </DataTemplate>
 </ResourceDictionary>

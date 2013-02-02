@@ -6,11 +6,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Kona.Infrastructure;
 using ValidationQuickStart.Models;
@@ -19,25 +17,26 @@ namespace ValidationQuickStart.ViewModels
 {
     public class UserInfoViewModel : ViewModel
     {
-        private IUserInfo _userInfo;
+        private UserInfo _userInfo;
         private ReadOnlyCollection<string> _allErrors;
 
-        // <snippet1306> 
         public UserInfoViewModel()
             : this(new UserInfo())
         {
         }
 
-        public UserInfoViewModel(IUserInfo userInfo)
+        public UserInfoViewModel(UserInfo userInfo)
         {
             _userInfo = userInfo;
-            _userInfo.ErrorsChanged += OnErrorsChanged;
+            if (_userInfo != null)
+            {
+                _userInfo.ErrorsChanged += OnErrorsChanged;
+            }
             _allErrors = BindableValidator.EmptyErrorsCollection;
             ValidateCommand = new DelegateCommand(Validate);
         }
-        // </snippet1306>
 
-        public IUserInfo UserInfo
+        public UserInfo UserInfo
         {
             get { return _userInfo; }
             set { SetProperty(ref _userInfo, value); }
@@ -56,11 +55,11 @@ namespace ValidationQuickStart.ViewModels
             _userInfo.ValidateProperties();
         }
 
-        // <snippet1308>
+        // <snippet1306>
         private void OnErrorsChanged(object sender, DataErrorsChangedEventArgs e)
         {
             AllErrors = new ReadOnlyCollection<string>(_userInfo.GetAllErrors().Values.SelectMany(c => c).ToList());
         }
-        // </snippet1308>
+        // </snippet1306>
     }
 }

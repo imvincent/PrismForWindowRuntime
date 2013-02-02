@@ -50,18 +50,19 @@ namespace Kona.AWShopper
 
         private static ISettingsCharmService CreateSettingsCharmService()
         {
+            // TODO: use localized strings here
             Func<IEnumerable<FlyoutView>> flyoutsFactory = () => new List<FlyoutView>()
-                        {
-                            new SignInFlyout("signIn", "Login"),
-                            new SignOutFlyout("signOut", "Logout"),
-                            new PaymentMethodFlyout("newPaymentMethod", "Add Payment Information"),
-                            new BillingAddressFlyout("newBillingAddress", "Add Billing Address"),
-                            new ShippingAddressFlyout("newShippingAddress", "Add Shipping Address"),
-                            new EditPaymentMethodFlyout("editPaymentMethod", "Edit Payment Information") { ExcludeFromSettingsPane = true },
-                            new EditShippingAddressFlyout("editShippingAddress", "Edit Shipping Address") { ExcludeFromSettingsPane = true },
-                            new EditBillingAddressFlyout("editBillingAddress", "Edit Billing Address") { ExcludeFromSettingsPane = true },
-                            new ChangeDefaultsFlyout("changeDefaults", "Change Defaults"),
-                        };
+                {
+                    new SignInFlyout("signIn", "Login"),
+                    new SignOutFlyout("signOut", "Logout"),
+                    new ShippingAddressFlyout("addShippingAddress", "Add Shipping Address"),
+                    new BillingAddressFlyout("addBillingAddress", "Add Billing Address"),
+                    new PaymentMethodFlyout("addPaymentMethod", "Add Payment Information"),
+                    new ShippingAddressFlyout("editShippingAddress", "Edit Shipping Address") { ExcludeFromSettingsPane = true },
+                    new BillingAddressFlyout("editBillingAddress", "Edit Billing Address") { ExcludeFromSettingsPane = true },
+                    new PaymentMethodFlyout("editPaymentMethod", "Edit Payment Information") { ExcludeFromSettingsPane = true },
+                    new ChangeDefaultsFlyout("changeDefaults", "Change Defaults"),
+                };
 
             var settingsCharmService = new SettingsCharmService(flyoutsFactory);
             SettingsPane.GetForCurrentView().CommandsRequested += settingsCharmService.OnCommandsRequested;
@@ -89,7 +90,7 @@ namespace Kona.AWShopper
 
             // Set up the list of known types for the SuspensionManager
             SuspensionManager.KnownTypes.Add(typeof(Address));
-            SuspensionManager.KnownTypes.Add(typeof(PaymentInfo));
+            SuspensionManager.KnownTypes.Add(typeof(PaymentMethod));
             SuspensionManager.KnownTypes.Add(typeof(UserInfo));
             SuspensionManager.KnownTypes.Add(typeof(ReadOnlyDictionary<string, ReadOnlyCollection<string>>));
            
@@ -120,15 +121,12 @@ namespace Kona.AWShopper
                                                                                                               new ShippingAddressUserControlViewModel(checkoutDataRepository, new LocationServiceProxy(), _resourceLoader),
                                                                                                               new BillingAddressUserControlViewModel(checkoutDataRepository, new LocationServiceProxy(), _resourceLoader), 
                                                                                                               new PaymentMethodUserControlViewModel(checkoutDataRepository), _settingsCharmService));
-            ViewModelLocator.Register(typeof(PaymentMethodFlyout), () => new PaymentMethodFlyoutViewModel(new PaymentMethodUserControlViewModel(null), checkoutDataRepository));
-            ViewModelLocator.Register(typeof(ShippingAddressFlyout), () => new ShippingAddressFlyoutViewModel(new ShippingAddressUserControlViewModel(null, new LocationServiceProxy(), _resourceLoader), checkoutDataRepository));
-            ViewModelLocator.Register(typeof(BillingAddressFlyout), () => new BillingAddressFlyoutViewModel(new BillingAddressUserControlViewModel(null, new LocationServiceProxy(), _resourceLoader), checkoutDataRepository));
-            ViewModelLocator.Register(typeof(ShoppingCartTabUserControl), () => new ShoppingCartTabUserControlViewModel(_shoppingCartRepository, _eventAggregator, _navigationService, new AlertMessageService(), _resourceLoader));
-            ViewModelLocator.Register(typeof(EditPaymentMethodFlyout), () => new EditPaymentMethodFlyoutViewModel(new PaymentMethodUserControlViewModel(null), checkoutDataRepository));
-            ViewModelLocator.Register(typeof(EditShippingAddressFlyout), () => new EditShippingAddressFlyoutViewModel(new ShippingAddressUserControlViewModel(null, new LocationServiceProxy(), _resourceLoader), checkoutDataRepository));
-            ViewModelLocator.Register(typeof(EditBillingAddressFlyout), () => new EditBillingAddressFlyoutViewModel(new BillingAddressUserControlViewModel(null, new LocationServiceProxy(), _resourceLoader), checkoutDataRepository));
+            ViewModelLocator.Register(typeof(ShippingAddressFlyout), () => new ShippingAddressFlyoutViewModel(new ShippingAddressUserControlViewModel(checkoutDataRepository, new LocationServiceProxy(), _resourceLoader), _resourceLoader));
+            ViewModelLocator.Register(typeof(BillingAddressFlyout), () => new BillingAddressFlyoutViewModel(new BillingAddressUserControlViewModel(checkoutDataRepository, new LocationServiceProxy(), _resourceLoader), _resourceLoader));
+            ViewModelLocator.Register(typeof(PaymentMethodFlyout), () => new PaymentMethodFlyoutViewModel(new PaymentMethodUserControlViewModel(checkoutDataRepository), _resourceLoader));
+            ViewModelLocator.Register(typeof(ShoppingCartTabUserControl), () => new ShoppingCartTabUserControlViewModel(_shoppingCartRepository, _eventAggregator, _navigationService, new AlertMessageService(), _resourceLoader, _accountService));
             ViewModelLocator.Register(typeof(TopAppBarUserControl), () => new TopAppBarUserControlViewModel(_navigationService));
-            ViewModelLocator.Register(typeof(ChangeDefaultsFlyout), () => new ChangeDefaultsFlyoutViewModel(checkoutDataRepository));
+            ViewModelLocator.Register(typeof(ChangeDefaultsFlyout), () => new ChangeDefaultsFlyoutViewModel(checkoutDataRepository, _resourceLoader));
             //</snippet302>
         }
     }

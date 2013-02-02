@@ -31,7 +31,7 @@ namespace EventAggregatorQuickstart
         public DelegateCommand AddItemToCartUIThreadCommand { get; private set; }
         public DelegateCommand AddItemToCartBackgroundThreadCommand { get; private set; }
 
-        // <snippet3103>
+        // <snippet3102>
         private void PublishOnUIThread()
         {
             AddItemToCart();
@@ -64,6 +64,6 @@ namespace EventAggregatorQuickstart
                 _cart.Items.Add(item);
             }
         }
-        // </snippet3103>
+        // </snippet3102>
     }
 }

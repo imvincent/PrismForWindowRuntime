@@ -10,6 +10,7 @@ using System.Collections.Generic;
 
 namespace EventAggregatorQuickstart
 {
+    // <snippet3101>
     public class ShoppingCart
     {
         public ShoppingCart()
@@ -19,4 +20,5 @@ namespace EventAggregatorQuickstart
         public string UserId { get; set; }
         public List<ShoppingCartItem> Items { get; set; }
     }
+    // </snippet3101>
 }

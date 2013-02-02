@@ -27,5 +27,7 @@ namespace Kona.UILogic.Models
 
         public IEnumerable<Product> Products { get; set; }
 
+        public int TotalNumberOfItems { get; set; }
+
     }
 }

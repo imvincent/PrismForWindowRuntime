@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Kona.WebServices.Models;
 using Kona.WebServices.Repositories;
+using Kona.WebServices.Strings;
 
 namespace Kona.WebServices.Controllers
 {
@@ -53,13 +54,13 @@ namespace Kona.WebServices.Controllers
         {
             if (order == null)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Invalid order");
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, Resources.InvalidOrder);
             }
 
             if (ModelState.IsValid)
             {
                 order = _orderRepository.Create(order);
-                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, order);
+                var response = Request.CreateResponse(HttpStatusCode.Created, order);
                 response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = order.Id }));
                 return response;
             }
@@ -75,24 +76,24 @@ namespace Kona.WebServices.Controllers
         {
             if (order == null || id != order.Id)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Invalid order");
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, Resources.InvalidOrder);
             }
 
             if (ModelState.IsValid)
             {
                 // TODO: add business logic validation (check stock, approve transaction, etc)
                 // for instance, validate the transaction before performing the purchase
-                var result = order.PaymentInfo.CardNumber != "22222" ? "APPROVED" : string.Format(CultureInfo.CurrentCulture, "Invalid Payment Info. Reason: {0}", "DECLINED_CONTACT_YOUR_BANK");
+                var result = order.PaymentMethod.CardNumber != "22222" ? "APPROVED" : string.Format(CultureInfo.CurrentCulture, "Invalid Payment Method. Reason: {0}", "DECLINED_CONTACT_YOUR_BANK");
 
                 if (result == "APPROVED")
                 {
                     // TODO: Process the order
-                    _orderRepository.Delete(order);
+                    _orderRepository.Delete(order.Id);
                     return Request.CreateResponse();
                 }
                 else
                 {
-                    ModelState.AddModelError("order.PaymentInfo", result);
+                    ModelState.AddModelError("order.PaymentMethod", result);
                 }
             }
 

@@ -57,13 +57,16 @@ namespace Kona.Infrastructure.Flyouts
                 Edge = (SettingsPane.Edge == SettingsEdgeLocation.Right) ? EdgeTransitionLocation.Right : EdgeTransitionLocation.Left
             });
 
-            // Place the Flyout inside the Popup
+            // Place the Flyout inside the Popup and open it
             _popup.Child = this;
             _popup.IsOpen = true;
 
-            var viewModel = this.DataContext as IFlyoutViewModel;
+            // If the Flyout has a DataContext, call the viewModel.Open method and set the set the Close and GoBack actions for future use
+            var viewModel = DataContext as IFlyoutViewModel;
             if (viewModel != null)
             {
+                viewModel.CloseFlyout = Close;
+                viewModel.GoBack = GoBack;
                 viewModel.Open(parameter, successAction);
             }
         }

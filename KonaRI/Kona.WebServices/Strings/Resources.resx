@@ -132,4 +132,7 @@
   <data name="ErrorRequired" xml:space="preserve">
     <value>This field is required</value>
   </data>
+  <data name="InvalidOrder" xml:space="preserve">
+    <value>Invalid order</value>
+  </data>
 </root>

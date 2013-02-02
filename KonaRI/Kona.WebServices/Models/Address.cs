@@ -95,7 +95,7 @@ namespace Kona.WebServices.Models
                     if (isValid) break;
                 }
             }
-            catch
+            catch (ArgumentNullException)
             {
                 isValid = false;
             }

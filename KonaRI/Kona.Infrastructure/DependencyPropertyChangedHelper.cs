@@ -60,12 +60,16 @@ namespace Kona.Infrastructure
         // When our dependency property gets set by the binding, trigger the property changed event that the user of this helper can subscribe to
         private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((DependencyPropertyChangedHelper)d).PropertyChanged(d, e);
+            var handler = ((DependencyPropertyChangedHelper)d).PropertyChanged;
+            if (handler != null)
+            {
+                handler(d, e);
+            }
         }
 
         /// <summary>
         /// This event will be raised whenever the source object property changes, and carries along the before and after values
         /// </summary>
-        public event DependencyPropertyChangedEventHandler PropertyChanged = delegate { };
+        public event DependencyPropertyChangedEventHandler PropertyChanged;
     }
 }

@@ -248,7 +248,6 @@ namespace Microsoft.Patterns.PubSubEvents.Tests
             Assert.IsTrue((PubSubEvent.Contains(emptyAction.Action)));
         }
 
-#if !SILVERLIGHT
         [TestMethod]
         public void InlineDelegateDeclarationsDoesNotGetCollectedIncorrectlyWithWeakReferences()
         {
@@ -260,7 +259,6 @@ namespace Microsoft.Patterns.PubSubEvents.Tests
 
             Assert.IsTrue(published);
         }
-#endif
 
         [TestMethod]
         public void ShouldNotGarbageCollectDelegateReferenceWhenUsingKeepAlive()

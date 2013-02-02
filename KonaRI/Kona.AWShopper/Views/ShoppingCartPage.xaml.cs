@@ -7,7 +7,7 @@
 
 
 using Kona.Infrastructure;
-using Kona.UILogic.ViewModels;
+using Kona.Infrastructure.Interfaces;
 using Windows.UI.Xaml;
 
 namespace Kona.AWShopper.Views

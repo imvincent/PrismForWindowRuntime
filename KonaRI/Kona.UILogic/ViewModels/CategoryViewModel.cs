@@ -48,9 +48,9 @@ namespace Kona.UILogic.ViewModels
 
         public string Title { get { return _category.Title; } }
 
-        public IEnumerable<CategoryViewModel> Subcategories { get; private set; }
-
         public IEnumerable<ProductViewModel> Products { get; private set; }
+
+        public int TotalNumberOfItems { get { return _category.TotalNumberOfItems; } }
 
         public ICommand CategoryNavigationCommand { get; private set; }
 

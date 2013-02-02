@@ -9,11 +9,9 @@
     xmlns:infrastructure="using:Kona.Infrastructure"
     mc:Ignorable="d">
 
-    <!-- <snippet1301> -->
     <Page.DataContext>
         <vm:UserInfoViewModel />
     </Page.DataContext>
-    <!-- </snippet1301> -->
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
         <Grid x:Name="ContentGrid" Margin="40, 0">
@@ -29,17 +27,18 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="500" />
             </Grid.ColumnDefinitions>
 
             <!-- Page Header -->
             <TextBlock x:Name="Header" Text="Validation Quickstart" Style="{StaticResource HeaderTextStyle}" VerticalAlignment="Center" />
 
-            <!-- <snippet1302> -->
             <!-- First Name -->
             <TextBlock x:Name="FirstNameTitle" x:Uid="FirstNameTitle" Grid.Row="1" Style="{StaticResource BasicTextStyle}" Text="First Name" />
+            <!-- <snippet1303> -->
             <TextBox x:Name="FirstNameValue" Grid.Row="2" Text="{Binding UserInfo.FirstName, Mode=TwoWay}"
                      behaviors:HighlightOnErrors.PropertyErrors="{Binding UserInfo.Errors[FirstName]}" />
+            <!-- </snippet1303> -->
 
             <!-- Middle Name -->
             <TextBlock x:Name="MiddleNameTitle" x:Uid="MiddleNameTitle" Grid.Row="3" Style="{StaticResource BasicTextStyle}" Text="Middle Name" />
@@ -50,13 +49,11 @@
             <TextBlock x:Name="LastNameTitle" x:Uid="LastNameTitle" Grid.Row="5" Style="{StaticResource BasicTextStyle}" Text="Last Name" />
             <TextBox x:Name="LastNameValue" Grid.Row="6" Text="{Binding UserInfo.LastName, Mode=TwoWay}"
                      behaviors:HighlightOnErrors.PropertyErrors="{Binding UserInfo.Errors[LastName]}" />
-            <!-- </snippet1302> -->
 
             <!-- Menu -->
             <Button x:Name="Validate" Grid.Row="7" Command="{Binding ValidateCommand}">Validate</Button>
 
             <!-- Errors -->
-            <!-- <snippet1303> -->
             <ItemsControl x:Name="AllErrors" Grid.Row="8" ItemsSource="{Binding AllErrors}" >
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -64,10 +61,9 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <!-- </snippet1303> -->
         </Grid>
-		<VisualStateManager.VisualStateGroups>
-    		<VisualStateGroup x:Name="ApplicationViewStates">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="ApplicationViewStates">
                 <VisualState x:Name="FullScreenLandscape" />
                 <VisualState x:Name="Filled" />
                 <VisualState x:Name="FullScreenPortrait" />
@@ -84,7 +80,7 @@
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
-			</VisualStateGroup>
-    	</VisualStateManager.VisualStateGroups>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
 </infrastructure:VisualStateAwarePage>

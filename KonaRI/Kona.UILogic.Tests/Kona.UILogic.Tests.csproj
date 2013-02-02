@@ -116,6 +116,7 @@
     <Compile Include="Mocks\MockCacheService.cs" />
     <Compile Include="Mocks\MockCheckoutDataRepository.cs" />
     <Compile Include="Mocks\MockCredentialStore.cs" />
+    <Compile Include="Mocks\MockShippingMethodService.cs" />
     <Compile Include="Mocks\MockShoppingCartUpdatedEvent.cs" />
     <Compile Include="Mocks\MockEventAggregator.cs" />
     <Compile Include="Mocks\MockIdentityService.cs" />

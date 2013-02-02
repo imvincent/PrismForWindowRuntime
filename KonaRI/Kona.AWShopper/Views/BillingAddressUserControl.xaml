@@ -29,50 +29,66 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
-                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="150" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
             <!-- First Name -->
             <TextBlock x:Name="TitleFirstName" x:Uid="TitleFirstName" Style="{StaticResource FormTitleStyle}"
                         Grid.Row="0" Grid.Column="0" Text="First Name*" />
-            <controls:FormFieldTextBox x:Name="FirstName" AutomationProperties.AutomationId="FirstNameTextBox" Style="{StaticResource FormFieldStyle}"
-                                        Grid.Row="1" Grid.Column="0" AutomationProperties.IsRequiredForForm="True"
-                                        Text="{Binding Address.FirstName, Mode=TwoWay}"
-                                        IsEnabled="{Binding IsEnabled}"
-                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[FirstName]}" />
-            <TextBlock  x:Name="ErrorsFirstName" Style="{StaticResource ErrorMessageStyle}"
-			            Grid.Row="2" Grid.Column="0"
-						Text="{Binding Address.Errors[FirstName], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
+            <controls:FormFieldTextBox x:Name="FirstName" 
+                                       AutomationProperties.AutomationId="FirstNameTextBox"
+                                       AutomationProperties.IsRequiredForForm="True"
+                                       AutomationProperties.LabeledBy="{Binding ElementName=TitleFirstName}"
+                                       Style="{StaticResource FormFieldStyle}"
+                                       Grid.Row="1" Grid.Column="0" 
+                                       Text="{Binding Address.FirstName, Mode=TwoWay}"
+                                       IsEnabled="{Binding IsEnabled}"
+                                       behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[FirstName]}" />
+            <TextBlock x:Name="ErrorsFirstName" Style="{StaticResource ErrorMessageStyle}"
+			           Grid.Row="2" Grid.Column="0"
+					   Text="{Binding Address.Errors[FirstName], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
 
             <!-- Middle Initial -->
             <TextBlock x:Name="TitleMiddleInitial" x:Uid="TitleMiddleInitial" Style="{StaticResource FormTitleStyle}"
                            Grid.Row="0" Grid.Column="1" Text="Middle Initial" />
-            <controls:FormFieldTextBox x:Name="MiddleInitial" AutomationProperties.AutomationId="MiddleInitialTextBox" Style="{StaticResource FormFieldStyle}"
+            <controls:FormFieldTextBox x:Name="MiddleInitial" 
+                                       AutomationProperties.AutomationId="MiddleInitialTextBox"
+                                       AutomationProperties.LabeledBy="{Binding ElementName=TitleMiddleInitial}"
+                                       Style="{StaticResource FormFieldStyle}"
                                         Grid.Row="1" Grid.Column="1" 
                                         Text="{Binding Address.MiddleInitial, Mode=TwoWay}"
                                         IsEnabled="{Binding IsEnabled}"
                                         behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[MiddleInitial]}" Height="32" VerticalAlignment="Top" />
+            <TextBlock x:Name="ErrorsMiddleInitial" Style="{StaticResource ErrorMessageStyle}"
+			           Grid.Row="2" Grid.Column="1"
+					   Text="{Binding Address.Errors[MiddleInitial], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
 
             <!-- Last Name -->
             <TextBlock x:Name="TitleLastName" x:Uid="TitleLastName" Style="{StaticResource FormTitleStyle}"
                            Grid.Row="0" Grid.Column="2" Text="Last Name*" />
-            <controls:FormFieldTextBox x:Name="LastName" AutomationProperties.AutomationId="LastNameTextBox" Style="{StaticResource FormFieldStyle}"
-                                        Grid.Row="1" Grid.Column="2" AutomationProperties.IsRequiredForForm="True"
+            <controls:FormFieldTextBox x:Name="LastName" 
+                                       AutomationProperties.AutomationId="LastNameTextBox" 
+                                       AutomationProperties.IsRequiredForForm="True"
+                                       AutomationProperties.LabeledBy="{Binding ElementName=TitleLastName}"
+                                       Style="{StaticResource FormFieldStyle}"
+                                        Grid.Row="1" Grid.Column="2" 
                                         Text="{Binding Address.LastName, Mode=TwoWay}"
                                         IsEnabled="{Binding IsEnabled}"
                                         behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[LastName]}" />
-            <TextBlock  x:Name="ErrorsLastName" Style="{StaticResource ErrorMessageStyle}"
-			            Grid.Row="2" Grid.Column="2"
-						Text="{Binding Address.Errors[LastName], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
+            <TextBlock x:Name="ErrorsLastName" Style="{StaticResource ErrorMessageStyle}"
+			           Grid.Row="2" Grid.Column="2"
+					   Text="{Binding Address.Errors[LastName], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
         </Grid>
 
         <!-- Address -->
         <Grid x:Name="AddressGrid" Grid.Row="1">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -87,21 +103,31 @@
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="TitleAddress" x:Uid="TitleAddress" Style="{StaticResource FormTitleStyle}"
                            Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Text="Address*" />
-            <controls:FormFieldTextBox x:Name="Address" AutomationProperties.AutomationId="AddressTextBox" Style="{StaticResource FormFieldStyle}"
+            <controls:FormFieldTextBox x:Name="Address" 
+                                       AutomationProperties.AutomationId="AddressTextBox" 
+                                       AutomationProperties.IsRequiredForForm="True"
+                                       AutomationProperties.LabeledBy="{Binding ElementName=TitleAddress}"
+                                       Style="{StaticResource FormFieldStyle}"
                                         Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
                                         Text="{Binding Address.StreetAddress, Mode=TwoWay}"
-                                        IsEnabled="{Binding IsEnabled}" AutomationProperties.IsRequiredForForm="True"
+                                        IsEnabled="{Binding IsEnabled}" 
                                         behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[StreetAddress]}"  />
-            <TextBlock  x:Name="ErrorsAddress" Style="{StaticResource ErrorMessageStyle}"
-			            Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
-						Text="{Binding Address.Errors[StreetAddress], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
+            <TextBlock x:Name="ErrorsAddress" Style="{StaticResource ErrorMessageStyle}"
+			           Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
+					   Text="{Binding Address.Errors[StreetAddress], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
 
             <TextBlock x:Name="TitleOptionalAddress" x:Uid="TitleOptionalAddress" Style="{StaticResource FormTitleStyle}"
                        Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" Text="Optional Address" />
-            <controls:FormFieldTextBox x:Name="OptionalAddress" AutomationProperties.AutomationId="OptionalAddressTextBox" Style="{StaticResource FormFieldStyle}"  
-                                           Grid.Row="4" Grid.Column="0"
-                                           IsEnabled="{Binding IsEnabled}"
-                                           Text="{Binding Address.OptionalAddress, Mode=TwoWay}" Grid.ColumnSpan="4" />
+            <controls:FormFieldTextBox x:Name="OptionalAddress" 
+                                       AutomationProperties.AutomationId="OptionalAddressTextBox" 
+                                       AutomationProperties.LabeledBy="{Binding ElementName=TitleOptionalAddress}"
+                                       Style="{StaticResource FormFieldStyle}"  
+                                       Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4"
+                                       IsEnabled="{Binding IsEnabled}" Margin="0,0,20,0"
+                                       Text="{Binding Address.OptionalAddress, Mode=TwoWay}" />
+            <TextBlock x:Name="ErrorsOptionalAddress" Style="{StaticResource ErrorMessageStyle}"
+			           Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4"
+					   Text="{Binding Address.Errors[OptionalAddress], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
         </Grid>
 
         <!-- Area -->
@@ -124,43 +150,47 @@
             <!--City-->
             <TextBlock x:Name="TitleArea" x:Uid="TitleArea" Style="{StaticResource FormTitleStyle}"
                            Grid.Row="0" Grid.Column="0" Text="Area" />
-            <controls:FormFieldTextBox x:Name="City" x:Uid="City" AutomationProperties.AutomationId="CityTextBox" Style="{StaticResource FormFieldStyle}"
-                                        Grid.Row="1" Grid.Column="0"
-                                        Text="{Binding Address.City, Mode=TwoWay}"
-                                        IsEnabled="{Binding IsEnabled}"
-                                        Watermark="City" AutomationProperties.IsRequiredForForm="True"
-                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[City]}" />
-            <TextBlock  x:Name="ErrorsCity" Style="{StaticResource ErrorMessageStyle}"
-			            Grid.Row="2" Grid.Column="0"
-						Text="{Binding Address.Errors[City], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
+            <controls:FormFieldTextBox x:Name="City" x:Uid="City" 
+                                       AutomationProperties.AutomationId="CityTextBox" 
+                                       AutomationProperties.IsRequiredForForm="True"
+                                       Style="{StaticResource FormFieldStyle}"
+                                       Grid.Row="1" Grid.Column="0"
+                                       Text="{Binding Address.City, Mode=TwoWay}"
+                                       IsEnabled="{Binding IsEnabled}"
+                                       Watermark="City" 
+                                       behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[City]}" />
+            <TextBlock x:Name="ErrorsCity" Style="{StaticResource ErrorMessageStyle}"
+			           Grid.Row="2" Grid.Column="0"
+				       Text="{Binding Address.Errors[City], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
 
             <!-- State -->
-            <ComboBox x:Name="State" AutomationProperties.AutomationId="StateComboBox"
-                        Style="{StaticResource FormComboStyle}"
-                        Grid.Row="1" Grid.Column="1"
-                        ItemsSource="{Binding States}"
-                        DisplayMemberPath="Value"
-                        SelectedValuePath="Id"
-                        SelectedValue="{Binding Address.State, Mode=TwoWay}"
-                        behaviors:ComboBoxKeyboardSelection.Enabled="True"
-                        IsEnabled="{Binding IsEnabled}"
-                        AutomationProperties.IsRequiredForForm="True"
-                        behaviors:HighlightFormComboOnErrors.PropertyErrors="{Binding Address.Errors[State]}" />
-            <TextBlock  x:Name="ErrorsState" Style="{StaticResource ErrorMessageStyle}"
-			            Grid.Row="2" Grid.Column="1"
-                        Text="{Binding Address.Errors[State], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
+            <ComboBox x:Name="State" x:Uid="StateComboBox" 
+                      AutomationProperties.AutomationId="StateComboBox"
+                      AutomationProperties.IsRequiredForForm="True"
+                      Style="{StaticResource FormComboStyle}"
+                      Grid.Row="1" Grid.Column="1"
+                      ItemsSource="{Binding States}"
+                      DisplayMemberPath="Value"
+                      SelectedValuePath="Id"
+                      SelectedValue="{Binding Address.State, Mode=TwoWay}"
+                      behaviors:ComboBoxKeyboardSelection.Enabled="True"
+                      IsEnabled="{Binding IsEnabled}"
+                      behaviors:HighlightFormComboOnErrors.PropertyErrors="{Binding Address.Errors[State]}" />
+            <TextBlock x:Name="ErrorsState" Style="{StaticResource ErrorMessageStyle}"
+			           Grid.Row="2" Grid.Column="1"
+                       Text="{Binding Address.Errors[State], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
 
             <!-- ZipCode -->
-            <controls:FormFieldTextBox x:Name="ZipCode" x:Uid="PostalCode" AutomationProperties.AutomationId="PostalCodeTextBox"
+            <controls:FormFieldTextBox x:Name="ZipCode" x:Uid="PostalCodeTextBox" AutomationProperties.AutomationId="PostalCodeTextBox"
                                        Style="{StaticResource FormFieldStyle}"
-                                        Grid.Row="1" Grid.Column="2"
-                                        Text="{Binding Address.ZipCode, Mode=TwoWay}"
-                                        IsEnabled="{Binding IsEnabled}"
-                                        Watermark="Zip Code" AutomationProperties.IsRequiredForForm="True"
-                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[ZipCode]}" />
-            <TextBlock  x:Name="ErrorZipCode" Style="{StaticResource ErrorMessageStyle}"
-			            Grid.Row="2" Grid.Column="2"
-						Text="{Binding Address.Errors[ZipCode], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
+                                       Grid.Row="1" Grid.Column="2"
+                                       Text="{Binding Address.ZipCode, Mode=TwoWay}"
+                                       IsEnabled="{Binding IsEnabled}"
+                                       Watermark="Zip Code" AutomationProperties.IsRequiredForForm="True"
+                                       behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[ZipCode]}" />
+            <TextBlock x:Name="ErrorZipCode" Style="{StaticResource ErrorMessageStyle}"
+			           Grid.Row="2" Grid.Column="2"
+					   Text="{Binding Address.Errors[ZipCode], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
 
         </Grid>
 
@@ -176,17 +206,25 @@
             </Grid.RowDefinitions>
             <TextBlock x:Name="TitlePhone" x:Uid="TitlePhone" Style="{StaticResource FormTitleStyle}"
 					   Grid.Row="0" Grid.Column="0" Text="Phone*" />
-            <controls:FormFieldTextBox x:Name="Phone" AutomationProperties.AutomationId="PhoneTextBox" Style="{StaticResource FormFieldStyle}"
-											Grid.Row="1" Grid.Column="0" AutomationProperties.IsRequiredForForm="True"
-											Text="{Binding Address.Phone, Mode=TwoWay}"
-                                            IsEnabled="{Binding IsEnabled}"
-											behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[Phone]}" />
-            <TextBlock  x:Name="ErrorPhone" Style="{StaticResource ErrorMessageStyle}"
-			            Grid.Row="2" Grid.Column="0"
-						Text="{Binding Address.Errors[Phone], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
+            <controls:FormFieldTextBox x:Name="Phone" 
+                                       AutomationProperties.AutomationId="PhoneTextBox" 
+                                       AutomationProperties.IsRequiredForForm="True"
+                                       AutomationProperties.LabeledBy="{Binding ElementName=TitlePhone}"
+                                       Style="{StaticResource FormFieldStyle}"
+									   Grid.Row="1" Grid.Column="0" 
+									   Text="{Binding Address.Phone, Mode=TwoWay}"
+                                       IsEnabled="{Binding IsEnabled}"
+									   behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[Phone]}" />
+            <TextBlock x:Name="ErrorPhone" Style="{StaticResource ErrorMessageStyle}"
+			           Grid.Row="2" Grid.Column="0"
+					Text="{Binding Address.Errors[Phone], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
         </Grid>
 
-        <CheckBox x:Name="SetAsDefaultCheckbox" x:Uid="SetAsDefaultCheckbox" AutomationProperties.AutomationId="SetAsDefaultCheckBox" Grid.Row="4" IsChecked="{Binding SetAsDefault, Mode=TwoWay}" Content="Set as default" />
+        <CheckBox x:Name="SetAsDefaultCheckbox" x:Uid="SetAsDefaultCheckbox" 
+                  AutomationProperties.AutomationId="SetAsDefaultCheckBox" 
+                  Grid.Row="4" Margin="0,10,0,0"
+                  IsChecked="{Binding SetAsDefault, Mode=TwoWay}" 
+                  Content="Set as default" />
 
         <VisualStateManager.VisualStateGroups>
 
@@ -200,7 +238,9 @@
                         <!-- Content -->
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.Margin" Storyboard.TargetName="ContentGrid">
                             <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>20,0,0,0</DiscreteObjectKeyFrame.Value>
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:String>0,0,20,0</x:String>
+                                </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <!-- Name -->
@@ -247,10 +287,24 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="TitleLastName">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="ErrorsMiddleInitial">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <x:Int32>5</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="ErrorsMiddleInitial">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>0</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="TitleLastName">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>6</x:Int32>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
@@ -264,7 +318,7 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="LastName">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>6</x:Int32>
+                                    <x:Int32>7</x:Int32>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
@@ -275,7 +329,207 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="ErrorsLastName">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>8</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="ErrorsLastName">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>0</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+
+                        <!-- Area -->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.ColumnDefinitions[0].Width" Storyboard.TargetName="AreaGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>*</DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.ColumnDefinitions[1].Width" Storyboard.TargetName="AreaGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>Auto</DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.ColumnDefinitions[2].Width" Storyboard.TargetName="AreaGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>Auto</DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="State">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>0</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="State">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>3</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="State">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Thickness>0,20,20,0</Thickness>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="ErrorsState">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>4</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="ErrorsState">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>0</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="ZipCode">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>0</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="ZipCode">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>5</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="ZipCode">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Thickness>0,20,20,0</Thickness>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="ErrorZipCode">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>0</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="ErrorZipCode">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>6</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="Flyout">
+                    <Storyboard>
+                        <!-- Set as default -->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Visibility)" Storyboard.TargetName="SetAsDefaultCheckbox">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:String>Collapsed</x:String>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <!-- Content -->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.Margin" Storyboard.TargetName="ContentGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:String>20,0,0,0</x:String>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <!-- Name -->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.ColumnDefinitions[0].Width" Storyboard.TargetName="NameGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>*</DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.ColumnDefinitions[1].Width" Storyboard.TargetName="NameGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>Auto</DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.ColumnDefinitions[2].Width" Storyboard.TargetName="NameGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>Auto</DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="TitleMiddleInitial">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>3</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="TitleMiddleInitial">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>0</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="MiddleInitial">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>4</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="MiddleInitial">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>0</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="ErrorsMiddleInitial">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>5</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="ErrorsMiddleInitial">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>0</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="TitleLastName">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>6</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="TitleLastName">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>0</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="LastName">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>7</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="LastName">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <x:Int32>0</x:Int32>
@@ -285,7 +539,14 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="ErrorsLastName">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>7</x:Int32>
+                                    <x:Int32>8</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="ErrorsLastName">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>0</x:Int32>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
@@ -376,195 +637,6 @@
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
-                </VisualState>
-                <VisualState x:Name="Flyout">
-                	<Storyboard>
-                        <!-- Content -->
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.Margin" Storyboard.TargetName="ContentGrid">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>20,0,0,0</DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <!-- Name -->
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.ColumnDefinitions[0].Width" Storyboard.TargetName="NameGrid">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>*</DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.ColumnDefinitions[1].Width" Storyboard.TargetName="NameGrid">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>Auto</DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.ColumnDefinitions[2].Width" Storyboard.TargetName="NameGrid">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>Auto</DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="TitleMiddleInitial">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>3</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="TitleMiddleInitial">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>0</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="MiddleInitial">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>4</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="MiddleInitial">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>0</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="TitleLastName">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>5</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="TitleLastName">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>0</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="LastName">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>6</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="LastName">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>0</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="ErrorsLastName">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>0</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="ErrorsLastName">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>7</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <!-- Area -->
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.ColumnDefinitions[0].Width" Storyboard.TargetName="AreaGrid">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>*</DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.ColumnDefinitions[1].Width" Storyboard.TargetName="AreaGrid">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>Auto</DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.ColumnDefinitions[2].Width" Storyboard.TargetName="AreaGrid">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>Auto</DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="State">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>0</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="State">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>3</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="State">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Thickness>0,20,20,0</Thickness>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="ErrorsState">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>4</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="ErrorsState">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>0</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="ZipCode">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>0</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="ZipCode">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>5</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="ZipCode">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Thickness>0,20,20,0</Thickness>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="ErrorZipCode">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>0</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="ErrorZipCode">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>6</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="SetAsDefaultCheckbox">
-                			<DiscreteObjectKeyFrame KeyTime="0">
-                				<DiscreteObjectKeyFrame.Value>
-                					<Visibility>Collapsed</Visibility>
-                				</DiscreteObjectKeyFrame.Value>
-                			</DiscreteObjectKeyFrame>
-                		</ObjectAnimationUsingKeyFrames>
-                	</Storyboard>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>

@@ -32,7 +32,7 @@ namespace Kona.UILogic.ViewModels
 
         public BillingAddressUserControlViewModel(ICheckoutDataRepository checkoutDataRepository, ILocationService locationService, IResourceLoader resourceLoader)
         {
-            _address = new Address() { Id = Guid.NewGuid().ToString() };
+            _address = new Address();
             _checkoutDataRepository = checkoutDataRepository;
             _locationService = locationService;
             _resourceLoader = resourceLoader;
@@ -94,11 +94,11 @@ namespace Kona.UILogic.ViewModels
 
             if (navigationMode == NavigationMode.New)
             {
-                if (_checkoutDataRepository.ContainsDefaultValue("BillingAddress"))
+                var address = _checkoutDataRepository.GetDefaultBillingAddressValue();
+                if (address != null)
                 {
-                    Address = _checkoutDataRepository.GetDefaultBillingAddressValue();
-
-                    // Validate form fields
+                    // Update the information and validate the values
+                    Address = address;
                     ValidateForm();
                 }
             }

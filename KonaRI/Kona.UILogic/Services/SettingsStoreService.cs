@@ -92,7 +92,7 @@ namespace Kona.UILogic.Services
                 }
             }
 
-            return new T();
+            return default(T);
         }
 
         public void SetAsDefaultValue(string container, string id)

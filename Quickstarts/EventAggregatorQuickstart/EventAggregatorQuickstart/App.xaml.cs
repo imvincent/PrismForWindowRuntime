@@ -49,11 +49,10 @@ namespace EventAggregatorQuickstart
             if (rootFrame == null)
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
-                // <snippet3100>
                 rootFrame = new Frame();
                 _navigationService = _bootstrapper.CreateNavigationService(rootFrame);
                 _bootstrapper.Bootstrap(_navigationService);
-                // </snippet3100>
+
                 if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
                     _navigationService.RestoreSavedNavigation();

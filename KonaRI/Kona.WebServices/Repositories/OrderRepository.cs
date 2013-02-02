@@ -56,7 +56,7 @@ namespace Kona.WebServices.Repositories
                 order.ShoppingCart = item.ShoppingCart;
                 order.ShippingAddress = item.ShippingAddress;
                 order.BillingAddress = item.BillingAddress;
-                order.PaymentInfo = item.PaymentInfo;
+                order.PaymentMethod = item.PaymentMethod;
                 order.ShippingMethod = item.ShippingMethod;
 
                 return true;
@@ -65,9 +65,9 @@ namespace Kona.WebServices.Repositories
             return false;
         }
 
-        public bool Delete(Order item)
+        public bool Delete(int id)
         {
-            var order = _orders.FirstOrDefault(c => c.Id == item.Id);
+            var order = _orders.FirstOrDefault(c => c.Id == id);
             return _orders.Remove(order);
         }
     }

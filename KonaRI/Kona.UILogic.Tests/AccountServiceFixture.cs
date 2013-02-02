@@ -172,22 +172,39 @@ namespace Kona.UILogic.Tests
         }
 
         [TestMethod]
-        public async Task GetSignedInUserAsync_WhenSessionTimedOut_ReturnsNull()
+        public async Task GetSignedInUserAsync_WhenSessionTimedOut_AttemptsToAutoSignIn()
         {
+            var userChangedEventRaised = false;
+            var newUserName = string.Empty;
             var identityService = new MockIdentityService();
-            identityService.LogOnAsyncDelegate = (s, s1) => Task.FromResult(new LogOnResult {UserInfo = new UserInfo(), ServerCookieHeader = string.Empty});
+            identityService.LogOnAsyncDelegate = (s, s1) => Task.FromResult(new LogOnResult {UserInfo = new UserInfo{UserName = s}, ServerCookieHeader = string.Empty});
             var restorableStateService = new MockRestorableStateService();
-            var target = new AccountService(identityService, restorableStateService, null);
+            var credentialStore = new MockCredentialStore();
+            credentialStore.GetSavedCredentialsDelegate = s =>
+                                                              {
+                                                                  if (s == "KonaRI")
+                                                                  {
+                                                                      return new PasswordCredential("KonaRI", "testusername",
+                                                                                                    "testpassword");
+                                                                  }
+                                                                  return null;
+                                                              };
+            var target = new AccountService(identityService, restorableStateService, credentialStore);
 
             target.SignInUserAsync("testusername", "testpassword");
-
+            target.UserChanged += (sender, args) =>
+                                      {
+                                          userChangedEventRaised = true;
+                                          newUserName = args.NewUserInfo.UserName;
+                                      };
             identityService.VerifyActiveSessionDelegate = (s, s1) =>
                                                               {
                                                                   throw new SecurityException();
                                                               };
             var userInfo = await target.GetSignedInUserAsync();
 
-            Assert.IsNull(userInfo);
+            Assert.IsTrue(userChangedEventRaised);
+            Assert.AreEqual("testusername", newUserName);
 
         }
     }

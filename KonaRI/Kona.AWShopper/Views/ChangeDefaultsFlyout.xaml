@@ -72,33 +72,33 @@
                 <DiscreteObjectKeyFrame KeyTime="0" Value="" />
             </ObjectAnimationUsingKeyFrames>
         </Storyboard>
-        <Storyboard x:Name="HidePaymentInfo">
-            <PopOutThemeAnimation Storyboard.TargetName="PaymentInfoList" />
+        <Storyboard x:Name="HidePaymentMethod">
+            <PopOutThemeAnimation Storyboard.TargetName="PaymentMethodList" />
         </Storyboard>
-        <Storyboard x:Name="CollapsePaymentInfo">
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PaymentInfoList">
+        <Storyboard x:Name="CollapsePaymentMethod">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PaymentMethodList">
                 <DiscreteObjectKeyFrame KeyTime="0">
                     <DiscreteObjectKeyFrame.Value>
                         <Visibility>Collapsed</Visibility>
                     </DiscreteObjectKeyFrame.Value>
                 </DiscreteObjectKeyFrame>
             </ObjectAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Content)" Storyboard.TargetName="expandPaymentInfoButton">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Content)" Storyboard.TargetName="expandPaymentMethodButton">
                 <DiscreteObjectKeyFrame KeyTime="0" Value="" />
             </ObjectAnimationUsingKeyFrames>
         </Storyboard>
-        <Storyboard x:Name="ShowPaymentInfo">
-            <PopInThemeAnimation Storyboard.TargetName="PaymentInfoList" />
+        <Storyboard x:Name="ShowPaymentMethod">
+            <PopInThemeAnimation Storyboard.TargetName="PaymentMethodList" />
         </Storyboard>
-        <Storyboard x:Name="UncollapsePaymentInfo">
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PaymentInfoList">
+        <Storyboard x:Name="UncollapsePaymentMethod">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PaymentMethodList">
                 <DiscreteObjectKeyFrame KeyTime="0">
                     <DiscreteObjectKeyFrame.Value>
                         <Visibility>Visible</Visibility>
                     </DiscreteObjectKeyFrame.Value>
                 </DiscreteObjectKeyFrame>
             </ObjectAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Content)" Storyboard.TargetName="expandPaymentInfoButton">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Content)" Storyboard.TargetName="expandPaymentMethodButton">
                 <DiscreteObjectKeyFrame KeyTime="0" Value="" />
             </ObjectAnimationUsingKeyFrames>
         </Storyboard>
@@ -178,22 +178,22 @@
                                 </Style>
                             </ListView.ItemContainerStyle>
                         </ListView>
-                        <Grid x:Name="PaymentInfoPanel">
+                        <Grid x:Name="PaymentMethodPanel">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="60" />
                             </Grid.ColumnDefinitions>
                             <TextBlock x:Uid="PaymentMethodLabel" Text="Payment Method" FontSize="22" VerticalAlignment="Center"></TextBlock>
-                            <Button x:Name="expandPaymentInfoButton" AutomationProperties.AutomationId="ExpandPaymentInfoButton" Grid.Column="1" Content="" FontFamily="Segoe UI Symbol" FontSize="22" Click="PaymentInfoToggleClick"></Button>
+                            <Button x:Name="expandPaymentMethodButton" AutomationProperties.AutomationId="ExpandPaymentMethodButton" Grid.Column="1" Content="" FontFamily="Segoe UI Symbol" FontSize="22" Click="PaymentMethodToggleClick"></Button>
                         </Grid>
-                        <ListView x:Name="PaymentInfoList" AutomationProperties.AutomationId="PaymentInfoList" SelectionMode="Single" ItemTemplate="{StaticResource CheckoutDataTemplate}" ItemsSource="{Binding PaymentInfos}" SelectedItem="{Binding SelectedPaymentInfo, Mode=TwoWay}" HorizontalAlignment="Stretch">
+                        <ListView x:Name="PaymentMethodList" AutomationProperties.AutomationId="PaymentMethodList" SelectionMode="Single" ItemTemplate="{StaticResource CheckoutDataTemplate}" ItemsSource="{Binding PaymentMethods}" SelectedItem="{Binding SelectedPaymentMethod, Mode=TwoWay}" HorizontalAlignment="Stretch">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
                                 </Style>
                             </ListView.ItemContainerStyle>
                         </ListView>
-                        <Button x:Uid="SaveDefaultsButton" AutomationProperties.AutomationId="SaveDefaultsButton" Background="{StaticResource AWShopperAccentBrush}" Content="Save Defaults" HorizontalAlignment="Stretch" Command="{Binding SaveDefaultsCommand}" />
+                        <Button x:Uid="SaveDefaultsButton" AutomationProperties.AutomationId="SaveDefaultsButton" Background="{StaticResource AWShopperAccentBrush}" Content="Save Defaults" HorizontalAlignment="Stretch" Command="{Binding SaveCommand}" />
                     </StackPanel>
                 </Grid>
             </ScrollViewer>

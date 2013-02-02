@@ -18,9 +18,7 @@ namespace Kona.WebServices.Models
             ShoppingCartItems = shoppingCartItems;
         }
 
-        public int Id { get; set; }
-
-        public string UserId { get; set; }
+        public string ShoppingCartId { get; set; }
 
         public ICollection<ShoppingCartItem> ShoppingCartItems {get; private set;}
 

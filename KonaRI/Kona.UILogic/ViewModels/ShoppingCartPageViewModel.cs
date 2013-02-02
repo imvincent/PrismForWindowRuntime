@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Kona.Infrastructure;
+using Kona.Infrastructure.Interfaces;
 using Kona.UILogic.Events;
 using Kona.UILogic.Models;
 using Kona.UILogic.Repositories;
@@ -43,9 +44,10 @@ namespace Kona.UILogic.ViewModels
             _shoppingCartRepository = shoppingCartRepository;
             _accountService = accountService;
             _settingsCharmService = settingsCharmService;
-
-            eventAggregator.GetEvent<ShoppingCartUpdatedEvent>().Subscribe(() => UpdateShoppingCartAsync());
-
+            if (eventAggregator != null)
+            {
+                eventAggregator.GetEvent<ShoppingCartUpdatedEvent>().Subscribe(() => UpdateShoppingCartAsync());
+            }
             CheckoutCommand = new DelegateCommand(Checkout, CanCheckout);
             EditAmountCommand = new DelegateCommand(OpenEditAmountFlyout);
             RemoveCommand = new DelegateCommand<ShoppingCartItemViewModel>(Remove);

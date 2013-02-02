@@ -38,8 +38,9 @@ namespace Kona.AWShopper.Controls
 
             }
 
-            VariableSizedWrapGrid.SetRowSpan(element as UIElement, _rowVal);
-            VariableSizedWrapGrid.SetColumnSpan(element as UIElement, _colVal);
+            var uiElement = element as UIElement;
+            VariableSizedWrapGrid.SetRowSpan(uiElement, _rowVal);
+            VariableSizedWrapGrid.SetColumnSpan(uiElement, _colVal);
         }
         // </snippet608>
     }
@@ -47,8 +48,14 @@ namespace Kona.AWShopper.Controls
     // <snippet609>
     public static class LayoutSizes
     {
-        public static Size PrimaryItem = new Size(2, 2);
-        public static Size SecondaryItem = new Size(1, 1);
+        public static Size PrimaryItem
+        {
+            get { return new Size(2, 2); }
+        } 
+        public static Size SecondaryItem
+        {
+            get{return new Size(1, 1); }
+        }
     }
     // </snippet609>
 }

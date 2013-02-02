@@ -109,7 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BindableBaseFixture.cs" />
-    <Compile Include="EntityValidatorFixture.cs" />
+    <Compile Include="BindableValidatorFixture.cs" />
     <Compile Include="FrameNavigationServiceFixture.cs" />
     <Compile Include="Mocks\MockFrameSessionState.cs" />
     <Compile Include="Mocks\MockPage.cs" />

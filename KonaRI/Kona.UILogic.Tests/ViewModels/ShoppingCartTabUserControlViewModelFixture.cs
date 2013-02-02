@@ -38,8 +38,10 @@ namespace Kona.UILogic.Tests.ViewModels
                 if (type == typeof(ShoppingCartItemUpdatedEvent)) return new ShoppingCartItemUpdatedEvent();
                 return null;
             };
+            var accountService = new MockAccountService();
+            accountService.GetSignedInUserAsyncDelegate = () => Task.FromResult((UserInfo) null);
             shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult(shoppingCart);
-            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, null, new AlertMessageService(), null);
+            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, null, new AlertMessageService(), null, accountService);
 
             Assert.AreEqual(3, target.ItemCount);
         }
@@ -59,7 +61,9 @@ namespace Kona.UILogic.Tests.ViewModels
                 if (type == typeof(ShoppingCartItemUpdatedEvent)) return new ShoppingCartItemUpdatedEvent();
                 return null;
             };
-            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, null, new AlertMessageService(), null);
+            var accountService = new MockAccountService();
+            accountService.GetSignedInUserAsyncDelegate = () => Task.FromResult((UserInfo)null);
+            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, null, new AlertMessageService(), null, accountService);
 
             shoppingCart = new ShoppingCart(new List<ShoppingCartItem>()
                                                {
@@ -95,7 +99,9 @@ namespace Kona.UILogic.Tests.ViewModels
             };
             var shoppingCartRepository = new MockShoppingCartRepository();
             shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult(new ShoppingCart(null));
-            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, navigationService, new AlertMessageService(), null);
+            var accountService = new MockAccountService();
+            accountService.GetSignedInUserAsyncDelegate = () => Task.FromResult((UserInfo)null);
+            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, navigationService, new AlertMessageService(), null, accountService);
             target.ShoppingCartTabCommand.Execute();
 
             Assert.IsTrue(navigateCalled);
@@ -114,8 +120,9 @@ namespace Kona.UILogic.Tests.ViewModels
                 if (type == typeof(ShoppingCartItemUpdatedEvent)) return new ShoppingCartItemUpdatedEvent();
                 return null;
             };
-            
-            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, null, new AlertMessageService(), null);
+            var accountService = new MockAccountService();
+            accountService.GetSignedInUserAsyncDelegate = () => Task.FromResult((UserInfo)null);
+            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, null, new AlertMessageService(), null, accountService);
             target.ItemCount = 99;
 
             shoppingCartUpdatedEvent.Publish();
@@ -139,8 +146,10 @@ namespace Kona.UILogic.Tests.ViewModels
                                                             Assert.AreEqual("Error", s1);
                                                             return Task.FromResult(string.Empty);
                                                         };
+            var accountService = new MockAccountService();
+            accountService.GetSignedInUserAsyncDelegate = () => Task.FromResult((UserInfo)null);
             var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, null, null,
-                                                                 alertMessageService, new MockResourceLoader());
+                                                                 alertMessageService, new MockResourceLoader(), accountService);
 
             Assert.IsTrue(alertCalled);
         }

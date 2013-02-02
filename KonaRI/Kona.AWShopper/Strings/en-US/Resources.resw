@@ -132,10 +132,10 @@
   <data name="BillingAddress" xml:space="preserve">
     <value>Billing Address</value>
   </data>
-  <data name="Editing" xml:space="preserve">
-    <value>Editing {0}</value>
+  <data name="SelectCheckoutData" xml:space="preserve">
+    <value>Select {0}</value>
   </data>
-  <data name="PaymentInfo" xml:space="preserve">
+  <data name="PaymentMethod" xml:space="preserve">
     <value>Payment</value>
   </data>
   <data name="ShippingAddress" xml:space="preserve">
@@ -151,7 +151,7 @@
     <value>Address*</value>
   </data>
   <data name="TitleArea.Text" xml:space="preserve">
-    <value>Area</value>
+    <value>Area*</value>
   </data>
   <data name="TitleFirstName.Text" xml:space="preserve">
     <value>First Name*</value>
@@ -198,19 +198,19 @@
   <data name="EditAmount" xml:space="preserve">
     <value>Edit Amount</value>
   </data>
-  <data name="AddBillingAddressTitle.Text" xml:space="preserve">
+  <data name="AddBillingAddressTitle" xml:space="preserve">
     <value>Add Billing Address</value>
   </data>
   <data name="AddButton.Content" xml:space="preserve">
     <value>Add</value>
   </data>
-  <data name="AddPaymentMethodTitle.Text" xml:space="preserve">
+  <data name="AddPaymentMethodTitle" xml:space="preserve">
     <value>Add Payment Method</value>
   </data>
   <data name="AddressAndPaymentLabel.Text" xml:space="preserve">
     <value>Address &amp; Payment</value>
   </data>
-  <data name="AddShippingAddressTitle.Text" xml:space="preserve">
+  <data name="AddShippingAddressTitle" xml:space="preserve">
     <value>Add Shipping Address</value>
   </data>
   <data name="AddToCartButton.Content" xml:space="preserve">
@@ -240,13 +240,13 @@
   <data name="DiscountCodesLabel.Text" xml:space="preserve">
     <value>Discount Codes:</value>
   </data>
-  <data name="EditBillingAddressTitle.Text" xml:space="preserve">
+  <data name="EditBillingAddressTitle" xml:space="preserve">
     <value>Edit Billing Address</value>
   </data>
-  <data name="EditPaymentMethodTitle.Text" xml:space="preserve">
+  <data name="EditPaymentMethodTitle" xml:space="preserve">
     <value>Edit Payment Method</value>
   </data>
-  <data name="EditShippingAddressTitle.Text" xml:space="preserve">
+  <data name="EditShippingAddressTitle" xml:space="preserve">
     <value>Edit Shipping Address</value>
   </data>
   <data name="EmailAddressLabel.Text" xml:space="preserve">
@@ -321,8 +321,8 @@
   <data name="BillingAddressIncompleteMessage.Text" xml:space="preserve">
     <value>Billing address incomplete</value>
   </data>
-  <data name="PaymentInformationIncompleteMessage.Text" xml:space="preserve">
-    <value>Payment information incomplete</value>
+  <data name="PaymentMethodIncompleteMessage.Text" xml:space="preserve">
+    <value>Payment method incomplete</value>
   </data>
   <data name="ShippingAddressIncompleteMessage.Text" xml:space="preserve">
     <value>Shipping address incomplete</value>
@@ -366,7 +366,7 @@
   <data name="ExpirationYear.Watermark" xml:space="preserve">
     <value>Year</value>
   </data>
-  <data name="PostalCode.Watermark" xml:space="preserve">
+  <data name="PostalCodeTextBox.Watermark" xml:space="preserve">
     <value>Zip Code</value>
   </data>
   <data name="RemoveAppBarButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
@@ -396,10 +396,55 @@
   <data name="Quantity" xml:space="preserve">
     <value>QTY</value>
   </data>
-  <data name="SelectAppBarButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+  <data name="SelectCheckoutDataAppBarButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Select</value>
   </data>
   <data name="FirstName" xml:space="preserve">
     <value />
+  </data>
+  <data name="City.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="ExpirationMonth.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Expiration month</value>
+  </data>
+  <data name="ExpirationYear.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Expiration year</value>
+  </data>
+  <data name="PostalCodeTextBox.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Zip code</value>
+  </data>
+  <data name="StateComboBox.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="TitleFirstName.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>First name</value>
+  </data>
+  <data name="EditQuantityPopup.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Edit quantity popup</value>
+  </data>
+  <data name="SelectedProductImage.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Selected product image</value>
+  </data>
+  <data name="DetailsLabel.Text" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="InventoryStatusLabel.Text" xml:space="preserve">
+    <value>Inventory Status</value>
+  </data>
+  <data name="ReviewsLabel.Text" xml:space="preserve">
+    <value>12 Reviews:</value>
+  </data>
+  <data name="SalePriceLabel.Text" xml:space="preserve">
+    <value>Sale Price</value>
+  </data>
+  <data name="SameAsShippingAddressCheckBox.Content" xml:space="preserve">
+    <value>Same as Shipping Address</value>
+  </data>
+  <data name="AddCheckoutData.Content" xml:space="preserve">
+    <value>Enter new data</value>
+  </data>
+  <data name="ShoppingCartButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Shopping Cart</value>
   </data>
 </root>

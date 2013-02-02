@@ -16,13 +16,6 @@ namespace Kona.AWShopper.Views
             : base(commandId, commandTitle, StandardFlyoutSize.Narrow)
         {
             this.InitializeComponent();
-
-            var viewModel = this.DataContext as IFlyoutViewModel;
-            if (viewModel != null)
-            {
-                viewModel.CloseFlyout = this.Close;
-                viewModel.GoBack = this.GoBack;
-            }
         }
     }
 }

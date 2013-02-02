@@ -7,17 +7,11 @@
 
 
 using Kona.Infrastructure;
-using Kona.UILogic.ViewModels;
+using Kona.Infrastructure.Interfaces;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Navigation;
-
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace Kona.AWShopper.Views
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class CheckoutHubPage : VisualStateAwarePage
     {
         public CheckoutHubPage()
@@ -26,7 +20,7 @@ namespace Kona.AWShopper.Views
             Window.Current.SizeChanged += Current_SizeChanged;
         }
 
-        void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
+        private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
         {
             var viewModel = this.DataContext as IHandleWindowSizeChanged;
             viewModel.WindowCurrentSizeChanged();

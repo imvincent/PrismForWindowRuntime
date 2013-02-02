@@ -52,28 +52,35 @@
                     <StackPanel x:Name="FlyoutContent">
                         <TextBlock x:Uid="PleaseSignInTextBlock" Style="{StaticResource BasicTextStyle}" TextWrapping="Wrap"
                                    Text="Please sign in." />
-                        <TextBlock x:Uid="EmailAddressLabel" Margin="0,25, 0, 0"
+                        <TextBlock x:Name="EmailAddressLabel" x:Uid="EmailAddressLabel" Margin="0,25, 0, 0"
                                        Text="Email address" 
                                        HorizontalAlignment="Left"
                                        Style="{StaticResource BasicTextStyle}"  />
-                        <TextBox HorizontalAlignment="Left" AutomationProperties.AutomationId="UserNameTextBox"
-                                     Width="280" AutomationProperties.IsRequiredForForm="True"
-                                     Text="{Binding UserName, Mode=TwoWay}" 
-                                     IsEnabled="{Binding IsNewSignIn}"/>
-                        <TextBlock x:Uid="PasswordLabel" Margin="0,25, 0, 0"
+                        <TextBox HorizontalAlignment="Left" 
+                                 AutomationProperties.AutomationId="UserNameTextBox"
+                                 AutomationProperties.IsRequiredForForm="True"
+                                 AutomationProperties.LabeledBy="{Binding ElementName=EmailAddressLabel}"
+                                 Width="280" Text="{Binding UserName, Mode=TwoWay}" 
+                                 IsEnabled="{Binding IsNewSignIn}"/>
+                        <TextBlock x:Name="PasswordLabel" x:Uid="PasswordLabel" Margin="0,25, 0, 0"
                                        Text="Password"
                                        HorizontalAlignment="Left"
                                         Width="280"
                                        Style="{StaticResource BasicTextStyle}"/>
-                        <PasswordBox  Width="280" AutomationProperties.IsRequiredForForm="True"
-                                         HorizontalAlignment="Left"
-                                         Password="{Binding Password,Mode=TwoWay}" AutomationProperties.AutomationId="PasswordBox"/>
-                        <TextBlock x:Uid="SaveCredentialsLabel" Margin="0,25, 0, 0"
+                        <PasswordBox  Width="280" 
+                                      AutomationProperties.AutomationId="PasswordBox"
+                                      AutomationProperties.IsRequiredForForm="True"
+                                      AutomationProperties.LabeledBy="{Binding ElementName=PasswordLabel}"
+                                      HorizontalAlignment="Left"
+                                      Password="{Binding Password,Mode=TwoWay}" />
+                        <TextBlock x:Name="SaveCredentialsLabel" x:Uid="SaveCredentialsLabel" Margin="0,25, 0, 0"
                                        Text="Save credentials?"
                                        HorizontalAlignment="Left"
                                         Width="280"
                                        Style="{StaticResource BasicTextStyle}"/>
-                        <CheckBox HorizontalAlignment="Left" IsChecked="{Binding SaveCredentials,Mode=TwoWay}" AutomationProperties.AutomationId="SaveCredentialsCheckBox"/>
+                        <CheckBox HorizontalAlignment="Left" IsChecked="{Binding SaveCredentials,Mode=TwoWay}" 
+                                  AutomationProperties.AutomationId="SaveCredentialsCheckBox"
+                                  AutomationProperties.LabeledBy="{Binding ElementName=SaveCredentialsLabel}"/>
                         <!-- <snippet310> -->
                         <Button x:Uid="SubmitButton" Background="{StaticResource AWShopperAccentBrush}" Content="Submit" Width="280" Margin="0,25,0,0"
                                     Command="{Binding SignInCommand}" AutomationProperties.AutomationId="SignInSubmitButton" />

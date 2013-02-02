@@ -24,9 +24,10 @@ namespace Kona.UILogic.ViewModels
         private readonly INavigationService _navigationService;
         private readonly IAlertMessageService _alertMessageService;
         private readonly IResourceLoader _resourceLoader;
+        private readonly IAccountService _accountService;
         private int _itemCount;
 
-        public ShoppingCartTabUserControlViewModel(IShoppingCartRepository shoppingCartRepository, IEventAggregator eventAggregator, INavigationService navigationService, IAlertMessageService alertMessageService, IResourceLoader resourceLoader)
+        public ShoppingCartTabUserControlViewModel(IShoppingCartRepository shoppingCartRepository, IEventAggregator eventAggregator, INavigationService navigationService, IAlertMessageService alertMessageService, IResourceLoader resourceLoader, IAccountService accountService)
         {
             _itemCount = 0; //ItemCount will be set using async method call.
 
@@ -34,6 +35,7 @@ namespace Kona.UILogic.ViewModels
             _navigationService = navigationService;
             _alertMessageService = alertMessageService;
             _resourceLoader = resourceLoader;
+            _accountService = accountService;
 
             if (eventAggregator != null)
             {
@@ -49,6 +51,9 @@ namespace Kona.UILogic.ViewModels
 
         private async void UpdateItemCountAsync()
         {
+            //Trigger auto-login if credentials are saved.
+            await _accountService.GetSignedInUserAsync();
+
             ShoppingCart shoppingCart = null;
             var getShoppingCartCallFailed = false;
 

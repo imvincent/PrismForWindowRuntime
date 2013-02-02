@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Kona.Infrastructure;
+using Kona.Infrastructure.Interfaces;
 using Kona.UILogic.Models;
 using Kona.UILogic.Repositories;
 using Kona.UILogic.Services;
@@ -33,9 +34,9 @@ namespace Kona.UILogic.ViewModels
         private readonly IPaymentMethodUserControlViewModel _paymentMethodViewModel;
         private readonly ISettingsCharmService _settingsCharmService;
         private bool _useSameAddressAsShipping;
-        private bool _isShippingInfoInvalid;
-        private bool _isBillingInfoInvalid;
-        private bool _isPaymentInfoInvalid;
+        private bool _isShippingAddressInvalid;
+        private bool _isBillingAddressInvalid;
+        private bool _isPaymentMethodInvalid;
         private bool _isUnsnapping;
 
         public CheckoutHubPageViewModel(INavigationService navigationService, IAccountService accountService, IOrderService orderService, ShippingMethodServiceProxy shippingMethodService, IShoppingCartRepository shoppingCartRepository,
@@ -70,8 +71,7 @@ namespace Kona.UILogic.ViewModels
             set
             {
                 SetProperty(ref _useSameAddressAsShipping, value);
-
-                if (!_useSameAddressAsShipping)
+                if (_useSameAddressAsShipping)
                 {
                     // Clean the Billing Address values & errors
                     BillingAddressViewModel.Address = new Address { Id = Guid.NewGuid().ToString() };
@@ -82,24 +82,24 @@ namespace Kona.UILogic.ViewModels
         }
 
         [RestorableState]
-        public bool IsShippingInfoInvalid
+        public bool IsShippingAddressInvalid
         {
-            get { return _isShippingInfoInvalid; }
-            set { SetProperty(ref _isShippingInfoInvalid, value); }
+            get { return _isShippingAddressInvalid; }
+            set { SetProperty(ref _isShippingAddressInvalid, value); }
         }
 
         [RestorableState]
-        public bool IsBillingInfoInvalid
+        public bool IsBillingAddressInvalid
         {
-            get { return _isBillingInfoInvalid; }
-            set { SetProperty(ref _isBillingInfoInvalid, value); }
+            get { return _isBillingAddressInvalid; }
+            set { SetProperty(ref _isBillingAddressInvalid, value); }
         }
 
         [RestorableState]
-        public bool IsPaymentInfoInvalid
+        public bool IsPaymentMethodInvalid
         {
-            get { return _isPaymentInfoInvalid; }
-            set { SetProperty(ref _isPaymentInfoInvalid, value); }
+            get { return _isPaymentMethodInvalid; }
+            set { SetProperty(ref _isPaymentMethodInvalid, value); }
         }
 
         public override void OnNavigatedTo(object navigationParameter, Windows.UI.Xaml.Navigation.NavigationMode navigationMode, System.Collections.Generic.Dictionary<string, object> viewState)
@@ -120,11 +120,11 @@ namespace Kona.UILogic.ViewModels
 
         private async void GoNext()
         {
-            IsShippingInfoInvalid = ShippingAddressViewModel.ValidateForm() == false;
-            IsBillingInfoInvalid = UseSameAddressAsShipping ? false : BillingAddressViewModel.ValidateForm() == false;
-            IsPaymentInfoInvalid = PaymentMethodViewModel.ValidateForm() == false;
+            IsShippingAddressInvalid = ShippingAddressViewModel.ValidateForm() == false;
+            IsBillingAddressInvalid = UseSameAddressAsShipping ? false : BillingAddressViewModel.ValidateForm() == false;
+            IsPaymentMethodInvalid = PaymentMethodViewModel.ValidateForm() == false;
 
-            if (!IsShippingInfoInvalid && !IsBillingInfoInvalid && !IsPaymentInfoInvalid)
+            if (!IsShippingAddressInvalid && !IsBillingAddressInvalid && !IsPaymentMethodInvalid)
             {
                 if (await _accountService.GetSignedInUserAsync() == null)
                 {
@@ -150,7 +150,7 @@ namespace Kona.UILogic.ViewModels
                     UserId = (await _accountService.GetSignedInUserAsync()).UserName,
                     ShippingAddress = ShippingAddressViewModel.Address,
                     BillingAddress = UseSameAddressAsShipping ? ShippingAddressViewModel.Address : BillingAddressViewModel.Address,
-                    PaymentInfo = PaymentMethodViewModel.PaymentInfo,
+                    PaymentMethod = PaymentMethodViewModel.PaymentMethod,
                     ShippingMethod = await _shippingMethodService.GetBasicShippingMethodAsync(),
                     ShoppingCart = await _shoppingCartRepository.GetShoppingCartAsync()
                 };
@@ -159,6 +159,7 @@ namespace Kona.UILogic.ViewModels
             {
                 // Call the service to create the order
                 Order createdOrder = await _orderService.CreateOrderAsync(order, _accountService.ServerCookieHeader);
+                order.Id = createdOrder.Id;
 
                 // If everything is OK, process the form information
                 if (UseSameAddressAsShipping)
@@ -170,7 +171,7 @@ namespace Kona.UILogic.ViewModels
                 BillingAddressViewModel.ProcessForm();
                 PaymentMethodViewModel.ProcessForm();
 
-                _navigationService.Navigate("CheckoutSummary", createdOrder);
+                _navigationService.Navigate("CheckoutSummary", order);
             }
             catch (ModelValidationException mvex)
             {
@@ -191,7 +192,7 @@ namespace Kona.UILogic.ViewModels
             var billingAddressErrors = new Dictionary<string, ReadOnlyCollection<string>>();
             var paymentMethodErrors = new Dictionary<string, ReadOnlyCollection<string>>();
 
-            // Property keys of the form. Format: order.{ShippingAddress/BillingAddress/PaymentInfo}.{Property}
+            // Property keys of the form. Format: order.{ShippingAddress/BillingAddress/PaymentMethod}.{Property}
             foreach (var propkey in validationResult.ModelState.Keys)
             {
                 string orderPropAndEntityProp = propkey.Substring(propkey.IndexOf('.') + 1); // strip off order. prefix
@@ -205,7 +206,7 @@ namespace Kona.UILogic.ViewModels
 
             if (shippingAddressErrors.Count > 0) _shippingAddressViewModel.Address.Errors.SetAllErrors(shippingAddressErrors);
             if (billingAddressErrors.Count > 0) _billingAddressViewModel.Address.Errors.SetAllErrors(billingAddressErrors);
-            if (paymentMethodErrors.Count > 0) _paymentMethodViewModel.PaymentInfo.Errors.SetAllErrors(paymentMethodErrors);
+            if (paymentMethodErrors.Count > 0) _paymentMethodViewModel.PaymentMethod.Errors.SetAllErrors(paymentMethodErrors);
         }
 
         public void WindowCurrentSizeChanged()

@@ -67,11 +67,12 @@ namespace Kona.WebServices.Controllers
             {
                 var todaysDealsCategory = GetCategory(0);
                 todaysDealsCategory.Products = _productRepository.TodaysDealsProducts;
+                todaysDealsCategory.TotalNumberOfItems = _productRepository.TodaysDealsProducts.Count();
                 return new List<Category>() { todaysDealsCategory };
             }
         }
 
-        private void FillProducts(IEnumerable<Category> categories, int maxAmountofItems)
+        private void FillProducts(IEnumerable<Category> categories, int maxNumberOfItems)
         {
             foreach (var category in categories)
             {
@@ -84,15 +85,17 @@ namespace Kona.WebServices.Controllers
                     {
                         productList.AddRange(_productRepository.GetProductsFromCategory(subcategory.Id));
                     }
-                    category.Products = maxAmountofItems > 0
+                    category.TotalNumberOfItems = productList.Count;
+                    category.Products = maxNumberOfItems > 0
                                             ? productList.Where(p => p.ImageName != "no_image_available_large.gif")
-                                                         .Take(maxAmountofItems)
+                                                         .Take(maxNumberOfItems)
                                             : productList;
                 }
                 else
                 {
                     //Today's Deals Category
                     category.Products = _productRepository.TodaysDealsProducts;
+                    category.TotalNumberOfItems = _productRepository.TodaysDealsProducts.Count();
                 }
             }
         }

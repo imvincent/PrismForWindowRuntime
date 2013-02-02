@@ -106,6 +106,7 @@
     <Compile Include="Commands\DelegateCommand.cs" />
     <Compile Include="Commands\DelegateCommandBase.cs" />
     <Compile Include="BindableValidator.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="DependencyPropertyChangedHelper.cs" />
     <Compile Include="Flyouts\FlyoutSize.cs" />
     <Compile Include="Flyouts\FlyOutView.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="HttpClientExtensions.cs" />
     <Compile Include="Interfaces\ICredentialStore.cs" />
     <Compile Include="Flyouts\IFlyoutViewModel.cs" />
+    <Compile Include="Interfaces\IHandleWindowSizeChanged.cs" />
     <Compile Include="Interfaces\INavigationAware.cs" />
     <Compile Include="Interfaces\INavigationService.cs" />
     <Compile Include="Interfaces\IRequestService.cs" />
@@ -122,6 +124,7 @@
     <Compile Include="Interfaces\IResumableStateService.cs" />
     <Compile Include="Interfaces\ISettingsCharmService.cs" />
     <Compile Include="FrameSessionStateWrapper.cs" />
+    <Compile Include="Interfaces\IValidatableBindableBase.cs" />
     <Compile Include="ResourceLoaderAdapter.cs" />
     <Compile Include="SuspensionManager.cs" />
     <Compile Include="ValidatableBindableBase.cs" />
