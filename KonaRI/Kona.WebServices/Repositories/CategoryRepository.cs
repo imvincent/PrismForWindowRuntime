@@ -16,24 +16,23 @@ namespace Kona.WebServices.Repositories
 {
     public class CategoryRepository : IRepository<Category>
     {
-        private static IEnumerable<Category> _categories;
-
-        public CategoryRepository()
-        {
-            if (_categories == null)
-            {
-                PopulateCategories();
-            }
-        }
+        private static IEnumerable<Category> _categories = PopulateCategories();
 
         public IEnumerable<Category> GetAll()
         {
-            return _categories;
+            lock (_categories)
+            {
+                // Return new collection so callers can iterate independently on separate threads
+                return _categories.ToArray();
+            }
         }
 
         public Category GetItem(int id)
         {
-            return _categories.FirstOrDefault(c => c.Id == id);
+            lock (_categories)
+            {
+                return _categories.FirstOrDefault(c => c.Id == id);
+            }
         }
 
         public Category Create(Category item)
@@ -51,9 +50,9 @@ namespace Kona.WebServices.Repositories
             throw new NotImplementedException();
         }
 
-        private static void PopulateCategories()
+        private static IEnumerable<Category> PopulateCategories()
         {
-            _categories = new List<Category>
+            return new List<Category>
              {
                  new Category {Title = "Today's Deals", Id = 0, ImageExternalUri = new Uri("/Images/water_bottle_cage_small.gif", UriKind.Relative) },
                  new Category {Title = "Accessories", Id = 4000, ImageExternalUri = new Uri("/Images/water_bottle_cage_small.gif", UriKind.Relative) },
@@ -99,6 +98,12 @@ new Category { Title = "Pumps", Id=36, ParentId=4000, ImageExternalUri = new Uri
 new Category { Title = "Tires and Tubes", Id=37, ParentId=4000, ImageExternalUri = new Uri("/Images/mb_tires_large.gif", UriKind.Relative) },
 
             };
+        }
+
+
+        public void Reset()
+        {
+            throw new NotImplementedException();
         }
     }
 }

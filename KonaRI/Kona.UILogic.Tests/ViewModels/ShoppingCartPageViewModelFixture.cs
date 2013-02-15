@@ -38,7 +38,7 @@ namespace Kona.UILogic.Tests.ViewModels
             var eventAggregator = new MockEventAggregator();
             eventAggregator.GetEventDelegate = type => new MockShoppingCartUpdatedEvent();
 
-            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, new MockAccountService(), null, eventAggregator);
+            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, new MockAccountService(), null, eventAggregator, null, null);
             target.OnNavigatedTo(null, NavigationMode.New, null);
 
             Assert.AreEqual("$200.00", target.FullPrice);
@@ -65,7 +65,7 @@ namespace Kona.UILogic.Tests.ViewModels
             };
             var eventAggregator = new MockEventAggregator();
             eventAggregator.GetEventDelegate = type => new MockShoppingCartUpdatedEvent();
-            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, new MockAccountService(), null, eventAggregator);
+            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, new MockAccountService(), null, eventAggregator, null, null);
             target.OnNavigatedTo(null, NavigationMode.New, null);
 
             Assert.AreEqual("$200.00", target.FullPrice);
@@ -87,7 +87,7 @@ namespace Kona.UILogic.Tests.ViewModels
             var eventAggregator = new MockEventAggregator();
             var shoppingCartUpdatedEvent = new ShoppingCartUpdatedEvent();
             eventAggregator.GetEventDelegate = type => shoppingCartUpdatedEvent;
-            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, accountService, null, eventAggregator);
+            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, accountService, null, eventAggregator, null, null);
             target.OnNavigatedTo(null, NavigationMode.New, null);  
 
             Assert.AreEqual("$0.00", target.FullPrice);
@@ -102,7 +102,7 @@ namespace Kona.UILogic.Tests.ViewModels
                 return Task.FromResult(shoppingCart);
             };
 
-            shoppingCartUpdatedEvent.Publish();
+            shoppingCartUpdatedEvent.Publish(null);
 
             Assert.AreEqual("$200.00", target.FullPrice);
 
@@ -116,7 +116,7 @@ namespace Kona.UILogic.Tests.ViewModels
             var eventAggregator = new MockEventAggregator();
             eventAggregator.GetEventDelegate = type => new MockShoppingCartUpdatedEvent();
             var target = new ShoppingCartPageViewModel(shoppingCartRepository, new MockNavigationService(),
-                                                       new MockAccountService(), new MockSettingsCharmService(), eventAggregator);
+                                                       new MockAccountService(), new MockSettingsCharmService(), eventAggregator, null, null);
 
             target.OnNavigatedTo(null, NavigationMode.New, null);
 
@@ -140,7 +140,7 @@ namespace Kona.UILogic.Tests.ViewModels
                                                           };
             var eventAggregator = new MockEventAggregator();
             eventAggregator.GetEventDelegate = type => new MockShoppingCartUpdatedEvent();
-            var target = new ShoppingCartPageViewModel(null, navigationService, accountService, settingsCharmService, eventAggregator);
+            var target = new ShoppingCartPageViewModel(null, navigationService, accountService, settingsCharmService, eventAggregator, null, null);
 
             target.CheckoutCommand.Execute();
 
@@ -155,21 +155,21 @@ namespace Kona.UILogic.Tests.ViewModels
             shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult<ShoppingCart>(null);
             var eventAggregator = new MockEventAggregator();
             eventAggregator.GetEventDelegate = type => new MockShoppingCartUpdatedEvent();
-            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, null, null, eventAggregator);
-            target.UpdateShoppingCartAsync();
+            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, null, null, eventAggregator, null, null);
+            target.UpdateShoppingCartAsync(null);
             
             Assert.IsFalse(target.CheckoutCommand.CanExecute());
 
             shoppingCartRepository.GetShoppingCartAsyncDelegate = 
                 () => Task.FromResult(new ShoppingCart(new Collection<ShoppingCartItem>()){Currency = "USD", FullPrice = 0, TaxRate = 0, TotalDiscount = 0, TotalPrice = 0});
-            target.UpdateShoppingCartAsync();
+            target.UpdateShoppingCartAsync(null);
             
             Assert.IsFalse(target.CheckoutCommand.CanExecute());
 
             shoppingCartRepository.GetShoppingCartAsyncDelegate =
                 () => Task.FromResult(new ShoppingCart(new Collection<ShoppingCartItem> { new ShoppingCartItem{Product = new Product(), Currency = "USD", Quantity = 0} }) 
                 { Currency = "USD", FullPrice = 0, TaxRate = 0, TotalDiscount = 0, TotalPrice = 0 });
-            target.UpdateShoppingCartAsync();
+            target.UpdateShoppingCartAsync(null);
 
             Assert.IsTrue(target.CheckoutCommand.CanExecute());
 
@@ -182,7 +182,7 @@ namespace Kona.UILogic.Tests.ViewModels
             var shoppingCartRepository = new MockShoppingCartRepository();
             var eventAggregator = new MockEventAggregator();
             eventAggregator.GetEventDelegate = type => new MockShoppingCartUpdatedEvent();
-            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, null, null, eventAggregator);
+            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, null, null, eventAggregator, null, null);
 
             target.SelectedItem = new ShoppingCartItemViewModel(new ShoppingCartItem(){ Quantity = 2, Currency = "USD", Product = new Product(), });
 

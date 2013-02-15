@@ -17,30 +17,15 @@ namespace Kona.AWShopper.Views
         public ShoppingCartPage()
         {
             this.InitializeComponent();
-            pop.Opened += pop_Opened;
-            Window.Current.SizeChanged += Current_SizeChanged;
+            EditQuantityPopup.Opened += EditQuantityPopup_Opened;
         }
 
-        void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
+        private void EditQuantityPopup_Opened(object sender, object e)
         {
-            var viewModel = this.DataContext as IHandleWindowSizeChanged;
-            if (viewModel != null)
-            {
-                viewModel.WindowCurrentSizeChanged();
-            }
-        }
-
-        void pop_Opened(object sender, object e)
-        {
-            const int margin = 10;
-            const int appbarHeight = 280;
-            pop.HorizontalOffset = margin;
-            pop.VerticalOffset = Window.Current.CoreWindow.Bounds.Bottom - appbarHeight - margin;
-        }
-
-        protected override void OnNavigatingFrom(Windows.UI.Xaml.Navigation.NavigatingCancelEventArgs e)
-        {
-            Window.Current.SizeChanged -= Current_SizeChanged;
+            int margin = 10;
+            int appbarHeight = 90;
+            EditQuantityPopup.HorizontalOffset = margin;
+            EditQuantityPopup.VerticalOffset = Window.Current.CoreWindow.Bounds.Bottom - appbarHeight - PopupPanel.ActualHeight - margin;
         }
     }
 }

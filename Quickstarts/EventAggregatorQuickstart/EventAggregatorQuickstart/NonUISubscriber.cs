@@ -7,17 +7,28 @@
 
 
 using System;
+using Windows.UI.Core;
 using Windows.UI.Popups;
 
 namespace EventAggregatorQuickstart
 {
     public class NonUISubscriber
     {
+        CoreDispatcher _dispatcher;
+        public NonUISubscriber(CoreDispatcher dispatcher)
+        {
+            _dispatcher = dispatcher;
+        }
+
         public void HandleShoppingCartChanged(ShoppingCart cart)
         {
-            MessageDialog dialog = new MessageDialog("Shopping cart updated in Non UI subscriber on thread " + Environment.CurrentManagedThreadId);
             // Assign into local variable because it is meant to be fire and forget and calling would require an await/async
-            var task = dialog.ShowAsync();
+            var threadId = Environment.CurrentManagedThreadId;
+            var dialogAction = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    MessageDialog dialog = new MessageDialog("Shopping cart updated in Non UI subscriber on thread " + threadId);
+                    var showAsync = dialog.ShowAsync();
+                });
         }
     }
 }

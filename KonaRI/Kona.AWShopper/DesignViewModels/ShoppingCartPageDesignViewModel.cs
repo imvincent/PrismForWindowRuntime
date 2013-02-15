@@ -53,29 +53,29 @@ namespace Kona.AWShopper.DesignViewModels
                    new ShoppingCartItemViewModel(new ShoppingCartItem()
                         {
                             Id = Guid.NewGuid().ToString(),
-                           Product = new Product() {  Title = "Product 2",  Description = "Description of Product 2", ListPrice = 25.10, DiscountPercentage = 10, ProductNumber = "2", ImageName = (new Uri("ms-appx:///Assets/StoreLogo.png")).AbsoluteUri },
-                            Quantity = 1,
+                            Product = new Product() {  Title = "Product 2",  Description = "Description of Product 2", ListPrice = 25.10, DiscountPercentage = 10, ProductNumber = "2", ImageName = (new Uri("ms-appx:///Assets/StoreLogo.png")).AbsoluteUri },
+                            Quantity = 20,
                             Currency = "USD"
                         }), 
                    new ShoppingCartItemViewModel(new ShoppingCartItem()
                         {
                             Id = Guid.NewGuid().ToString(),
-                           Product = new Product() {  Title = "Product 3",  Description = "Description of Product 3", ListPrice = 25.10, DiscountPercentage = 10, ProductNumber = "3", ImageName = (new Uri("ms-appx:///Assets/StoreLogo.png")).AbsoluteUri },
-                            Quantity = 1,
+                            Product = new Product() {  Title = "Product 3",  Description = "Description of Product 3", ListPrice = 25.10, DiscountPercentage = 10, ProductNumber = "3", ImageName = (new Uri("ms-appx:///Assets/StoreLogo.png")).AbsoluteUri },
+                            Quantity = 30,
                             Currency = "USD"
                         }), 
                    new ShoppingCartItemViewModel(new ShoppingCartItem()
                         {
                             Id = Guid.NewGuid().ToString(),
                             Product = new Product() {  Title = "Product 4",  Description = "Description of Product 4", ListPrice = 25.10, DiscountPercentage = 10, ProductNumber = "4", ImageName = (new Uri("ms-appx:///Assets/StoreLogo.png")).AbsoluteUri },
-                            Quantity = 1,
+                            Quantity = 14,
                             Currency = "USD"
                         }), 
                    new ShoppingCartItemViewModel(new ShoppingCartItem()
                         {
                             Id = Guid.NewGuid().ToString(),
                             Product = new Product() {  Title = "Product 5",  Description = "Description of Product 5", ListPrice = 25.10, DiscountPercentage = 10, ProductNumber = "5", ImageName = (new Uri("ms-appx:///Assets/StoreLogo.png")).AbsoluteUri },
-                            Quantity = 1,
+                            Quantity = 25,
                             Currency = "USD"
                         }), 
                 };

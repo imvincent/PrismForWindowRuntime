@@ -32,7 +32,7 @@ namespace Kona.Infrastructure.Tests
                 var page = new MockPage();
 
                 // Register the ViewModel to the page
-                ViewModelLocator.Register(typeof(MockPage), () => new MockPageViewModel());
+                ViewModelLocator.Register(typeof(MockPage).ToString(), () => new MockPageViewModel());
 
                 // Fire AutoWireViewModelChanged
                 ViewModelLocator.SetAutoWireViewModel(page, true);

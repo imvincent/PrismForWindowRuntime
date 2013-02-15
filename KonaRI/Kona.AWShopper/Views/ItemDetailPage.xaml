@@ -6,16 +6,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:infrastructure="using:Kona.Infrastructure"
+             xmlns:designViewModels="using:Kona.AWShopper.DesignViewModels"
              xmlns:views="using:Kona.AWShopper.Views"
              infrastructure:ViewModelLocator.AutoWireViewModel="true"
-             mc:Ignorable="d">
-    <Page.Resources>
-
-        <!-- Collection of items displayed by this page -->
-        <CollectionViewSource x:Name="itemsViewSource"
-                              Source="{Binding Items}"/>
-
-    </Page.Resources>
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance designViewModels:ItemDetailsPageDesignViewModel, IsDesignTimeCreatable=True}">
 
     <Page.TopAppBar>
         <AppBar Style="{StaticResource AppBarStyle}">
@@ -68,7 +63,7 @@
                   AutomationProperties.Name="Item Details"
                   TabIndex="1"
                   Grid.Row="1"
-                  ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
+                  ItemsSource="{Binding Items}"
                   SelectedItem="{Binding SelectedProduct, Mode=TwoWay}">
             <!-- </snippet409> -->
             <!-- </snippet605> -->
@@ -80,7 +75,7 @@
                         Loaded/unloaded events explicitly subscribe to view state updates from the page
                     -->
                     <UserControl Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates">
-                        <ScrollViewer x:Name="scrollViewer" Grid.Row="1" Padding="120,0,0,0" VerticalScrollBarVisibility="Auto">
+                        <ScrollViewer x:Name="scrollViewer" Grid.Row="1" Padding="120,0,0,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                             <Grid x:Name="mainGrid">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
@@ -101,11 +96,7 @@
                                     </Grid.RowDefinitions>
                                     <TextBlock x:Uid="OverviewLabel" Grid.Row="0" FontWeight="SemiLight" FontSize="28" Foreground="{StaticResource AWShopperAccentBrush}" Text="Overview" />
                                     <Image Grid.Row="1" x:Name="image" Height="300" Width="300" Margin="0,20,0,20" Source="{Binding Image}" Stretch="UniformToFill" />
-                                    <StackPanel Grid.Row="2" Orientation="Horizontal">
-                                        <ComboBox x:Name="colorCombo" Width="145" Margin="10,0,0,0" ItemsSource="{Binding Colors}" DisplayMemberPath="Value" SelectedValuePath="Id" SelectedValue="{Binding SelectedColor, Mode=TwoWay}"/>
-                                        <ComboBox x:Name="sizeCombo" Width="145" Margin="10,0,10,0" ItemsSource="{Binding Sizes}" DisplayMemberPath="Value" SelectedValuePath="Id" SelectedValue="{Binding SelectedSize, Mode=TwoWay}"/>
-                                    </StackPanel>
-                                    <Button Grid.Row="4" x:Uid="AddToCartButton" AutomationProperties.AutomationId="AddToCartButton" Content="Add to Cart" Command="{Binding AddToCartCommand}" Background="{StaticResource AWShopperAccentBrush}" Margin="10,10,10,10" HorizontalAlignment="Stretch"/>
+                                    <Button Grid.Row="2" x:Uid="AddToCartButton" AutomationProperties.AutomationId="AddToCartButton" Content="Add to Cart" Command="{Binding AddToCartCommand}" Background="{StaticResource AWShopperAccentBrush}" Margin="10,10,10,10" HorizontalAlignment="Stretch"/>
                                 </Grid>
                                 <Grid x:Name="grid2" Column="1" Width="320">
                                     <Grid.RowDefinitions>
@@ -230,20 +221,6 @@
                                                 <DiscreteObjectKeyFrame KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
                                                         <x:Double>290</x:Double>
-                                                    </DiscreteObjectKeyFrame.Value>
-                                                </DiscreteObjectKeyFrame>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="sizeCombo">
-                                                <DiscreteObjectKeyFrame KeyTime="0">
-                                                    <DiscreteObjectKeyFrame.Value>
-                                                        <x:Double>130</x:Double>
-                                                    </DiscreteObjectKeyFrame.Value>
-                                                </DiscreteObjectKeyFrame>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="colorCombo">
-                                                <DiscreteObjectKeyFrame KeyTime="0">
-                                                    <DiscreteObjectKeyFrame.Value>
-                                                        <x:Double>138</x:Double>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
@@ -372,4 +349,30 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </Grid>
+
+    <!-- AppBar -->
+    <Page.BottomAppBar>
+        <AppBar Style="{StaticResource AppBarStyle}"
+                AutomationProperties.AutomationId="BottomAppBar"
+                IsSticky="{Binding IsAppBarSticky}">
+            <Grid>
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Left">
+                    <Button x:Name="PinAppBarButton"
+                            x:Uid="PinAppBarButton"
+                            AutomationProperties.AutomationId="PinAppBarButton"
+                            Style="{StaticResource PinAppBarButtonStyle}"
+                            Visibility="{Binding IsSelectedProductPinned, Converter={StaticResource BooleanNegationToVisibilityConverter}}"
+                            Command="{Binding PinProductCommand}" />
+                    <Button x:Name="UnpinAppBarButton"
+                            x:Uid="UnpinAppBarButton"
+                            AutomationProperties.AutomationId="UnpinAppBarButton"
+                            Style="{StaticResource UnpinAppBarButtonStyle}"
+                            Visibility="{Binding IsSelectedProductPinned, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            Command="{Binding UnpinProductCommand}" />
+                </StackPanel>
+            </Grid>
+        </AppBar>
+    </Page.BottomAppBar>
+
 </infrastructure:VisualStateAwarePage>

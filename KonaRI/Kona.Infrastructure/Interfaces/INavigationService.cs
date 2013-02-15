@@ -14,5 +14,7 @@ namespace Kona.Infrastructure
         void GoBack();
         bool CanGoBack();
         void ClearHistory();
+        void RestoreSavedNavigation();
+        void Suspending();
     }
 }

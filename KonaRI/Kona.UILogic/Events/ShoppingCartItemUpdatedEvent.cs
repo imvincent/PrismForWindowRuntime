@@ -10,7 +10,7 @@ using Microsoft.Practices.PubSubEvents;
 
 namespace Kona.UILogic.Events
 {
-    public class ShoppingCartItemUpdatedEvent : PubSubEvent
+    public class ShoppingCartItemUpdatedEvent : PubSubEvent<object>
     {
     }
 }

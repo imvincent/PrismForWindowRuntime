@@ -47,6 +47,4 @@ namespace Kona.AWShopper.Behaviors
             }
         }
     }
-
-
 }

@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Kona.UILogic.Models;
 using Kona.UILogic.Services;
@@ -17,9 +18,9 @@ namespace Kona.UILogic.Repositories
     public class CheckoutDataRepository : ICheckoutDataRepository
     {
         private readonly ISettingsStoreService _settingsStoreService;
-        private ICollection<Address> _shippingAddresses;
-        private ICollection<Address> _billingAddresses;
-        private ICollection<PaymentMethod> _paymentMethods;
+        private IList<Address> _shippingAddresses;
+        private IList<Address> _billingAddresses;
+        private IList<PaymentMethod> _paymentMethods;
 
         public CheckoutDataRepository(ISettingsStoreService settingsStoreService)
         {
@@ -28,181 +29,168 @@ namespace Kona.UILogic.Repositories
 
         public Address GetShippingAddress(string id)
         {
-            if (_shippingAddresses == null)
-            {
-                _shippingAddresses = _settingsStoreService.RetrieveAllValues<Address>("ShippingAddress");
-            }
-            var shippingAdress = _shippingAddresses.FirstOrDefault(s => s.Id == id);
-            return shippingAdress;
+            return GetAllShippingAddresses().FirstOrDefault(s => s.Id == id);
         }
 
-        // <snippet503>
         public Address GetBillingAddress(string id)
         {
-            if (_billingAddresses == null)
-            {
-                _billingAddresses = _settingsStoreService.RetrieveAllValues<Address>("BillingAddress");
-            }
-            var billingAddress = _billingAddresses.FirstOrDefault(b => b.Id == id);
-            return billingAddress;
+            return GetAllBillingAddresses().FirstOrDefault(b => b.Id == id);
         }
-        // </snippet503>
 
         public PaymentMethod GetPaymentMethod(string id)
         {
-            if (_paymentMethods == null)
-            {
-                _paymentMethods = _settingsStoreService.RetrieveAllValues<PaymentMethod>("PaymentMethod");
-            }
-            var paymentMethod = _paymentMethods.FirstOrDefault(p => p.Id == id);
-            return paymentMethod;
+            return GetAllPaymentMethods().FirstOrDefault(p => p.Id == id);
         }
 
-        public ICollection<Address> GetAllShippingAddresses()
+        public Address GetDefaultShippingAddress()
+        {
+            var defaultValueId = _settingsStoreService.GetValue<string>(Constants.Default, Constants.ShippingAddress);
+            if (string.IsNullOrEmpty(defaultValueId)) return null;
+
+            return GetShippingAddress(defaultValueId);
+        }
+
+        public Address GetDefaultBillingAddress()
+        {
+            var defaultValueId = _settingsStoreService.GetValue<string>(Constants.Default, Constants.BillingAddress);
+            if (string.IsNullOrEmpty(defaultValueId)) return null;
+
+            return GetBillingAddress(defaultValueId);
+        }
+
+        public PaymentMethod GetDefaultPaymentMethod()
+        {
+            var defaultValueId = _settingsStoreService.GetValue<string>(Constants.Default, Constants.PaymentMethod);
+            if (string.IsNullOrEmpty(defaultValueId)) return null;
+
+            return GetPaymentMethod(defaultValueId);
+        }
+
+        public IReadOnlyCollection<Address> GetAllShippingAddresses()
         {
             if (_shippingAddresses == null)
             {
-                _shippingAddresses = _settingsStoreService.RetrieveAllValues<Address>("ShippingAddress");
+                _shippingAddresses = _settingsStoreService.GetAllEntities<Address>(Constants.ShippingAddress).ToList();
             }
-            return _shippingAddresses;
+
+            return new ReadOnlyCollection<Address>(_shippingAddresses);
         }
 
-        public ICollection<Address> GetAllBillingAddresses()
+        // <snippet503>
+        public IReadOnlyCollection<Address> GetAllBillingAddresses()
         {
             if (_billingAddresses == null)
             {
-               _billingAddresses = _settingsStoreService.RetrieveAllValues<Address>("BillingAddress");
+                _billingAddresses = _settingsStoreService.GetAllEntities<Address>(Constants.BillingAddress).ToList();
             }
-            return _billingAddresses;
-        }
 
-        public ICollection<PaymentMethod> GetAllPaymentMethods()
+            return new ReadOnlyCollection<Address>(_billingAddresses);
+        }
+        // </snippet503>
+
+        public IReadOnlyCollection<PaymentMethod> GetAllPaymentMethods()
         {
             if (_paymentMethods == null)
             {
-                _paymentMethods = _settingsStoreService.RetrieveAllValues<PaymentMethod>("PaymentMethod");
+                _paymentMethods = _settingsStoreService.GetAllEntities<PaymentMethod>(Constants.PaymentMethod).ToList();
             }
 
-            return _paymentMethods;
-        }
-
-        public Address GetDefaultShippingAddressValue()
-        {
-            return _settingsStoreService.GetDefaultValue<Address>("ShippingAddress");
-        }
-
-        public Address GetDefaultBillingAddressValue()
-        {
-            return _settingsStoreService.GetDefaultValue<Address>("BillingAddress");
-        }
-
-        public PaymentMethod GetDefaultPaymentMethodValue()
-        {
-            return _settingsStoreService.GetDefaultValue<PaymentMethod>("PaymentMethod");
+            return new ReadOnlyCollection<PaymentMethod>(_paymentMethods);
         }
 
         public Address SaveShippingAddress(Address address)
         {
-            if (_shippingAddresses == null)
+            Address savedAddress = GetAllShippingAddresses().FirstOrDefault(c => IsMatchingAddress(c, address));
+
+            if (savedAddress == null)
             {
-                _shippingAddresses = _settingsStoreService.RetrieveAllValues<Address>("ShippingAddress");
+                address.Id = Guid.NewGuid().ToString();
+                _shippingAddresses.Add(address);
+                _settingsStoreService.SaveEntity(Constants.ShippingAddress, address.Id, address);
+                
+                return address;
             }
 
-            Address savedAddress = savedAddress = _shippingAddresses.FirstOrDefault(c => IsMatchingAddress(c, address));
-            if (savedAddress != null) return savedAddress;
-
-            address.Id = Guid.NewGuid().ToString();
-            _shippingAddresses.Add(address);
-            _settingsStoreService.SaveValue("ShippingAddress", address);
-            return address;
+            return savedAddress;
         }
 
         // <snippet502>
         public Address SaveBillingAddress(Address address)
         {
-            if (_billingAddresses == null)
+            Address savedAddress = GetAllBillingAddresses().FirstOrDefault(c => IsMatchingAddress(c, address));
+
+            if (savedAddress == null)
             {
-                _billingAddresses = _settingsStoreService.RetrieveAllValues<Address>("BillingAddress");
+                address.Id = Guid.NewGuid().ToString();
+                _billingAddresses.Add(address);
+                _settingsStoreService.SaveEntity(Constants.BillingAddress, address.Id, address);
+                
+                return address;
             }
 
-            Address savedAddress = savedAddress = _billingAddresses.FirstOrDefault(c => IsMatchingAddress(c, address));
-            if (savedAddress != null) return savedAddress;
-
-            address.Id = Guid.NewGuid().ToString();
-            _billingAddresses.Add(address);
-            _settingsStoreService.SaveValue("BillingAddress", address);
-            return address;
+            return savedAddress;
         }
         // </snippet502>
 
         public PaymentMethod SavePaymentMethod(PaymentMethod paymentMethod)
         {
-            if (_paymentMethods == null)
+            PaymentMethod savedPaymentMethod = GetAllPaymentMethods().FirstOrDefault(c => IsMatchingPaymentMethod(c, paymentMethod));
+
+            if (savedPaymentMethod == null)
             {
-                _paymentMethods = _settingsStoreService.RetrieveAllValues<PaymentMethod>("PaymentMethod");
+                paymentMethod.Id = Guid.NewGuid().ToString();
+                _paymentMethods.Add(paymentMethod);
+                _settingsStoreService.SaveEntity(Constants.PaymentMethod, paymentMethod.Id, paymentMethod);
+
+                return paymentMethod;
             }
 
-            PaymentMethod savedPaymentMethod = _paymentMethods.FirstOrDefault(c => IsMatchingPaymentMethod(c, paymentMethod));
-            if (savedPaymentMethod != null) return savedPaymentMethod;
-
-            paymentMethod.Id = Guid.NewGuid().ToString();
-            _paymentMethods.Add(paymentMethod);
-            _settingsStoreService.SaveValue("PaymentMethod", paymentMethod);
-            return paymentMethod;
+            return savedPaymentMethod;
         }
 
-        public void SetAsDefaultShippingAddress(string id)
+        public void SetDefaultShippingAddress(Address address)
         {
-            _settingsStoreService.SetAsDefaultValue("ShippingAddress", id);
-        }
-
-        public void SetAsDefaultBillingAddress(string id)
-        {
-            _settingsStoreService.SetAsDefaultValue("BillingAddress", id);
-        }
-
-        public void SetAsDefaultPaymentMethod(string id)
-        {
-            _settingsStoreService.SetAsDefaultValue("PaymentMethod", id);
-        }
-
-        public void DeleteShippingAddressValue(string id)
-        {
-            if (_shippingAddresses == null)
+            if (address == null)
             {
-                _shippingAddresses = _settingsStoreService.RetrieveAllValues<Address>("ShippingAddress");
+                throw new ArgumentNullException("address", "address is null");
             }
 
-            var elementToRemove = _shippingAddresses.FirstOrDefault(p => p.Id == id);
-            if (elementToRemove == null) return;
-            _shippingAddresses.Remove(elementToRemove);
-            _settingsStoreService.DeleteValue("ShippingAddress", id);
+            _settingsStoreService.SaveValue<string>(Constants.Default, Constants.ShippingAddress, address.Id);
         }
 
-        public void DeleteBillingAddressValue(string id)
+        public void SetDefaultBillingAddress(Address address)
         {
-            if (_billingAddresses == null)
+            if (address == null)
             {
-                _billingAddresses = _settingsStoreService.RetrieveAllValues<Address>("BillingAddress");
+                throw new ArgumentNullException("address", "address is null");
             }
 
-            var elementToRemove = _billingAddresses.FirstOrDefault(p => p.Id == id);
-            if (elementToRemove == null) return;
-            _billingAddresses.Remove(elementToRemove);
-            _settingsStoreService.DeleteValue("BillingAddress", id);
+            _settingsStoreService.SaveValue<string>(Constants.Default, Constants.BillingAddress, address.Id);
         }
 
-        public void DeletePaymentMethodValue(string id)
+        public void SetDefaultPaymentMethod(PaymentMethod paymentMethod)
         {
-            if (_paymentMethods == null)
+            if (paymentMethod == null)
             {
-                _paymentMethods = _settingsStoreService.RetrieveAllValues<PaymentMethod>("PaymentMethod");
+                throw new ArgumentNullException("paymentMethod", "paymentMethod is null");
             }
 
-            var elementToRemove = _paymentMethods.FirstOrDefault(p => p.Id == id);
-            if (elementToRemove == null) return;
-            _paymentMethods.Remove(elementToRemove);
-            _settingsStoreService.DeleteValue("PaymentMethod", id);
+            _settingsStoreService.SaveValue<string>(Constants.Default, Constants.PaymentMethod, paymentMethod.Id);
+        }
+
+        public void RemoveDefaultShippingAddress()
+        {
+            _settingsStoreService.DeleteSetting(Constants.Default, Constants.ShippingAddress);
+        }
+
+        public void RemoveDefaultBillingAddress()
+        {
+            _settingsStoreService.DeleteSetting(Constants.Default, Constants.BillingAddress);
+        }
+
+        public void RemoveDefaultPaymentMethod()
+        {
+            _settingsStoreService.DeleteSetting(Constants.Default, Constants.PaymentMethod);
         }
 
         private static bool IsMatchingAddress(Address firstAddress, Address secondAddress)

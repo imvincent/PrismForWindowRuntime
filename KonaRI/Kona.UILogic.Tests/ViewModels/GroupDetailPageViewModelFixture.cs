@@ -14,6 +14,7 @@ using Kona.UILogic.ViewModels;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using Windows.UI.Xaml.Navigation;
 using System.Collections.Generic;
+using System.Net.Http;
 
 namespace Kona.UILogic.Tests.ViewModels
 {
@@ -55,13 +56,45 @@ namespace Kona.UILogic.Tests.ViewModels
                 return Task.FromResult(categories);
             };
 
-            var viewModel = new GroupDetailPageViewModel(repository, navigationService);
+            var viewModel = new GroupDetailPageViewModel(repository, navigationService, null, null);
             viewModel.OnNavigatedTo(1, NavigationMode.New, null);
 
             Assert.IsNotNull(viewModel.Items);
             Assert.AreEqual(3, ((ICollection<CategoryViewModel>)viewModel.Items).Count);
             Assert.AreEqual("CategoryTitle", viewModel.Title);
         }
+
+        [TestMethod]
+        public void OnNavigatedTo_When_Service_Not_Available_Then_Pops_Alert()
+        {
+            var repository = new MockProductCatalogRepository();
+            var navigationService = new MockNavigationService();
+            var alertService = new MockAlertMessageService();
+            var resourceLoader = new MockResourceLoader();
+
+            bool alertCalled = false;
+            repository.GetSubcategoriesAsyncDelegate = (categoryId) =>
+            {
+                throw new HttpRequestException();
+            };
+
+            repository.GetCategoriesAsyncDelegate = (categoryId) =>
+            {
+                throw new HttpRequestException();
+            };
+
+            alertService.ShowAsyncDelegate = (msg, title) =>
+            {
+                alertCalled = true;
+                return Task.FromResult(string.Empty);
+            };
+
+            var viewModel = new GroupDetailPageViewModel(repository, navigationService, alertService, resourceLoader);
+            viewModel.OnNavigatedTo("1", NavigationMode.New, null);
+
+            Assert.IsTrue(alertCalled);
+        }
+
 
         [TestMethod]
         public void ProductNav_With_Valid_Parameter()
@@ -76,7 +109,7 @@ namespace Kona.UILogic.Tests.ViewModels
                 return true;
             };
 
-            var viewModel = new GroupDetailPageViewModel(repository, navigationService);
+            var viewModel = new GroupDetailPageViewModel(repository, navigationService, null, null);
             viewModel.ProductNavigationAction.Invoke(1);
         }
 
@@ -92,7 +125,7 @@ namespace Kona.UILogic.Tests.ViewModels
                 return false;
             };
 
-            var viewModel = new GroupDetailPageViewModel(repository, navigationService);
+            var viewModel = new GroupDetailPageViewModel(repository, navigationService, null, null);
             viewModel.ProductNavigationAction.Invoke(null);
         }
 
@@ -105,7 +138,7 @@ namespace Kona.UILogic.Tests.ViewModels
             navigationService.CanGoBackDelegate = () => false;
             navigationService.GoBackDelegate = () => Assert.Fail();
 
-            var viewModel = new GroupDetailPageViewModel(repository, navigationService);
+            var viewModel = new GroupDetailPageViewModel(repository, navigationService, null, null);
             bool canExecute = viewModel.GoBackCommand.CanExecute();
 
             if (canExecute) viewModel.GoBackCommand.Execute();
@@ -120,7 +153,7 @@ namespace Kona.UILogic.Tests.ViewModels
             navigationService.CanGoBackDelegate = () => true;
             navigationService.GoBackDelegate = () => Assert.IsTrue(true);
 
-            var viewModel = new GroupDetailPageViewModel(repository, navigationService);
+            var viewModel = new GroupDetailPageViewModel(repository, navigationService, null, null);
             bool canExecute = viewModel.GoBackCommand.CanExecute();
 
             if (canExecute) viewModel.GoBackCommand.Execute();

@@ -10,32 +10,37 @@ using System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml;
+using Kona.Infrastructure.Interfaces;
 
 namespace Kona.Infrastructure
 {
     public class FrameNavigationService : INavigationService
     {
-        private readonly Frame frame;
-        private IFrameSessionState frameSessionState;
-        private Func<string, Type> navigationResolver;
+        private const string LastNavigationParameterKey = "LastNavigationParameter";
+        private readonly IFrameFacade _frame;
+        private IFrameSessionState _frameSessionState;
+        private Func<string, Type> _navigationResolver;
+        private readonly IRestorableStateService _restorableStateService;
 
-        public FrameNavigationService(Frame frame, IFrameSessionState frameSessionState, Func<string, Type> navigationResolver)
+        public FrameNavigationService(IFrameFacade frame, IFrameSessionState frameSessionState, Func<string, Type> navigationResolver, IRestorableStateService restorableStateService)
         {
-            this.frame = frame;
-            this.frameSessionState = frameSessionState;
-            this.navigationResolver = navigationResolver;
+            _frame = frame;
+            _frameSessionState = frameSessionState;
+            _navigationResolver = navigationResolver;
+            _restorableStateService = restorableStateService;
 
-            this.frame.Navigating += frame_Navigating;
-            this.frame.Navigated += frame_Navigated;
+            _frame.Navigating += frame_Navigating;
+            _frame.Navigated += frame_Navigated;
         }
 
-        private void frame_Navigating(object sender, NavigatingCancelEventArgs e)
+        private void frame_Navigating(object sender, EventArgs e)
         {
             NavigateFromCurrentViewModel(false);
         }
 
-        private void frame_Navigated(object sender, NavigationEventArgs e)
+        private void frame_Navigated(object sender, MvvmNavigatedEventArgs e)
         {
+            _restorableStateService.SaveState(LastNavigationParameterKey, e.Parameter);
             NavigateToCurrentViewModel(e.NavigationMode, e.Parameter);
         }
 
@@ -46,15 +51,16 @@ namespace Kona.Infrastructure
 
         public void RestoreSavedNavigation()
         {
-            NavigateToCurrentViewModel(NavigationMode.Refresh, null);
+            var navigationParameter = _restorableStateService.GetState(LastNavigationParameterKey);
+            NavigateToCurrentViewModel(NavigationMode.Refresh, navigationParameter);
         }
 
         // <snippet705>
         private void NavigateToCurrentViewModel(NavigationMode navigationMode, object parameter)
         {
-            var newView = frame.Content as FrameworkElement;
+            var newView = _frame.Content as FrameworkElement;
             if (newView == null) return;
-            var frameState = this.frameSessionState.GetSessionStateForFrame(frame);
+            var frameState = this._frameSessionState.GetSessionStateForFrame(_frame);
             var newViewModel = newView.DataContext as INavigationAware;
             if (newViewModel != null)
                 newViewModel.OnNavigatedTo(parameter, navigationMode, frameState);
@@ -64,9 +70,9 @@ namespace Kona.Infrastructure
         // <snippet702>
         private void NavigateFromCurrentViewModel(bool suspending)
         {
-            var departingView = frame.Content as FrameworkElement;
+            var departingView = _frame.Content as FrameworkElement;
             if (departingView == null) return;
-            var frameState = this.frameSessionState.GetSessionStateForFrame(frame);
+            var frameState = this._frameSessionState.GetSessionStateForFrame(_frame);
             var departingViewModel = departingView.DataContext as INavigationAware;
             if (departingViewModel != null)
                 departingViewModel.OnNavigatedFrom(frameState, suspending);
@@ -76,24 +82,24 @@ namespace Kona.Infrastructure
         // <snippet413>
         public bool Navigate(string pageToken, object parameter)
         {
-            Type pageType = this.navigationResolver(pageToken);
-            return frame.Navigate(pageType, parameter);
+            Type pageType = this._navigationResolver(pageToken);
+            return _frame.Navigate(pageType, parameter);
         }
         // </snippet413>
 
         public void GoBack()
         {
-            frame.GoBack();
+            _frame.GoBack();
         }
 
         public bool CanGoBack()
         {
-            return frame.CanGoBack;
+            return _frame.CanGoBack;
         }
 
         public void ClearHistory()
         {
-            frame.SetNavigationState("1,0");
+            _frame.SetNavigationState("1,0");
         }
     }
 }

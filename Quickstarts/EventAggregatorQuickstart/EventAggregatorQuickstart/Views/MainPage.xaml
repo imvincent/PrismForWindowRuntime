@@ -16,18 +16,25 @@
         </DataTemplate>
     </Page.Resources>
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <ContentControl Content="{Binding PublisherViewModel}"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="{Binding ThreadMessage}" HorizontalAlignment="Center" Style="{StaticResource HeaderTextStyle}" VerticalAlignment="Bottom"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <ContentControl Content="{Binding PublisherViewModel}"
                         ContentTemplate="{StaticResource PublisherTemplate}"
                         HorizontalContentAlignment="Center"
                         VerticalContentAlignment="Center" />
-        <ContentControl Grid.Column="1"
+            <ContentControl Grid.Column="1"
                         Content="{Binding SubscriberViewModel}"
                         ContentTemplate="{StaticResource SubscriberTemplate}"
                         HorizontalContentAlignment="Center"
                         VerticalContentAlignment="Center" />
+        </Grid>
     </Grid>
 </Page>

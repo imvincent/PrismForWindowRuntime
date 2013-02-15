@@ -28,7 +28,7 @@ namespace Kona.UILogic.ViewModels
             _resourceLoader = resourceLoader;
 
             SaveCommand = new DelegateCommand(SavedShippingAddress);
-            GoBackCommand = new DelegateCommand(() => GoBack(), () => true);
+            GoBackCommand = new DelegateCommand(() => GoBack());
         }
 
         public IShippingAddressUserControlViewModel ShippingAddressViewModel

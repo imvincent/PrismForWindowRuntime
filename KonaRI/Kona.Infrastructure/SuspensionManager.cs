@@ -11,11 +11,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using Kona.Infrastructure.Interfaces;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 namespace Kona.Infrastructure
 {
@@ -71,7 +71,7 @@ namespace Kona.Infrastructure
             // Save the navigation state for all registered frames
             foreach (var weakFrameReference in _registeredFrames)
             {
-                Frame frame;
+                IFrameFacade frame;
                 if (weakFrameReference.TryGetTarget(out frame))
                 {
                     SaveFrameNavigationState(frame);
@@ -126,7 +126,7 @@ namespace Kona.Infrastructure
                 // Restore any registered frames to their saved state
                 foreach (var weakFrameReference in _registeredFrames)
                 {
-                    Frame frame;
+                    IFrameFacade frame;
                     if (weakFrameReference.TryGetTarget(out frame))
                     {
                         frame.ClearValue(FrameSessionStateProperty);
@@ -144,7 +144,7 @@ namespace Kona.Infrastructure
             DependencyProperty.RegisterAttached("_FrameSessionStateKey", typeof(String), typeof(SuspensionManager), null);
         private static DependencyProperty FrameSessionStateProperty =
             DependencyProperty.RegisterAttached("_FrameSessionState", typeof(Dictionary<String, Object>), typeof(SuspensionManager), null);
-        private static List<WeakReference<Frame>> _registeredFrames = new List<WeakReference<Frame>>();
+        private static List<WeakReference<IFrameFacade>> _registeredFrames = new List<WeakReference<IFrameFacade>>();
 
         /// <summary>
         /// Registers a <see cref="Frame"/> instance to allow its navigation history to be saved to
@@ -158,7 +158,7 @@ namespace Kona.Infrastructure
         /// <see cref="SuspensionManager"/></param>
         /// <param name="sessionStateKey">A unique key into <see cref="SessionState"/> used to
         /// store navigation-related information.</param>
-        public static void RegisterFrame(Frame frame, String sessionStateKey)
+        public static void RegisterFrame(IFrameFacade frame, String sessionStateKey)
         {
             var resourceLoader = new ResourceLoader(Constants.KonaInfrastructureResourceMapId);
 
@@ -177,7 +177,7 @@ namespace Kona.Infrastructure
             // Use a dependency property to associate the session key with a frame, and keep a list of frames whose
             // navigation state should be managed
             frame.SetValue(FrameSessionStateKeyProperty, sessionStateKey);
-            _registeredFrames.Add(new WeakReference<Frame>(frame));
+            _registeredFrames.Add(new WeakReference<IFrameFacade>(frame));
 
             // Check to see if navigation state can be restored
             RestoreFrameNavigationState(frame);
@@ -190,14 +190,14 @@ namespace Kona.Infrastructure
         /// </summary>
         /// <param name="frame">An instance whose navigation history should no longer be
         /// managed.</param>
-        public static void UnregisterFrame(Frame frame)
+        public static void UnregisterFrame(IFrameFacade frame)
         {
             // Remove session state and remove the frame from the list of frames whose navigation
             // state will be saved (along with any weak references that are no longer reachable)
             SessionState.Remove((String)frame.GetValue(FrameSessionStateKeyProperty));
             _registeredFrames.RemoveAll((weakFrameReference) =>
             {
-                Frame testFrame;
+                IFrameFacade testFrame;
                 return !weakFrameReference.TryGetTarget(out testFrame) || testFrame == frame;
             });
         }
@@ -215,7 +215,7 @@ namespace Kona.Infrastructure
         /// <param name="frame">The instance for which session state is desired.</param>
         /// <returns>A collection of state subject to the same serialization mechanism as
         /// <see cref="SessionState"/>.</returns>
-        public static Dictionary<String, Object> SessionStateForFrame(Frame frame)
+        public static Dictionary<String, Object> SessionStateForFrame(IFrameFacade frame)
         {
             var frameState = (Dictionary<String, Object>)frame.GetValue(FrameSessionStateProperty);
 
@@ -241,7 +241,7 @@ namespace Kona.Infrastructure
             return frameState;
         }
 
-        private static void RestoreFrameNavigationState(Frame frame)
+        private static void RestoreFrameNavigationState(IFrameFacade frame)
         {
             var frameState = SessionStateForFrame(frame);
             if (frameState.ContainsKey("Navigation"))
@@ -250,7 +250,7 @@ namespace Kona.Infrastructure
             }
         }
 
-        private static void SaveFrameNavigationState(Frame frame)
+        private static void SaveFrameNavigationState(IFrameFacade frame)
         {
             var frameState = SessionStateForFrame(frame);
             frameState["Navigation"] = frame.GetNavigationState();

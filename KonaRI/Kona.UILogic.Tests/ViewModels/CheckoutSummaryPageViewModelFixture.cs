@@ -21,8 +21,21 @@ namespace Kona.UILogic.Tests.ViewModels
     [TestClass]
     public class CheckoutSummaryPageViewModelFixture
     {
+
         [TestMethod]
-        public void Checkout_WhenAnonymous_ShowsSignInFlyout()
+        public void SubmitValidOrder_CallSuccessDialog()
+        {
+            // TODO
+        }
+
+        [TestMethod]
+        public void SubmitValidOrder_CallErrorDialog()
+        {
+            // TODO
+        }
+
+        [TestMethod]
+        public void Submit_WhenAnonymous_ShowsSignInFlyout()
         {
             var showFlyoutCalled = false;
             var navigationService = new MockNavigationService();
@@ -34,7 +47,7 @@ namespace Kona.UILogic.Tests.ViewModels
                 showFlyoutCalled = true;
                 Assert.AreEqual("signIn", s);
             };
-            var target = new CheckoutSummaryPageViewModel(navigationService, null, null, null, null, accountService, settingsCharmService, null);
+            var target = new CheckoutSummaryPageViewModel(navigationService, null, null, null, null, accountService, settingsCharmService, null, null);
 
             target.SubmitCommand.Execute();
 
@@ -60,8 +73,8 @@ namespace Kona.UILogic.Tests.ViewModels
             };
 
             var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), new MockOrderService(), mockShippingMethodService,
-                                                          new MockCheckoutDataRepository(), new MockShoppingCartRepository(), 
-                                                          new MockAccountService(), new MockSettingsCharmService(), new MockResourceLoader());
+                                                          null, new MockShoppingCartRepository(),
+                                                          new MockAccountService(), new MockSettingsCharmService(), new MockResourceLoader(), null);
 
             target.OnNavigatedTo(mockOrder, NavigationMode.New, null);
 
@@ -96,8 +109,8 @@ namespace Kona.UILogic.Tests.ViewModels
             };
             
             var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), new MockOrderService(), mockShippingMethodService,
-                                                          new MockCheckoutDataRepository(), new MockShoppingCartRepository(),
-                                                          new MockAccountService(), new MockSettingsCharmService(), new MockResourceLoader());
+                                                          null, new MockShoppingCartRepository(),
+                                                          new MockAccountService(), new MockSettingsCharmService(), new MockResourceLoader(), null);
 
             target.OnNavigatedTo(mockOrder, NavigationMode.New, null);
             Assert.IsFalse(target.IsBottomAppBarOpened);
@@ -112,16 +125,19 @@ namespace Kona.UILogic.Tests.ViewModels
             string requestedFlyoutName = string.Empty;
             var mockSettingsCharmService = new MockSettingsCharmService() { ShowFlyoutDelegate = (flyoutName, a, b) => Assert.IsTrue(flyoutName == requestedFlyoutName) };
 
-            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), null, null, null, null, null, mockSettingsCharmService, null);
+            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), null, null, null, null, null, mockSettingsCharmService, null, null);
 
             requestedFlyoutName = "editShippingAddress";
-            target.EditCheckoutDataCommand.Execute(new CheckoutDataViewModel(null, null, null, null, null, null, Constants.ShippingAddress, null));
+            target.SelectedCheckoutData = new CheckoutDataViewModel(null, null, null, null, null, null, Constants.ShippingAddress, null);
+            target.EditCheckoutDataCommand.Execute().Wait();
 
             requestedFlyoutName = "editBillingAddress";
-            target.EditCheckoutDataCommand.Execute(new CheckoutDataViewModel(null, null, null, null, null, null, Constants.BillingAddress, null));
+            target.SelectedCheckoutData = new CheckoutDataViewModel(null, null, null, null, null, null, Constants.BillingAddress, null);
+            target.EditCheckoutDataCommand.Execute().Wait();
 
             requestedFlyoutName = "editPaymentMethod";
-            target.EditCheckoutDataCommand.Execute(new CheckoutDataViewModel(null, null, null, null, null, null, Constants.PaymentMethod, null));
+            target.SelectedCheckoutData = new CheckoutDataViewModel(null, null, null, null, null, null, Constants.PaymentMethod, null);
+            target.EditCheckoutDataCommand.Execute().Wait();
         }
 
         [TestMethod]
@@ -151,11 +167,12 @@ namespace Kona.UILogic.Tests.ViewModels
             };
             
             var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), new MockOrderService(), mockShippingMethodService,
-                                                          new MockCheckoutDataRepository(), new MockShoppingCartRepository(),
-                                                          new MockAccountService(), mockSettingsCharmService, new MockResourceLoader());
+                                                          null, new MockShoppingCartRepository(),
+                                                          new MockAccountService(), mockSettingsCharmService, new MockResourceLoader(), null);
 
             target.OnNavigatedTo(mockOrder, NavigationMode.New, null);
-            target.EditCheckoutDataCommand.Execute(target.CheckoutDataViewModels[2]);
+            target.SelectedCheckoutData = target.CheckoutDataViewModels[2];
+            target.EditCheckoutDataCommand.Execute().Wait();
 
             // Check if order information has changed
             Assert.IsTrue(mockOrder.PaymentMethod.CardNumber == "5678");
@@ -174,16 +191,19 @@ namespace Kona.UILogic.Tests.ViewModels
                 }
             };
 
-            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), null, null, null, null, null, mockSettingsCharmService, null);
+            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), null, null, null, null, null, mockSettingsCharmService, null, null);
 
             requestedFlyoutName = "addShippingAddress";
-            target.AddCheckoutDataCommand.Execute(new CheckoutDataViewModel(null, null, null, null, null, null, Constants.ShippingAddress, null));
+            target.SelectedCheckoutData = new CheckoutDataViewModel(null, null, null, null, null, null, Constants.ShippingAddress, null);
+            target.AddCheckoutDataCommand.Execute().Wait();
 
             requestedFlyoutName = "addBillingAddress";
-            target.AddCheckoutDataCommand.Execute(new CheckoutDataViewModel(null, null, null, null, null, null, Constants.BillingAddress, null));
+            target.SelectedCheckoutData = new CheckoutDataViewModel(null, null, null, null, null, null, Constants.BillingAddress, null);
+            target.AddCheckoutDataCommand.Execute().Wait();
 
             requestedFlyoutName = "addPaymentMethod";
-            target.AddCheckoutDataCommand.Execute(new CheckoutDataViewModel(null, null, null, null, null, null, Constants.PaymentMethod, null));
+            target.SelectedCheckoutData = new CheckoutDataViewModel(null, null, null, null, null, null, Constants.PaymentMethod, null);
+            target.AddCheckoutDataCommand.Execute().Wait();
         }
     }
 }

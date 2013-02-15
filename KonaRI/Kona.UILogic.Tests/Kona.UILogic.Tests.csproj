@@ -111,10 +111,10 @@
     <Compile Include="AccountServiceFixture.cs" />
     <Compile Include="Mocks\CustomDelegates.cs" />
     <Compile Include="Mocks\MockAccountService.cs" />
+    <Compile Include="Mocks\MockAddress.cs" />
     <Compile Include="Mocks\MockAlertService.cs" />
     <Compile Include="Mocks\MockBillingAddressPageViewModel.cs" />
     <Compile Include="Mocks\MockCacheService.cs" />
-    <Compile Include="Mocks\MockCheckoutDataRepository.cs" />
     <Compile Include="Mocks\MockCredentialStore.cs" />
     <Compile Include="Mocks\MockShippingMethodService.cs" />
     <Compile Include="Mocks\MockShoppingCartUpdatedEvent.cs" />
@@ -136,6 +136,7 @@
     <Compile Include="Repositories\ProductCatalogRepositoryFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ShoppingCartRepositoryFixture.cs" />
+    <Compile Include="Services\SettingsStoreServiceFixture.cs" />
     <Compile Include="ViewModels\BillingAddressUserControlViewModelFixture.cs" />
     <Compile Include="ViewModels\CheckoutHubPageViewModelFixture.cs" />
     <Compile Include="ViewModels\CheckoutSummaryPageViewModelFixture.cs" />

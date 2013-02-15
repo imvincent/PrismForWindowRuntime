@@ -6,6 +6,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Kona.UILogic.Services
@@ -13,5 +14,7 @@ namespace Kona.UILogic.Services
     public interface IAlertMessageService
     {
         Task ShowAsync(string message, string title);
+
+        Task ShowAsync(string message, string title, IEnumerable<DialogCommand> dialogCommands);
     }
 }

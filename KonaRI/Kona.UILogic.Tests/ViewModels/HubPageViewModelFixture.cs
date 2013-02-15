@@ -84,6 +84,7 @@ namespace Kona.UILogic.Tests.ViewModels
         {
             var alertCalled = false;
             var productCatalogRepository = new MockProductCatalogRepository();
+            var navService = new MockNavigationService();
             productCatalogRepository.GetCategoriesAsyncDelegate = (maxAmmountOfProducts) =>
             {
                 throw new HttpRequestException();
@@ -95,7 +96,7 @@ namespace Kona.UILogic.Tests.ViewModels
                 Assert.AreEqual("Error", s1);
                 return Task.FromResult(string.Empty);
             };
-            var target = new HubPageViewModel(productCatalogRepository, null,
+            var target = new HubPageViewModel(productCatalogRepository, navService,
                                                                  alertMessageService, new MockResourceLoader());
             target.OnNavigatedTo(null, NavigationMode.New, null);
             

@@ -28,7 +28,7 @@ namespace Kona.UILogic.ViewModels
             _resourceLoader = resourceLoader;
             
             SaveCommand = new DelegateCommand(SavePaymentMethod);
-            GoBackCommand = new DelegateCommand(() => GoBack(), () => true);
+            GoBackCommand = new DelegateCommand(() => GoBack());
         }
 
         public IPaymentMethodUserControlViewModel PaymentMethodViewModel

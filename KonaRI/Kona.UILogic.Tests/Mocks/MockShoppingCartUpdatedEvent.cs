@@ -20,7 +20,7 @@ namespace Kona.UILogic.Tests.Mocks
 
         public Action PublishDelegate { get; set; }
 
-        public override void Publish()
+        public override void Publish(object argument)
         {
             PublishDelegate();
         }

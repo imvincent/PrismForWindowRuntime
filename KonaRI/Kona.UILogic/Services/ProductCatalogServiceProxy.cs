@@ -34,6 +34,19 @@ namespace Kona.UILogic.Services
         }
         // </snippet513>
 
+        public async Task<ReadOnlyCollection<Category>> GetFilteredProductsAsync(string productsQueryString)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.AddCurrentCultureHeader();
+                var response = await httpClient.GetAsync(string.Format("{0}?productsQueryString={1}", _categoriesBaseUrl, productsQueryString));
+                response.EnsureSuccessStatusCode();
+                var result = await response.Content.ReadAsAsync<ReadOnlyCollection<Category>>();
+
+                return result;
+            }
+        }
+
         public async Task<ReadOnlyCollection<Category>> GetSubcategoriesAsync(int categoryId)
         {
             using (var httpClient = new HttpClient())

@@ -50,10 +50,11 @@ namespace Kona.UILogic.ViewModels
         private readonly IAccountService _accountService;
         private readonly ISettingsCharmService _settingsCharmService;
         private readonly IResourceLoader _resourceLoader;
+        private readonly IAlertMessageService _alertMessageService;
         private bool _isUnsnapping = false;
 
         public CheckoutSummaryPageViewModel(INavigationService navigationService, IOrderService orderService, IShippingMethodService shippingMethodService, ICheckoutDataRepository checkoutDataRepository, IShoppingCartRepository shoppingCartRepository,
-                                            IAccountService accountService, ISettingsCharmService settingsCharmService, IResourceLoader resourceLoader)
+                                            IAccountService accountService, ISettingsCharmService settingsCharmService, IResourceLoader resourceLoader, IAlertMessageService alertMessageService)
         {
             _navigationService = navigationService;
             _orderService = orderService;
@@ -63,13 +64,14 @@ namespace Kona.UILogic.ViewModels
             _settingsCharmService = settingsCharmService;
             _resourceLoader = resourceLoader;
             _accountService = accountService;
+            _alertMessageService = alertMessageService;
 
-            SubmitCommand = new DelegateCommand(Submit, CanSubmit);
+            SubmitCommand = DelegateCommand.FromAsyncHandler(Submit, CanSubmit);
             GoBackCommand = new DelegateCommand(_navigationService.GoBack);
 
-            EditCheckoutDataCommand = new DelegateCommand<CheckoutDataViewModel>(EditCheckoutData);
-            SelectCheckoutDataCommand = new DelegateCommand<CheckoutDataViewModel>(SelectCheckoutData);
-            AddCheckoutDataCommand = new DelegateCommand<CheckoutDataViewModel>(AddCheckoutData);
+            EditCheckoutDataCommand = new DelegateCommand(EditCheckoutData);
+            SelectCheckoutDataCommand = new DelegateCommand(SelectCheckoutData);
+            AddCheckoutDataCommand = new DelegateCommand(AddCheckoutData);
         }
 
         public string OrderSubtotal
@@ -188,11 +190,11 @@ namespace Kona.UILogic.ViewModels
 
         public DelegateCommand GoBackCommand { get; private set; }
 
-        public DelegateCommand<CheckoutDataViewModel> EditCheckoutDataCommand { get; private set; }
+        public DelegateCommand EditCheckoutDataCommand { get; private set; }
 
-        public DelegateCommand<CheckoutDataViewModel> SelectCheckoutDataCommand { get; private set; }
+        public DelegateCommand SelectCheckoutDataCommand { get; private set; }
 
-        public DelegateCommand<CheckoutDataViewModel> AddCheckoutDataCommand { get; private set; }
+        public DelegateCommand AddCheckoutDataCommand { get; private set; }
 
         public override async void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState)
         {
@@ -237,7 +239,7 @@ namespace Kona.UILogic.ViewModels
             return SelectedShippingMethod != null;
         }
 
-        private async void Submit()
+        private async Task Submit()
         {
             if (await _accountService.GetSignedInUserAsync() == null)
             {
@@ -256,24 +258,26 @@ namespace Kona.UILogic.ViewModels
 
         private async Task<bool> SubmitOrderTransactionAsync()
         {
-            string errorMessage = null;
+            string errorMessage = string.Empty;
+
             try
             {
                 await _orderService.ProcessOrderAsync(_order, _accountService.ServerCookieHeader);
 
                 string successTitle = _resourceLoader.GetString("OrderPurchasedTitle");
                 string successMessage = _resourceLoader.GetString("OrderPurchasedMessage");
-                string dialogOkButtonLabel = _resourceLoader.GetString("DialogOkButtonLabel");
-
-                MessageDialog dialog = new MessageDialog(successMessage, successTitle);
-                dialog.Commands.Add(new UICommand(dialogOkButtonLabel, async (command) =>
+                var dialogOkCommand = new DialogCommand()
                     {
-                        _navigationService.Navigate("Hub", null);
-                        _navigationService.ClearHistory();
-                        await _shoppingCartRepository.ClearCartAsync();
-                    }));
+                        Label = _resourceLoader.GetString("DialogOkButtonLabel"),
+                        Invoked = async () =>
+                            {
+                                _navigationService.Navigate("Hub", null);
+                                _navigationService.ClearHistory();
+                                await _shoppingCartRepository.ClearCartAsync();
+                            }
+                    };
 
-                await dialog.ShowAsync();
+                await _alertMessageService.ShowAsync(successMessage, successTitle, new List<DialogCommand>() { dialogOkCommand });
                 return true;
             }
             catch (ModelValidationException mvex)
@@ -285,17 +289,19 @@ namespace Kona.UILogic.ViewModels
             {
                 errorMessage = string.Format(CultureInfo.CurrentCulture, ErrorMessagesHelper.GeneralServiceErrorMessage, Environment.NewLine, ex.Message);
             }
-            if (!(string.IsNullOrWhiteSpace(errorMessage)))
+
+            if (!string.IsNullOrWhiteSpace(errorMessage))
             {
-                MessageDialog errorDialog = new MessageDialog(errorMessage, ErrorMessagesHelper.ErrorProcessingOrder);
-                await errorDialog.ShowAsync();
+                await _alertMessageService.ShowAsync(errorMessage, ErrorMessagesHelper.ErrorProcessingOrder);
             }
-            // </snippet406>
+
             return false;
+            // </snippet406>
         }
 
-        private void AddCheckoutData(CheckoutDataViewModel selectedData)
+        private void AddCheckoutData()
         {
+            var selectedData = SelectedCheckoutData;
             if (selectedData == null) return;
 
             // Unsnap application, if snapped
@@ -315,8 +321,9 @@ namespace Kona.UILogic.ViewModels
             IsSelectCheckoutDataPopupOpened = false;
         }
 
-        private void EditCheckoutData(CheckoutDataViewModel selectedData)
+        private void EditCheckoutData()
         {
+            var selectedData = SelectedCheckoutData;
             if (selectedData == null) return;
 
             // Unsnap application, if snapped
@@ -333,8 +340,9 @@ namespace Kona.UILogic.ViewModels
             _settingsCharmService.ShowFlyout(flyoutName, selectedData.Context, () => UpdateCheckoutData(selectedData));
         }
 
-        private void SelectCheckoutData(CheckoutDataViewModel selectedData)
+        private void SelectCheckoutData()
         {
+            var selectedData = SelectedCheckoutData;
             IEnumerable<CheckoutDataViewModel> checkoutData = null;
 
             switch (selectedData.DataType)
@@ -360,7 +368,7 @@ namespace Kona.UILogic.ViewModels
             {
                 IsSelectCheckoutDataPopupOpened = true;
 
-                // Select the current order CheckoutData
+                // Select the order's CheckoutData
                 SelectedAllCheckoutData = AllCheckoutDataViewModels.FirstOrDefault(c => c.EntityId == SelectedCheckoutData.EntityId);
             }
         }

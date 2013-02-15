@@ -33,11 +33,11 @@ namespace Kona.Infrastructure.Tests
         {
             await ExecuteOnUIThread(() =>
             {
-                Frame frame = new Frame();
-                var mockFrameSessionState = new MockFrameSessionState();
-                mockFrameSessionState.GetSessionStateForFrameDelegate = (Frame currentFrame) => new Dictionary<string, object>();
-
-                var navigationService = new FrameNavigationService(frame, mockFrameSessionState, (pageToken) => typeof(MockPage));
+                var frame = new FrameFacadeAdapter(new Frame());
+                var frameSessionState = new MockFrameSessionState();
+                frameSessionState.GetSessionStateForFrameDelegate = (currentFrame) => new Dictionary<string, object>();
+                var restorableStateService = new MockRestorableStateService();
+                var navigationService = new FrameNavigationService(frame, frameSessionState, (pageToken) => typeof(MockPage), restorableStateService);
 
                 bool result = navigationService.Navigate("Mock", 1);
 
@@ -53,11 +53,11 @@ namespace Kona.Infrastructure.Tests
         {
             await ExecuteOnUIThread(() =>
             {
-                Frame frame = new Frame();
-                var mockFrameSessionState = new MockFrameSessionState();
-                mockFrameSessionState.GetSessionStateForFrameDelegate = (Frame currentFrame) => new Dictionary<string, object>();
+                var frame = new FrameFacadeAdapter(new Frame());
+                var frameSessionState = new MockFrameSessionState();
+                frameSessionState.GetSessionStateForFrameDelegate = (currentFrame) => new Dictionary<string, object>();
 
-                var navigationService = new FrameNavigationService(frame, mockFrameSessionState, (pageToken) => typeof(string));
+                var navigationService = new FrameNavigationService(frame, frameSessionState, (pageToken) => typeof(string), null);
 
                 bool result = navigationService.Navigate("Mock", 1);
 
@@ -71,7 +71,7 @@ namespace Kona.Infrastructure.Tests
         {
             await ExecuteOnUIThread(() =>
             {
-                Frame frame = new Frame();
+                var frame = new FrameFacadeAdapter(new Frame());
 
                 bool viewModelNavigatedToCalled = false;
                 var viewModel = new MockPageViewModel();
@@ -90,15 +90,15 @@ namespace Kona.Infrastructure.Tests
                     view.DataContext = viewModel;
                 };
 
-                var mockFrameSessionState = new MockFrameSessionState();
-                mockFrameSessionState.GetSessionStateForFrameDelegate = (Frame currentFrame) =>
+                var frameSessionState = new MockFrameSessionState();
+                frameSessionState.GetSessionStateForFrameDelegate = (currentFrame) =>
                 {
                     var toReturn = new Dictionary<string, object>();
                     toReturn.Add("someValue", 1);
                     return toReturn;
                 };
-
-                var navigationService = new FrameNavigationService(frame, mockFrameSessionState, (pageToken) => typeof(MockPage));
+                var restorableStateService = new MockRestorableStateService();
+                var navigationService = new FrameNavigationService(frame, frameSessionState, (pageToken) => typeof(MockPage), restorableStateService);
 
                 navigationService.Navigate("Mock", 1);
 
@@ -111,7 +111,7 @@ namespace Kona.Infrastructure.Tests
         {
             await ExecuteOnUIThread(() =>
             {
-                Frame frame = new Frame();
+                var frame = new FrameFacadeAdapter(new Frame());
                 
 
                 bool viewModelNavigatedFromCalled = false;
@@ -123,15 +123,15 @@ namespace Kona.Infrastructure.Tests
                     viewModelNavigatedFromCalled = true;
                 };
 
-                var mockFrameSessionState = new MockFrameSessionState();
-                mockFrameSessionState.GetSessionStateForFrameDelegate = (Frame currentFrame) =>
+                var frameSessionState = new MockFrameSessionState();
+                frameSessionState.GetSessionStateForFrameDelegate = (currentFrame) =>
                 {
                     var toReturn = new Dictionary<string, object>();
                     toReturn.Add("someValue", 1);
                     return toReturn;
                 };
 
-                var navigationService = new FrameNavigationService(frame, mockFrameSessionState, (pageToken) => typeof(MockPage));
+                var navigationService = new FrameNavigationService(frame, frameSessionState, (pageToken) => typeof(MockPage), null);
 
                 // Set up the frame's content with a Page
                 var view = new MockPage();
@@ -150,16 +150,16 @@ namespace Kona.Infrastructure.Tests
         {
             await ExecuteOnUIThread(() =>
             {
-                Frame frame = new Frame();
-                var mockFrameSessionState = new MockFrameSessionState();
-                mockFrameSessionState.GetSessionStateForFrameDelegate = (Frame currentFrame) =>
+                var frame = new FrameFacadeAdapter(new Frame());
+                var frameSessionState = new MockFrameSessionState();
+                frameSessionState.GetSessionStateForFrameDelegate = (currentFrame) =>
                 {
                     var toReturn = new Dictionary<string, object>();
                     toReturn.Add("someValue", 1);
                     return toReturn;
                 };
-
-                var navigationService = new FrameNavigationService(frame, mockFrameSessionState, (pageToken) => typeof(MockPage));
+                var restorableStateService = new MockRestorableStateService();
+                var navigationService = new FrameNavigationService(frame, frameSessionState, (pageToken) => typeof(MockPage), restorableStateService);
 
                 navigationService.Navigate("Mock", 1);
 
@@ -182,16 +182,16 @@ namespace Kona.Infrastructure.Tests
         {
             await ExecuteOnUIThread(() =>
             {
-                Frame frame = new Frame();
-                var mockFrameSessionState = new MockFrameSessionState();
-                mockFrameSessionState.GetSessionStateForFrameDelegate = (Frame currentFrame) =>
+                var frame = new FrameFacadeAdapter(new Frame());
+                var frameSessionState = new MockFrameSessionState();
+                frameSessionState.GetSessionStateForFrameDelegate = (currentFrame) =>
                 {
                     var toReturn = new Dictionary<string, object>();
                     toReturn.Add("someValue", 1);
                     return toReturn;
                 };
-
-                var navigationService = new FrameNavigationService(frame, mockFrameSessionState, (pageToken) => typeof(MockPage));
+                var restorableStateService = new MockRestorableStateService();
+                var navigationService = new FrameNavigationService(frame, frameSessionState, (pageToken) => typeof(MockPage), restorableStateService);
 
                 navigationService.Navigate("Mock", 1);
 
@@ -214,11 +214,11 @@ namespace Kona.Infrastructure.Tests
         {
             await ExecuteOnUIThread(() =>
             {
-                Frame frame = new Frame();
-                var mockFrameSessionState = new MockFrameSessionState();
-                mockFrameSessionState.GetSessionStateForFrameDelegate = (Frame currentFrame) => new Dictionary<string, object>();
-
-                var navigationService = new FrameNavigationService(frame, mockFrameSessionState, (pageToken) => typeof(MockPage));
+                var frame = new FrameFacadeAdapter(new Frame());
+                var frameSessionState = new MockFrameSessionState();
+                frameSessionState.GetSessionStateForFrameDelegate = (currentFrame) => new Dictionary<string, object>();
+                var restorableStateService = new MockRestorableStateService();
+                var navigationService = new FrameNavigationService(frame, frameSessionState, (pageToken) => typeof(MockPage), restorableStateService);
 
                 bool resultFirstNavigation = navigationService.Navigate("MockPage", 1);
 

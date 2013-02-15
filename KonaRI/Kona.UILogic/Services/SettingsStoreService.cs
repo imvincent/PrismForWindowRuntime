@@ -6,6 +6,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -18,92 +19,161 @@ namespace Kona.UILogic.Services
         // <snippet500>
         private ApplicationDataContainer _settingsContainer;
 
-        public SettingsStoreService()
+        public SettingsStoreService() : this(ApplicationData.Current.LocalSettings) { }
+
+        public SettingsStoreService(ApplicationDataContainer applicationDataContainer)
         {
-            _settingsContainer = ApplicationData.Current.LocalSettings;
+            _settingsContainer = applicationDataContainer;
         }
         // </snippet500>
 
-        public void DeleteContainer(string container)
+        public T GetValue<T>(string container, string id)
         {
-            _settingsContainer.DeleteContainer(container);
+            if (container == null)
+            {
+                throw new ArgumentNullException("container", "container cannot be null");
+            }
+
+            if (id == null)
+            {
+                throw new ArgumentNullException("id", "id cannot be null");
+            }
+
+            ApplicationDataContainer dataContainer = _settingsContainer.CreateContainer(container, ApplicationDataCreateDisposition.Always);
+            var value = dataContainer.Values[id];
+
+            if (value == null) return default(T);
+
+            return (T)value;
         }
 
-        public List<T> RetrieveAllValues<T>(string container) where T : new()
+        public IEnumerable<T> GetAllValues<T>(string container)
         {
-            var selectedContainer = _settingsContainer.CreateContainer(container, ApplicationDataCreateDisposition.Always);
+            if (container == null)
+            {
+                throw new ArgumentNullException("container", "container cannot be null");
+            }
+
+            ApplicationDataContainer dataContainer = _settingsContainer.CreateContainer(container, ApplicationDataCreateDisposition.Always);
             var values = new List<T>();
 
-            var defaultValueId = selectedContainer.Values["default"] as string;
-            if (!string.IsNullOrEmpty(defaultValueId))
+            foreach (var value in dataContainer.Values)
             {
-                values.Add(PopulateEntity<T>(selectedContainer.Values[defaultValueId] as ApplicationDataCompositeValue));
+                values.Add((T)value.Value);
             }
 
-            foreach (var compositeValue in selectedContainer.Values)
-            {
-                if (compositeValue.Key != "default" && compositeValue.Key != defaultValueId)
-                {
-                    var entity = PopulateEntity<T>((ApplicationDataCompositeValue)compositeValue.Value);
-                    values.Add(entity);
-                }
-            }
             return values;
         }
 
-        // <snippet501>
-        public void SaveValue(string container, object entity)
+        public T GetEntity<T>(string container, string id) where T : new()
         {
-            if (entity == null)
+            if (container == null)
             {
-                return;
+                throw new ArgumentNullException("container", "container cannot be null");
             }
 
-            ApplicationDataCompositeValue compositeValue = GetCompositeValue(entity);
+            if (id == null)
+            {
+                throw new ArgumentNullException("id", "id cannot be null");
+            }
 
-            var selectedContainer = _settingsContainer.CreateContainer(container, ApplicationDataCreateDisposition.Always);
-            selectedContainer.Values[compositeValue["Id"].ToString()] = compositeValue;
+            ApplicationDataContainer dataContainer = _settingsContainer.CreateContainer(container, ApplicationDataCreateDisposition.Always);
+            var value = dataContainer.Values[id];
+
+            if (value == null) return default(T);
+
+            return PopulateEntity<T>((ApplicationDataCompositeValue)value);
+        }
+
+        public IEnumerable<T> GetAllEntities<T>(string container) where T : new()
+        {
+            if (container == null)
+            {
+                throw new ArgumentNullException("container", "container cannot be null");
+            }
+
+            ApplicationDataContainer dataContainer = _settingsContainer.CreateContainer(container, ApplicationDataCreateDisposition.Always);
+            var values = new List<T>();
+
+            foreach (var compositeValue in dataContainer.Values)
+            {
+                var entity = PopulateEntity<T>((ApplicationDataCompositeValue)compositeValue.Value);
+                values.Add(entity);
+            }
+
+            return values;
+        }
+
+        public void SaveValue<T>(string container, string id, T value)
+        {
+            if (container == null)
+            {
+                throw new ArgumentNullException("container", "container cannot be null");
+            }
+
+            if (string.IsNullOrEmpty(id))
+            {
+                throw new ArgumentNullException("id", "id cannot be null");
+            }
+
+            if (value == null)
+            {
+                throw new ArgumentNullException("value", "value cannot be null");
+            }
+
+            ApplicationDataContainer dataContainer = _settingsContainer.CreateContainer(container, ApplicationDataCreateDisposition.Always);
+            dataContainer.Values[id] = value;
+        }
+
+        // <snippet501>
+        public void SaveEntity<T>(string container, string id, T value) where T : new()
+        {
+            if (container == null)
+            {
+                throw new ArgumentNullException("container", "container cannot be null");
+            }
+
+            if (string.IsNullOrEmpty(id))
+            {
+                throw new ArgumentNullException("id", "id cannot be null");
+            }
+
+            if (value == null)
+            {
+                throw new ArgumentNullException("value", "value cannot be null");
+            }
+
+            ApplicationDataContainer dataContainer = _settingsContainer.CreateContainer(container, ApplicationDataCreateDisposition.Always);
+            ApplicationDataCompositeValue compositeValue = GetCompositeValue(value);
+
+            dataContainer.Values[id] = compositeValue;
         }
         // </snippet501>
 
-        public void DeleteValue(string container, string id)
+        public void DeleteSetting(string container, string id)
         {
-            var selectedContainer = _settingsContainer.CreateContainer(container, ApplicationDataCreateDisposition.Always);
-            selectedContainer.Values.Remove(id);
-        }
-
-        public bool ContainsDefaultValue(string container)
-        {
-            var selectedContainer = _settingsContainer.CreateContainer(container, ApplicationDataCreateDisposition.Always);
-            return selectedContainer.Values.ContainsKey("default");
-        }
-
-        public T GetDefaultValue<T>(string container) where T : new()
-        {
-            var selectedContainer = _settingsContainer.CreateContainer(container,
-                                                                       ApplicationDataCreateDisposition.Always);
-            var defaultValueId = selectedContainer.Values["default"] as string;
-            if (!string.IsNullOrEmpty(defaultValueId))
+            if (container == null)
             {
-                var defaultValue = selectedContainer.Values[defaultValueId];
-                if (defaultValue != null)
-                {
-                    return PopulateEntity<T>(defaultValue as ApplicationDataCompositeValue);
-                }
+                throw new ArgumentNullException("container", "container cannot be null");
             }
 
-            return default(T);
-        }
-
-        public void SetAsDefaultValue(string container, string id)
-        {
-            var selectedContainer = _settingsContainer.CreateContainer(container, ApplicationDataCreateDisposition.Always);
             if (string.IsNullOrEmpty(id))
             {
-                selectedContainer.Values["default"] = string.Empty;
+                throw new ArgumentNullException("id", "id cannot be null");
             }
 
-            selectedContainer.Values["default"] = id;
+            var dataContainer = _settingsContainer.CreateContainer(container, ApplicationDataCreateDisposition.Always);
+            dataContainer.Values.Remove(id);
+        }
+
+        public void DeleteContainer(string container)
+        {
+            if (container == null)
+            {
+                throw new ArgumentNullException("container", "container cannot be null");
+            }
+
+            _settingsContainer.DeleteContainer(container);
         }
 
         private T PopulateEntity<T>(ApplicationDataCompositeValue compositeValue) where T : new()

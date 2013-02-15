@@ -9,6 +9,7 @@
 using System;
 using System.Threading.Tasks;
 using Kona.Infrastructure;
+using Kona.Infrastructure.Interfaces;
 using Kona.UILogic.Models;
 using System.Security;
 using System.Net.Http;
@@ -17,7 +18,8 @@ namespace Kona.UILogic.Services
 {
     public class AccountService : IAccountService
     {
-        private const string STATE_TOKEN = "AccountService_ServerCookieHeader";
+        public const string ServerCookieHeaderKey = "AccountService_ServerCookieHeader";
+        public const string SignedInUserKey = "AccountService_SignedInUser";
 
         private readonly IIdentityService _identityService;
         private readonly IRestorableStateService _stateService;
@@ -30,7 +32,11 @@ namespace Kona.UILogic.Services
             _identityService = identityService;
             _stateService = stateService;
             _credentialStore = credentialStore;
-            if (_stateService != null) _stateService.AppRestored += (s, e) => { if (_stateService != null) _serverCookieHeader = _stateService.GetState(STATE_TOKEN) as string; };
+            if (_stateService != null)
+            {
+                _serverCookieHeader = _stateService.GetState(ServerCookieHeaderKey) as string;
+                _signedInUser = _stateService.GetState(SignedInUserKey) as UserInfo;
+            }
         }
 
         public string ServerCookieHeader
@@ -54,7 +60,7 @@ namespace Kona.UILogic.Services
                     return _signedInUser;
                 }
             }
-            catch (SecurityException){}
+            catch (SecurityException)
             {
                 //User's session has expired.
             }
@@ -62,36 +68,41 @@ namespace Kona.UILogic.Services
             // Attempt to sign in using credentials stored locally
             // If succeeds, ask for a new active session
             var savedCredentials = _credentialStore.GetSavedCredentials("KonaRI");
-            if (savedCredentials != null && await SignInUserAsync(savedCredentials.UserName, savedCredentials.Password))
+            if (savedCredentials != null)
             {
-                return _signedInUser;
+                savedCredentials.RetrievePassword();
+                if (await SignInUserAsync(savedCredentials.UserName, savedCredentials.Password))
+                {
+                    return _signedInUser;
+                }
             }
 
             return null;
         }
 
-        // <snippet507>
         public async Task<bool> SignInUserAsync(string userName, string password)
         {
             try
             {
+                // <snippet507>
                 var result = await _identityService.LogOnAsync(userName, password);
+                // </snippet507>
                 _serverCookieHeader = result.ServerCookieHeader;
-                _stateService.SaveState(STATE_TOKEN, _serverCookieHeader);
+                _stateService.SaveState(ServerCookieHeaderKey, _serverCookieHeader);
                 var previousSignedInUser = _signedInUser;
                 _signedInUser = result.UserInfo;
+                _stateService.SaveState(SignedInUserKey, _signedInUser);
                 RaiseUserChanged(result.UserInfo, previousSignedInUser);
                 return true;
             }
             catch (HttpRequestException)
             {
                 _serverCookieHeader = string.Empty;
-                _stateService.SaveState(STATE_TOKEN, _serverCookieHeader);
+                _stateService.SaveState(ServerCookieHeaderKey, _serverCookieHeader);
             }
 
             return false;
         }
-        // </snippet507>
 
         public event EventHandler<UserChangedEventArgs> UserChanged;
 

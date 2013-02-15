@@ -46,6 +46,12 @@ namespace Kona.AWShopper.DesignViewModels
 
         public bool IsBottomAppBarOpened { get; set; }
 
+        public ShippingMethod SelectedShippingMethod { get; set; }
+
+        public CheckoutDataViewModel SelectedCheckoutData { get; set; }
+
+        public CheckoutDataViewModel SelectedAllCheckoutData { get; set; }
+
         private void FillWithDummyData()
         {
             OrderSubtotal = "$100.00";
@@ -65,6 +71,7 @@ namespace Kona.AWShopper.DesignViewModels
                 new CheckoutDataViewModel("2", resourceLoader.GetString("BillingAddress"), "12345 Main St NE", "Seattle, WA 54321", "Name Lastname", new Uri("ms-appx:///Assets/billingAddressLogo.png", UriKind.Absolute), null, null),
                 new CheckoutDataViewModel("3", resourceLoader.GetString("PaymentMethod"), "Card ending in 1234", "Card expiring in 10/2014", "Name Lastname", new Uri("ms-appx:///Assets/paymentMethodLogo.png", UriKind.Absolute), null, null),
             };
+            SelectedCheckoutData = CheckoutDataViewModels.First();
 
             ShippingMethods = new List<ShippingMethod>()
             {
@@ -72,6 +79,7 @@ namespace Kona.AWShopper.DesignViewModels
                 new ShippingMethod() { Id = 2, Description = "Shipping Method 2", Cost = 15.10, EstimatedTime = "1 month"},
                 new ShippingMethod() { Id = 3, Description = "Shipping Method 3", Cost = 151.0, EstimatedTime = "1 day"},
             };
+            SelectedShippingMethod = ShippingMethods.First();
 
             ShoppingCartItemViewModels = new List<ShoppingCartItemViewModel>()
                 {
@@ -85,14 +93,14 @@ namespace Kona.AWShopper.DesignViewModels
                    new ShoppingCartItemViewModel(new ShoppingCartItem()
                         {
                             Id = Guid.NewGuid().ToString(),
-                           Product = new Product() {  Title = "Product 2",  Description = "Description of Product 2", ListPrice = 25.10, DiscountPercentage = 10, ProductNumber = "2", ImageName = (new Uri("ms-appx:///Assets/StoreLogo.png")).AbsoluteUri },
+                            Product = new Product() {  Title = "Product 2",  Description = "Description of Product 2", ListPrice = 25.10, DiscountPercentage = 10, ProductNumber = "2", ImageName = (new Uri("ms-appx:///Assets/StoreLogo.png")).AbsoluteUri },
                             Quantity = 1,
                             Currency = "USD"
                         }), 
                    new ShoppingCartItemViewModel(new ShoppingCartItem()
                         {
                             Id = Guid.NewGuid().ToString(),
-                           Product = new Product() {  Title = "Product 3",  Description = "Description of Product 3", ListPrice = 25.10, DiscountPercentage = 10, ProductNumber = "3", ImageName = (new Uri("ms-appx:///Assets/StoreLogo.png")).AbsoluteUri },
+                            Product = new Product() {  Title = "Product 3",  Description = "Description of Product 3", ListPrice = 25.10, DiscountPercentage = 10, ProductNumber = "3", ImageName = (new Uri("ms-appx:///Assets/StoreLogo.png")).AbsoluteUri },
                             Quantity = 1,
                             Currency = "USD"
                         }), 
@@ -111,7 +119,7 @@ namespace Kona.AWShopper.DesignViewModels
                             Currency = "USD"
                         }), 
                 };
-
+            
             AllCheckoutDataViewModels = new List<CheckoutDataViewModel>()
             {
                 new CheckoutDataViewModel("1", resourceLoader.GetString("ShippingAddress"), "12345 Main St NE", "Seattle, WA 54321", "Name Lastname", new Uri("ms-appx:///Assets/shippingAddressLogo.png", UriKind.Absolute), null, null),
@@ -119,6 +127,7 @@ namespace Kona.AWShopper.DesignViewModels
                 new CheckoutDataViewModel("3", resourceLoader.GetString("ShippingAddress"), "12345 Main St NE", "Seattle, WA 54321", "Name Lastname", new Uri("ms-appx:///Assets/shippingAddressLogo.png", UriKind.Absolute), null, null),
                 new CheckoutDataViewModel("4", resourceLoader.GetString("ShippingAddress"), "12345 Main St NE", "Seattle, WA 54321", "Name Lastname", new Uri("ms-appx:///Assets/shippingAddressLogo.png", UriKind.Absolute), null, null),
             };
+            SelectedAllCheckoutData = AllCheckoutDataViewModels.First();
         }
     }
 }

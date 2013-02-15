@@ -333,14 +333,11 @@
   <data name="GeneralServiceErrorMessage" xml:space="preserve">
     <value>The following error messages were received from the service: {0} {1}</value>
   </data>
-  <data name="ErrorShoppingCartServiceUnreachable" xml:space="preserve">
-    <value>Shopping cart service is unreachable.</value>
-  </data>
   <data name="Error" xml:space="preserve">
     <value>Error</value>
   </data>
-  <data name="ErrorProductCatalogServiceUnreachable" xml:space="preserve">
-    <value>Product catalog service is unreachable.</value>
+  <data name="ErrorServiceUnreachable" xml:space="preserve">
+    <value>Service is unreachable.</value>
   </data>
   <data name="HomeAppBarButton.Content" xml:space="preserve">
     <value>Home</value>
@@ -446,5 +443,11 @@
   </data>
   <data name="ShoppingCartButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Shopping Cart</value>
+  </data>
+  <data name="AppBar.FlowDirection" xml:space="preserve">
+    <value>LeftToRight</value>
+  </data>
+  <data name="Page.FlowDirection" xml:space="preserve">
+    <value>LeftToRight</value>
   </data>
 </root>

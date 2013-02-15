@@ -17,24 +17,24 @@ namespace Kona.UILogic.Repositories
         Address GetBillingAddress(string id);
         PaymentMethod GetPaymentMethod(string id);
 
-        ICollection<Address> GetAllShippingAddresses();
-        ICollection<Address> GetAllBillingAddresses();
-        ICollection<PaymentMethod> GetAllPaymentMethods();
+        Address GetDefaultShippingAddress();
+        Address GetDefaultBillingAddress();
+        PaymentMethod GetDefaultPaymentMethod();
 
-        Address GetDefaultShippingAddressValue();
-        Address GetDefaultBillingAddressValue();
-        PaymentMethod GetDefaultPaymentMethodValue();
+        IReadOnlyCollection<Address> GetAllShippingAddresses();
+        IReadOnlyCollection<Address> GetAllBillingAddresses();
+        IReadOnlyCollection<PaymentMethod> GetAllPaymentMethods();
 
         Address SaveShippingAddress(Address address);
         Address SaveBillingAddress(Address address);
         PaymentMethod SavePaymentMethod(PaymentMethod paymentMethod);
-        
-        void SetAsDefaultShippingAddress(string id);
-        void SetAsDefaultBillingAddress(string id);
-        void SetAsDefaultPaymentMethod(string id);
-        
-        void DeleteShippingAddressValue(string id);
-        void DeleteBillingAddressValue(string id);
-        void DeletePaymentMethodValue(string id);
+
+        void SetDefaultShippingAddress(Address address);
+        void SetDefaultBillingAddress(Address address);
+        void SetDefaultPaymentMethod(PaymentMethod paymentMethod);
+
+        void RemoveDefaultShippingAddress();
+        void RemoveDefaultBillingAddress();
+        void RemoveDefaultPaymentMethod();
     }
 }

@@ -4,12 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:infrastructure="using:Kona.Infrastructure" mc:Ignorable="d"
+    xmlns:infrastructure="using:Kona.Infrastructure" 
+    xmlns:designViewModels="using:Kona.AWShopper.DesignViewModels"
     infrastructure:ViewModelLocator.AutoWireViewModel="true"
-    Width="100"
-    Height="100"
-    d:DesignHeight="300"
-    d:DesignWidth="400">
+    mc:Ignorable="d"
+    Width="100" Height="100"
+    d:DesignHeight="300" d:DesignWidth="400"
+    d:DataContext="{d:DesignInstance designViewModels:ShoppingCartTabDesignViewModel, IsDesignTimeCreatable=True}">
+    
     <UserControl.Resources>
         <Style x:Key="ButtonStyle1" TargetType="Button">
             <Setter Property="Background" Value="{StaticResource ButtonBackgroundThemeBrush}"/>

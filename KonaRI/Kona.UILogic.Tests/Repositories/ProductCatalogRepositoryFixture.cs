@@ -60,7 +60,7 @@ namespace Kona.UILogic.Tests.Repositories
 
             cacheService.GetDataDelegate = (string s) =>
             {
-                if (s == "Categories")
+                if (s == "Categories0")
                     return new ReadOnlyCollection<Category>(categories);
 
                 return new ReadOnlyCollection<Category>(null);
@@ -88,7 +88,7 @@ namespace Kona.UILogic.Tests.Repositories
             cacheService.SaveDataAsyncDelegate = (s, o) =>
             {
                 var collection = (ReadOnlyCollection<Category>)o;
-                Assert.AreEqual("Categories", s);
+                Assert.AreEqual("Categories0", s);
                 Assert.AreEqual(2, collection.Count);
                 Assert.AreEqual(1, collection[0].Id);
                 Assert.AreEqual(2, collection[1].Id);

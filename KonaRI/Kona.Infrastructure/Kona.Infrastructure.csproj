@@ -101,6 +101,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AppManifestHelper.cs" />
     <Compile Include="BindableBase.cs" />
     <Compile Include="BooleanToVisibilityConverter.cs" />
     <Compile Include="Commands\DelegateCommand.cs" />
@@ -108,24 +109,31 @@
     <Compile Include="BindableValidator.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DependencyPropertyChangedHelper.cs" />
+    <Compile Include="FileBackedRestorableStateService.cs" />
     <Compile Include="Flyouts\FlyoutSize.cs" />
     <Compile Include="Flyouts\FlyOutView.cs" />
     <Compile Include="FrameNavigationService.cs" />
+    <Compile Include="FrameFacadeAdapter.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="HttpClientExtensions.cs" />
     <Compile Include="Interfaces\ICredentialStore.cs" />
     <Compile Include="Flyouts\IFlyoutViewModel.cs" />
+    <Compile Include="Interfaces\IFrameFacade.cs" />
     <Compile Include="Interfaces\IHandleWindowSizeChanged.cs" />
     <Compile Include="Interfaces\INavigationAware.cs" />
     <Compile Include="Interfaces\INavigationService.cs" />
     <Compile Include="Interfaces\IRequestService.cs" />
     <Compile Include="Interfaces\IFrameSessionState.cs" />
     <Compile Include="Interfaces\IResourceLoader.cs" />
-    <Compile Include="Interfaces\IResumableStateService.cs" />
+    <Compile Include="Interfaces\IRestorableStateService.cs" />
+    <Compile Include="SearchEventArgs.cs" />
     <Compile Include="Interfaces\ISettingsCharmService.cs" />
     <Compile Include="FrameSessionStateWrapper.cs" />
     <Compile Include="Interfaces\IValidatableBindableBase.cs" />
+    <Compile Include="MvvmNavigatedEventArgs.cs" />
+    <Compile Include="MvvmAppBase.cs" />
     <Compile Include="ResourceLoaderAdapter.cs" />
+    <Compile Include="RestorableStateServiceException.cs" />
     <Compile Include="SuspensionManager.cs" />
     <Compile Include="ValidatableBindableBase.cs" />
     <Compile Include="VisualStateAwarePage.cs" />

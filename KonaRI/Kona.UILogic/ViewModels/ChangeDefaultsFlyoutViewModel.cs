@@ -16,105 +16,107 @@ using Kona.Infrastructure;
 using Kona.Infrastructure.Flyouts;
 using Kona.UILogic.Models;
 using Kona.UILogic.Repositories;
-using Windows.ApplicationModel.Resources;
-using Windows.Globalization;
-using Windows.Globalization.DateTimeFormatting;
 
 namespace Kona.UILogic.ViewModels
 {
     public class ChangeDefaultsFlyoutViewModel : ViewModel, IFlyoutViewModel
     {
         private readonly ICheckoutDataRepository _checkoutDataRepository;
+        private IResourceLoader _resourceLoader;
         private CheckoutDataViewModel _selectedPaymentMethod;
         private CheckoutDataViewModel _selectedShippingAddress;
         private CheckoutDataViewModel _selectedBillingAddress;
-        private IResourceLoader _resourceLoader;
 
         public ChangeDefaultsFlyoutViewModel(ICheckoutDataRepository checkoutDataRepository, IResourceLoader resourceLoader)
         {
             _checkoutDataRepository = checkoutDataRepository;
             _resourceLoader = resourceLoader;
-            SaveCommand = new DelegateCommand(SaveDefaults);
-            GoBackCommand = new DelegateCommand(() => GoBack(), () => true);
+
+            GoBackCommand = new DelegateCommand(() => GoBack());
         }
 
-        public ICollection<CheckoutDataViewModel> PaymentMethods { get; private set; }
+        public IReadOnlyCollection<CheckoutDataViewModel> PaymentMethods { get; private set; }
 
-        public ICollection<CheckoutDataViewModel> ShippingAddresses { get; private set; }
+        public IReadOnlyCollection<CheckoutDataViewModel> ShippingAddresses { get; private set; }
 
-        public ICollection<CheckoutDataViewModel> BillingAddresses { get; private set; }
+        public IReadOnlyCollection<CheckoutDataViewModel> BillingAddresses { get; private set; }
 
         public Action CloseFlyout { get; set; }
 
         public Action GoBack { get; set; }
 
-        public ICommand SaveCommand { get; set; }
-
         public ICommand GoBackCommand { get; private set; }
-
-        public CheckoutDataViewModel SelectedPaymentMethod
-        {
-            get { return _selectedPaymentMethod; }
-            set { SetProperty(ref _selectedPaymentMethod, value); }
-        }
 
         public CheckoutDataViewModel SelectedShippingAddress
         {
             get { return _selectedShippingAddress; }
-            set { SetProperty(ref _selectedShippingAddress, value); }
+            set
+            {
+                var oldValue = _selectedShippingAddress;
+                if (SetProperty(ref _selectedShippingAddress, value) && value != null && oldValue != null)
+                {
+                    _checkoutDataRepository.SetDefaultShippingAddress((Address)_selectedShippingAddress.Context);
+                }
+            }
         }
 
         public CheckoutDataViewModel SelectedBillingAddress
         {
             get { return _selectedBillingAddress; }
-            set { SetProperty(ref _selectedBillingAddress, value); }
+            set
+            {
+                var oldValue = _selectedBillingAddress;
+                if (SetProperty(ref _selectedBillingAddress, value) && value != null && oldValue != null)
+                {
+                    _checkoutDataRepository.SetDefaultBillingAddress((Address)_selectedBillingAddress.Context);
+                }
+            }
+        }
+
+        public CheckoutDataViewModel SelectedPaymentMethod
+        {
+            get { return _selectedPaymentMethod; }
+            set
+            {
+                var oldValue = _selectedPaymentMethod;
+                if (SetProperty(ref _selectedPaymentMethod, value) && value != null && oldValue != null)
+                {
+                    _checkoutDataRepository.SetDefaultPaymentMethod((PaymentMethod)_selectedPaymentMethod.Context);
+                }
+            }
         }
 
         public void Open(object parameter, Action successAction)
         {
-            PopulateCollections();
-            var defaultPaymentMethod = _checkoutDataRepository.GetDefaultPaymentMethodValue();
-            var defaultShippingAddress = _checkoutDataRepository.GetDefaultShippingAddressValue();
-            var defaultBillingAddress = _checkoutDataRepository.GetDefaultBillingAddressValue();
-            
-            if (ShippingAddresses != null && defaultShippingAddress != null)
-            {
-                SelectedShippingAddress = ShippingAddresses.FirstOrDefault(s => s.EntityId == defaultShippingAddress.Id);
-            }
-            if (BillingAddresses != null && defaultBillingAddress != null)
-            {
-                SelectedBillingAddress = BillingAddresses.FirstOrDefault(b => b.EntityId == defaultBillingAddress.Id);
-            }
-            if (PaymentMethods != null && defaultPaymentMethod != null)
-            {
-                SelectedPaymentMethod = PaymentMethods.FirstOrDefault(p => p.EntityId == defaultPaymentMethod.Id);
-            }
-        }
-
-        private void PopulateCollections()
-        {
-            var shippingAddresses = _checkoutDataRepository.GetAllShippingAddresses()
-                                                           .Select(address => CreateCheckoutData(address, Constants.ShippingAddress));
-
-            var billingAddresses = _checkoutDataRepository.GetAllBillingAddresses()
-                                                          .Select(address => CreateCheckoutData(address, Constants.BillingAddress));
-
-
-            var paymentMethods = _checkoutDataRepository.GetAllPaymentMethods()
-                                                        .Select(paymentMethod => CreateCheckoutData(paymentMethod));
-
+            // Populate ShippingAddress collection
+            var shippingAddresses = _checkoutDataRepository.GetAllShippingAddresses().Select(address => CreateCheckoutData(address, Constants.ShippingAddress));
             ShippingAddresses = new ReadOnlyCollection<CheckoutDataViewModel>(shippingAddresses.ToList());
-            BillingAddresses = new ReadOnlyCollection<CheckoutDataViewModel>(billingAddresses.ToList());
-            PaymentMethods = new ReadOnlyCollection<CheckoutDataViewModel>(paymentMethods.ToList());
-        }
 
-        private void SaveDefaults()
-        {
-            _checkoutDataRepository.SetAsDefaultShippingAddress(SelectedShippingAddress != null ? SelectedShippingAddress.EntityId : null);
-            _checkoutDataRepository.SetAsDefaultBillingAddress(SelectedBillingAddress != null ? SelectedBillingAddress.EntityId : null);
-            _checkoutDataRepository.SetAsDefaultPaymentMethod(SelectedPaymentMethod != null ? SelectedPaymentMethod.EntityId : null);
-            
-            CloseFlyout();
+            if (ShippingAddresses != null)
+            {
+                var defaultShippingAddress = _checkoutDataRepository.GetDefaultShippingAddress();
+                SelectedShippingAddress = defaultShippingAddress != null ? ShippingAddresses.FirstOrDefault(s => s.EntityId == defaultShippingAddress.Id) : null;
+            }
+
+            // Populate BillingAddress collection
+            var billingAddresses = _checkoutDataRepository.GetAllBillingAddresses().Select(address => CreateCheckoutData(address, Constants.BillingAddress));
+            BillingAddresses = new ReadOnlyCollection<CheckoutDataViewModel>(billingAddresses.ToList());
+
+            if (BillingAddresses != null)
+            {
+                var defaultBillingAddress = _checkoutDataRepository.GetDefaultBillingAddress();
+                SelectedBillingAddress =  defaultBillingAddress != null ? BillingAddresses.FirstOrDefault(s => s.EntityId == defaultBillingAddress.Id) : null;
+            }
+
+            // Populate PaymentMethod collection
+            var paymentMethods = _checkoutDataRepository.GetAllPaymentMethods().Select(payment => CreateCheckoutData(payment));
+            PaymentMethods = new ReadOnlyCollection<CheckoutDataViewModel>(paymentMethods.ToList());
+
+            if (PaymentMethods != null)
+            {
+                var defaultPaymentMethod = _checkoutDataRepository.GetDefaultPaymentMethod();
+                SelectedPaymentMethod = defaultPaymentMethod != null ? PaymentMethods.FirstOrDefault(s => s.EntityId == defaultPaymentMethod.Id) : null;
+            }
         }
 
         private CheckoutDataViewModel CreateCheckoutData(Address address, string dataType)

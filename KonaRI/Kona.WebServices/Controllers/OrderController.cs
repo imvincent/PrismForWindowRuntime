@@ -100,5 +100,17 @@ namespace Kona.WebServices.Controllers
             // Only get here if there are modelstate errors
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
         }
+
+        /// <summary>
+        /// Used for testing
+        /// </summary>
+        /// <param name="reset">Flag to differentiate the posts by query string parameter</param>
+        [HttpPost]
+        [AllowAnonymous]
+        public void Reset(bool reset)
+        {
+            if (reset)
+                _orderRepository.Reset();
+        }
     }
 }

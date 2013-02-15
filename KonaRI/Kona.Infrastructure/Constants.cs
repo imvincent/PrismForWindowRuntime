@@ -13,5 +13,6 @@ namespace Kona.Infrastructure
         private Constants(){}
         public const string KonaInfrastructureResourceMapId = "/Kona.Infrastructure/Resources/";
         public const string SessionStateFileName = "_sessionState.xml";
+        public const string RestorableStateFileName = "_restorableState.xml";
     }
 }

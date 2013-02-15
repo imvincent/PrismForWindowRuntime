@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Kona.Infrastructure
 {
-    public class ViewModel : BindableBase
+    public class ViewModel : BindableBase, INavigationAware
     {
         public string EntityId { get; set; }
 

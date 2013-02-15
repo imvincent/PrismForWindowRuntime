@@ -6,7 +6,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,11 +15,10 @@ using Kona.UILogic.Models;
 using Kona.UILogic.Repositories;
 using Kona.UILogic.Services;
 using Windows.UI.Xaml.Navigation;
-using System.ComponentModel;
 
 namespace Kona.UILogic.ViewModels
 {
-    public class BillingAddressUserControlViewModel : ViewModel, INavigationAware, IBillingAddressUserControlViewModel
+    public class BillingAddressUserControlViewModel : ViewModel, IBillingAddressUserControlViewModel
     {
         private Address _address;
         private bool _setAsDefault;
@@ -71,6 +69,7 @@ namespace Kona.UILogic.ViewModels
             }
         }
 
+        // <snippet911>
         public override async void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState)
         {
             // The States collection needs to be populated before setting the State property
@@ -94,16 +93,27 @@ namespace Kona.UILogic.ViewModels
 
             if (navigationMode == NavigationMode.New)
             {
-                var address = _checkoutDataRepository.GetDefaultBillingAddressValue();
-                if (address != null)
+                var defaultAddress = _checkoutDataRepository.GetDefaultBillingAddress();
+                if (defaultAddress != null)
                 {
                     // Update the information and validate the values
-                    Address = address;
+                    Address.FirstName = defaultAddress.FirstName;
+                    Address.MiddleInitial = defaultAddress.MiddleInitial;
+                    Address.LastName = defaultAddress.LastName;
+                    Address.StreetAddress = defaultAddress.StreetAddress;
+                    Address.OptionalAddress = defaultAddress.OptionalAddress;
+                    Address.City = defaultAddress.City;
+                    Address.State = defaultAddress.State;
+                    Address.ZipCode = defaultAddress.ZipCode;
+                    Address.Phone = defaultAddress.Phone;
+
                     ValidateForm();
                 }
             }
         }
+        // </snippet911>
 
+        // <snippet910>
         public override void OnNavigatedFrom(Dictionary<string, object> viewState, bool suspending)
         {
             base.OnNavigatedFrom(viewState, suspending);
@@ -114,6 +124,7 @@ namespace Kona.UILogic.ViewModels
                 AddEntityStateValue("errorsCollection", _address.GetAllErrors(), viewState);
             }
         }
+        // </snippet910>
 
         public bool ValidateForm()
         {
@@ -132,7 +143,7 @@ namespace Kona.UILogic.ViewModels
 
             if (SetAsDefault)
             {
-                _checkoutDataRepository.SetAsDefaultBillingAddress(savedAddress.Id);
+                _checkoutDataRepository.SetDefaultBillingAddress(savedAddress);
             }
         }
 

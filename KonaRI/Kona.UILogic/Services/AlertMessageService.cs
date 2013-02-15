@@ -7,8 +7,10 @@
 
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.UI.Popups;
+using System.Linq;
 
 namespace Kona.UILogic.Services
 {
@@ -18,12 +20,28 @@ namespace Kona.UILogic.Services
 
         public async Task ShowAsync(string message, string title)
         {
-            //Only show one dialog at a time.
+            await ShowAsync(message, title, null);
+        }
+
+        public async Task ShowAsync(string message, string title, IEnumerable<DialogCommand> dialogCommands)
+        {
+            // Only show one dialog at a time.
             if (!_isShowing)
             {
+                var messageDialog = new MessageDialog(message, title);
+                
+                if (dialogCommands != null)
+                {
+                    var commands = dialogCommands.Select(c => new UICommand(c.Label, (command) => c.Invoked(), c.Id));
+
+                    foreach (var command in commands)
+                    {
+                        messageDialog.Commands.Add(command);
+                    }
+                }
+
                 _isShowing = true;
-                MessageDialog dlg = new MessageDialog(message, title);
-                await dlg.ShowAsync();
+                await messageDialog.ShowAsync();
                 _isShowing = false;
             }
         }

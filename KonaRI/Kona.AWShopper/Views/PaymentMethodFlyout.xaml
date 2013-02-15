@@ -14,7 +14,7 @@
 
     <Border BorderBrush="{StaticResource AWShopperFlyoutHeaderBackground}"
             BorderThickness="1,0,0,0">
-        <Grid VerticalAlignment="Stretch" Background="{StaticResource AWShopperFlyoutContentBackground}">
+        <Grid VerticalAlignment="Stretch" Background="{StaticResource LightBackground}">
 
             <!-- Root grid definition -->
             <Grid.RowDefinitions>
@@ -56,7 +56,7 @@
                                                         behaviors:ChangeVisualState.VisualState="Flyout" 
                                                         DataContext="{Binding PaymentMethodViewModel}" />
                         <Button x:Uid="SaveButton" AutomationProperties.AutomationId="SaveButton" Content="Save" Background="{StaticResource AWShopperAccentBrush}" HorizontalAlignment="Stretch" Margin="20,20,20,0"
-                                    Command="{Binding SaveCommand}" />
+                                    Command="{Binding SaveCommand}" Style="{StaticResource LightButtonStyle}" />
                     </StackPanel>
                 </Grid>
             </ScrollViewer>

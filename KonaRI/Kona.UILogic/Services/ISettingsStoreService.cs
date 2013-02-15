@@ -11,19 +11,21 @@ using System.Collections.Generic;
 namespace Kona.UILogic.Services
 {
     public interface ISettingsStoreService
-    {        
-        void DeleteContainer(string container);
+    {
+        T GetValue<T>(string container, string id);
 
-        List<T> RetrieveAllValues<T>(string container) where T: new();
+        IEnumerable<T> GetAllValues<T>(string container);
+
+        void SaveValue<T>(string container, string id, T value);
+
+        T GetEntity<T>(string container, string id) where T : new();
+
+        IEnumerable<T> GetAllEntities<T>(string container) where T: new();
+
+        void SaveEntity<T>(string container, string id, T value) where T : new();
         
-        void SaveValue(string container, object entity);
-        
-        void DeleteValue(string container, string id);
-        
-        bool ContainsDefaultValue(string container);
-        
-        T GetDefaultValue<T>(string container) where T : new();
-        
-        void SetAsDefaultValue(string container, string id);
+        void DeleteSetting(string container, string id);
+
+        void DeleteContainer(string container);
     }
 }

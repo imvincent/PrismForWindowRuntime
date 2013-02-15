@@ -13,7 +13,7 @@ namespace Kona.WebServices.Repositories
 {
     public interface IProductRepository
     {
-        IEnumerable<Product> TodaysDealsProducts { get; set; }
+        IEnumerable<Product> GetTodaysDealsProducts();
         IEnumerable<Product> GetProductsFromCategory(int subcategoryId);
         IEnumerable<Product> GetAll();
     }

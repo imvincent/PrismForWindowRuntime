@@ -20,5 +20,6 @@ namespace Kona.WebServices.Repositories
         T Create(T item);
         bool Update(T item);
         bool Delete(int id);
+        void Reset();
     }
 }

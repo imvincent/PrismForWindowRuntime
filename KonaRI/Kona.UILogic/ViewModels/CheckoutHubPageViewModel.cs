@@ -27,12 +27,13 @@ namespace Kona.UILogic.ViewModels
         private readonly INavigationService _navigationService;
         private readonly IAccountService _accountService;
         private readonly IOrderService _orderService;
-        private IShippingMethodService _shippingMethodService;
+        private readonly IShippingMethodService _shippingMethodService;
         private readonly IShoppingCartRepository _shoppingCartRepository;
         private readonly IShippingAddressUserControlViewModel _shippingAddressViewModel;
         private readonly IBillingAddressUserControlViewModel _billingAddressViewModel;
         private readonly IPaymentMethodUserControlViewModel _paymentMethodViewModel;
         private readonly ISettingsCharmService _settingsCharmService;
+        private readonly IAlertMessageService _alertMessageService;
         private bool _useSameAddressAsShipping;
         private bool _isShippingAddressInvalid;
         private bool _isBillingAddressInvalid;
@@ -40,7 +41,7 @@ namespace Kona.UILogic.ViewModels
         private bool _isUnsnapping;
 
         public CheckoutHubPageViewModel(INavigationService navigationService, IAccountService accountService, IOrderService orderService, ShippingMethodServiceProxy shippingMethodService, IShoppingCartRepository shoppingCartRepository,
-                                        IShippingAddressUserControlViewModel shippingAddressViewModel, IBillingAddressUserControlViewModel billingAddressViewModel, IPaymentMethodUserControlViewModel paymentMethodViewModel, ISettingsCharmService settingsCharmService)
+                                        IShippingAddressUserControlViewModel shippingAddressViewModel, IBillingAddressUserControlViewModel billingAddressViewModel, IPaymentMethodUserControlViewModel paymentMethodViewModel, ISettingsCharmService settingsCharmService, IAlertMessageService alertMessageService)
         {
             _navigationService = navigationService;
             _accountService = accountService;
@@ -52,9 +53,10 @@ namespace Kona.UILogic.ViewModels
             _billingAddressViewModel = billingAddressViewModel;
             _paymentMethodViewModel = paymentMethodViewModel;
             _settingsCharmService = settingsCharmService;
+            _alertMessageService = alertMessageService;
 
-            GoBackCommand = new DelegateCommand(() => navigationService.GoBack(), () => navigationService.CanGoBack());
-            GoNextCommand = new DelegateCommand(() => GoNext());
+            GoBackCommand = new DelegateCommand(navigationService.GoBack, navigationService.CanGoBack);
+            GoNextCommand = new DelegateCommand(GoNext);
         }
 
         public DelegateCommand GoBackCommand { get; private set; }
@@ -102,7 +104,7 @@ namespace Kona.UILogic.ViewModels
             set { SetProperty(ref _isPaymentMethodInvalid, value); }
         }
 
-        public override void OnNavigatedTo(object navigationParameter, Windows.UI.Xaml.Navigation.NavigationMode navigationMode, System.Collections.Generic.Dictionary<string, object> viewState)
+        public override void OnNavigatedTo(object navigationParameter, Windows.UI.Xaml.Navigation.NavigationMode navigationMode, Dictionary<string, object> viewState)
         {
             ShippingAddressViewModel.OnNavigatedTo(navigationParameter, navigationMode, viewState);
             BillingAddressViewModel.OnNavigatedTo(navigationParameter, navigationMode, viewState);
@@ -110,7 +112,7 @@ namespace Kona.UILogic.ViewModels
             base.OnNavigatedTo(navigationParameter, navigationMode, viewState);
         }
 
-        public override void OnNavigatedFrom(System.Collections.Generic.Dictionary<string, object> viewState, bool suspending)
+        public override void OnNavigatedFrom(Dictionary<string, object> viewState, bool suspending)
         {
             ShippingAddressViewModel.OnNavigatedFrom(viewState, suspending);
             BillingAddressViewModel.OnNavigatedFrom(viewState, suspending);
@@ -144,6 +146,8 @@ namespace Kona.UILogic.ViewModels
 
         private async Task ProcessFormAsync()
         {
+            string errorMessage = string.Empty;
+
             // Create an order with the values entered in the form 
             Order order = new Order
                 {
@@ -155,6 +159,7 @@ namespace Kona.UILogic.ViewModels
                     ShoppingCart = await _shoppingCartRepository.GetShoppingCartAsync()
                 };
 
+            // <snippet912>
             try
             {
                 // Call the service to create the order
@@ -177,12 +182,16 @@ namespace Kona.UILogic.ViewModels
             {
                 DisplayOrderErrorMessages(mvex.ValidationResult);
             }
+            // </snippet912>
+
             catch (HttpRequestException ex)
             {
-                MessageDialog dlg =
-                    new MessageDialog(
-                        string.Format(CultureInfo.CurrentCulture, ErrorMessagesHelper.GeneralServiceErrorMessage,
-                                      Environment.NewLine, ex.Message), ErrorMessagesHelper.ErrorProcessingOrder);
+                errorMessage = string.Format(CultureInfo.CurrentCulture, ErrorMessagesHelper.GeneralServiceErrorMessage, Environment.NewLine, ex.Message);
+            }
+
+            if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
+                await _alertMessageService.ShowAsync(errorMessage, ErrorMessagesHelper.ErrorProcessingOrder);
             }
         }
 

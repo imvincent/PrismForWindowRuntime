@@ -39,23 +39,23 @@ namespace Kona.UILogic.ViewModels
 
             if (eventAggregator != null)
             {
-                eventAggregator.GetEvent<ShoppingCartUpdatedEvent>().Subscribe(() => UpdateItemCountAsync());
-                eventAggregator.GetEvent<ShoppingCartItemUpdatedEvent>().Subscribe(() => UpdateItemCountAsync());
+                eventAggregator.GetEvent<ShoppingCartUpdatedEvent>().Subscribe(UpdateItemCountAsync);
+                eventAggregator.GetEvent<ShoppingCartItemUpdatedEvent>().Subscribe(UpdateItemCountAsync);
             }
 
             ShoppingCartTabCommand = new DelegateCommand(NavigateToShoppingCartPage);
 
             //Start process of updating item count.
-            UpdateItemCountAsync();
+            UpdateItemCountAsync(null);
         }
 
-        private async void UpdateItemCountAsync()
+        private async void UpdateItemCountAsync(object notUsed)
         {
             //Trigger auto-login if credentials are saved.
             await _accountService.GetSignedInUserAsync();
 
             ShoppingCart shoppingCart = null;
-            var getShoppingCartCallFailed = false;
+            var serviceCallFailed = false;
 
             try
             {
@@ -63,15 +63,15 @@ namespace Kona.UILogic.ViewModels
             }
             catch (HttpRequestException)
             {
-                getShoppingCartCallFailed = true;
+                serviceCallFailed = true;
             }
             catch(FileNotFoundException){}
             catch(UnauthorizedAccessException){}
             catch(Exception){}
 
-            if (getShoppingCartCallFailed)
+            if (serviceCallFailed)
             {
-                await _alertMessageService.ShowAsync(_resourceLoader.GetString("ErrorShoppingCartServiceUnreachable"), _resourceLoader.GetString("Error"));
+                await _alertMessageService.ShowAsync(_resourceLoader.GetString("ErrorServiceUnreachable"), _resourceLoader.GetString("Error"));
             }
 
             if (shoppingCart == null)

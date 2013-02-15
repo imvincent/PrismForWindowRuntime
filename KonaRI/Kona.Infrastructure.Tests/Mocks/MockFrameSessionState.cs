@@ -12,15 +12,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Kona.Infrastructure;
+using Kona.Infrastructure.Interfaces;
 using Windows.UI.Xaml.Controls;
 
 namespace Kona.Infrastructure.Tests.Mocks
 {
     public class MockFrameSessionState : IFrameSessionState
     {
-        public Func<Frame, Dictionary<string, object>> GetSessionStateForFrameDelegate { get; set; }
+        public Func<IFrameFacade, Dictionary<string, object>> GetSessionStateForFrameDelegate { get; set; }
 
-        public Dictionary<string, object> GetSessionStateForFrame(Frame frame)
+        public Dictionary<string, object> GetSessionStateForFrame(IFrameFacade frame)
         {
             return this.GetSessionStateForFrameDelegate(frame);
         }

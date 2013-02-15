@@ -28,13 +28,13 @@
                                Text="{Binding ItemsInCart}"
                                Margin="5" />
                 </StackPanel>
-                <Button Command="{Binding AddPassiveSubscriberCommand}"
-                        Content="Add Passive Subscriber"
+                <Button Command="{Binding AddNonUISubscriberCommand}"
+                        Content="Add Non-UI Subscriber"
                         HorizontalAlignment="Center"
                         Margin="20"
                         VerticalAlignment="Top" />
-                <Button Command="{Binding GCPassiveSubscriberCommand}"
-                        Content="GC Passive Subscriber"
+                <Button Command="{Binding GCNonUISubscriberCommand}"
+                        Content="GC Non-UI Subscriber"
                         HorizontalAlignment="Center"
                         Margin="20"
                         VerticalAlignment="Top" />

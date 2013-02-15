@@ -7,6 +7,7 @@
 
 
 using Kona.Infrastructure;
+using Kona.Infrastructure.Interfaces;
 using Microsoft.Practices.PubSubEvents;
 using System;
 using System.Globalization;
@@ -26,10 +27,10 @@ namespace EventAggregatorQuickstart
         {
             // Create the singleton EventAggregator so it can be dependency injected down to the view models who need it
             _eventAggregator  = new EventAggregator();
-            ViewModelLocator.Register(typeof(MainPage), () => new MainPageViewModel(_eventAggregator));
+            ViewModelLocator.Register(typeof(MainPage).ToString(), () => new MainPageViewModel(_eventAggregator));
         }
 
-        public FrameNavigationService CreateNavigationService(Frame rootFrame)
+        public INavigationService CreateNavigationService(IFrameFacade rootFrame, IRestorableStateService restorableStateService)
         {
             var sessionStateWrapper = new FrameSessionStateWrapper();
 
@@ -44,7 +45,7 @@ namespace EventAggregatorQuickstart
                 return viewType;
             };
 
-            var navigationService = new FrameNavigationService(rootFrame, sessionStateWrapper, navigationResolver);
+            var navigationService = new FrameNavigationService(rootFrame, sessionStateWrapper, navigationResolver, restorableStateService);
             return navigationService;
         }
     }

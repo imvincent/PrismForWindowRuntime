@@ -58,6 +58,7 @@
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.1.0-alpha-120809\lib\net40\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -116,6 +117,7 @@
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ShippingMethodController.cs" />
     <Compile Include="Controllers\ShoppingCartController.cs" />
+    <Compile Include="Controllers\TileNotificationController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

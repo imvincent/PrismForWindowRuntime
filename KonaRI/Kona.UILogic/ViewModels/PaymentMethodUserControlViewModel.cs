@@ -6,10 +6,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using Kona.Infrastructure;
 using Kona.UILogic.Models;
 using Kona.UILogic.Repositories;
@@ -17,7 +15,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Kona.UILogic.ViewModels
 {
-    public class PaymentMethodUserControlViewModel : ViewModel, INavigationAware, IPaymentMethodUserControlViewModel
+    public class PaymentMethodUserControlViewModel : ViewModel, IPaymentMethodUserControlViewModel
     {
         private bool _setAsDefault;
         private readonly ICheckoutDataRepository _checkoutDataRepository;
@@ -63,11 +61,17 @@ namespace Kona.UILogic.ViewModels
 
             if (navigationMode == NavigationMode.New)
             {
-                var paymentMethod = _checkoutDataRepository.GetDefaultPaymentMethodValue();
-                if (paymentMethod != null)
+                var defaultPaymentMethod = _checkoutDataRepository.GetDefaultPaymentMethod();
+                if (defaultPaymentMethod != null)
                 {
                     // Update the information and validate the values
-                    PaymentMethod = paymentMethod;
+                    PaymentMethod.CardNumber = defaultPaymentMethod.CardNumber;
+                    PaymentMethod.CardVerificationCode = defaultPaymentMethod.CardVerificationCode;
+                    PaymentMethod.CardholderName = defaultPaymentMethod.CardholderName;
+                    PaymentMethod.ExpirationMonth = defaultPaymentMethod.ExpirationMonth;
+                    PaymentMethod.ExpirationYear = defaultPaymentMethod.ExpirationYear;
+                    PaymentMethod.Phone = defaultPaymentMethod.Phone;
+
                     ValidateForm();
                 }
             }
@@ -96,7 +100,7 @@ namespace Kona.UILogic.ViewModels
 
             if (SetAsDefault)
             {
-                _checkoutDataRepository.SetAsDefaultPaymentMethod(savedPaymentMethod.Id);
+                _checkoutDataRepository.SetDefaultPaymentMethod(savedPaymentMethod);
             }
         }
 

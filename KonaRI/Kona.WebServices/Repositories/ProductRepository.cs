@@ -9,7 +9,6 @@
 using System.Collections.Generic;
 using Kona.WebServices.Models;
 using System.Linq;
-using System;
 
 namespace Kona.WebServices.Repositories
 {
@@ -21,18 +20,27 @@ namespace Kona.WebServices.Repositories
 
         public IEnumerable<Product> GetAll()
         {
-            return _products;
+            lock (_products)
+            {
+                // Return new collection so callers can iterate independently on separate threads
+                return _products.ToArray();
+            }
         }
 
         public IEnumerable<Product> GetProductsFromCategory(int subcategoryId)
         {
-            return _products.Where(p => p.SubcategoryId == subcategoryId);
+            lock (_products)
+            {
+                return _products.Where(p => p.SubcategoryId == subcategoryId);
+            }
         }
 
-        public IEnumerable<Product> TodaysDealsProducts
+        public IEnumerable<Product> GetTodaysDealsProducts()
         {
-            get { return _todaysDealsProducts; }
-            set { _todaysDealsProducts = value; }
+            lock (_todaysDealsProducts)
+            {
+                return _todaysDealsProducts.ToArray();
+            }
         }
 
         private static ICollection<Product> GetProducts()

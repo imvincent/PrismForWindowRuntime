@@ -283,66 +283,66 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="billingAddressTitle">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
-                                	<Thickness>20,20,0,40</Thickness>
+                                    <Thickness>20,20,0,40</Thickness>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="paymentMethodTitle">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
-                                	<Thickness>20,20,0,20</Thickness>
+                                    <Thickness>20,20,0,20</Thickness>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="shippingAddressTitle">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
-                                	<Thickness>20,0,0,20</Thickness>
+                                    <Thickness>20,0,0,20</Thickness>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
 
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="SameAsShippingAddressCheckBox">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<x:Int32>0</x:Int32>
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>0</x:Int32>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="SameAsShippingAddressCheckBox">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<x:Int32>2</x:Int32>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>2</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="SameAsShippingAddressCheckBox">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<Thickness>20,50,0,0</Thickness>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Thickness>20,50,0,0</Thickness>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.VerticalAlignment)" Storyboard.TargetName="SameAsShippingAddressCheckBox">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<VerticalAlignment>Bottom</VerticalAlignment>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <VerticalAlignment>Bottom</VerticalAlignment>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="submitButton">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<x:Double>NaN</x:Double>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Double>NaN</x:Double>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="submitButton">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="submitButton">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
                                     <x:String>0,50,40,0</x:String>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>

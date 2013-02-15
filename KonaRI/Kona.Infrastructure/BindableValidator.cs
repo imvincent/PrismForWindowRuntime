@@ -120,6 +120,7 @@ namespace Kona.Infrastructure
         /// <returns>True if the property is valid. Otherwise, false.</returns>
         /// <exception cref="ArgumentNullException">When  <paramref name="propertyName"/> is <see langword="null" /> or an empty string value.</exception>
         /// <exception cref="ArgumentException">When the <paramref name="propertyName"/> parameter does not match any property name.</exception>
+        // <snippet907>
         public bool ValidateProperty(string propertyName)
         {
             if (string.IsNullOrEmpty(propertyName))
@@ -149,6 +150,7 @@ namespace Kona.Infrastructure
 
             return isValid;
         }
+        // </snippet907>
 
         /// <summary>
         /// Validates all the properties decorated with the ValidationAttribute attribute.
@@ -156,6 +158,7 @@ namespace Kona.Infrastructure
         /// </summary>
         /// <returns>True if the property is valid. Otherwise, false.</returns>
         // <snippet1301>
+        // <snippet909>
         public bool ValidateProperties()
         {
             var propertiesWithNewErrors = new List<string>();
@@ -187,6 +190,7 @@ namespace Kona.Infrastructure
 
             return _errors.Values.Count == 0;
         }
+        // </snippet909>
         // </snippet1301>
 
         /// <summary>
@@ -196,6 +200,7 @@ namespace Kona.Infrastructure
         /// <param name="propertyErrors">A list containing the current error messages of the property.</param>
         /// <returns>True if the property is valid. Otherwise, false.</returns>
         // <snippet1302>
+        // <snippet908>
         private bool TryValidateProperty(PropertyInfo propertyInfo, List<string> propertyErrors)
         {
             var results = new List<ValidationResult>();
@@ -212,6 +217,7 @@ namespace Kona.Infrastructure
 
             return isValid;
         }
+        // </snippet908>
         // </snippet1302>
 
         /// <summary>

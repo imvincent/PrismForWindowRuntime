@@ -17,19 +17,6 @@ namespace Kona.AWShopper.Views
         public CheckoutHubPage()
         {
             this.InitializeComponent();
-            Window.Current.SizeChanged += Current_SizeChanged;
-        }
-
-        private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
-        {
-            var viewModel = this.DataContext as IHandleWindowSizeChanged;
-            viewModel.WindowCurrentSizeChanged();
-        }
-
-        protected override void OnNavigatedFrom(Windows.UI.Xaml.Navigation.NavigationEventArgs e)
-        {
-            Window.Current.SizeChanged -= Current_SizeChanged;
-            base.OnNavigatedFrom(e);
         }
     }
 }

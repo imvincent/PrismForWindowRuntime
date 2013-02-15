@@ -16,7 +16,7 @@ namespace Kona.Infrastructure
 {
     public class RequestService : IRequestService
     {
-        // <snippet516>
+        // <snippet517>
         public async Task<byte[]> GetExternalResourceAsync(Uri resourceUrl)
         {
             using (HttpClient request = new HttpClient())
@@ -25,6 +25,6 @@ namespace Kona.Infrastructure
                 return await response.Content.ReadAsByteArrayAsync();
             }
         }
-        // </snippet516>
+        // </snippet517>
     }
 }

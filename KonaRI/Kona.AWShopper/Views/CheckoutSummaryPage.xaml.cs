@@ -18,13 +18,6 @@ namespace Kona.AWShopper.Views
         {
             this.InitializeComponent();
             Popup.Opened += Popup_Opened;
-            Window.Current.SizeChanged += Current_SizeChanged;
-        }
-
-        private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
-        {
-            var viewModel = this.DataContext as IHandleWindowSizeChanged;
-            viewModel.WindowCurrentSizeChanged();
         }
 
         private void Popup_Opened(object sender, object e)
@@ -33,12 +26,6 @@ namespace Kona.AWShopper.Views
             int appbarHeight = 90;
             Popup.HorizontalOffset = margin;
             Popup.VerticalOffset = Window.Current.CoreWindow.Bounds.Bottom - appbarHeight - PopupPanel.ActualHeight - margin;
-        }
-
-        protected override void OnNavigatedFrom(Windows.UI.Xaml.Navigation.NavigationEventArgs e)
-        {
-            Window.Current.SizeChanged -= Current_SizeChanged;
-            base.OnNavigatedFrom(e);
         }
     }
 }

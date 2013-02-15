@@ -1,0 +1,16 @@
+﻿<kona:MvvmAppBase
+    x:Class="HelloWorld.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:kona="using:Kona.Infrastructure"
+    xmlns:local="using:HelloWorld">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Common/StandardStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <x:String x:Key="AppName">Kona: Hello World!</x:String>
+        </ResourceDictionary>
+    </Application.Resources>
+</kona:MvvmAppBase>

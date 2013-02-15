@@ -20,6 +20,7 @@ namespace Kona.UILogic.Services
 {
     public static class HttpResponseMessageExtensions
     {
+        // <snippet913>
         public static async Task EnsureSuccessWithValidationSupport(this HttpResponseMessage response)
         {
             // If BadRequest, see if it contains a validation payload
@@ -38,7 +39,7 @@ namespace Kona.UILogic.Services
                 throw new SecurityException();
 
             response.EnsureSuccessStatusCode(); // Will throw for any other service call errors
-                
         }
+        // </snippet913>
     }
 }

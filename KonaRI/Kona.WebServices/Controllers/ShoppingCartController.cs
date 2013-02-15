@@ -20,6 +20,8 @@ namespace Kona.WebServices.Controllers
     {
         private IShoppingCartRepository _shoppingCartRepository;
         private IProductRepository _productRepository;
+        // Need to lock to prevent concurrent shopping cart modifications because of using static memory for carts in the repositories
+        private static object _lock = new object();
 
         public ShoppingCartController()
             : this(new ShoppingCartRepository(), new ProductRepository())
@@ -37,34 +39,40 @@ namespace Kona.WebServices.Controllers
             return _shoppingCartRepository.GetById(id);
         }
 
-        // PUT /api/ShoppingCart/{id}?productIdToIncrement={productIdToIncrement}
-        [HttpPut]
+        // POST /api/ShoppingCart/{id}?productIdToIncrement={productIdToIncrement}
+        [HttpPost]
         public void AddProductToShoppingCart(string id, string productIdToIncrement)
         {
-            var product = _productRepository.GetAll().FirstOrDefault(c => c.ProductNumber == productIdToIncrement);
-            if (product == null)
+            lock (_lock)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);                    
-            }
+                var product = _productRepository.GetAll().FirstOrDefault(c => c.ProductNumber == productIdToIncrement);
+                if (product == null)
+                {
+                    throw new HttpResponseException(HttpStatusCode.NotFound);
+                }
 
-            _shoppingCartRepository.AddProductToCart(id, product);
+                _shoppingCartRepository.AddProductToCart(id, product);
+            }
         }
 
-        // PUT /api/ShoppingCart/{id}?productIdToIncrement={productIdToIncrement}
+        // POST /api/ShoppingCart/{id}?productIdToIncrement={productIdToIncrement}
         //This action decrements the quantity of an item in the shopping cart. 
         //For example, if a shopping cart has 3 socks, this action will update the quantity to 2.
-        [HttpPut]
+        [HttpPost]
         public void RemoveProductFromShoppingCart(string id, string productIdToDecrement)
         {
-            var product = _productRepository.GetAll().FirstOrDefault(c => c.ProductNumber == productIdToDecrement);
-            if (product == null)
+            lock (_lock)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
+                var product = _productRepository.GetAll().FirstOrDefault(c => c.ProductNumber == productIdToDecrement);
+                if (product == null)
+                {
+                    throw new HttpResponseException(HttpStatusCode.NotFound);
+                }
 
-            if (!_shoppingCartRepository.RemoveProductFromCart(id, productIdToDecrement))
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                if (!_shoppingCartRepository.RemoveProductFromCart(id, productIdToDecrement))
+                {
+                    throw new HttpResponseException(HttpStatusCode.NotFound);
+                }
             }
         }
 
@@ -83,42 +91,55 @@ namespace Kona.WebServices.Controllers
         [HttpPut]
         public void RemoveShoppingCartItem(string id, string itemIdToRemove)
         {
-            ShoppingCart shoppingCart = _shoppingCartRepository.GetById(id);
-
-            if (shoppingCart == null)
+            lock (_lock)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
+                ShoppingCart shoppingCart = _shoppingCartRepository.GetById(id);
 
-            if (!_shoppingCartRepository.RemoveItemFromCart(shoppingCart, itemIdToRemove))
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                if (shoppingCart == null)
+                {
+                    throw new HttpResponseException(HttpStatusCode.NotFound);
+                }
+
+                if (!_shoppingCartRepository.RemoveItemFromCart(shoppingCart, itemIdToRemove))
+                {
+                    throw new HttpResponseException(HttpStatusCode.NotFound);
+                }
             }
         }
 
-        // PUT /api/ShoppingCart/{id}?oldShoppingCartId={oldShoppingCartId}
-        [HttpPut]
+        // POST /api/ShoppingCart/{id}?oldShoppingCartId={oldShoppingCartId}
+        [HttpPost]
         public HttpResponseMessage MergeShoppingCarts(string id, string oldShoppingCartId)
         {
-            if (id == oldShoppingCartId) return new HttpResponseMessage(HttpStatusCode.OK);
-
-            var oldCart = _shoppingCartRepository.GetById(oldShoppingCartId);
-
-            if (oldCart != null)
+            lock (_lock)
             {
-                //Merge shopping carts by adding items from old cart to new cart.
-                foreach (var shoppingCartItem in oldCart.ShoppingCartItems)
-                {
-                    for (int i = 0; i < shoppingCartItem.Quantity; i++)
-                    {
-                        _shoppingCartRepository.AddProductToCart(id, shoppingCartItem.Product);
-                    }
-                }
+                if (id == oldShoppingCartId) return new HttpResponseMessage(HttpStatusCode.OK);
 
-                //Delete old cart
-                _shoppingCartRepository.Delete(oldShoppingCartId);
+                var oldCart = _shoppingCartRepository.GetById(oldShoppingCartId);
+
+                if (oldCart != null)
+                {
+                    //Merge shopping carts by adding items from old cart to new cart.
+                    foreach (var shoppingCartItem in oldCart.ShoppingCartItems)
+                    {
+                        for (int i = 0; i < shoppingCartItem.Quantity; i++)
+                        {
+                            _shoppingCartRepository.AddProductToCart(id, shoppingCartItem.Product);
+                        }
+                    }
+
+                    //Delete old cart
+                    _shoppingCartRepository.Delete(oldShoppingCartId);
+                }
+                return Request.CreateResponse(HttpStatusCode.OK);
             }
-            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        [HttpPost]
+        public void Reset(bool reset)
+        {
+            if (reset)
+                ShoppingCartRepository.Reset();
         }
     }
 }

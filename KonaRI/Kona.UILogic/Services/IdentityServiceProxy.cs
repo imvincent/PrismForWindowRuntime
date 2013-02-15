@@ -45,8 +45,8 @@ namespace Kona.UILogic.Services
                     var challengeEncoded = await response1.Content.ReadAsAsync<string>();
                     var challengeBuffer = CryptographicBuffer.DecodeFromHexString(challengeEncoded);
 
-                    // Use HMAC_MD5 hash to encode the challenge string using the password being authenticated as the key.
-                    var provider = MacAlgorithmProvider.OpenAlgorithm(MacAlgorithmNames.HmacMd5);
+                    // Use HMAC_SHA512 hash to encode the challenge string using the password being authenticated as the key.
+                    var provider = MacAlgorithmProvider.OpenAlgorithm(MacAlgorithmNames.HmacSha512);
                     var passwordBuffer = CryptographicBuffer.ConvertStringToBinary(password, BinaryStringEncoding.Utf8);
                     var hmacKey = provider.CreateKey(passwordBuffer);
                     var buffHmac = CryptographicEngine.Sign(hmacKey, challengeBuffer);

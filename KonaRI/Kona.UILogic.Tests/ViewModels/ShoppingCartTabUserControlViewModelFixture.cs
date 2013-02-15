@@ -73,7 +73,7 @@ namespace Kona.UILogic.Tests.ViewModels
 
             Assert.AreEqual(0, target.ItemCount);
 
-            shoppingCartUpdatedEvent.Publish();
+            shoppingCartUpdatedEvent.Publish(null);
 
             Assert.AreEqual(3, target.ItemCount);
 
@@ -125,7 +125,7 @@ namespace Kona.UILogic.Tests.ViewModels
             var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, null, new AlertMessageService(), null, accountService);
             target.ItemCount = 99;
 
-            shoppingCartUpdatedEvent.Publish();
+            shoppingCartUpdatedEvent.Publish(null);
 
             Assert.AreEqual(0, target.ItemCount);
         }

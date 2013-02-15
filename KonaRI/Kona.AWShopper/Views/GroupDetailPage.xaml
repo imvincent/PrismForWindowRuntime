@@ -1,28 +1,31 @@
-﻿<infrastructure:VisualStateAwarePage x:Name="pageRoot"
-             x:Class="Kona.AWShopper.Views.GroupDetailPage"
-             IsTabStop="false"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:infrastructure="using:Kona.Infrastructure"
-             xmlns:behaviors="using:Kona.AWShopper.Behaviors"
-             xmlns:data="using:Kona.AWShopper.Data" xmlns:Views="using:Kona.AWShopper.Views"
-                                     infrastructure:ViewModelLocator.AutoWireViewModel="true"
-             mc:Ignorable="d">
+﻿<infrastructure:VisualStateAwarePage
+    x:Class="Kona.AWShopper.Views.GroupDetailPage"
+    IsTabStop="false"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:infrastructure="using:Kona.Infrastructure"
+    xmlns:behaviors="using:Kona.AWShopper.Behaviors"
+    xmlns:views="using:Kona.AWShopper.Views" 
+    xmlns:designViewModels="using:Kona.AWShopper.DesignViewModels"
+    mc:Ignorable="d"
+    infrastructure:ViewModelLocator.AutoWireViewModel="true"
+    d:DataContext="{d:DesignInstance designViewModels:GroupDetailPageDesignViewModel, IsDesignTimeCreatable=True}">
 
     <Page.Resources>
 
         <!-- Collection of items displayed by this page -->
-        <CollectionViewSource x:Name="itemsViewSource"
+        <CollectionViewSource x:Name="ItemsViewSource"
                               Source="{Binding Items}"
+                              d:DesignSource="{Binding Items, Source={d:DesignInstance designViewModels:GroupDetailPageDesignViewModel, IsDesignTimeCreatable=True}}"
                               IsSourceGrouped="true"
                               ItemsPath="Products"/>
     </Page.Resources>
 
     <Page.TopAppBar>
         <AppBar Style="{StaticResource AppBarStyle}">
-            <Views:TopAppBarUserControl />
+            <views:TopAppBarUserControl />
         </AppBar>
     </Page.TopAppBar>
 
@@ -52,11 +55,11 @@
                        Text="{Binding Title}"
                        Style="{StaticResource PageHeaderTextStyle}"
                        Grid.Column="1" />
-            <Views:ShoppingCartTabUserControl x:Name="shoppingCartTabUserControl" Grid.Column="2" Margin="20" RenderTransformOrigin="0.5,0.5">
-                <Views:ShoppingCartTabUserControl.RenderTransform>
+            <views:ShoppingCartTabUserControl x:Name="shoppingCartTabUserControl" Grid.Column="2" Margin="20" RenderTransformOrigin="0.5,0.5">
+                <views:ShoppingCartTabUserControl.RenderTransform>
                     <CompositeTransform/>
-                </Views:ShoppingCartTabUserControl.RenderTransform>
-            </Views:ShoppingCartTabUserControl>
+                </views:ShoppingCartTabUserControl.RenderTransform>
+            </views:ShoppingCartTabUserControl>
         </Grid>
 
         <SemanticZoom Grid.Row="1"
@@ -108,7 +111,7 @@
                   TabIndex="1"
                   Margin="0,-14,0,0"
                   Padding="120,0,120,50"
-                  ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
+                  ItemsSource="{Binding Source={StaticResource ItemsViewSource}}"
                   ItemTemplate="{StaticResource KonaRIItemTemplate}"
                   SelectionMode="None"
                   IsItemClickEnabled="True"
@@ -151,7 +154,7 @@
                   Grid.Row="1"
                   Visibility="Collapsed"
                   Padding="10,0,0,60"
-                  ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
+                  ItemsSource="{Binding Source={StaticResource ItemsViewSource}}"
                   ItemTemplate="{StaticResource Standard80ItemTemplate}"
                   SelectionMode="None"
                   IsItemClickEnabled="True"

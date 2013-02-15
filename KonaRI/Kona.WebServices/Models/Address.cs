@@ -55,15 +55,18 @@ namespace Kona.WebServices.Models
         [RegularExpression(ADDRESS_REGEX_PATTERN, ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRegex")]
         public string State { get; set; }
 
+        // <snippet905>
         [Required(ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRequired")]
         [RegularExpression(NUMBERS_REGEX_PATTERN, ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRegex")]
         [CustomValidation(typeof(Address), "ValidateZipCodeState")]
         public string ZipCode { get; set; }
+        // </snippet905>
 
         [Required(ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRequired")]
         [RegularExpression(NUMBERS_REGEX_PATTERN, ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRegex")]
         public string Phone { get; set; }
 
+        // <snippet906>
         public static ValidationResult ValidateZipCodeState(object value, ValidationContext validationContext)
         {
             bool isValid = false;
@@ -82,7 +85,6 @@ namespace Kona.WebServices.Models
                 string stateName = ((Address)validationContext.ObjectInstance).State;
                 State state = new StateRepository().GetAll().FirstOrDefault(c => c.Name == stateName);
                 int zipCode = Convert.ToInt32(((Address)validationContext.ObjectInstance).ZipCode.Substring(0, 3), CultureInfo.InvariantCulture);
-
 
                 foreach (var range in state.ValidZipCodeRanges)
                 {
@@ -108,5 +110,6 @@ namespace Kona.WebServices.Models
                 return new ValidationResult(Resources.ErrorInvalidZipCodeInState);
             }
         }
+        // </snippet906>
     }
 }

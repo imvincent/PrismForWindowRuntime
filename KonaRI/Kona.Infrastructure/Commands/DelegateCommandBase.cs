@@ -8,6 +8,7 @@
 
 using System.Windows.Input;
 using System;
+using System.Threading.Tasks;
 
 namespace Kona.Infrastructure
 {
@@ -16,7 +17,7 @@ namespace Kona.Infrastructure
     /// </summary>
     public abstract class DelegateCommandBase : ICommand
     {
-        private readonly Action<object> _executeMethod;
+        private readonly Func<object, Task> _executeMethod;
         private readonly Func<object, bool> _canExecuteMethod;
 
         /// <summary>
@@ -29,11 +30,24 @@ namespace Kona.Infrastructure
             if (executeMethod == null || canExecuteMethod == null)
                 throw new ArgumentNullException("executeMethod", "DelegateCommand delegates cannot be null");
 
-            _executeMethod = executeMethod;
+            _executeMethod = (arg) => { executeMethod(arg); return Task.Delay(0); };
             _canExecuteMethod = canExecuteMethod;
         }
 
-       
+        /// <summary>
+        /// Createse a new instance of a <see cref="DelegateCommandBase"/>, specifying both the execute action as an awaitable Task and the can execute function.
+        /// </summary>
+        /// <param name="executeMethod">The <see cref="Func{Object,Task}"/> to execute when <see cref="ICommand.Execute"/> is invoked.</param>
+        /// <param name="canExecuteMethod">The <see cref="Func{Object,Bool}"/> to invoked when <see cref="ICommand.CanExecute"/> is invoked.</param>
+        protected DelegateCommandBase(Func<object,Task> executeMethod, Func<object, bool> canExecuteMethod, string differentiator)
+        {
+            if (executeMethod == null || canExecuteMethod == null)
+                throw new ArgumentNullException("executeMethod", "DelegateCommand delegates cannot be null");
+
+            _executeMethod = executeMethod;
+            _canExecuteMethod = canExecuteMethod;
+        }
+        
         /// <summary>
     /// Raises <see cref="ICommand.CanExecuteChanged"/> on the UI thread so every 
     /// command invoker can requery <see cref="ICommand.CanExecute"/>.
@@ -59,9 +73,9 @@ namespace Kona.Infrastructure
             OnCanExecuteChanged();
         }
 
-        void ICommand.Execute(object parameter)
+        async void ICommand.Execute(object parameter)
         {
-            Execute(parameter);
+            await Execute(parameter);
         }
 
         bool ICommand.CanExecute(object parameter)
@@ -73,9 +87,9 @@ namespace Kona.Infrastructure
         /// Executes the command with the provided parameter by invoking the <see cref="Action{Object}"/> supplied during construction.
         /// </summary>
         /// <param name="parameter"></param>
-        protected void Execute(object parameter)
+        protected async Task Execute(object parameter)
         {
-            _executeMethod(parameter);  
+            await _executeMethod(parameter);  
         }
 
         /// <summary>

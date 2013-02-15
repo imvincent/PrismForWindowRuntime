@@ -7,7 +7,6 @@
 
 
 using Kona.Infrastructure;
-using System;
 using Windows.ApplicationModel.Resources;
 
 namespace Kona.UILogic.Services
@@ -62,14 +61,9 @@ namespace Kona.UILogic.Services
             get { return ResourceLoader.GetString("Error"); }
         }
         
-        public static string ErrorProductCatalogServiceUnreachable
+        public static string ErrorServiceUnreachable
         {
-            get { return ResourceLoader.GetString("ErrorProductCatalogServiceUnreachable"); }
-        }
-
-        public static string ErrorShoppingCartServiceUnreachable
-        {
-            get { return ResourceLoader.GetString("ErrorShoppingCartServiceUnreachable"); }
+            get { return ResourceLoader.GetString("ErrorServiceUnreachable"); }
         }
     }
 }

@@ -8,14 +8,17 @@
 
 using System.Collections.ObjectModel;
 using System.Linq;
+using Kona.Infrastructure;
 using Windows.UI.Xaml;
 
 namespace Kona.AWShopper.Behaviors
 {
     public static class HighlightFormFieldOnErrors
     {
+        // <snippet901>
         public static readonly DependencyProperty PropertyErrorsProperty =
-            DependencyProperty.RegisterAttached("PropertyErrors", typeof(ReadOnlyCollection<string>), typeof(HighlightFormFieldOnErrors), new PropertyMetadata(null, OnPropertyErrorsChanged));
+            DependencyProperty.RegisterAttached("PropertyErrors", typeof(ReadOnlyCollection<string>), typeof(HighlightFormFieldOnErrors), new PropertyMetadata(BindableValidator.EmptyErrorsCollection, OnPropertyErrorsChanged));
+        // </snippet901>
 
         public static ReadOnlyCollection<string> GetPropertyErrors(DependencyObject sender)
         {
@@ -37,6 +40,7 @@ namespace Kona.AWShopper.Behaviors
             sender.SetValue(PropertyErrorsProperty, value);
         }
 
+        // <snippet902>
         private static void OnPropertyErrorsChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
             if (args == null || args.NewValue == null)
@@ -50,5 +54,6 @@ namespace Kona.AWShopper.Behaviors
             Style style = (propertyErrors.Any()) ? (Style)Application.Current.Resources["HighlightFormFieldStyle"] : (Style)Application.Current.Resources["FormFieldStyle"];
             control.Style = style;
         }
+        // </snippet902>
     }
 }

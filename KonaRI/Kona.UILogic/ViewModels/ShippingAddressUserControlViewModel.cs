@@ -6,8 +6,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Kona.Infrastructure;
@@ -20,7 +18,7 @@ using System.Collections.ObjectModel;
 
 namespace Kona.UILogic.ViewModels
 {
-    public class ShippingAddressUserControlViewModel : ViewModel, INavigationAware, IShippingAddressUserControlViewModel
+    public class ShippingAddressUserControlViewModel : ViewModel, IShippingAddressUserControlViewModel
     {
         private Address _address;
         private IReadOnlyCollection<ComboBoxItemValue> _states;
@@ -80,11 +78,20 @@ namespace Kona.UILogic.ViewModels
 
             if (navigationMode == NavigationMode.New)
             {
-                var address = _checkoutDataRepository.GetDefaultShippingAddressValue();
-                if (address != null)
+                var defaultAddress = _checkoutDataRepository.GetDefaultShippingAddress();
+                if (defaultAddress != null)
                 {
                     // Update the information and validate the values
-                    Address = address;
+                    Address.FirstName = defaultAddress.FirstName;
+                    Address.MiddleInitial = defaultAddress.MiddleInitial;
+                    Address.LastName = defaultAddress.LastName;
+                    Address.StreetAddress = defaultAddress.StreetAddress;
+                    Address.OptionalAddress = defaultAddress.OptionalAddress;
+                    Address.City = defaultAddress.City;
+                    Address.State = defaultAddress.State;
+                    Address.ZipCode = defaultAddress.ZipCode;
+                    Address.Phone = defaultAddress.Phone;
+
                     ValidateForm();
                 }
             }
@@ -133,7 +140,7 @@ namespace Kona.UILogic.ViewModels
 
             if (SetAsDefault)
             {
-                _checkoutDataRepository.SetAsDefaultShippingAddress(savedAddress.Id);
+                _checkoutDataRepository.SetDefaultShippingAddress(savedAddress);
             }
         }
     }

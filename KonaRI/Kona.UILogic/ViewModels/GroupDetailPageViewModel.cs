@@ -12,6 +12,8 @@ using Kona.UILogic.Repositories;
 using System;
 using System.Collections.Generic;
 using Windows.UI.Xaml.Navigation;
+using Kona.UILogic.Services;
+using System.Net.Http;
 
 namespace Kona.UILogic.ViewModels
 {
@@ -19,15 +21,19 @@ namespace Kona.UILogic.ViewModels
     {
         private readonly IProductCatalogRepository _productCatalogRepository;
         private readonly INavigationService _navigationService;
+        private readonly IAlertMessageService _alertService;
+        private readonly IResourceLoader _resourceLoader;
         private IReadOnlyCollection<object> _items;
         private string _title;
 
-        public GroupDetailPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService)
+        public GroupDetailPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService, IAlertMessageService alertMessageService, IResourceLoader resourceLoader)
         {
             _productCatalogRepository = productCatalogRepository;
             _navigationService = navigationService;
+            _alertService = alertMessageService;
+            _resourceLoader = resourceLoader;
             ProductNavigationAction = NavigateToProduct;
-            GoBackCommand = new DelegateCommand(() => navigationService.GoBack(), () => navigationService.CanGoBack());
+            GoBackCommand = new DelegateCommand(navigationService.GoBack, navigationService.CanGoBack);
         }
 
         public IReadOnlyCollection<object> Items
@@ -41,17 +47,24 @@ namespace Kona.UILogic.ViewModels
 
         public async override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState)
         {
-            var categoryId = navigationParameter is int ? (int)navigationParameter : 0;
-            var subcategories = await _productCatalogRepository.GetSubcategoriesAsync(categoryId);
-            var categorytViewModels = new List<CategoryViewModel>();
-            foreach (var subcategory in subcategories)
+            try
             {
-                categorytViewModels.Add(new CategoryViewModel(subcategory, _navigationService));
-            }
-            Items = new ReadOnlyCollection<CategoryViewModel>(categorytViewModels);
+                var categoryId = navigationParameter is int ? (int)navigationParameter : 0;
+                var subcategories = await _productCatalogRepository.GetSubcategoriesAsync(categoryId);
+                var categorytViewModels = new List<CategoryViewModel>();
+                foreach (var subcategory in subcategories)
+                {
+                    categorytViewModels.Add(new CategoryViewModel(subcategory, _navigationService));
+                }
+                Items = new ReadOnlyCollection<CategoryViewModel>(categorytViewModels);
 
-            var category = await _productCatalogRepository.GetCategoryAsync(categoryId);
-            Title = category.Title;
+                var category = await _productCatalogRepository.GetCategoryAsync(categoryId);
+                Title = category.Title;
+            }
+            catch (HttpRequestException)
+            {
+                var task = _alertService.ShowAsync(_resourceLoader.GetString("ErrorServiceUnreachable"), _resourceLoader.GetString("Error"));
+            }
         }
 
         public string Title

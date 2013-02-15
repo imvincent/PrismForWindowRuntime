@@ -71,27 +71,30 @@ namespace Kona.WebServices.Controllers
                 ChallengeCache.Remove(requestId);
             }
 
-            // Check that credentials are valid.
-            if (challenge != null && id != null && passwordHash != null && Identities.ContainsKey(id))
+            lock (Identities)
             {
-                // Compute hash for the previously issued challenge string using the password from the server's credentials store as the key.
-                var serverPassword = Encoding.UTF8.GetBytes(Identities[id]);
-                using (var provider = new HMACMD5(serverPassword))
+                // Check that credentials are valid.
+                if (challenge != null && id != null && passwordHash != null && Identities.ContainsKey(id))
                 {
-                    var serverHashBytes = provider.ComputeHash(challenge);
-                    // Authentication succeeds only if client and server have computed the same hash for the challenge string.
-                    var clientHashBytes = DecodeFromHexString(passwordHash);
-                    if (!serverHashBytes.SequenceEqual(clientHashBytes))
-                        throw new HttpResponseException(HttpStatusCode.Unauthorized);
-                }
+                    // Compute hash for the previously issued challenge string using the password from the server's credentials store as the key.
+                    var serverPassword = Encoding.UTF8.GetBytes(Identities[id]);
+                    using (var provider = new HMACSHA512(serverPassword))
+                    {
+                        var serverHashBytes = provider.ComputeHash(challenge);
+                        // Authentication succeeds only if client and server have computed the same hash for the challenge string.
+                        var clientHashBytes = DecodeFromHexString(passwordHash);
+                        if (!serverHashBytes.SequenceEqual(clientHashBytes))
+                            throw new HttpResponseException(HttpStatusCode.Unauthorized);
+                    }
 
-                if (HttpContext.Current != null) // TODO - hack to avoid null ref in unit test, should find way to make this happy in the unit test instead
-                    FormsAuthentication.SetAuthCookie(id, false);
-                return new UserInfo { UserName = id };
-            }
-            else
-            {
-                throw new HttpResponseException(HttpStatusCode.Unauthorized);
+                    if (HttpContext.Current != null) // TODO - hack to avoid null ref in unit test, should find way to make this happy in the unit test instead
+                        FormsAuthentication.SetAuthCookie(id, false);
+                    return new UserInfo { UserName = id };
+                }
+                else
+                {
+                    throw new HttpResponseException(HttpStatusCode.Unauthorized);
+                }
             }
         }
         // </snippet509>

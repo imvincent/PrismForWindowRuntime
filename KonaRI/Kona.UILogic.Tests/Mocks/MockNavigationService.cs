@@ -37,5 +37,15 @@ namespace Kona.UILogic.Tests.Mocks
         {
             ClearHistoryDelegate();
         }
+
+        public void RestoreSavedNavigation()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Suspending()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -36,7 +36,7 @@ namespace Kona.UILogic.Services
             {
                 shoppingCartClient.AddCurrentCultureHeader();
                 string requestUrl = _shoppingCartBaseUrl + shoppingCartId + "?productIdToIncrement=" + productIdToIncrement;
-                var response = await shoppingCartClient.PutAsync(requestUrl, null);
+                var response = await shoppingCartClient.PostAsync(requestUrl, null);
                 response.EnsureSuccessStatusCode();
             }
         }
@@ -47,7 +47,7 @@ namespace Kona.UILogic.Services
             {
                 shoppingCartClient.AddCurrentCultureHeader();
                 string requestUrl = _shoppingCartBaseUrl + shoppingCartId + "?productIdToDecrement=" + productIdToDecrement;
-                var response = await shoppingCartClient.PutAsync(requestUrl, null);
+                var response = await shoppingCartClient.PostAsync(requestUrl, null);
                 response.EnsureSuccessStatusCode();
             }
         }
@@ -79,7 +79,7 @@ namespace Kona.UILogic.Services
             {
                 shoppingCartClient.AddCurrentCultureHeader();
                 string requestUrl = _shoppingCartBaseUrl + newShoppingCartId + "?oldShoppingCartId=" + oldShoppingCartId;
-                var response = await shoppingCartClient.PutAsync(requestUrl, null);
+                var response = await shoppingCartClient.PostAsync(requestUrl, null);
                 response.EnsureSuccessStatusCode();
             }
         }

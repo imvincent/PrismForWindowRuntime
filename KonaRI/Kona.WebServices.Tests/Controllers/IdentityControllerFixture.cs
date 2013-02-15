@@ -48,8 +48,8 @@ namespace Kona.WebServices.Tests.Controllers
         {
             var passwordBuffer = Encoding.UTF8.GetBytes(password);
 
-            // same as MacAlgorithmProvider.OpenAlgorithm(MacAlgorithmNames.HmacMd5).CreateKey(passwordBuffer) in Windows Runtime.
-            var provider = new HMACMD5(passwordBuffer);
+            // same as MacAlgorithmProvider.OpenAlgorithm(MacAlgorithmNames.HmacSha512).CreateKey(passwordBuffer) in Windows Runtime.
+            var provider = new HMACSHA512(passwordBuffer);
 
             // Same as CryptographicBuffer.DecodeFromHexString in Windows Runtime.
             var challengeBuffer = DecodeFromHexString(challengeString);

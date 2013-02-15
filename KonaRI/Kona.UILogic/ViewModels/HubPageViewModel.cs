@@ -36,7 +36,7 @@ namespace Kona.UILogic.ViewModels
             _alertMessageService = alertMessageService;
             _resourceLoader = resourceLoader;
             ProductNavigationAction = NavigateToItem;
-            GoBackCommand = new DelegateCommand(() => navigationService.GoBack(), () => navigationService.CanGoBack());
+            GoBackCommand = new DelegateCommand(navigationService.GoBack, navigationService.CanGoBack);
         }
         // </snippet303>
         
@@ -63,14 +63,15 @@ namespace Kona.UILogic.ViewModels
         }
         // </snippet412>
 
-        // <snippet511>
         public async override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState)
         {
             ReadOnlyCollection<Category> rootCategories = null;
             var getCategoriesCallFailed = false;
             try
             {
+                // <snippet511>
                 rootCategories = await _productCatalogRepository.GetCategoriesAsync(5);
+                // </snippet511>
             }
             catch (HttpRequestException)
             {
@@ -79,7 +80,7 @@ namespace Kona.UILogic.ViewModels
 
             if (getCategoriesCallFailed)
             {
-                await _alertMessageService.ShowAsync(_resourceLoader.GetString("ErrorProductCatalogServiceUnreachable"), _resourceLoader.GetString("Error"));
+                await _alertMessageService.ShowAsync(_resourceLoader.GetString("ErrorServiceUnreachable"), _resourceLoader.GetString("Error"));
                 return;
             }
             
@@ -90,6 +91,5 @@ namespace Kona.UILogic.ViewModels
             }
             RootCategories = new ReadOnlyCollection<CategoryViewModel>(rootCategoryViewModels);
         }
-        // </snippet511>
     }
 }

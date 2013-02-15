@@ -6,6 +6,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using Kona.Infrastructure;
+using Kona.Infrastructure.Interfaces;
 using Kona.UILogic.Events;
 using Kona.UILogic.Models;
 using Kona.UILogic.Services;
@@ -18,34 +20,38 @@ namespace Kona.UILogic.Repositories
 {
     public class ShoppingCartRepository : IShoppingCartRepository
     {
-        public const string ShoppingCartIdSettingKey = "ShoppingCartId";
+        public const string ShoppingCartIdKey = "ShoppingCartId";
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IAccountService _accountService;
         private readonly IEventAggregator _eventAggregator;
         private readonly IProductCatalogRepository _productCatalogRepository;
+        private readonly IRestorableStateService _restorableStateService;
         private readonly ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
 
         private string _shoppingCartId;
         private ShoppingCart _cachedShoppingCart = null;
         
-        public ShoppingCartRepository(IShoppingCartService shoppingCartService, IAccountService accountService, IEventAggregator eventAggregator, IProductCatalogRepository productCatalogRepository)
+        public ShoppingCartRepository(IShoppingCartService shoppingCartService, IAccountService accountService, IEventAggregator eventAggregator, IProductCatalogRepository productCatalogRepository, IRestorableStateService restorableStateService)
         {
             _shoppingCartService = shoppingCartService;
             _accountService = accountService;
             _eventAggregator = eventAggregator;
             _productCatalogRepository = productCatalogRepository;
+            _restorableStateService = restorableStateService;
 
             if (accountService != null)
             {
                 _accountService.UserChanged += _accountService_UserChanged;
             }
 
-            if (_localSettings.Values.ContainsKey(ShoppingCartIdSettingKey))
-                _shoppingCartId = _localSettings.Values[ShoppingCartIdSettingKey].ToString();
+            if (_restorableStateService != null && _restorableStateService.GetState(ShoppingCartIdKey) != null)
+            {
+                _shoppingCartId = _restorableStateService.GetState(ShoppingCartIdKey).ToString();
+            }
             else
             {
                 _shoppingCartId = Guid.NewGuid().ToString();
-                _localSettings.Values[ShoppingCartIdSettingKey] = _shoppingCartId;
+                _restorableStateService.SaveState(ShoppingCartIdKey, _shoppingCartId);
             }
         }
 
@@ -72,7 +78,7 @@ namespace Kona.UILogic.Repositories
                 _shoppingCartId = Guid.NewGuid().ToString();
             }
 
-            _localSettings.Values[ShoppingCartIdSettingKey] = _shoppingCartId;
+            _localSettings.Values[ShoppingCartIdKey] = _shoppingCartId;
             RaiseShoppingCartUpdated();
         }
 
@@ -117,13 +123,13 @@ namespace Kona.UILogic.Repositories
         // <snippet1501>
         private void RaiseShoppingCartUpdated()
         {
-            _eventAggregator.GetEvent<ShoppingCartUpdatedEvent>().Publish();
+            _eventAggregator.GetEvent<ShoppingCartUpdatedEvent>().Publish(null);
         }
         // </snippet1501>
 
         private void RaiseShoppingCartItemUpdated()
         {
-            _eventAggregator.GetEvent<ShoppingCartItemUpdatedEvent>().Publish();
+            _eventAggregator.GetEvent<ShoppingCartItemUpdatedEvent>().Publish(null);
         }
     }
 }

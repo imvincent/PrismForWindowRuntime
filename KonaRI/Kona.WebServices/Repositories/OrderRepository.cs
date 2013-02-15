@@ -15,60 +15,77 @@ namespace Kona.WebServices.Repositories
 {
     public class OrderRepository : IRepository<Order>
     {
-        private static ICollection<Order> _orders;
-
-        public OrderRepository()
-        {
-            if (_orders == null)
-            {
-                _orders = new List<Order>(); 
-            }
-        }
+        private static ICollection<Order> _orders = new List<Order>();
+        private static object _lock = new object();
 
         public IEnumerable<Order> GetAll()
         {
-            return _orders;
+            lock (_lock)
+            {
+                // Return new collection so callers can iterate independently on separate threads
+                return _orders.ToArray();
+            }
         }
 
         public Order GetItem(int id)
         {
-            return _orders.FirstOrDefault(c => c.Id == id);
+            lock (_lock)
+            {
+                return _orders.FirstOrDefault(c => c.Id == id);
+            }
         }
 
         public Order Create(Order item)
         {
-            if (item == null)
+            lock (_lock)
             {
-                throw new ArgumentNullException("item");
-            }
+                if (item == null)
+                {
+                    throw new ArgumentNullException("item");
+                }
 
-            item.Id = _orders.Any() ? _orders.Max(c => c.Id) : 1;
-            _orders.Add(item);
-            return item;    
+                item.Id = _orders.Any() ? _orders.Max(c => c.Id) : 1;
+                _orders.Add(item);
+                return item;
+            }
         }
 
         public bool Update(Order item)
         {
-            var order = _orders.FirstOrDefault(c => c.Id == item.Id);
-
-            if (order != null)
+            lock (_lock)
             {
-                order.ShoppingCart = item.ShoppingCart;
-                order.ShippingAddress = item.ShippingAddress;
-                order.BillingAddress = item.BillingAddress;
-                order.PaymentMethod = item.PaymentMethod;
-                order.ShippingMethod = item.ShippingMethod;
+                var order = _orders.FirstOrDefault(c => c.Id == item.Id);
 
-                return true;
+                if (order != null)
+                {
+                    order.ShoppingCart = item.ShoppingCart;
+                    order.ShippingAddress = item.ShippingAddress;
+                    order.BillingAddress = item.BillingAddress;
+                    order.PaymentMethod = item.PaymentMethod;
+                    order.ShippingMethod = item.ShippingMethod;
+
+                    return true;
+                }
+
+                return false;
             }
-
-            return false;
         }
 
         public bool Delete(int id)
         {
-            var order = _orders.FirstOrDefault(c => c.Id == id);
-            return _orders.Remove(order);
+            lock (_lock)
+            {
+                var order = _orders.FirstOrDefault(c => c.Id == id);
+                return _orders.Remove(order);
+            }
+        }
+
+        public void Reset()
+        {
+            lock (_lock)
+            {
+                _orders = new List<Order>();
+            }
         }
     }
 }

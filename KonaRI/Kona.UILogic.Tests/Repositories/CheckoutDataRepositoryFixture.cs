@@ -18,214 +18,153 @@ namespace Kona.UILogic.Tests.Repositories
     [TestClass]
     public class CheckoutDataRepositoryFixture
     {
-
         [TestMethod]
-        public void RetrieveAllTypesOfCheckoutData()
+        public void GetEntity_Returns_Entity()
         {
             var service = SetupService();
             var target = new CheckoutDataRepository(service);
-            var bilingAddresses = target.GetAllBillingAddresses();
+
+            var shippingAddress = target.GetShippingAddress("3");
+            var bilingAddress = target.GetBillingAddress("2");
+            var paymentMethod = target.GetPaymentMethod("1");
+
+            Assert.AreEqual(shippingAddress.FirstName, "Anne");
+            Assert.AreEqual(bilingAddress.FirstName, "Jane");
+            Assert.AreEqual(paymentMethod.CardholderName, "John Doe");
+        }
+
+        [TestMethod]
+        public void GetDefaultValues_Returns_DefaultValues()
+        {
+            var service = SetupService();
+            var target = new CheckoutDataRepository(service);
+
+            var defaultShippingAddress = target.GetDefaultShippingAddress();
+            var defaultBilingAddress = target.GetDefaultBillingAddress();
+            var defaultPaymentMethod = target.GetDefaultPaymentMethod();
+
+            Assert.IsNotNull(defaultShippingAddress);
+            Assert.AreEqual(defaultShippingAddress.Id, "3");
+            Assert.IsNotNull(defaultBilingAddress);
+            Assert.AreEqual(defaultBilingAddress.Id, "2");
+            Assert.IsNull(defaultPaymentMethod);
+        }
+
+        [TestMethod]
+        public void GetAllEntities_Returns_AllEntities()
+        {
+            var service = SetupService();
+            var target = new CheckoutDataRepository(service);
+
             var shippingAddresses = target.GetAllShippingAddresses();
+            var bilingAddresses = target.GetAllBillingAddresses();
             var paymentMethods = target.GetAllPaymentMethods();
+
             Assert.AreEqual(3, shippingAddresses.Count());
             Assert.AreEqual(2, bilingAddresses.Count());
             Assert.AreEqual(1, paymentMethods.Count());
         }
 
         [TestMethod]
-        public void RetrieveSpecificCheckoutData()
+        public void SaveEntity_SavesEntity()
         {
             var service = SetupService();
             var target = new CheckoutDataRepository(service);
-            var billingAddress = target.GetBillingAddress("1");
-            var shippingAddress = target.GetShippingAddress("1");
-            var paymentMethod = target.GetPaymentMethod("1");
-            Assert.IsNotNull(billingAddress);
-            Assert.IsNotNull(shippingAddress);
-            Assert.IsNotNull(paymentMethod);
-            Assert.AreEqual("John", billingAddress.FirstName);
-            Assert.AreEqual("John", shippingAddress.FirstName);
-            Assert.AreEqual("John Doe", paymentMethod.CardholderName);
+
+            var savedShippingAddress = target.SaveShippingAddress(new Address() { FirstName = "TestFirstName", LastName = "TestLastName" });
+            var savedBillingAddress = target.SaveBillingAddress(new Address() { FirstName = "TestFirstName", LastName = "TestLastName" });
+            var savedPaymentMethod = target.SavePaymentMethod(new PaymentMethod() { CardholderName = "TestCardholderName" });
+
+            Assert.IsNotNull(savedShippingAddress);
+            Assert.IsNotNull(savedBillingAddress);
+            Assert.IsNotNull(savedPaymentMethod);
+
+            var shippingAddress = target.GetShippingAddress(savedShippingAddress.Id);
+            var billingAddress = target.GetBillingAddress(savedBillingAddress.Id);
+            var paymentMethod = target.GetPaymentMethod(savedPaymentMethod.Id);
+            
+            Assert.AreEqual(savedShippingAddress.Id, shippingAddress.Id);
+            Assert.AreEqual(savedBillingAddress.Id, billingAddress.Id);
+            Assert.AreEqual(savedPaymentMethod.Id, paymentMethod.Id);
         }
 
         [TestMethod]
-        public void SaveAllTypesOfCheckoutData()
+        public void SetDefaultEntity_SetsDefaultEntity()
         {
             var service = SetupService();
             var target = new CheckoutDataRepository(service);
-            var billingAddress = new Address(){Id = "3", FirstName = "Jack", LastName = "Doe", City = "Springfield", State = "Illinois"};
-            var shippingAddress = new Address() { Id = "4", FirstName = "Jill", LastName = "Doe", City = "Bellevue", State = "Washington" };
-            var paymentMethod = new PaymentMethod() {Id = "2", CardholderName = "Jill Doe"};
-            target.SaveShippingAddress(shippingAddress);
-            target.SaveBillingAddress(billingAddress);
-            target.SavePaymentMethod(paymentMethod);
-            Assert.AreEqual(3, target.GetAllBillingAddresses().Count);
-            Assert.AreEqual(4, target.GetAllShippingAddresses().Count);
-            Assert.AreEqual(2, target.GetAllPaymentMethods().Count);
-        }
 
-        [TestMethod]
-        public void DeleteAllTypesOfCheckoutData()
-        {
-            var service = SetupService();
-            var target = new CheckoutDataRepository(service);
-            target.DeleteBillingAddressValue("1");
-            target.DeleteShippingAddressValue("1");
-            target.DeletePaymentMethodValue("1");
-            var billingAddresses = target.GetAllBillingAddresses();
-            var shippingAddresses = target.GetAllShippingAddresses();
-            var paymentMethods = target.GetAllPaymentMethods();
-           
-            Assert.AreEqual(1, billingAddresses.Count);
-            Assert.AreEqual(2, shippingAddresses.Count);
-            Assert.AreEqual(0, paymentMethods.Count);
-            Assert.IsNull(billingAddresses.FirstOrDefault(b => b.Id == "1"));
-            Assert.IsNull(shippingAddresses.FirstOrDefault(s => s.Id == "1"));
-            Assert.IsNull(paymentMethods.FirstOrDefault(p => p.Id == "1"));
-        }
+            var defaultShippingAddress = target.GetDefaultShippingAddress();
+            var defaultBillingAddress = target.GetDefaultBillingAddress();
+            var defaultPaymentMethod = target.GetDefaultPaymentMethod();
 
-        [TestMethod] public void DefaultValuesForAllTypesOfCheckoutDataAreRetrievedAndSavedSuccessfully()
-        {
-            var service = SetupService();
-            var target = new CheckoutDataRepository(service);
-            var defaultBillingAddress = target.GetDefaultBillingAddressValue();
-            var defaultPaymentMethod = target.GetDefaultPaymentMethodValue();
-            var defaultShippingAddress = target.GetDefaultShippingAddressValue();
-
-            var defaultPaymentMethodExists = target.GetDefaultPaymentMethodValue() != null;
-            Assert.IsFalse(defaultPaymentMethodExists);
-            Assert.IsNull(defaultBillingAddress);
-            Assert.IsNull(defaultShippingAddress);
+            Assert.IsNotNull(defaultShippingAddress);
+            Assert.AreEqual(defaultShippingAddress.Id, "3");
+            Assert.IsNotNull(defaultBillingAddress);
+            Assert.AreEqual(defaultBillingAddress.Id, "2");
             Assert.IsNull(defaultPaymentMethod);
 
-            target.SetAsDefaultShippingAddress("1");
-            target.SetAsDefaultBillingAddress("1");
-            target.SetAsDefaultPaymentMethod("1");
-            defaultPaymentMethodExists = target.GetDefaultPaymentMethodValue() != null;
-            defaultBillingAddress = target.GetDefaultBillingAddressValue();
-            defaultPaymentMethod = target.GetDefaultPaymentMethodValue();
-            defaultShippingAddress = target.GetDefaultShippingAddressValue();
+            target.SetDefaultShippingAddress(target.GetShippingAddress("2"));
+            target.SetDefaultBillingAddress(target.GetBillingAddress("1"));
+            target.SetDefaultPaymentMethod(target.GetPaymentMethod("1"));
 
-            Assert.IsTrue(defaultPaymentMethodExists);
-            Assert.IsNotNull(defaultBillingAddress);
+            defaultShippingAddress = target.GetDefaultShippingAddress();
+            defaultBillingAddress = target.GetDefaultBillingAddress();
+            defaultPaymentMethod = target.GetDefaultPaymentMethod();
+
             Assert.IsNotNull(defaultShippingAddress);
+            Assert.AreEqual(defaultShippingAddress.Id, "2");
+            Assert.IsNotNull(defaultBillingAddress);
+            Assert.AreEqual(defaultBillingAddress.Id, "1");
             Assert.IsNotNull(defaultPaymentMethod);
-            Assert.AreEqual("John", defaultShippingAddress.FirstName);
-            Assert.AreEqual("John", defaultBillingAddress.FirstName);
-            Assert.AreEqual("John Doe", defaultPaymentMethod.CardholderName);
+            Assert.AreEqual(defaultPaymentMethod.Id, "1");
         }
 
         [TestMethod]
-        public void SaveShippingAddress_SavesIfNew()
+        public void RemoveDefaultEntity_RemovesDefaultEntity()
         {
             var service = SetupService();
             var target = new CheckoutDataRepository(service);
+            target.SetDefaultPaymentMethod(target.GetPaymentMethod("1"));
 
-            var savedAddress = target.SaveShippingAddress(new Address());
-            var address = target.GetShippingAddress(savedAddress.Id);
+            var defaultShippingAddress = target.GetDefaultShippingAddress();
+            var defaultBillingAddress = target.GetDefaultBillingAddress();
+            var defaultPaymentMethod = target.GetDefaultPaymentMethod();
 
-            Assert.IsNotNull(address);
+            Assert.IsNotNull(defaultShippingAddress);
+            Assert.IsNotNull(defaultBillingAddress);
+            Assert.IsNotNull(defaultPaymentMethod);
+
+            target.RemoveDefaultShippingAddress();
+            target.RemoveDefaultBillingAddress();
+            target.RemoveDefaultPaymentMethod();
+
+            defaultShippingAddress = target.GetDefaultShippingAddress();
+            defaultBillingAddress = target.GetDefaultBillingAddress();
+            defaultPaymentMethod = target.GetDefaultPaymentMethod();
+
+            Assert.IsNull(defaultShippingAddress);
+            Assert.IsNull(defaultBillingAddress);
+            Assert.IsNull(defaultPaymentMethod);
         }
-
-        [TestMethod]
-        public void SaveShippingAddress_DoesNotSaveAndReturnsSavedId()
-        {
-            var service = SetupService();
-            var target = new CheckoutDataRepository(service);
-
-            var savedAddress = target.SaveShippingAddress(new Address
-            {
-                Id = "NewShippingAddressId",
-                FirstName = "John",
-                MiddleInitial = "S",
-                LastName = "Doe",
-                City = "Redmond",
-                State = "Washington"
-            });
-
-            Assert.AreEqual("1", savedAddress.Id);
-        }
-
-
 
         private static MockSettingsStoreService SetupService()
         {
-            return new MockSettingsStoreService
-                {
-                    RetrieveAllValuesDelegate = container =>
-                        {
-                            if (container == "PaymentMethod")
-                            {
-                                return new List<object>()
-                                    {
-                                        new PaymentMethod()
-                                            {
-                                                Id = "1",
-                                                CardholderName = "John Doe",
-                                                CardNumber = "123512523123",
-                                                CardVerificationCode = "123"
-                                            },
-                                    };
-                            }
-                            else if (container == "BillingAddress")
-                            {
-                                return new List<object>()
-                                    {
-                                        new Address()
-                                            {
-                                                Id = "1",
-                                                FirstName = "John",
-                                                MiddleInitial = "B",
-                                                LastName = "Doe",
-                                                City = "Redmond",
-                                                State = "Washington"
-                                            },
-                                        new Address()
-                                            {
-                                                Id = "2",
-                                                FirstName = "Jane",
-                                                MiddleInitial = "B",
-                                                LastName = "Doe",
-                                                City = "Redmond",
-                                                State = "Washington"
-                                            },
-                                    };
-                            }
-                            else
-                            {
-                                return new List<object>()
-                                    {
-                                        new Address()
-                                            {
-                                                Id = "1",
-                                                FirstName = "John",
-                                                MiddleInitial = "S",
-                                                LastName = "Doe",
-                                                City = "Redmond",
-                                                State = "Washington"
-                                            },
-                                        new Address()
-                                            {
-                                                Id = "2",
-                                                FirstName = "Jane",
-                                                MiddleInitial = "S",
-                                                LastName = "Doe",
-                                                City = "Redmond",
-                                                State = "Washington"
-                                            },
-                                        new Address()
-                                            {
-                                                Id = "3",
-                                                FirstName = "Jean",
-                                                MiddleInitial = "S",
-                                                LastName = "Doe",
-                                                City = "Redmond",
-                                                State = "Washington"
-                                            },
-                                    };
-                            }
-                        }
-                };
+            var service = new MockSettingsStoreService();
+
+            service.SaveEntity(Constants.ShippingAddress, "1", new Address() { Id = "1", FirstName = "Bill", MiddleInitial = "B", LastName = "Doe", City = "Redmond", State = "Washington" });
+            service.SaveEntity(Constants.ShippingAddress, "2", new Address() { Id = "2", FirstName = "Jack", MiddleInitial = "B", LastName = "Doe", City = "Redmond", State = "Washington" });
+            service.SaveEntity(Constants.ShippingAddress, "3", new Address() { Id = "3", FirstName = "Anne", MiddleInitial = "B", LastName = "Doe", City = "Redmond", State = "Washington" });
+
+            service.SaveEntity(Constants.BillingAddress, "1", new Address() { Id = "1", FirstName = "John", MiddleInitial = "B", LastName = "Doe", City = "Redmond", State = "Washington" });
+            service.SaveEntity(Constants.BillingAddress, "2", new Address() { Id = "2", FirstName = "Jane", MiddleInitial = "B", LastName = "Doe", City = "Redmond", State = "Washington" });
+
+            service.SaveEntity(Constants.PaymentMethod, "1",  new PaymentMethod() { Id = "1", CardholderName = "John Doe", CardNumber = "123512523123", CardVerificationCode = "123" });
+
+            service.SaveValue(Constants.Default, Constants.ShippingAddress, "3");
+            service.SaveValue(Constants.Default, Constants.BillingAddress, "2");
+
+            return service;
         }
     }
 }

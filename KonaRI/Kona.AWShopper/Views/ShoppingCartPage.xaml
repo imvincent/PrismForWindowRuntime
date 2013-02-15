@@ -51,7 +51,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- Overview -->
-            <TextBlock x:Uid="OverviewLabel" x:Name="textBlock" Text="Overview" Grid.Row="0" Grid.Column="0" Height="50" Style="{StaticResource SubheaderTextStyle}" Foreground="{StaticResource AWShopperAccentBrush}"></TextBlock>
+            <TextBlock x:Uid="OverviewLabel" x:Name="textBlock" Text="Overview" Grid.Row="0" Grid.Column="0" Height="50" Style="{StaticResource SubheaderTextStyle}" Foreground="{StaticResource AWShopperAccentBrush}"/>
             <StackPanel x:Name="stackPanel" Grid.Row="2" Margin="0,0,50,0">
                 <Grid x:Name="grid" Width="300" Background="#444B50">
                     <Grid.RowDefinitions>
@@ -63,11 +63,11 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <TextBlock x:Uid="TotalItemsLabel" x:Name="textBlock2" Grid.Row="0" Grid.Column="0" Text="Total items:" FontSize="18" Foreground="#A9B0B4" Margin="10"></TextBlock>
+                    <TextBlock x:Uid="TotalItemsLabel" x:Name="textBlock2" Grid.Row="0" Grid.Column="0" Text="Total items:" FontSize="17.5" Foreground="#A9B0B4" Margin="10" VerticalAlignment="Bottom"></TextBlock>
                     <TextBlock x:Name="textBlock5" Grid.Row="0" Grid.Column="1" Text="{Binding FullPrice, Mode=TwoWay}" HorizontalAlignment="Right" FontSize="24" Foreground="White" Margin="10"></TextBlock>
-                    <TextBlock x:Uid="DiscountCodesLabel" x:Name="textBlock3" Grid.Row="1" Grid.Column="0" Text="Discount codes:" VerticalAlignment="Top" FontSize="18" Foreground="#A9B0B4" Margin="10"></TextBlock>
-                    <TextBlock x:Name="textBlock6" Grid.Row="1" Grid.Column="1" Text="{Binding TotalDiscount, Mode=TwoWay}" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="24" Foreground="White" Margin="10,0,10,30"></TextBlock>
-                    <TextBlock x:Uid="TotalLabel" x:Name="textBlock4" Grid.Row="2" Grid.Column="0" Text="Total:" FontSize="24" Foreground="#A9B0B4" Margin="10"></TextBlock>
+                    <TextBlock x:Uid="DiscountCodesLabel" x:Name="textBlock3" Grid.Row="1" Grid.Column="0" Text="Discount codes:" FontSize="17.5" Foreground="#A9B0B4" Margin="10" VerticalAlignment="Bottom"/>
+                    <TextBlock x:Name="textBlock6" Grid.Row="1" Grid.Column="1" Text="{Binding TotalDiscount, Mode=TwoWay}" HorizontalAlignment="Right" FontSize="24" Foreground="White" Margin="10"/>
+                    <TextBlock x:Uid="TotalLabel" x:Name="textBlock4" Grid.Row="2" Grid.Column="0" Text="Total:" FontSize="24" Foreground="#A9B0B4" Margin="10" VerticalAlignment="Bottom"></TextBlock>
                     <TextBlock x:Name="textBlock7" Grid.Row="2" Grid.Column="1" Text="{Binding TotalPrice, Mode=TwoWay}" HorizontalAlignment="Right" FontSize="24" Foreground="{StaticResource AWShopperAccentBrush}" Margin="10"></TextBlock>
                 </Grid>
                 <Button x:Name="CheckoutButton" x:Uid="CheckoutButton" AutomationProperties.AutomationId="CheckoutButton" Content="CHECKOUT" Command="{Binding CheckoutCommand}" Margin="0,20,0,0" HorizontalAlignment="Stretch" FontSize="20" Background="{StaticResource AWShopperAccentBrush}" Foreground="White" />
@@ -75,41 +75,48 @@
 
 
             <!-- Items -->
-            <TextBlock x:Uid="ItemsLabel" x:Name="ItemsLabel" Text="Items" Grid.Row="0" Height="50" Grid.Column="1" Style="{StaticResource SubheaderTextStyle}" Foreground="{StaticResource AWShopperAccentBrush}" Margin="10,0"></TextBlock>
+            <TextBlock x:Uid="ItemsLabel" x:Name="ItemsLabel" Text="Items" Grid.Row="0" Height="50" Grid.Column="1" Style="{StaticResource SubheaderTextStyle}" Foreground="{StaticResource AWShopperAccentBrush}"/>
             <!-- <snippet304> -->
             <GridView x:Name="ShoppingCartItemsGridView" x:Uid="ShoppingCartItemsGridView" 
                       AutomationProperties.AutomationId="ShoppingCartItemsGridView"
-                      SelectionMode="Single" Width="Auto" Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Top"
+                      SelectionMode="Single" Width="Auto" Grid.Row="2" Grid.Column="1" Grid.RowSpan="3" VerticalAlignment="Top"
                       ItemsSource="{Binding ShoppingCartItemViewModels}" 
                       SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-                      ItemTemplate="{StaticResource ShoppingCartItemTemplate}" />
+                      ItemTemplate="{StaticResource ShoppingCartItemTemplate}" Margin="0,0,0,-81" />
             <!-- </snippet304> -->
-            <ScrollViewer x:Name="scrollViewer" Grid.Row="3" Margin="10,0" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer x:Name="scrollViewer" Grid.Row="4" Margin="10,0" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
                 <ListView x:Name="listView" Width="260" ItemsSource="{Binding ShoppingCartItemViewModels}"
                           SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                           ItemTemplate="{StaticResource ShoppingCartItemTemplateSnapped}" />
             </ScrollViewer>
         </Grid>
 
-        <Popup x:Name="pop" x:Uid="EditQuantityPopup" AutomationProperties.AutomationId="EditQuantityPopup" IsLightDismissEnabled="True" IsOpen="{Binding IsEditPopupOpened, Mode=TwoWay}">
-            <Grid x:Name="panel" Background="Black" Opacity=".8" Height="200">
+        <Popup x:Name="EditQuantityPopup" x:Uid="EditQuantityPopup" AutomationProperties.AutomationId="EditQuantityPopup" IsLightDismissEnabled="True" IsOpen="{Binding IsEditPopupOpened, Mode=TwoWay}">
+            <Grid x:Name="PopupPanel" Background="Black" Opacity=".8" Height="200">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="65"/>
                     <RowDefinition/>
-                    <RowDefinition Height="85"/>
                 </Grid.RowDefinitions>
-                <TextBlock Margin="10" Text="Edit Amount" FontSize="34" Foreground="White"></TextBlock>
-                <Grid Grid.Row="2" Margin="10">
+                <TextBlock Grid.Row="0" Margin="10" Text="Edit Amount" FontSize="34" Foreground="White"></TextBlock>
+                <Grid x:Name="ContentPopupGrid" Grid.Row="1" Margin="10">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Image x:Uid="SelectedProductImage" Source="{Binding SelectedItem.Image}" />
-                    <Button Grid.Column="1" Style="{StaticResource RemoveAppBarButtonStyle}" Command="{Binding DecrementCountCommand}" AutomationProperties.AutomationId="DecrementAmountButton"></Button>
-                    <TextBlock Grid.Column="2" Text="{Binding SelectedItem.Quantity}" FontSize="50" Foreground="#FFE2742F" />
-                    <Button Grid.Column="3" Style="{StaticResource AddAppBarButtonStyle}" Command="{Binding IncrementCountCommand}" AutomationProperties.AutomationId="IncrementAmountButton"></Button>
+                    <Button x:Name="DecrementAmountButton" Grid.Column="1" Style="{StaticResource RemoveAppBarButtonStyle}" Command="{Binding DecrementCountCommand}" AutomationProperties.AutomationId="DecrementAmountButton" AutomationProperties.Name="" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,15,0,0" Padding="16,4,12,4" RenderTransformOrigin="0.5,0.5" >
+                        <Button.RenderTransform>
+                            <CompositeTransform/>
+                        </Button.RenderTransform>
+                    </Button>
+                    <TextBlock x:Name="EditAmountQuantity" Grid.Column="2" Text="{Binding SelectedItem.Quantity}" FontSize="55" Foreground="#FFE2742F" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <Button x:Name="IncrementAmountButton" Grid.Column="3" Style="{StaticResource AddAppBarButtonStyle}" Command="{Binding IncrementCountCommand}" AutomationProperties.AutomationId="IncrementAmountButton" AutomationProperties.Name="" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,15,0,0" RenderTransformOrigin="0.5,0.5" >
+                        <Button.RenderTransform>
+                            <CompositeTransform/>
+                        </Button.RenderTransform>
+                    </Button>
                 </Grid>
             </Grid>
         </Popup>
@@ -122,7 +129,6 @@
                 <VisualState x:Name="FullScreenPortrait" />
                 <VisualState x:Name="Snapped">
                     <Storyboard>
-                        <!-- Header -->
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}" />
                         </ObjectAnimationUsingKeyFrames>
@@ -178,10 +184,24 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="textBlock">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Thickness>15,20,0,0</Thickness>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="ItemsLabel">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <x:Double>30</x:Double>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="ItemsLabel">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Thickness>15,20,0,0</Thickness>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
@@ -268,29 +288,6 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="textBlock">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Thickness>10,0</Thickness>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <DoubleAnimation Duration="0" To="16" Storyboard.TargetProperty="(TextBlock.FontSize)" Storyboard.TargetName="textBlock" d:IsOptimized="True"/>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(TextBlock.FontWeight)" Storyboard.TargetName="textBlock">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <FontWeight>Bold</FontWeight>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <DoubleAnimation Duration="0" To="16" Storyboard.TargetProperty="(TextBlock.FontSize)" Storyboard.TargetName="ItemsLabel" d:IsOptimized="True"/>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(TextBlock.FontWeight)" Storyboard.TargetName="ItemsLabel">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <FontWeight>Bold</FontWeight>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="scrollViewer">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
@@ -361,7 +358,40 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <!-- Content -->
+                        <!-- Popup -->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="PopupPanel">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="290" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="PopupPanel">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="150" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.ColumnDefinitions)[1].Width" Storyboard.TargetName="ContentPopupGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="60" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.ColumnDefinitions)[2].Width" Storyboard.TargetName="ContentPopupGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="50" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.FontSize)" Storyboard.TargetName="EditAmountQuantity">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="25" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <DoubleAnimation Duration="0" To="0.7" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="DecrementAmountButton" d:IsOptimized="True"/>
+                        <DoubleAnimation Duration="0" To="0.7" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="DecrementAmountButton" d:IsOptimized="True"/>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="DecrementAmountButton">
+                            <DiscreteObjectKeyFrame KeyTime="0" >
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Thickness>-10,0,0,0</Thickness>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <DoubleAnimation Duration="0" To="0.7" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="IncrementAmountButton" d:IsOptimized="True"/>
+                        <DoubleAnimation Duration="0" To="0.7" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="IncrementAmountButton" d:IsOptimized="True"/>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="IncrementAmountButton">
+                            <DiscreteObjectKeyFrame KeyTime="0" >
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Thickness>-20,0,0,0</Thickness>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
             </VisualStateGroup>

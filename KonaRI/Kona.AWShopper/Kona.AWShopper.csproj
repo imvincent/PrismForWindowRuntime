@@ -107,14 +107,12 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="App.DependencyInjection.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Behaviors\CheckBoxCheckedToAction.cs" />
     <Compile Include="Behaviors\ChangeVisualState.cs" />
     <Compile Include="Behaviors\ComboBoxKeyboardSelection.cs" />
     <Compile Include="Behaviors\HighlightFormComboOnErrors.cs" />
     <Compile Include="Behaviors\HighlightFormFieldOnErrors.cs" />
+    <Compile Include="Behaviors\HighlightSearchBehavior.cs" />
     <Compile Include="Behaviors\ListViewItemClickedToAction.cs" />
     <Compile Include="Controls\FormFieldTextBox.cs" />
     <Compile Include="Controls\MultipleSizedGridView.cs" />
@@ -127,9 +125,15 @@
     <Compile Include="Converters\IsGiftContentConverter.cs" />
     <Compile Include="Converters\IsSignInInvalidConverter.cs" />
     <Compile Include="Converters\NotNullToVisibleConverter.cs" />
+    <Compile Include="DesignViewModels\ChangeDefaultDesignViewModel.cs" />
     <Compile Include="DesignViewModels\CheckoutHubPageDesignViewModel.cs" />
     <Compile Include="DesignViewModels\CheckoutSummaryPageDesignViewModel.cs" />
+    <Compile Include="DesignViewModels\GroupDetailPageDesignViewModel.cs" />
+    <Compile Include="DesignViewModels\HubPageDesignViewModel.cs" />
+    <Compile Include="DesignViewModels\ItemDetailsPageDesignViewModel.cs" />
+    <Compile Include="DesignViewModels\SearchResultsPageDesignViewModel.cs" />
     <Compile Include="DesignViewModels\ShoppingCartPageDesignViewModel.cs" />
+    <Compile Include="DesignViewModels\ShoppingCartTabDesignViewModel.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Views\BillingAddressUserControl.xaml.cs">
       <DependentUpon>BillingAddressUserControl.xaml</DependentUpon>
@@ -145,6 +149,9 @@
     </Compile>
     <Compile Include="Views\BillingAddressFlyout.xaml.cs">
       <DependentUpon>BillingAddressFlyout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SearchResultsPage.xaml.cs">
+      <DependentUpon>SearchResultsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ShippingAddressFlyout.xaml.cs">
       <DependentUpon>ShippingAddressFlyout.xaml</DependentUpon>
@@ -210,12 +217,23 @@
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\WideLogo.scale-100.png" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Themes\DataTemplates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\LightThemedStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
     <Page Include="Views\BillingAddressUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -235,6 +253,10 @@
     <Page Include="Views\BillingAddressFlyout.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SearchResultsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ShippingAddressFlyout.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -313,6 +335,11 @@
     <Folder Include="obj\" />
     <Folder Include="Services\" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Practices.Unity.WinRT">
+      <HintPath>..\packages\Unity.3.0.1208-Preview\lib\WinRT45\Microsoft.Practices.Unity.WinRT.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>
@@ -320,7 +347,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>KonaRI.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>Kona.AWShopper.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

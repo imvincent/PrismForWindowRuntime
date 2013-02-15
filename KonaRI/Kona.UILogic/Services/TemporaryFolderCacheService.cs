@@ -71,6 +71,7 @@ namespace Kona.UILogic.Services
             return new Uri(file.Path);
         }
 
+        // <snippet516>
         public async Task<Uri> SaveExternalDataAsync(string cacheKey, Uri dataUrl)
         {
             StorageFile file = await _cacheFolder.CreateFileAsync(cacheKey, CreationCollisionOption.ReplaceExisting);
@@ -81,6 +82,7 @@ namespace Kona.UILogic.Services
             
             return new Uri(file.Path, UriKind.Absolute);
         }
+        // </snippet516>
 
         private static T Deserialize<T>(string json)
         {

@@ -15,19 +15,15 @@ namespace Kona.WebServices.Repositories
 {
     public class StateRepository : IRepository<State>
     {
-        private static IEnumerable<State> _states; 
-
-        public StateRepository()
-        {
-            if (_states == null)
-            {
-                PopulateStates();
-            }
-        }
+        private static IEnumerable<State> _states = PopulateStates();
 
         public IEnumerable<State> GetAll()
         {
-            return _states;
+            lock (_states)
+            {
+                // Return new collection so callers can iterate independently on separate threads
+                return _states.ToArray();
+            }
         }
 
         public State GetItem(int id)
@@ -50,9 +46,9 @@ namespace Kona.WebServices.Repositories
             throw new NotImplementedException();
         }
 
-        private static void PopulateStates()
+        private static IEnumerable<State> PopulateStates()
         {
-            _states = new List<State>
+            return new List<State>
             {
                 new State(new[] {"350-369"}) { Code = "AL", Name = "Alabama"},
                 new State(new [] {"995-999"}) { Code = "AK", Name = "Alaska"},
@@ -107,6 +103,12 @@ namespace Kona.WebServices.Repositories
                 new State(new [] { "247-268" }) { Code = "WV", Name = "West Virginia"},
                 new State(new [] { "820-831" }) { Code = "WY", Name = "Wyoming"}
             };
+        }
+
+
+        public void Reset()
+        {
+            throw new NotImplementedException();
         }
     }
 }

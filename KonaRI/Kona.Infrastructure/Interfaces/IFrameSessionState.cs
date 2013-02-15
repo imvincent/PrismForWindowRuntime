@@ -11,12 +11,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
+using Kona.Infrastructure.Interfaces;
 
 namespace Kona.Infrastructure
 {
+
     public interface IFrameSessionState
     {
-        Dictionary<String, Object> GetSessionStateForFrame(Frame frame);
+        Dictionary<String, Object> GetSessionStateForFrame(IFrameFacade frame);
     }
 }

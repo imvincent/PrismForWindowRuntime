@@ -24,6 +24,7 @@ namespace Kona.UILogic.Services
             _flyoutsResolver = flyoutsResolver;
         }
 
+        // <snippet519>
         public void OnCommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
         {
             if (args == null || args.Request == null || args.Request.ApplicationCommands == null)
@@ -46,6 +47,7 @@ namespace Kona.UILogic.Services
                 }
             }
         }
+        // </snippet519>
 
         public void ShowFlyout(string flyoutId, object parameter, Action successAction)
         {

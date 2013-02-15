@@ -11,7 +11,7 @@ using Microsoft.Practices.PubSubEvents;
 namespace Kona.UILogic.Events
 {
     // <snippet1502>
-    public class ShoppingCartUpdatedEvent : PubSubEvent
+    public class ShoppingCartUpdatedEvent : PubSubEvent<object>
     {
     }
     // </snippet1502>

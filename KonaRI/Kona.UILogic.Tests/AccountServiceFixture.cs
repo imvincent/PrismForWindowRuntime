@@ -42,6 +42,44 @@ namespace Kona.UILogic.Tests
         }
 
         [TestMethod]
+        public async Task SuccessfullSignIn_SavesServerCookieHeader()
+        {
+            var identityService = new MockIdentityService();
+            var stateService = new MockRestorableStateService();
+            identityService.LogOnAsyncDelegate = (userId, password) =>
+            {
+                return Task.FromResult(new LogOnResult { ServerCookieHeader = "TestServerCookieHeader", UserInfo = new UserInfo { UserName = userId } });
+            };
+
+            var target = new AccountService(identityService, stateService, null);
+
+            var retVal = await target.SignInUserAsync("TestUserName", "TestPassword");
+            Assert.AreEqual("TestServerCookieHeader", stateService.GetState(AccountService.ServerCookieHeaderKey));
+        }
+
+        [TestMethod, Ignore]
+        public async Task AccountService_ReadsServerCookieHeaderFromRestorableStateService()
+        {
+            var verifyActiveSessionCalled = false;
+            var identityService = new MockIdentityService();
+            var stateService = new MockRestorableStateService();
+            stateService.SaveState(AccountService.ServerCookieHeaderKey, "SavedServerCookieHeader");
+            identityService.VerifyActiveSessionDelegate = (userName, serverCookieHeader) =>
+                                                              {
+                                                                  Assert.AreEqual("SavedServerCookieHeader",
+                                                                                  serverCookieHeader);
+                                                                  verifyActiveSessionCalled = true;
+                                                                  return Task.FromResult(true);
+                                                              };
+
+            var target = new AccountService(identityService, stateService, null);
+
+            var retVal = await target.GetSignedInUserAsync();
+
+            Assert.IsTrue(verifyActiveSessionCalled);
+        }
+
+        [TestMethod]
         public async Task FailedSignIn_DoesNotRaiseUserChangedEvent()
         {
             bool userChangedFired = false;
@@ -93,8 +131,8 @@ namespace Kona.UILogic.Tests
             identityService.VerifyActiveSessionDelegate = (userName, cookieHeader) => Task.FromResult(false);
             var credentialStore = new MockCredentialStore();
             credentialStore.GetSavedCredentialsDelegate = s => null;
-
-            var target = new AccountService(identityService, null, credentialStore);
+            var restorableStateService = new MockRestorableStateService();
+            var target = new AccountService(identityService, restorableStateService, credentialStore);
 
             var userInfo = await target.GetSignedInUserAsync(); 
             
@@ -155,7 +193,8 @@ namespace Kona.UILogic.Tests
             var userChangedRaised = false;
             var credentialStore = new MockCredentialStore();
             credentialStore.GetSavedCredentialsDelegate = s => null;
-            var target = new AccountService(null, null, credentialStore);
+            var restorableStateService = new MockRestorableStateService();
+            var target = new AccountService(null, restorableStateService, credentialStore);
             target.UserChanged += (sender, args) =>
                                       {
                                           userChangedRaised = true;

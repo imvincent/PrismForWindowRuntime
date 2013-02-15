@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using Kona.Infrastructure.Interfaces;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -67,6 +68,13 @@ namespace Kona.Infrastructure
         private void WindowSizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
             this.InvalidateVisualState();
+
+            //Inform ViewModel if it cares about the window size changing
+            var viewModel = DataContext as IHandleWindowSizeChanged;
+            if (viewModel != null)
+            {
+                viewModel.WindowCurrentSizeChanged();
+            }
         }
 
         /// <summary>
@@ -142,15 +150,16 @@ namespace Kona.Infrastructure
             // Returning to a cached page through navigation shouldn't trigger state loading
             if (this._pageKey != null) return;
 
-            var frameState = SuspensionManager.SessionStateForFrame(this.Frame);
-            this._pageKey = "Page-" + this.Frame.BackStackDepth;
+            var frameFacade = new FrameFacadeAdapter(this.Frame);
+            var frameState = SuspensionManager.SessionStateForFrame(frameFacade);
+            this._pageKey = "Page-" + frameFacade.BackStackDepth;
 
             if (e.NavigationMode == NavigationMode.New)
             {
                 // Clear existing state for forward navigation when adding a new page to the
                 // navigation stack
                 var nextPageKey = this._pageKey;
-                int nextPageIndex = this.Frame.BackStackDepth;
+                int nextPageIndex = frameFacade.BackStackDepth;
                 while (frameState.Remove(nextPageKey))
                 {
                     nextPageIndex++;
@@ -176,7 +185,8 @@ namespace Kona.Infrastructure
         /// property provides the group to be displayed.</param>
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            var frameState = SuspensionManager.SessionStateForFrame(this.Frame);
+            var frameFacade = new FrameFacadeAdapter(this.Frame);
+            var frameState = SuspensionManager.SessionStateForFrame(frameFacade);
             var pageState = new Dictionary<String, Object>();
             this.SaveState(pageState);
             frameState[_pageKey] = pageState;

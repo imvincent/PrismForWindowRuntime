@@ -29,7 +29,7 @@ namespace Kona.UILogic.Repositories
         // <snippet512>
         public async Task<ReadOnlyCollection<Category>> GetCategoriesAsync(int maxAmountOfProducts)
         {
-            string cacheFileName = "Categories";
+            string cacheFileName = String.Format("{0}{1}", "Categories", maxAmountOfProducts);
 
             if (await _cacheService.DataExistsAndIsValidAsync(cacheFileName))
             {
@@ -72,6 +72,39 @@ namespace Kona.UILogic.Repositories
             }
         }
         // </snippet512>
+
+        public async Task<ReadOnlyCollection<Category>> GetFilteredProductsAsync(string queryString)
+        {
+
+            // Retrieve the items from the service
+            var items = await _productCatalogService.GetFilteredProductsAsync(queryString);
+
+            // Save the images locally
+            // Update the item's local URI
+            foreach (var item in items)
+            {
+                if (item.ImageExternalUri != null)
+                {
+                    string imageFileName = item.ImageExternalUri.ToString().Substring(item.ImageExternalUri.ToString().LastIndexOf('/') + 1);
+                    item.ImageLocalUri = await _cacheService.SaveExternalDataAsync(imageFileName, item.ImageExternalUri);
+
+                    // TODO Save the images locally for each subcategory & update the item's local URI
+                    if (item.Products != null)
+                    {
+                        foreach (var subItem in item.Products)
+                        {
+                            if (subItem.ImageName != null)
+                            {
+                                var localUri = await _cacheService.SaveExternalDataAsync(subItem.ImageName, new Uri("/Images/" + subItem.ImageName, UriKind.Relative));
+                                subItem.ImageName = localUri.ToString();
+                            }
+                        }
+                    }
+                }
+            }
+
+            return items;
+        }
 
         public async Task<ReadOnlyCollection<Category>> GetSubcategoriesAsync(int categoryId)
         {

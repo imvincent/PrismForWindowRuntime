@@ -43,6 +43,7 @@ namespace Kona.UILogic.Models
             set { SetProperty(ref _id, value); }
         }
 
+        // <snippet904>
         [Required(ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "RequiredErrorMessage")]
         [RegularExpression(NAMES_REGEX_PATTERN, ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "RegexErrorMessage")]
         public string FirstName
@@ -50,6 +51,7 @@ namespace Kona.UILogic.Models
             get { return _firstName; }
             set { SetProperty(ref _firstName, value); }
         }
+        // </snippet904>
 
         [RegularExpression(NAMES_REGEX_PATTERN, ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "RegexErrorMessage")]
         public string MiddleInitial

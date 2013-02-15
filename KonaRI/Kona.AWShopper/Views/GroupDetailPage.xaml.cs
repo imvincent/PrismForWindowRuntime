@@ -57,7 +57,7 @@ namespace Kona.AWShopper.Views
             {
                 var listViewBase = GroupDetailssemanticZoom.ZoomedOutView as ListViewBase;
                 if (listViewBase != null)
-                    listViewBase.ItemsSource = itemsViewSource.View.CollectionGroups;
+                    listViewBase.ItemsSource = ItemsViewSource.View.CollectionGroups;
             }
         }
 

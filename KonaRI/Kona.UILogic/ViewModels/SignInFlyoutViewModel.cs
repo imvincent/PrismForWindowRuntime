@@ -35,9 +35,9 @@ namespace Kona.UILogic.ViewModels
                 _lastSignedInUser = _accountService.LastSignedInUser;
             }
             // <snippet308>
-            SignInCommand = new DelegateCommand(async () => await SignInAsync(), () => CanSignIn());
+            SignInCommand = DelegateCommand.FromAsyncHandler(SignInAsync, CanSignIn);
             // </snippet308>
-            GoBackCommand = new DelegateCommand(() => GoBack(), () => true);
+            GoBackCommand = new DelegateCommand(() => GoBack());
         }
 
         public string UserName
@@ -88,6 +88,10 @@ namespace Kona.UILogic.ViewModels
             set { SetProperty(ref _isSignInInvalid, value); }
         }
 
+        public bool ExcludeFromSettingsPane
+        {
+            get { return _lastSignedInUser != null; }
+        }
         public Action CloseFlyout { get; set; }
         
 

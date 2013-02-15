@@ -9,6 +9,7 @@
 using Kona.Infrastructure;
 using Microsoft.Practices.PubSubEvents;
 using System;
+using Windows.UI.Xaml;
 
 namespace EventAggregatorQuickstart
 {
@@ -22,8 +23,8 @@ namespace EventAggregatorQuickstart
         public SubscriberViewModel(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
-            AddPassiveSubscriberCommand = new DelegateCommand(AddWeakReferenceSubscriber);
-            GCPassiveSubscriberCommand = new DelegateCommand(GCWeakReferenceSubscriber);
+            AddNonUISubscriberCommand = new DelegateCommand(AddWeakReferenceSubscriber);
+            GCNonUISubscriberCommand = new DelegateCommand(GCWeakReferenceSubscriber);
 
             // <snippet3103>
             // Subscribe indicating this handler should always be called on the UI Thread
@@ -33,8 +34,8 @@ namespace EventAggregatorQuickstart
             // </snippet3103>
         }
 
-        public DelegateCommand AddPassiveSubscriberCommand { get; private set; }
-        public DelegateCommand GCPassiveSubscriberCommand { get; private set; }
+        public DelegateCommand AddNonUISubscriberCommand { get; private set; }
+        public DelegateCommand GCNonUISubscriberCommand { get; private set; }
 
         public bool ShowWarning
         {
@@ -62,7 +63,7 @@ namespace EventAggregatorQuickstart
         private void AddWeakReferenceSubscriber()
         {
             // Create subscriber and hold on to it so it does not get garbage collected
-            _Subscriber = new NonUISubscriber();
+            _Subscriber = new NonUISubscriber(Window.Current.Dispatcher);
             // Subscribe with defaults, pointing to subscriber method that pops a message box when the event fires
             _eventAggregator.GetEvent<ShoppingCartChangedEvent>().Subscribe(_Subscriber.HandleShoppingCartChanged);
         }

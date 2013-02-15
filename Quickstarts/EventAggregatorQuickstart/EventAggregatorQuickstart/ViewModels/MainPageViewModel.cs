@@ -8,6 +8,7 @@
 
 using Kona.Infrastructure;
 using Microsoft.Practices.PubSubEvents;
+using System;
 
 namespace EventAggregatorQuickstart
 {
@@ -22,5 +23,7 @@ namespace EventAggregatorQuickstart
 
         public SubscriberViewModel SubscriberViewModel { get; set; }
         public PublisherViewModel PublisherViewModel { get; set; }
+
+        public string ThreadMessage { get { return string.Format("UI Thread ID: {0}", Environment.CurrentManagedThreadId); } }
     }
 }

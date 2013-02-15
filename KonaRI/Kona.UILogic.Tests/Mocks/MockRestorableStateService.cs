@@ -6,12 +6,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using Kona.Infrastructure;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Kona.Infrastructure.Interfaces;
 
 namespace Kona.UILogic.Tests.Mocks
 {
@@ -22,10 +20,7 @@ namespace Kona.UILogic.Tests.Mocks
         public void SaveState(string key, object state)
         {
             _stateBag[key] = state;
-            AppRestored(this,null);
         }
-
-        public event EventHandler AppRestored = delegate { };
 
         public object GetState(string key)
         {
@@ -35,14 +30,19 @@ namespace Kona.UILogic.Tests.Mocks
                 return null;
         }
 
-        public void RaiseAppRestored()
+        public Task RestoreAsync()
         {
-            AppRestored(this, null);
+            throw new NotImplementedException();
         }
 
-        public void SetFrameState(Dictionary<string, object> frameState)
+        public Task ClearAsync()
         {
-            _stateBag = frameState;
+            throw new NotImplementedException();
+        }
+
+        public Task SaveAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -138,9 +138,15 @@
     <Compile Include="Repositories\ShoppingCartRepository.cs" />
     <Compile Include="Services\AccountService.cs" />
     <Compile Include="Services\AlertMessageService.cs" />
+    <Compile Include="Services\AssetsService.cs" />
+    <Compile Include="Services\DialogCommand.cs" />
     <Compile Include="Services\HttpResponseMessageExtensions.cs" />
     <Compile Include="Services\IAlertMessageService.cs" />
+    <Compile Include="Services\IAssetsService.cs" />
+    <Compile Include="Services\ITileService.cs" />
     <Compile Include="Services\ModelValidationException.cs" />
+    <Compile Include="Services\TileService.cs" />
+    <Compile Include="Services\ResetOrdersAndShoppingCartServiceStateProxy.cs" />
     <Compile Include="Services\ShippingMethodServiceProxy.cs" />
     <Compile Include="Services\IAccountService.cs" />
     <Compile Include="Services\ICacheService.cs" />
@@ -153,7 +159,6 @@
     <Compile Include="Services\OrderServiceProxy.cs" />
     <Compile Include="Services\ProductCatalogServiceProxy.cs" />
     <Compile Include="Services\ErrorMessagesHelper.cs" />
-    <Compile Include="Services\ResumableStateService.cs" />
     <Compile Include="Services\RoamingCredentialStore.cs" />
     <Compile Include="Services\SettingsCharmService.cs" />
     <Compile Include="Services\SettingsStoreService.cs" />
@@ -172,6 +177,7 @@
     <Compile Include="ViewModels\CheckoutSummaryPageViewModel.cs" />
     <Compile Include="ViewModels\ChangeDefaultsFlyoutViewModel.cs" />
     <Compile Include="ViewModels\BillingAddressFlyoutViewModel.cs" />
+    <Compile Include="ViewModels\SearchResultsPageViewModel.cs" />
     <Compile Include="ViewModels\ShippingAddressFlyoutViewModel.cs" />
     <Compile Include="ViewModels\PaymentMethodFlyoutViewModel.cs" />
     <Compile Include="ViewModels\ProductViewModel.cs" />

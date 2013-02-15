@@ -315,11 +315,11 @@
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="ExpirationYear">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<Thickness>0,20,20,0</Thickness>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Thickness>0,20,20,0</Thickness>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
@@ -343,6 +343,16 @@
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>Auto</DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TitleCardNumber"
+                                                       Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="{StaticResource LightFormTitleStyle}" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TitleCardholderName"
+                                                       Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="{StaticResource LightFormTitleStyle}" />
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="TitleCardholderName">
                             <DiscreteObjectKeyFrame KeyTime="0">
@@ -397,6 +407,11 @@
                                 <DiscreteObjectKeyFrame.Value>Auto</DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TitleExpirationDate"
+                                                       Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="{StaticResource LightFormTitleStyle}" />
+                        </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="ExpirationYear">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
@@ -424,6 +439,11 @@
                                     <x:Int32>4</x:Int32>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TitlePhoneNumber"
+                                                       Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="{StaticResource LightFormTitleStyle}" />
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="TitlePhoneNumber">
                             <DiscreteObjectKeyFrame KeyTime="0">
@@ -468,6 +488,11 @@
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <!-- Card Verification Info -->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TitleCardVerificationCode"
+                                                       Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="{StaticResource LightFormTitleStyle}" />
+                        </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.ColumnDefinitions[1].Width" Storyboard.TargetName="CardVerificationInfoGrid">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>Auto</DiscreteObjectKeyFrame.Value>
@@ -479,6 +504,13 @@
                                     <Thickness>0,20,20,0</Thickness>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="SetAsDefaultCheckbox">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<Visibility>Collapsed</Visibility>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>

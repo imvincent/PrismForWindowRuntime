@@ -28,14 +28,14 @@ namespace Kona.UILogic.ViewModels
             _accountService = accountService;
             _credentialStore = credentialStore;
             _navigationService = navigationService;
-            GoBackCommand = new DelegateCommand(() => GoBack(), () => true);
+            GoBackCommand = new DelegateCommand(() => GoBack());
+            if (_accountService != null)
+                _userInfo = _accountService.LastSignedInUser;
         }
 
 
         public void Open(object parameter, Action successAction)
         {
-            _userInfo = _accountService.LastSignedInUser;
-
             if (_userInfo != null)
             {
                 UserName = _userInfo.UserName;
@@ -74,5 +74,11 @@ namespace Kona.UILogic.ViewModels
             get { return _userName; }
             set { SetProperty(ref _userName, value); }
         }
+
+        public bool ExcludeFromSettingsPane
+        {
+            get { return _userInfo == null; }
+        }
+
     }
 }

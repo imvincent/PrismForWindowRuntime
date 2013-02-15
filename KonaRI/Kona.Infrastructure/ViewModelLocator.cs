@@ -16,20 +16,21 @@ namespace Kona.Infrastructure
 {
     public static class ViewModelLocator
     {
-        static Dictionary<Type, Func<BindableBase>> factories = new Dictionary<Type, Func<BindableBase>>();
-        private static Func<Type, ViewModel> defaultViewModelFactory = type => Activator.CreateInstance(type) as ViewModel;
+        static Dictionary<string, Func<object>> factories = new Dictionary<string, Func<object>>();
+        private static Func<Type, object> defaultViewModelFactory = type => Activator.CreateInstance(type);
         
         //Default View Type to VM Type resolver assumes VM is in same assembly and namespace as View Type.
         private static Func<Type, Type> defaultViewTypeToViewModelTypeResolver= 
             viewType =>
             {
                 var viewName = viewType.FullName;
+                viewName = viewName.Replace(".Views.", ".ViewModels.");
                 var viewAssemblyName = viewType.GetTypeInfo().Assembly.FullName;
                 var viewModelName = String.Format(CultureInfo.InvariantCulture, "{0}ViewModel, {1}", viewName, viewAssemblyName);
                 return Type.GetType(viewModelName);
             };
 
-        public static void SetDefaultViewModelFactory(Func<Type, ViewModel> viewModelFactory)
+        public static void SetDefaultViewModelFactory(Func<Type, object> viewModelFactory)
         {
             defaultViewModelFactory = viewModelFactory;
         }
@@ -88,14 +89,14 @@ namespace Kona.Infrastructure
         private static object GetViewModelForView(FrameworkElement view)
         {
             // Mapping of view models base on view type (or instance) goes here
-            if (factories.ContainsKey(view.GetType()))
-                return factories[view.GetType()]();
+            if (factories.ContainsKey(view.GetType().ToString()))
+                return factories[view.GetType().ToString()]();
             return null;
         }
 
-        public static void Register(Type viewType, Func<BindableBase> factory)
+        public static void Register(string viewTypeName, Func<object> factory)
         {
-            factories[viewType] = factory;
+            factories[viewTypeName] = factory;
         }
     }
 }

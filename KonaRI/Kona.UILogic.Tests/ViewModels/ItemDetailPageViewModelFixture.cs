@@ -16,6 +16,7 @@ using Kona.UILogic.ViewModels;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using Windows.UI.Xaml.Navigation;
 using System.Collections.Generic;
+using System.Net.Http;
 
 namespace Kona.UILogic.Tests.ViewModels
 {
@@ -48,16 +49,16 @@ namespace Kona.UILogic.Tests.ViewModels
                 {
                     products = new ReadOnlyCollection<Product>(new List<Product>
                     {
-                        new Product(){ ProductNumber = "1"},
-                        new Product(){ ProductNumber = "2"},
-                        new Product(){ ProductNumber = "3"}
+                        new Product(){ ProductNumber = "1", ImageName = "http://image" },
+                        new Product(){ ProductNumber = "2", ImageName = "http://image" },
+                        new Product(){ ProductNumber = "3", ImageName = "http://image" }
                     });
                 }
 
                 return Task.FromResult(products);
             };
 
-            var viewModel = new ItemDetailPageViewModel(repository, navigationService, new MockShoppingCartRepository());
+            var viewModel = new ItemDetailPageViewModel(repository, navigationService, new MockShoppingCartRepository(), null, null, null);
             viewModel.OnNavigatedTo("1", NavigationMode.New, null);
 
             Assert.IsNotNull(viewModel.Items);
@@ -66,15 +67,47 @@ namespace Kona.UILogic.Tests.ViewModels
         }
 
         [TestMethod]
+        public void OnNavigatedTo_When_Service_Not_Available_Then_Pops_Alert()
+        {
+            var repository = new MockProductCatalogRepository();
+            var navigationService = new MockNavigationService();
+            var alertService = new MockAlertMessageService();
+            var resourceLoader = new MockResourceLoader();
+
+            bool alertCalled = false;
+            repository.GetProductAsyncDelegate = (productNumber) =>
+            {
+                throw new HttpRequestException();
+            };
+
+            repository.GetProductsAsyncDelegate = (subCategoryId) =>
+            {
+                throw new HttpRequestException();
+            };
+
+            alertService.ShowAsyncDelegate = (msg, title) =>
+            {
+                alertCalled = true;
+                return Task.FromResult(string.Empty);
+            };
+
+            var viewModel = new ItemDetailPageViewModel(repository, navigationService, new MockShoppingCartRepository(), alertService, resourceLoader, null);
+            viewModel.OnNavigatedTo("1", NavigationMode.New, null);
+
+            Assert.IsTrue(alertCalled);
+        }
+
+        [TestMethod]
         public void GoBack_When_CanGoBack_Is_Not_True()
         {
             var repository = new MockProductCatalogRepository();
             var navigationService = new MockNavigationService();
+            var alertService = new MockAlertMessageService();
 
             navigationService.CanGoBackDelegate = () => false;
             navigationService.GoBackDelegate = () => Assert.Fail();
 
-            var viewModel = new ItemDetailPageViewModel(repository, navigationService, new MockShoppingCartRepository());
+            var viewModel = new ItemDetailPageViewModel(repository, navigationService, new MockShoppingCartRepository(), null, null, null);
             bool canExecute = viewModel.GoBackCommand.CanExecute();
             
             if (canExecute) viewModel.GoBackCommand.Execute();
@@ -85,14 +118,39 @@ namespace Kona.UILogic.Tests.ViewModels
         {
             var repository = new MockProductCatalogRepository();
             var navigationService = new MockNavigationService();
+            var alertService = new MockAlertMessageService();
 
             navigationService.CanGoBackDelegate = () => true;
             navigationService.GoBackDelegate = () => Assert.IsTrue(true, "I can go back");
 
-            var viewModel = new ItemDetailPageViewModel(repository, navigationService, new MockShoppingCartRepository());
+            var viewModel = new ItemDetailPageViewModel(repository, navigationService, new MockShoppingCartRepository(), null, null, null);
             bool canExecute = viewModel.GoBackCommand.CanExecute();
 
             if (canExecute) viewModel.GoBackCommand.Execute();
         }
+
+         [TestMethod]
+         public void PinToDesktop_Changes_IsAppBarSticky()
+         {
+             // TODO
+         }
+
+         [TestMethod]
+         public void PinToDesktop_CallsPin_OnlyIfNotPinned()
+         {
+             // TODO
+         }
+
+         [TestMethod]
+         public void UnpToDesktop_Changes_IsAppBarSticky()
+         {
+             // TODO
+         }
+
+         [TestMethod]
+         public void UnpinToDesktop_CallsUnpin_OnlyIfPinned()
+         {
+             // TODO
+         }
     }
 }

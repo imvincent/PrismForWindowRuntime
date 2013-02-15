@@ -7,6 +7,7 @@
 
 
 using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Kona.Infrastructure
@@ -47,7 +48,7 @@ namespace Kona.Infrastructure
             : this(executeMethod, (o)=>true)
         {            
         }
-
+        
         /// <summary>
         /// Initializes a new instance of <see cref="DelegateCommand{T}"/>.
         /// </summary>
@@ -62,6 +63,27 @@ namespace Kona.Infrastructure
                 throw new ArgumentNullException("executeMethod", "DelegateCommand delegates cannot be null");
         }
         // </snippet307>
+
+        /// <summary>
+        /// Factory method to create a new instance of <see cref="DelegateCommand{T}"/> from an awaitable handler method.
+        /// </summary>
+        /// <param name="executeMethod">Delegate to execute when Execute is called on the command.</param>
+        /// <returns>Constructed instance of <see cref="DelegateCommand{T}"/></returns>
+        public static DelegateCommand<T> FromAsyncHandler(Func<T,Task> executeMethod)
+        {
+            return new DelegateCommand<T>(executeMethod, null);
+        }
+
+        /// <summary>
+        /// Factory method to create a new instance of <see cref="DelegateCommand{T}"/> from an awaitable handler method.
+        /// </summary>
+        /// <param name="executeMethod">Delegate to execute when Execute is called on the command.  This can be null to just hook up a CanExecute delegate.</param>
+        /// <param name="canExecuteMethod">Delegate to execute when CanExecute is called on the command.  This can be null.</param>
+        /// <returns>Constructed instance of <see cref="DelegateCommand{T}"/></returns>
+        public static DelegateCommand<T> FromAsyncHandler(Func<T, Task> executeMethod, Func<T, bool> canExecuteMethod)
+        {
+            return new DelegateCommand<T>(executeMethod, canExecuteMethod, null);
+        }
 
         ///<summary>
         ///Determines if the command can execute by invoked the <see cref="Func{T,Bool}"/> provided during construction.
@@ -79,10 +101,24 @@ namespace Kona.Infrastructure
         ///Executes the command and invokes the <see cref="Action{T}"/> provided during construction.
         ///</summary>
         ///<param name="parameter">Data used by the command.</param>
-        public void Execute(T parameter)
+        public async Task Execute(T parameter)
         {
-            base.Execute(parameter);
+            await base.Execute(parameter);
         }
+
+
+        private DelegateCommand(Func<T, Task> executeMethod, string differentiator)
+            : this(executeMethod, (o) => true, differentiator)
+        {
+        }
+
+        private DelegateCommand(Func<T, Task> executeMethod, Func<T, bool> canExecuteMethod, string differentiator)
+            : base((o) => executeMethod((T)o), (o) => canExecuteMethod((T)o), differentiator)
+        {
+            if (executeMethod == null || canExecuteMethod == null)
+                throw new ArgumentNullException("executeMethod", "DelegateCommand delegates cannot be null");
+        }
+
     }
 
     /// <summary>
@@ -113,13 +149,33 @@ namespace Kona.Infrastructure
                 throw new ArgumentNullException("executeMethod", "DelegateCommand delegates cannot be null");
         }
 
+        /// <summary>
+        /// Factory method to create a new instance of <see cref="DelegateCommand"/> from an awaitable handler method.
+        /// </summary>
+        /// <param name="executeMethod">Delegate to execute when Execute is called on the command.</param>
+        /// <returns>Constructed instance of <see cref="DelegateCommand"/></returns>
+        public static DelegateCommand FromAsyncHandler(Func<Task> executeMethod)
+        {
+            return new DelegateCommand(executeMethod, null);
+        }
+
+        /// <summary>
+        /// Factory method to create a new instance of <see cref="DelegateCommand"/> from an awaitable handler method.
+        /// </summary>
+        /// <param name="executeMethod">Delegate to execute when Execute is called on the command.  This can be null to just hook up a CanExecute delegate.</param>
+        /// <param name="canExecuteMethod">Delegate to execute when CanExecute is called on the command.  This can be null.</param>
+        /// <returns>Constructed instance of <see cref="DelegateCommand"/></returns>
+        public static DelegateCommand FromAsyncHandler(Func<Task> executeMethod, Func<bool> canExecuteMethod)
+        {
+            return new DelegateCommand(executeMethod, canExecuteMethod, null);
+        }
 
         ///<summary>
         /// Executes the command.
         ///</summary>
-        public void Execute()
+        public async Task Execute()
         {
-            Execute(null);
+            await Execute(null);
         }
 
         /// <summary>
@@ -129,6 +185,18 @@ namespace Kona.Infrastructure
         public bool CanExecute()
         {
             return CanExecute(null);
+        }
+
+        private DelegateCommand(Func<Task> executeMethod, string differentiator)
+            : this(executeMethod, () => true, differentiator)
+        {
+        }
+
+        private DelegateCommand(Func<Task> executeMethod, Func<bool> canExecuteMethod, string differentiator)
+            : base((o) => executeMethod(), (o) => canExecuteMethod(), differentiator)
+        {
+            if (executeMethod == null || canExecuteMethod == null)
+                throw new ArgumentNullException("executeMethod", "DelegateCommand delegates cannot be null");
         }
     }
     

@@ -63,7 +63,6 @@
     <Compile Include="PubSubEvent.cs" />
     <Compile Include="SubscriptionToken.cs" />
     <Compile Include="ThreadOption.cs" />
-    <Compile Include="WeakDelegatesManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

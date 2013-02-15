@@ -23,7 +23,7 @@ namespace EventAggregatorQuickstart
     sealed partial class App : Application
     {
         Bootstrapper _bootstrapper = new Bootstrapper();
-        FrameNavigationService _navigationService;
+        INavigationService _navigationService;
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -50,7 +50,8 @@ namespace EventAggregatorQuickstart
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
-                _navigationService = _bootstrapper.CreateNavigationService(rootFrame);
+                var frameFacade = new FrameFacadeAdapter(rootFrame);
+                _navigationService = _bootstrapper.CreateNavigationService(frameFacade, new FileBackedRestorableStateService());
                 _bootstrapper.Bootstrap(_navigationService);
 
                 if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)

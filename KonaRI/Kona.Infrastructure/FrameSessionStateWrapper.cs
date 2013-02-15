@@ -7,13 +7,14 @@
 
 
 using System.Collections.Generic;
-using Windows.UI.Xaml.Controls;
+using Kona.Infrastructure.Interfaces;
+
 
 namespace Kona.Infrastructure
 {
     public class FrameSessionStateWrapper : IFrameSessionState
     {
-        public Dictionary<string, object> GetSessionStateForFrame(Frame frame)
+        public Dictionary<string, object> GetSessionStateForFrame(IFrameFacade frame)
         {
             return SuspensionManager.SessionStateForFrame(frame);
         }

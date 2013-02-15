@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="39fe9467-f06e-4c0e-88da-112e61572543" Publisher="CN=fcheung" Version="1.0.0.0" />
+  <Identity Name="39fe9467-f06e-4c0e-88da-112e61572543" Publisher="CN=patternsAndpractices" Version="1.0.0.0" />
   <Properties>
     <DisplayName>Kona.AWShopper</DisplayName>
     <PublisherDisplayName>fcheung</PublisherDisplayName>
@@ -16,9 +16,12 @@
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Kona.AWShopper">
       <VisualElements DisplayName="Kona.AWShopper" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="Kona.AWShopper" ForegroundText="light" BackgroundColor="#353C41">
-        <DefaultTile ShowName="allLogos" />
-        <SplashScreen Image="Assets\SplashScreen.png" />
+        <DefaultTile ShowName="noLogos" ShortName="AW Shopper" WideLogo="Assets\WideLogo.png" />
+        <SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#1d1d1d" />
       </VisualElements>
+      <Extensions>
+        <Extension Category="windows.search" />
+      </Extensions>
     </Application>
   </Applications>
   <Capabilities>
