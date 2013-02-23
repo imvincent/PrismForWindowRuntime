@@ -8,6 +8,7 @@
 
 using System.Collections.ObjectModel;
 using Kona.Infrastructure;
+using Kona.Infrastructure.Interfaces;
 using Kona.UILogic.Repositories;
 using System;
 using System.Collections.Generic;
@@ -23,15 +24,17 @@ namespace Kona.UILogic.ViewModels
         private readonly INavigationService _navigationService;
         private readonly IAlertMessageService _alertService;
         private readonly IResourceLoader _resourceLoader;
+        private readonly ISearchPaneService _searchPaneService;
         private IReadOnlyCollection<object> _items;
         private string _title;
 
-        public GroupDetailPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService, IAlertMessageService alertMessageService, IResourceLoader resourceLoader)
+        public GroupDetailPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService, IAlertMessageService alertMessageService, IResourceLoader resourceLoader, ISearchPaneService searchPaneService)
         {
             _productCatalogRepository = productCatalogRepository;
             _navigationService = navigationService;
             _alertService = alertMessageService;
             _resourceLoader = resourceLoader;
+            _searchPaneService = searchPaneService;
             ProductNavigationAction = NavigateToProduct;
             GoBackCommand = new DelegateCommand(navigationService.GoBack, navigationService.CanGoBack);
         }
@@ -60,10 +63,20 @@ namespace Kona.UILogic.ViewModels
 
                 var category = await _productCatalogRepository.GetCategoryAsync(categoryId);
                 Title = category.Title;
+                _searchPaneService.ShowOnKeyboardInput(true);
             }
             catch (HttpRequestException)
             {
                 var task = _alertService.ShowAsync(_resourceLoader.GetString("ErrorServiceUnreachable"), _resourceLoader.GetString("Error"));
+            }
+        }
+
+        public override void OnNavigatedFrom(Dictionary<string, object> viewState, bool suspending)
+        {
+            base.OnNavigatedFrom(viewState, suspending);
+            if (!suspending)
+            {
+                _searchPaneService.ShowOnKeyboardInput(false);
             }
         }
 

@@ -30,7 +30,7 @@ namespace EventAggregatorQuickstart
             ViewModelLocator.Register(typeof(MainPage).ToString(), () => new MainPageViewModel(_eventAggregator));
         }
 
-        public INavigationService CreateNavigationService(IFrameFacade rootFrame, IRestorableStateService restorableStateService)
+        public INavigationService CreateNavigationService(IFrameFacade rootFrame, ISuspensionManagerState suspensionManagerState)
         {
             var sessionStateWrapper = new FrameSessionStateWrapper();
 
@@ -45,7 +45,7 @@ namespace EventAggregatorQuickstart
                 return viewType;
             };
 
-            var navigationService = new FrameNavigationService(rootFrame, sessionStateWrapper, navigationResolver, restorableStateService);
+            var navigationService = new FrameNavigationService(rootFrame, sessionStateWrapper, navigationResolver, suspensionManagerState);
             return navigationService;
         }
     }

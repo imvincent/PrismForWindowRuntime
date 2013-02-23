@@ -9,8 +9,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using Kona.Infrastructure;
+using Kona.Infrastructure.Interfaces;
 using Kona.UILogic.Repositories;
 using Windows.UI.Xaml.Navigation;
 
@@ -18,16 +20,19 @@ namespace Kona.UILogic.ViewModels
 {
     public class SearchResultsPageViewModel : ViewModel, INavigationAware
     {
-        private IProductCatalogRepository _productCatalogRepository;
-        private INavigationService _navigationService;
+        private readonly IProductCatalogRepository _productCatalogRepository;
+        private readonly INavigationService _navigationService;
+        private readonly ISearchPaneService _searchPaneService;
         private string _searchTerm;
         private string _queryString;
-        private  ObservableCollection<CategoryViewModel> _results = new ObservableCollection<CategoryViewModel>();
+        private bool _noResults;
+        private ReadOnlyCollection<CategoryViewModel> _results;
 
-        public SearchResultsPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService)
+        public SearchResultsPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService, ISearchPaneService searchPaneService)
         {
             _productCatalogRepository = productCatalogRepository;
             _navigationService = navigationService;
+            _searchPaneService = searchPaneService;
             ProductNavigationAction = NavigateToItem;
             GoBackCommand = new DelegateCommand(_navigationService.GoBack, _navigationService.CanGoBack);
         }
@@ -44,11 +49,16 @@ namespace Kona.UILogic.ViewModels
             set { SetProperty(ref this._searchTerm, value); }
         }
 
-        public ObservableCollection<CategoryViewModel> Results
-        {
+        public ReadOnlyCollection<CategoryViewModel> Results {
             get { return _results; }
             set { SetProperty(ref _results, value); }
         } 
+
+        public bool NoResults
+        {
+            get { return _noResults; }
+            set { SetProperty(ref _noResults, value); }
+        }
 
         public Action<object> ProductNavigationAction { get; private set; }
 
@@ -59,7 +69,7 @@ namespace Kona.UILogic.ViewModels
             var queryText = navigationParameter as String;
 
             var rootCategories = await _productCatalogRepository.GetFilteredProductsAsync(queryText);
-            var rootCategoryViewModels = new ObservableCollection<CategoryViewModel>();
+            var rootCategoryViewModels = new List<CategoryViewModel>();
             foreach (var rootCategory in rootCategories)
             {
                 rootCategoryViewModels.Add(new CategoryViewModel(rootCategory, _navigationService));
@@ -68,7 +78,19 @@ namespace Kona.UILogic.ViewModels
             // Communicate results through the view model
             this.SearchTerm = queryText;
             this.QueryText = '\u201c' + queryText + '\u201d';
-            this.Results = rootCategoryViewModels;
+            this.Results = new ReadOnlyCollection<CategoryViewModel>(rootCategoryViewModels);
+            this.NoResults = this.Results.Count(c => c.Products.Any()) <= 0;
+               
+            _searchPaneService.ShowOnKeyboardInput(true);
+        }
+
+        public override void OnNavigatedFrom(Dictionary<string, object> viewState, bool suspending)
+        {
+            base.OnNavigatedFrom(viewState, suspending);
+            if (!suspending)
+            {
+                _searchPaneService.ShowOnKeyboardInput(false);
+            }
         }
 
         private void NavigateToItem(object parameter)

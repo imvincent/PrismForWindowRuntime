@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Http;
 using Kona.Infrastructure;
+using Kona.Infrastructure.Interfaces;
 using Kona.UILogic.Models;
 using Kona.UILogic.Repositories;
 using Kona.UILogic.Services;
@@ -26,20 +27,22 @@ namespace Kona.UILogic.ViewModels
         private INavigationService _navigationService;
         private readonly IAlertMessageService _alertMessageService;
         private readonly IResourceLoader _resourceLoader;
+        private readonly ISearchPaneService _searchPaneService;
         private IReadOnlyCollection<CategoryViewModel> _rootCategories;
 
         // <snippet303>
-        public HubPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService, IAlertMessageService alertMessageService, IResourceLoader resourceLoader)
+        public HubPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService, IAlertMessageService alertMessageService, IResourceLoader resourceLoader, ISearchPaneService searchPaneService)
         {
-            _productCatalogRepository = productCatalogRepository; 
+            _productCatalogRepository = productCatalogRepository;
             _navigationService = navigationService;
             _alertMessageService = alertMessageService;
             _resourceLoader = resourceLoader;
+            _searchPaneService = searchPaneService;
             ProductNavigationAction = NavigateToItem;
             GoBackCommand = new DelegateCommand(navigationService.GoBack, navigationService.CanGoBack);
         }
         // </snippet303>
-        
+
         // <snippet305>
         public IReadOnlyCollection<CategoryViewModel> RootCategories
         {
@@ -83,13 +86,24 @@ namespace Kona.UILogic.ViewModels
                 await _alertMessageService.ShowAsync(_resourceLoader.GetString("ErrorServiceUnreachable"), _resourceLoader.GetString("Error"));
                 return;
             }
-            
+
             var rootCategoryViewModels = new List<CategoryViewModel>();
             foreach (var rootCategory in rootCategories)
             {
                 rootCategoryViewModels.Add(new CategoryViewModel(rootCategory, _navigationService));
             }
             RootCategories = new ReadOnlyCollection<CategoryViewModel>(rootCategoryViewModels);
+            _searchPaneService.ShowOnKeyboardInput(true);
+        }
+
+
+        public override void OnNavigatedFrom(Dictionary<string, object> viewState, bool suspending)
+        {
+            base.OnNavigatedFrom(viewState, suspending);
+            if (!suspending)
+            {
+                _searchPaneService.ShowOnKeyboardInput(false);
+            }
         }
     }
 }

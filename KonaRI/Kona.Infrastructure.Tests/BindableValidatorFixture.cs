@@ -15,6 +15,7 @@ namespace Kona.Infrastructure.Tests
     [TestClass]
     public class BindableValidatorFixture
     {
+        // <snippet1200>
         [TestMethod]
         public void Validation_Of_Field_When_Valid_Should_Succeeed()
         {
@@ -26,6 +27,7 @@ namespace Kona.Infrastructure.Tests
             Assert.IsTrue(isValid);
             Assert.IsTrue(target.GetAllErrors().Values.Count == 0);
         }
+        // </snippet1200>
 
         [TestMethod]
         public void Validation_Of_Field_When_Invalid_Should_Fail()

@@ -8,8 +8,7 @@
                     mc:Ignorable="d"
                     d:DesignHeight="768"
                     d:DesignWidth="364"
-                    Infrastructure:ViewModelLocator.AutoWireViewModel="true"
-                    ExcludeFromSettingsPane="{Binding ExcludeFromSettingsPane}">
+                    Infrastructure:ViewModelLocator.AutoWireViewModel="true">
 
     <Border BorderBrush="{StaticResource AWShopperFlyoutHeaderBackground}"
             Background="{StaticResource LightBackground}"
@@ -31,7 +30,7 @@
 
                 <StackPanel Orientation="Horizontal"
                             Grid.Column="0"
-                            Margin="40, 32, 17, 13">
+                            Margin="40, 32, 0, 13">
                     <Button Command="{Binding GoBackCommand}"
                             x:Uid="SignInFlyoutBackButton"
                             Margin="0,3,0,0"
@@ -41,9 +40,11 @@
                                Margin="10,0,0,0"
                                FontFamily="Segoe UI"
                                FontWeight="SemiLight"
-                               FontSize="24.6667"
+                               FontSize="24"
                                Text="Login"
+                               Width="225"
                                Foreground="White" />
+                    <Image Source="ms-appx:///Assets/SmallLogo.png" />
                 </StackPanel>
             </Grid>
 
@@ -104,6 +105,7 @@
                                 Background="{StaticResource AWShopperAccentBrush}"
                                 Content="Submit"
                                 Width="280"
+                                Foreground="White"
                                 Margin="0,25,0,0"
                                 Command="{Binding SignInCommand}"
                                 AutomationProperties.AutomationId="SignInSubmitButton"

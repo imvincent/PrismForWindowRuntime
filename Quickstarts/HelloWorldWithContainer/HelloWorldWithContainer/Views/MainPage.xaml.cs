@@ -6,11 +6,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Kona.Infrastructure;
-using Windows.UI.Xaml.Controls;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 

@@ -6,6 +6,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System;
 using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -22,11 +23,13 @@ namespace Kona.UILogic.Tests.ViewModels
     [TestClass]
     public class HubPageModelFixture
     {
+        // <snippet1201>
         [TestMethod]
         public void OnNavigatedTo_Fill_RootCategories()
         {
             var repository = new MockProductCatalogRepository();
             var navigationService = new MockNavigationService();
+            var searchPaneService = new MockSearchPaneService();
 
             repository.GetCategoriesAsyncDelegate = (maxAmmountOfProducts) =>
             {
@@ -39,32 +42,43 @@ namespace Kona.UILogic.Tests.ViewModels
                 return Task.FromResult(categories);
             };
 
-            var viewModel = new HubPageViewModel(repository, navigationService, null, null);
+            var viewModel = new HubPageViewModel(repository, navigationService, null, null, searchPaneService);
             viewModel.OnNavigatedTo(null, NavigationMode.New, null);
 
             Assert.IsNotNull(viewModel.RootCategories);
             Assert.AreEqual(((ICollection<CategoryViewModel>)viewModel.RootCategories).Count, 3);
         }
+        // </snippet1201>
 
         [TestMethod]
         public void ProductNav_With_Valid_Parameter()
         {
             var repository = new MockProductCatalogRepository();
             var navigationService = new MockNavigationService();
-
+            var productToNavigate =
+              new ProductViewModel(new Product()
+              {
+                  ListPrice = 100,
+                  DiscountPercentage = 50,
+                  ProductNumber = "p1",
+                  ImageUri = new Uri("http://image"),
+                  Currency = "USD",
+                  Title = "My Title",
+                  Description = "My Description",
+              });
             navigationService.NavigateDelegate = (pageName, categoryId) =>
             {
-                Assert.AreEqual("GroupDetailPage", pageName);
-                Assert.AreEqual(1, categoryId);
+                Assert.AreEqual("ItemDetail", pageName);
+                Assert.AreEqual(productToNavigate.ProductNumber, categoryId);
                 return true;
             };
 
-            var viewModel = new HubPageViewModel(repository, navigationService, null, null);
-            viewModel.ProductNavigationAction.Invoke(1);
+            var viewModel = new HubPageViewModel(repository, navigationService, null, null, null);
+            viewModel.ProductNavigationAction.Invoke(productToNavigate);
         }
 
         [TestMethod]
-        public void ProductNav_With_Null_Parameter()
+        public void ProductNav_With_Null_Parameter_Does_Not_Navigate()
         {
             var repository = new MockProductCatalogRepository();
             var navigationService = new MockNavigationService();
@@ -75,7 +89,7 @@ namespace Kona.UILogic.Tests.ViewModels
                 return false;
             };
                 
-            var viewModel = new HubPageViewModel(repository, navigationService, null, null);
+            var viewModel = new HubPageViewModel(repository, navigationService, null, null, null);
             viewModel.ProductNavigationAction.Invoke(null);
         }
 
@@ -85,6 +99,7 @@ namespace Kona.UILogic.Tests.ViewModels
             var alertCalled = false;
             var productCatalogRepository = new MockProductCatalogRepository();
             var navService = new MockNavigationService();
+            var searchPaneService = new MockSearchPaneService();
             productCatalogRepository.GetCategoriesAsyncDelegate = (maxAmmountOfProducts) =>
             {
                 throw new HttpRequestException();
@@ -97,7 +112,7 @@ namespace Kona.UILogic.Tests.ViewModels
                 return Task.FromResult(string.Empty);
             };
             var target = new HubPageViewModel(productCatalogRepository, navService,
-                                                                 alertMessageService, new MockResourceLoader());
+                                                                 alertMessageService, new MockResourceLoader(), searchPaneService);
             target.OnNavigatedTo(null, NavigationMode.New, null);
             
             Assert.IsTrue(alertCalled);

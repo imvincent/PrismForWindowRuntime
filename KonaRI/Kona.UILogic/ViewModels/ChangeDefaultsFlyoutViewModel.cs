@@ -22,10 +22,10 @@ namespace Kona.UILogic.ViewModels
     public class ChangeDefaultsFlyoutViewModel : ViewModel, IFlyoutViewModel
     {
         private readonly ICheckoutDataRepository _checkoutDataRepository;
-        private IResourceLoader _resourceLoader;
-        private CheckoutDataViewModel _selectedPaymentMethod;
+        private readonly IResourceLoader _resourceLoader;
         private CheckoutDataViewModel _selectedShippingAddress;
         private CheckoutDataViewModel _selectedBillingAddress;
+        private CheckoutDataViewModel _selectedPaymentMethod;
 
         public ChangeDefaultsFlyoutViewModel(ICheckoutDataRepository checkoutDataRepository, IResourceLoader resourceLoader)
         {
@@ -52,10 +52,16 @@ namespace Kona.UILogic.ViewModels
             get { return _selectedShippingAddress; }
             set
             {
-                var oldValue = _selectedShippingAddress;
-                if (SetProperty(ref _selectedShippingAddress, value) && value != null && oldValue != null)
+                if (SetProperty(ref _selectedShippingAddress, value))
                 {
-                    _checkoutDataRepository.SetDefaultShippingAddress((Address)_selectedShippingAddress.Context);
+                    if (_selectedShippingAddress != null)
+                    {
+                        _checkoutDataRepository.SetDefaultShippingAddress((Address)_selectedShippingAddress.Context);
+                    }
+                    else
+                    {
+                        _checkoutDataRepository.RemoveDefaultShippingAddress();
+                    }
                 }
             }
         }
@@ -65,10 +71,16 @@ namespace Kona.UILogic.ViewModels
             get { return _selectedBillingAddress; }
             set
             {
-                var oldValue = _selectedBillingAddress;
-                if (SetProperty(ref _selectedBillingAddress, value) && value != null && oldValue != null)
+                if (SetProperty(ref _selectedBillingAddress, value))
                 {
-                    _checkoutDataRepository.SetDefaultBillingAddress((Address)_selectedBillingAddress.Context);
+                    if (_selectedBillingAddress != null)
+                    {
+                        _checkoutDataRepository.SetDefaultBillingAddress((Address)_selectedBillingAddress.Context);
+                    }
+                    else
+                    {
+                        _checkoutDataRepository.RemoveDefaultBillingAddress();
+                    }
                 }
             }
         }
@@ -78,15 +90,21 @@ namespace Kona.UILogic.ViewModels
             get { return _selectedPaymentMethod; }
             set
             {
-                var oldValue = _selectedPaymentMethod;
-                if (SetProperty(ref _selectedPaymentMethod, value) && value != null && oldValue != null)
+                if (SetProperty(ref _selectedPaymentMethod, value))
                 {
-                    _checkoutDataRepository.SetDefaultPaymentMethod((PaymentMethod)_selectedPaymentMethod.Context);
+                    if (_selectedPaymentMethod != null)
+                    {
+                        _checkoutDataRepository.SetDefaultPaymentMethod((PaymentMethod)_selectedPaymentMethod.Context);
+                    }
+                    else
+                    {
+                        _checkoutDataRepository.RemoveDefaultPaymentMethod();
+                    }
                 }
             }
         }
 
-        public void Open(object parameter, Action successAction)
+        public async void Open(object parameter, Action successAction)
         {
             // Populate ShippingAddress collection
             var shippingAddresses = _checkoutDataRepository.GetAllShippingAddresses().Select(address => CreateCheckoutData(address, Constants.ShippingAddress));
@@ -95,7 +113,8 @@ namespace Kona.UILogic.ViewModels
             if (ShippingAddresses != null)
             {
                 var defaultShippingAddress = _checkoutDataRepository.GetDefaultShippingAddress();
-                SelectedShippingAddress = defaultShippingAddress != null ? ShippingAddresses.FirstOrDefault(s => s.EntityId == defaultShippingAddress.Id) : null;
+                var selectedShippingAddress = defaultShippingAddress != null ? ShippingAddresses.FirstOrDefault(s => s.EntityId == defaultShippingAddress.Id) : null;
+                SetProperty(ref _selectedShippingAddress, selectedShippingAddress);
             }
 
             // Populate BillingAddress collection
@@ -105,17 +124,19 @@ namespace Kona.UILogic.ViewModels
             if (BillingAddresses != null)
             {
                 var defaultBillingAddress = _checkoutDataRepository.GetDefaultBillingAddress();
-                SelectedBillingAddress =  defaultBillingAddress != null ? BillingAddresses.FirstOrDefault(s => s.EntityId == defaultBillingAddress.Id) : null;
+                var selectedBillingAddress = defaultBillingAddress != null ? BillingAddresses.FirstOrDefault(s => s.EntityId == defaultBillingAddress.Id) : null;
+                SetProperty(ref _selectedBillingAddress, selectedBillingAddress);
             }
 
             // Populate PaymentMethod collection
-            var paymentMethods = _checkoutDataRepository.GetAllPaymentMethods().Select(payment => CreateCheckoutData(payment));
+            var paymentMethods = (await _checkoutDataRepository.GetAllPaymentMethodsAsync()).Select(payment => CreateCheckoutData(payment));
             PaymentMethods = new ReadOnlyCollection<CheckoutDataViewModel>(paymentMethods.ToList());
 
             if (PaymentMethods != null)
             {
-                var defaultPaymentMethod = _checkoutDataRepository.GetDefaultPaymentMethod();
-                SelectedPaymentMethod = defaultPaymentMethod != null ? PaymentMethods.FirstOrDefault(s => s.EntityId == defaultPaymentMethod.Id) : null;
+                var defaultPaymentMethod = await _checkoutDataRepository.GetDefaultPaymentMethodAsync();
+                var selectedPaymentMethod = defaultPaymentMethod != null ? PaymentMethods.FirstOrDefault(s => s.EntityId == defaultPaymentMethod.Id) : null;
+                SetProperty(ref _selectedPaymentMethod, selectedPaymentMethod);
             }
         }
 
@@ -140,7 +161,7 @@ namespace Kona.UILogic.ViewModels
                                             string.Format(CultureInfo.CurrentCulture, "{0}/{1}", paymentMethod.ExpirationMonth, paymentMethod.ExpirationYear)),
                                             paymentMethod.CardholderName,
                                             new Uri(Constants.PaymentMethodLogo, UriKind.Absolute),
-                                            Constants.PaymentMethod, 
+                                            Constants.PaymentMethod,
                                             paymentMethod);
         }
     }

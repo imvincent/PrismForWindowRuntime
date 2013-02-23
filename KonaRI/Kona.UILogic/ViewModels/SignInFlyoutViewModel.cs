@@ -19,20 +19,18 @@ namespace Kona.UILogic.ViewModels
     {
         private string _userName;
         private string _password;
+        private bool _saveCredentials;
         private bool _isSignInInvalid;
         private readonly IAccountService _accountService;
-        private readonly ICredentialStore _credentialStore;
-        private bool _saveCredentials;
         private Action _successAction;
         private UserInfo _lastSignedInUser;
 
-        public SignInFlyoutViewModel(IAccountService accountService, ICredentialStore credentialStore)
+        public SignInFlyoutViewModel(IAccountService accountService)
         {
             _accountService = accountService;
-            _credentialStore = credentialStore;
             if (accountService != null)
             {
-                _lastSignedInUser = _accountService.LastSignedInUser;
+                _lastSignedInUser = _accountService.SignedInUser;
             }
             // <snippet308>
             SignInCommand = DelegateCommand.FromAsyncHandler(SignInAsync, CanSignIn);
@@ -115,18 +113,17 @@ namespace Kona.UILogic.ViewModels
 
         public async Task SignInAsync()
         {
-            var result = await _accountService.SignInUserAsync(UserName, Password);
+            var result = await _accountService.SignInUserAsync(UserName, Password, useCredentialStore: SaveCredentials);
 
             if (result)
             {
                 IsSignInInvalid = false;
 
-                if (SaveCredentials)
+                if (_successAction != null)
                 {
-                    _credentialStore.SaveCredentials("KonaRI", UserName, Password);
+                    _successAction();
+                    _successAction = null;
                 }
-                
-                if (_successAction != null) _successAction();
 
                 CloseFlyout();
             }

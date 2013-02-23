@@ -13,6 +13,7 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Kona.Infrastructure.Interfaces;
 using Windows.ApplicationModel.Resources;
+using Windows.Security.Cryptography.DataProtection;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
@@ -86,10 +87,13 @@ namespace Kona.Infrastructure
             
                 // Get an output stream for the SessionState file and write the state asynchronously
                 StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(Constants.SessionStateFileName, CreationCollisionOption.ReplaceExisting);
-                using (Stream fileStream = await file.OpenStreamForWriteAsync())
+                using (var fileStream = await file.OpenAsync(FileAccessMode.ReadWrite)) 
                 {
                     sessionData.Seek(0, SeekOrigin.Begin);
-                    await sessionData.CopyToAsync(fileStream);
+                    var provider = new DataProtectionProvider("LOCAL=user");
+
+                    // Encrypt the session data and write it to disk.
+                    await provider.ProtectStreamAsync(sessionData.AsInputStream(), fileStream);
                     await fileStream.FlushAsync();
                 }
             }
@@ -100,15 +104,12 @@ namespace Kona.Infrastructure
         }
 
         /// <summary>
-        /// Restores previously saved <see cref="SessionState"/>.  Any <see cref="Frame"/> instances
-        /// registered with <see cref="RegisterFrame"/> will also restore their prior navigation
-        /// state, which in turn gives their active <see cref="Page"/> an opportunity restore its
-        /// state.
+        /// Restores previously saved <see cref="SessionState"/>.
         /// </summary>
         /// <returns>An asynchronous task that reflects when session state has been read.  The
         /// content of <see cref="SessionState"/> should not be relied upon until this task
         /// completes.</returns>
-        public static async Task RestoreAsync()
+        public async static Task RestoreSessionStateAsync()
         {
             _sessionState = new Dictionary<String, Object>();
 
@@ -118,11 +119,36 @@ namespace Kona.Infrastructure
                 StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync(Constants.SessionStateFileName);
                 using (IInputStream inStream = await file.OpenSequentialReadAsync())
                 {
-                    // Deserialize the Session State
-                    DataContractSerializer serializer = new DataContractSerializer(typeof(Dictionary<string, object>), _knownTypes);
-                    _sessionState = (Dictionary<string, object>)serializer.ReadObject(inStream.AsStreamForRead());
-                }
+                    var memoryStream = new MemoryStream();
+                    var provider = new DataProtectionProvider("LOCAL=user");
 
+                    // Decrypt the prevously saved session data.
+                    await provider.UnprotectStreamAsync(inStream, memoryStream.AsOutputStream());
+                    memoryStream.Seek(0, SeekOrigin.Begin);
+                    // Deserialize the Session State
+                    DataContractSerializer serializer = new DataContractSerializer(typeof(Dictionary<string, object>),
+                                                                                   _knownTypes);
+                    _sessionState = (Dictionary<string, object>)serializer.ReadObject(memoryStream);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new SuspensionManagerException(e);
+            }
+        }
+
+
+        /// <summary>
+        /// Any <see cref="Frame"/> instances registered with <see cref="RegisterFrame"/> will 
+        /// restore their prior navigation state, which in turn gives their active <see cref="Page"/> 
+        /// an opportunity restore its state.
+        /// 
+        /// This method requires that RestoreSessionStateAsync be call prior to this method.
+        /// </summary>
+        public static void RestoreFrameState()
+        {
+            try
+            {
                 // Restore any registered frames to their saved state
                 foreach (var weakFrameReference in _registeredFrames)
                 {

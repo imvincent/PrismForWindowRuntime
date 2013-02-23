@@ -21,7 +21,7 @@ namespace Kona.UILogic.Services
     {
         private string _clientBaseUrl = string.Format("{0}/api/Order/", Constants.ServerAddress);
 
-        public async Task<Order> CreateOrderAsync(Order order, string serverCookieHeader)
+        public async Task<int> CreateOrderAsync(Order order, string serverCookieHeader)
         {
             using (HttpClientHandler handler = new HttpClientHandler { CookieContainer = new CookieContainer() })
             {
@@ -34,8 +34,8 @@ namespace Kona.UILogic.Services
 
                     string requestUrl = _clientBaseUrl;
                     var response = await orderClient.PostAsJsonAsync<Order>(requestUrl, order);
-                    await response.EnsureSuccessWithValidationSupport();
-                    return await response.Content.ReadAsAsync<Order>();
+                    await response.EnsureSuccessWithValidationSupportAsync();
+                    return await response.Content.ReadAsAsync<int>();
                 }
             }
         }
@@ -53,7 +53,7 @@ namespace Kona.UILogic.Services
 
                     string requestUrl = _clientBaseUrl + order.Id;
                     var response = await orderClient.PutAsJsonAsync<Order>(requestUrl, order);
-                    await response.EnsureSuccessWithValidationSupport();
+                    await response.EnsureSuccessWithValidationSupportAsync();
                 }
             }
         }

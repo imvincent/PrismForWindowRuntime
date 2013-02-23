@@ -14,16 +14,15 @@
     <SolidColorBrush x:Name="AWShopperItemForegroundLighterBrush"
                      Color="#BCBEC0" />
     <SolidColorBrush x:Name="AWShopperFlyoutHeaderBackground"
-                     Color="#00b2f0" />
+                     Color="#353C41" />
     <SolidColorBrush x:Name="AWShopperFlyoutContentBackground"
                      Color="Black" />
     <SolidColorBrush x:Name="AWShopperSemanticZoomOverlayBackground"
                      Color="#FF25A1DB" />
 
     <!-- Application Background -->
-    <Color x:Key="AWShopperBackground">#FF2C3339"</Color>
     <SolidColorBrush x:Name="ApplicationPageBackgroundThemeBrush"
-                     Color="{StaticResource AWShopperBackground}" />
+                     Color="#FF2C3339" />
 
     <!-- ListView Selection Color -->
     <Color x:Key="ItemSelectionColor">#FFE2742F</Color>

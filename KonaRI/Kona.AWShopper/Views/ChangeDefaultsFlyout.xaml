@@ -32,18 +32,20 @@
 
                 <StackPanel Orientation="Horizontal"
                             Grid.Column="0"
-                            Margin="40, 32, 17, 13">
+                            Margin="40, 32, 0, 13">
                     <Button Command="{Binding GoBackCommand}"
                             AutomationProperties.AutomationId="ChangeDefaultsFlyoutBackButton"
                             Margin="0,3,0,0"
                             Style="{StaticResource SettingsBackButtonStyle}" />
                     <TextBlock x:Uid="ChangeDefaultsTitle"
-                               Margin="10,0,0,0"
+                               Margin="10,0,10,0"
                                FontFamily="Segoe UI"
                                FontWeight="SemiLight"
                                FontSize="24"
+                               Width="225"
                                Text="Change Defaults"
                                Foreground="White" />
+                    <Image Source="ms-appx:///Assets/SmallLogo.png" />
                 </StackPanel>
             </Grid>
 

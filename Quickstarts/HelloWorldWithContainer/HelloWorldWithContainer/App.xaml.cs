@@ -6,23 +6,25 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using HelloWorldWithContainer.Services;
 using Kona.Infrastructure;
-using Windows.ApplicationModel.Activation;
-using Microsoft.Practices.Unity;
 using Kona.Infrastructure.Interfaces;
+using Microsoft.Practices.Unity;
+using Windows.ApplicationModel.Activation;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
 
 namespace HelloWorldWithContainer
 {
+    // <snippet3300>
     sealed partial class App : MvvmAppBase
+    // </snippet3300>
     {
         // New up the singleton container that will be used for type resolution in the app
+        // <snippet3301>
         IUnityContainer _container = new UnityContainer();
+        // </snippet3301>
+
         public App()
         {
             InitializeComponent();
@@ -47,10 +49,11 @@ namespace HelloWorldWithContainer
         /// This is the place you initialize your services and set default factory or default resolver for the view model locator
         /// </summary>
         /// <param name="args">The same launch arguments passed when the app starts.</param>
+        // <snippet3302>
         public override void OnInitialize(IActivatedEventArgs args)
         {
             // Register the two KonaApplication services with the container so that view models can take dependencies on them
-            _container.RegisterInstance<IRestorableStateService>(RestorableStateService);
+            _container.RegisterInstance<ISuspensionManagerState>(SuspensionManagerState);
             _container.RegisterInstance<INavigationService>(NavigationService);
             // Register any app specific types with the container
             _container.RegisterType<IDataRepository, DataRepository>();
@@ -59,5 +62,6 @@ namespace HelloWorldWithContainer
             // dependencies get injected by the container
             ViewModelLocator.SetDefaultViewModelFactory((viewModelType) => _container.Resolve(viewModelType));
         }
+        // </snippet3302>
     }
 }

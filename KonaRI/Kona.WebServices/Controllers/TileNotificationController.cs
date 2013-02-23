@@ -15,6 +15,7 @@ namespace Kona.WebServices.Controllers
 {
     public class TileNotificationController : ApiController
     {
+        // <snippet801>
         public HttpResponseMessage GetTileNotification()
         {
             var tileXml = @"<tile>
@@ -45,5 +46,6 @@ namespace Kona.WebServices.Controllers
                 new System.Net.Http.Headers.MediaTypeHeaderValue("text/xml");
             return response;
         } 
+        // </snippet801>
     }
 }

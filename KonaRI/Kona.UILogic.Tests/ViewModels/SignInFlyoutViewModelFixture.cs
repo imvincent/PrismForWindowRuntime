@@ -18,79 +18,72 @@ namespace Kona.UILogic.Tests.ViewModels
     public class SignInFlyoutViewModelFixture
     {
         [TestMethod]
-        public void FiringSignInCommand_Persists_Credentials_And_Turns_Invisible()
+        public async Task FiringSignInCommand_Persists_Credentials_And_Turns_Invisible()
         {
-            var accountService = new MockAccountService();
             bool accountServiceSignInCalled = false;
-            bool credentialStoreSaveCalled = false;
+            bool flyoutClosed = false;
 
-            accountService.SignInUserAsyncDelegate = (username, password) =>
-            {
-                Assert.AreEqual("TestUsername", username);
-                Assert.AreEqual("TestPassword", password);
-                accountServiceSignInCalled = true;
-                return Task.FromResult(true);
-            };
+            var accountService = new MockAccountService()
+                {
+                    SignInUserAsyncDelegate = (username, password, useCredentialStore) =>
+                        {
+                            Assert.AreEqual("TestUsername", username);
+                            Assert.AreEqual("TestPassword", password);
+                            Assert.IsTrue(useCredentialStore);
+                            accountServiceSignInCalled = true;
+                            return Task.FromResult(true);
+                        }
+                };
 
-            var credentialStore = new MockCredentialStore();
-            credentialStore.SaveCredentialsDelegate = (resource, username, password) =>
-            {
-                Assert.AreEqual("KonaRI", resource);
-                Assert.AreEqual("TestUsername", username);
-                Assert.AreEqual("TestPassword", password);
-                credentialStoreSaveCalled = true;
-            };
+            var target = new SignInFlyoutViewModel(accountService)
+                {
+                    CloseFlyout = () => flyoutClosed = true,
+                    UserName = "TestUsername",
+                    Password = "TestPassword",
+                    SaveCredentials = true
+                };
 
-            var target = new SignInFlyoutViewModel(accountService, credentialStore);
-            target.CloseFlyout = () => { Assert.IsTrue(true); };
-
-            target.UserName = "TestUsername";
-            target.Password = "TestPassword";
-            target.SaveCredentials = true;
-            target.SignInCommand.Execute();
+            await target.SignInCommand.Execute();
 
             Assert.IsTrue(accountServiceSignInCalled);
-            Assert.IsTrue(credentialStoreSaveCalled);
+            Assert.IsTrue(flyoutClosed);
         }
 
         [TestMethod]
-        public void FiringSignInCommand_WithNotRememberPassword_DoesNotSave()
+        public async Task FiringSignInCommand_WithNotRememberPassword_DoesNotSaveInCredentialStore()
         {
-            var credentialStoreSaveCalled = false;
-            var accountService = new MockAccountService();
-            accountService.SignInUserAsyncDelegate = (username, password) =>
-            {
-                return Task.FromResult(true);
-            };
+            var accountService = new MockAccountService()
+                {
+                    SignInUserAsyncDelegate = (username, password, useCredentialStore) =>
+                        {
+                            Assert.IsFalse(useCredentialStore);
+                            return Task.FromResult(true);
+                        }
+                };
 
-            var credentialStore = new MockCredentialStore();
-            credentialStore.SaveCredentialsDelegate = (resource, username, password) =>
-                                                                          {
-                                                                              credentialStoreSaveCalled = true;
-                                                                              Assert.Fail();
-                                                                          };
-            var target = new SignInFlyoutViewModel(accountService, credentialStore);
-            target.CloseFlyout = () => { Assert.IsTrue(true); };
-            target.SaveCredentials = false;
+            var target = new SignInFlyoutViewModel(accountService)
+                {
+                    CloseFlyout = () => Assert.IsTrue(true),
+                    SaveCredentials = false
+                };
 
-            target.SignInCommand.Execute();
-
-            Assert.IsFalse(credentialStoreSaveCalled);
+            await target.SignInCommand.Execute();
         }
 
         [TestMethod]
-        public void SuccessfulSignIn_CallsSuccessAction()
+        public async Task SuccessfulSignIn_CallsSuccessAction()
         {
             var successActionCalled = false;
-            var accountService = new MockAccountService();
-            accountService.SignInUserAsyncDelegate = (username, password) => Task.FromResult(true);
-            var credentialStore = new MockCredentialStore();
-            credentialStore.SaveCredentialsDelegate = (resource, username, password) => { };
-            var target = new SignInFlyoutViewModel(accountService, credentialStore);
+            var accountService = new MockAccountService()
+                {
+                    SignInUserAsyncDelegate = (username, password, useCredentialStore) => Task.FromResult(true)
+                };
+
+            var target = new SignInFlyoutViewModel(accountService) {CloseFlyout = () => Task.Delay(0)};
 
             target.Open(null, () => { successActionCalled = true; });
-
-            target.SignInCommand.Execute();
+            
+            await target.SignInCommand.Execute();
 
             Assert.IsTrue(successActionCalled);
         }
@@ -98,14 +91,15 @@ namespace Kona.UILogic.Tests.ViewModels
         [TestMethod]
         public void UserName_ReturnsLastSignedInUser_IfAvailable()
         {
-            var accountService = new MockAccountService();
-            accountService.LastSignedInUser = new UserInfo { UserName = "TestUserName" };
+            var accountService = new MockAccountService()
+                {
+                    SignedInUser = new UserInfo { UserName = "TestUserName" }
+                };
 
-            var target = new SignInFlyoutViewModel(accountService, null);
+            var target = new SignInFlyoutViewModel(accountService);
 
             Assert.AreEqual("TestUserName", target.UserName);
             Assert.IsFalse(target.IsNewSignIn);
-
         }
     }
 }

@@ -94,7 +94,12 @@ namespace Kona.AWShopper.Behaviors
 
             var searchTerm = GetSearchTerm(textBlock);
             var originalText = GetSearchText(textBlock);
-            if (string.IsNullOrEmpty(originalText) || string.IsNullOrEmpty(searchTerm)) return;
+            if (string.IsNullOrEmpty(originalText) || (searchTerm == null)) return;
+            if (searchTerm == string.Empty)
+            {
+                textBlock.Text = originalText;
+                return;
+            }
 
             textBlock.Inlines.Clear();
             var currentIndex = 0;

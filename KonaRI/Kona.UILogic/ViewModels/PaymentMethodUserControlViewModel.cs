@@ -17,7 +17,6 @@ namespace Kona.UILogic.ViewModels
 {
     public class PaymentMethodUserControlViewModel : ViewModel, IPaymentMethodUserControlViewModel
     {
-        private bool _setAsDefault;
         private readonly ICheckoutDataRepository _checkoutDataRepository;
         private PaymentMethod _paymentMethod;
 
@@ -26,7 +25,7 @@ namespace Kona.UILogic.ViewModels
             _paymentMethod = new PaymentMethod();
             _checkoutDataRepository = checkoutDataRepository;
         }
-        
+
         [RestorableState]
         public PaymentMethod PaymentMethod
         {
@@ -34,14 +33,7 @@ namespace Kona.UILogic.ViewModels
             set { SetProperty(ref _paymentMethod, value); }
         }
 
-        [RestorableState]
-        public bool SetAsDefault
-        {
-            get { return _setAsDefault; }
-            set { SetProperty(ref _setAsDefault, value); }
-        }
-
-        public override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState)
+        public override async void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState)
         {
             if (viewState != null)
             {
@@ -61,7 +53,7 @@ namespace Kona.UILogic.ViewModels
 
             if (navigationMode == NavigationMode.New)
             {
-                var defaultPaymentMethod = _checkoutDataRepository.GetDefaultPaymentMethod();
+                var defaultPaymentMethod = await _checkoutDataRepository.GetDefaultPaymentMethodAsync();
                 if (defaultPaymentMethod != null)
                 {
                     // Update the information and validate the values
@@ -90,18 +82,7 @@ namespace Kona.UILogic.ViewModels
 
         public void ProcessForm()
         {
-            var savedPaymentMethod =  _checkoutDataRepository.SavePaymentMethod(PaymentMethod);
-
-            //If matching saved payment information found, use saved payment information
-            if (savedPaymentMethod.Id != PaymentMethod.Id)
-            {
-                PaymentMethod = savedPaymentMethod;
-            }
-
-            if (SetAsDefault)
-            {
-                _checkoutDataRepository.SetDefaultPaymentMethod(savedPaymentMethod);
-            }
+            _checkoutDataRepository.SavePaymentMethodAsync(PaymentMethod);
         }
 
         public bool ValidateForm()

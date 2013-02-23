@@ -43,8 +43,12 @@ namespace Kona.UILogic.Services
         {
             if (!SecondaryTileExists(tileId))
             {
+                // <snippet808>
                 var secondaryTile = new SecondaryTile(tileId, shortName, displayName, arguments, TileOptions.ShowNameOnWideLogo, _assetsService.GetSquareLogoUri(), _assetsService.GetWideLogoUri());
+                // </snippet808>
+                // <snippet809>
                 bool isPinned = await secondaryTile.RequestCreateAsync();
+                // </snippet809>
 
                 return isPinned;
             }
@@ -56,9 +60,12 @@ namespace Kona.UILogic.Services
         {
             if (SecondaryTileExists(tileId))
             {
+                // <snippet810>
                 var secondaryTile = new SecondaryTile(tileId);
-
+                // </snippet810>
+                // <snippet811>
                 bool isUnpinned = await secondaryTile.RequestDeleteAsync();
+                // </snippet811>
                 return isUnpinned;
             }
 

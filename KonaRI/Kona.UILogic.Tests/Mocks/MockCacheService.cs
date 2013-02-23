@@ -16,8 +16,8 @@ namespace Kona.UILogic.Tests.Mocks
     {
         public Func<string, Task<bool>> DataExistsAndIsValidAsyncDelegate { get; set; }
         public Func<string, object> GetDataDelegate { get; set; }
-        public Func<string, object, Task<Uri>> SaveDataAsyncDelegate { get; set; }
-        public Func<string, Uri, Task<Uri>> SaveExternalDataAsyncDelegate { get; set; }
+        public Func<string, object, Task> SaveDataAsyncDelegate { get; set; }
+        public Func<Uri, Task<Uri>> SaveExternalDataAsyncDelegate { get; set; }
 
         private object getDataAsyncDelegate { get; set; }
 
@@ -34,14 +34,14 @@ namespace Kona.UILogic.Tests.Mocks
             return Task.FromResult(result) as Task<T>;
         }
 
-        public Task<Uri> SaveDataAsync<T>(string cacheKey, T content)
+        public Task SaveDataAsync<T>(string cacheKey, T content)
         {
             return this.SaveDataAsyncDelegate(cacheKey, content);
         }
 
-        public Task<Uri> SaveExternalDataAsync(string cacheKey, Uri dataUrl)
+        public Task<Uri> SaveExternalDataAsync(Uri dataUrl)
         {
-            return this.SaveExternalDataAsyncDelegate(cacheKey, dataUrl); 
+            return this.SaveExternalDataAsyncDelegate(dataUrl); 
         }
     }
 }

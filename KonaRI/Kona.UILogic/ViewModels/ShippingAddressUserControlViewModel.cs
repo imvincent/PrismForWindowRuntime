@@ -22,7 +22,6 @@ namespace Kona.UILogic.ViewModels
     {
         private Address _address;
         private IReadOnlyCollection<ComboBoxItemValue> _states;
-        private bool _setAsDefault;
         private readonly ICheckoutDataRepository _checkoutDataRepository;
         private readonly ILocationService _locationService;
         private readonly IResourceLoader _resourceLoader;
@@ -46,13 +45,6 @@ namespace Kona.UILogic.ViewModels
         {
             get { return _states; }
             set { SetProperty(ref _states, value); }
-        }
-
-        [RestorableState]
-        public bool SetAsDefault
-        {
-            get { return _setAsDefault; }
-            set { SetProperty(ref _setAsDefault, value); }
         }
 
         public override async void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState)
@@ -130,18 +122,7 @@ namespace Kona.UILogic.ViewModels
 
         public void ProcessForm()
         {
-            var savedAddress = _checkoutDataRepository.SaveShippingAddress(Address);
-            
-            //If matching saved address found, use saved address
-            if (savedAddress.Id != Address.Id)
-            {
-                Address = savedAddress;
-            }
-
-            if (SetAsDefault)
-            {
-                _checkoutDataRepository.SetDefaultShippingAddress(savedAddress);
-            }
+            _checkoutDataRepository.SaveShippingAddress(Address);
         }
     }
 }

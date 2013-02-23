@@ -22,19 +22,16 @@ namespace Kona.UILogic.ViewModels
     public class ProductViewModel
     {
         private readonly Product _product;
-        private Uri _image;
-        private IShoppingCartRepository _shoppingCartRepository;
+        private readonly Uri _image;
+        private readonly IShoppingCartRepository _shoppingCartRepository;
 
-        public ProductViewModel(Product product) : this(product, null)
-        {
-            
-        }
+        public ProductViewModel(Product product) : this(product, null) { }
 
         public ProductViewModel(Product product, IShoppingCartRepository shoppingCartRepository)
         {
             _product = product;
             _shoppingCartRepository = shoppingCartRepository;
-            _image = new Uri(this._product.ImageName, UriKind.Absolute);
+            _image = product.ImageUri;
 
             AddToCartCommand = DelegateCommand.FromAsyncHandler(AddToCart);
         }

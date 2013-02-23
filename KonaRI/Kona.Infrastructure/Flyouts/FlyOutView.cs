@@ -7,6 +7,7 @@
 
 
 using System;
+using Kona.Infrastructure.Interfaces;
 using Windows.UI.ApplicationSettings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -19,37 +20,20 @@ namespace Kona.Infrastructure.Flyouts
     {
         #region Fields
         private Popup _popup;
+        private ISearchPaneService _searchPaneService;
+        private bool _wasSearchOnKeyboardInputEnabled;
         #endregion
 
         #region Construction
-        public FlyoutView(string commandId, string commandTitle, int flyoutSize)
+        public FlyoutView(int flyoutSize, ISearchPaneService searchPaneService)
         {
-            CommandId = commandId;
-            CommandTitle = commandTitle;
             FlyoutSize = flyoutSize;
+            _searchPaneService = searchPaneService;
         }
 
         #endregion
 
         #region Properties
-        /// <summary>
-        /// The command identifier used to invoke the flyout panel.
-        /// </summary>
-        public string CommandId
-        {
-            get { return (string)GetValue(CommandIdProperty); }
-            set { SetValue(CommandIdProperty, value); }
-        }
-
-        /// <summary>
-        /// The title presented inside of the flyout.
-        /// </summary>
-        public string CommandTitle
-        {
-            get { return (string)GetValue(CommandTitleProperty); }
-            set { SetValue(CommandTitleProperty, value); }
-        }
-
         /// <summary>
         /// The width of the flyout.
         /// </summary>
@@ -58,41 +42,14 @@ namespace Kona.Infrastructure.Flyouts
             get { return (int)GetValue(FlyoutSizeProperty); }
             set { SetValue(FlyoutSizeProperty, value); }
         }
-
-        /// <summary>
-        /// A flag to indicate whether to present a link in the settings flyout for presenting the flyout.
-        /// </summary>
-        public bool ExcludeFromSettingsPane
-        {
-            get { return (bool)GetValue(ExcludeFromSettingsPaneProperty); }
-            set { SetValue(ExcludeFromSettingsPaneProperty, value); }
-        }
         #endregion
 
         #region Dependency Properties
-        /// <summary>
-        /// DependencyProperty for CommandId.
-        /// </summary>
-        public static readonly DependencyProperty CommandIdProperty =
-            DependencyProperty.Register("CommandId", typeof(string), typeof(FlyoutView), new PropertyMetadata(null));
-
-        /// <summary>
-        /// DependencyProperty for CommandTitle.
-        /// </summary>
-        public static readonly DependencyProperty CommandTitleProperty =
-            DependencyProperty.Register("CommandTitle", typeof(string), typeof(FlyoutView), new PropertyMetadata(null));
-
         /// <summary>
         /// DependencyProperty for FlyoutSize.
         /// </summary>
         public static readonly DependencyProperty FlyoutSizeProperty =
             DependencyProperty.Register("FlyoutSize", typeof(int), typeof(FlyoutView), new PropertyMetadata(0));
-
-        /// <summary>
-        /// DependencyProperty for ExcludeFromSettingsPane.
-        /// </summary>
-        public static readonly DependencyProperty ExcludeFromSettingsPaneProperty =
-            DependencyProperty.Register("ExcludeFromSettingsPane", typeof(bool), typeof(FlyoutView), new PropertyMetadata(false));
         #endregion
 
         #region Public Methods
@@ -136,6 +93,13 @@ namespace Kona.Infrastructure.Flyouts
                 viewModel.GoBack = GoBack;
                 viewModel.Open(parameter, successAction);
             }
+
+            // If SearchOnKeyboardInput is enabled, disable it. Also, save the current state
+            _wasSearchOnKeyboardInputEnabled = _searchPaneService.IsShowOnKeyBoardInputEnabled();
+            if (_wasSearchOnKeyboardInputEnabled)
+            {
+                _searchPaneService.ShowOnKeyboardInput(false);
+            }
         }
 
         /// <summary>
@@ -162,6 +126,10 @@ namespace Kona.Infrastructure.Flyouts
         {
             _popup.Child = null;
             Window.Current.Activated -= OnWindowActivated;
+            if (_wasSearchOnKeyboardInputEnabled)
+            {
+                _searchPaneService.ShowOnKeyboardInput(true);
+            }
         }
 
         private void OnWindowActivated(object sender, Windows.UI.Core.WindowActivatedEventArgs e)

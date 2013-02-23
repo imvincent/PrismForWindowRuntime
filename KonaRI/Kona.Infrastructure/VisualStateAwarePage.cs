@@ -68,13 +68,6 @@ namespace Kona.Infrastructure
         private void WindowSizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
             this.InvalidateVisualState();
-
-            //Inform ViewModel if it cares about the window size changing
-            var viewModel = DataContext as IHandleWindowSizeChanged;
-            if (viewModel != null)
-            {
-                viewModel.WindowCurrentSizeChanged();
-            }
         }
 
         /// <summary>

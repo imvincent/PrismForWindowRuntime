@@ -17,13 +17,11 @@ namespace Kona.UILogic.Tests.Mocks
     public class MockSettingsStoreService : ISettingsStoreService
     {
         private readonly Dictionary<string, Dictionary<string, object>> _values = new Dictionary<string, Dictionary<string, object>>();
-        private SettingsStoreService _settingStoreService;
-
+        
         public Func<string, string, object> GetValueDelegate { get; set; }
         public Func<string, IEnumerable<object>> GetAllValuesDelegate { get; set; }
         public Func<string, string, object> GetEntityDelegate { get; set; }
         public Func<string, IEnumerable<object>> GetAllEntitiesDelegate { get; set; }
-
         
         public T GetValue<T>(string container, string id)
         {

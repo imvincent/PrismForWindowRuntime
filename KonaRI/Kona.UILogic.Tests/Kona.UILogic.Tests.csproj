@@ -108,7 +108,11 @@
     <SDKReference Include="TestPlatform, Version=11.0" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountServiceFixture.cs" />
+    <Compile Include="Mocks\MockCheckoutDataRepository.cs" />
+    <Compile Include="Mocks\MockEncryptionService.cs" />
+    <Compile Include="Mocks\MockOrderRepository.cs" />
+    <Compile Include="Mocks\MockSearchPaneService.cs" />
+    <Compile Include="Services\AccountServiceFixture.cs" />
     <Compile Include="Mocks\CustomDelegates.cs" />
     <Compile Include="Mocks\MockAccountService.cs" />
     <Compile Include="Mocks\MockAddress.cs" />
@@ -126,12 +130,13 @@
     <Compile Include="Mocks\MockProductCatalogRepository.cs" />
     <Compile Include="Mocks\MockProductCatalogService.cs" />
     <Compile Include="Mocks\MockResourceLoader.cs" />
-    <Compile Include="Mocks\MockRestorableStateService.cs" />
-    <Compile Include="Mocks\MockSettingsCharmService.cs" />
+    <Compile Include="Mocks\MockSuspensionManagerState.cs" />
+    <Compile Include="Mocks\MockFlyoutService.cs" />
     <Compile Include="Mocks\MockSettingsStoreService.cs" />
     <Compile Include="Mocks\MockShippingAddressPageViewModel.cs" />
     <Compile Include="Mocks\MockShoppingCartRepository.cs" />
     <Compile Include="Mocks\MockShoppingCartService.cs" />
+    <Compile Include="Mocks\MockTileService.cs" />
     <Compile Include="Repositories\CheckoutDataRepositoryFixture.cs" />
     <Compile Include="Repositories\ProductCatalogRepositoryFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -140,6 +145,7 @@
     <Compile Include="ViewModels\BillingAddressUserControlViewModelFixture.cs" />
     <Compile Include="ViewModels\CheckoutHubPageViewModelFixture.cs" />
     <Compile Include="ViewModels\CheckoutSummaryPageViewModelFixture.cs" />
+    <Compile Include="ViewModels\SearchResultsPageViewModelFixture.cs" />
     <Compile Include="ViewModels\ShoppingCartTabUserControlViewModelFixture.cs" />
     <Compile Include="ViewModels\SignOutFlyoutViewModelFixture.cs" />
     <Compile Include="ViewModels\GroupDetailPageViewModelFixture.cs" />

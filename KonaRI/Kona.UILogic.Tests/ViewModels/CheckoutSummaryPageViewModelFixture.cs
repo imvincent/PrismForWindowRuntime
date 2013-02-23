@@ -11,6 +11,7 @@ using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
 using Kona.UILogic.Models;
+using Kona.UILogic.Services;
 using Kona.UILogic.Tests.Mocks;
 using Kona.UILogic.ViewModels;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
@@ -23,33 +24,101 @@ namespace Kona.UILogic.Tests.ViewModels
     {
 
         [TestMethod]
-        public void SubmitValidOrder_CallSuccessDialog()
+        public async Task SubmitValidOrder_CallsSuccessDialog()
         {
-            // TODO
-        }
-
-        [TestMethod]
-        public void SubmitValidOrder_CallErrorDialog()
-        {
-            // TODO
-        }
-
-        [TestMethod]
-        public void Submit_WhenAnonymous_ShowsSignInFlyout()
-        {
-            var showFlyoutCalled = false;
+            bool successDialogCalled = false;
+            bool errorDialogCalled = false;
             var navigationService = new MockNavigationService();
-            var accountService = new MockAccountService();
-            accountService.GetSignedInUserAsyncDelegate = () => Task.FromResult<UserInfo>(null);
-            var settingsCharmService = new MockSettingsCharmService();
-            settingsCharmService.ShowFlyoutDelegate = (s, o, arg3) =>
+            var accountService = new MockAccountService()
+                {
+                    GetSignedInUserAsyncDelegate = () => Task.FromResult<UserInfo>(new UserInfo())
+                };
+            var orderService = new MockOrderService()
+                {
+                    // the order is valid, it can be processed
+                    ProcessOrderAsyncDelegate = (a, b) => Task.FromResult(true)
+                };
+            var resourcesService = new MockResourceLoader()
+                {
+                    GetStringDelegate = (key) => key
+                };
+            var alertService = new MockAlertMessageService()
+                {
+                    ShowAsyncWithCommandsDelegate = (dialogTitle, dialogMessage, dialogCommands) =>
+                        {
+                            successDialogCalled = dialogTitle.ToLower().Contains("purchased");
+                            errorDialogCalled = !successDialogCalled;
+                            return Task.FromResult(successDialogCalled);
+        }
+                };
+
+            var target = new CheckoutSummaryPageViewModel(navigationService, orderService, null, null, null, null, accountService, null, resourcesService, alertService);
+            await target.SubmitCommand.Execute();
+
+            Assert.IsTrue(successDialogCalled);
+            Assert.IsFalse(errorDialogCalled);
+        }
+
+        [TestMethod]
+        public async Task SubmitInvalidOrder_CallsErrorDialog()
+        {
+            bool successDialogCalled = false;
+            bool errorDialogCalled = false;
+            var navigationService = new MockNavigationService();
+            var accountService = new MockAccountService()
+                {
+                    GetSignedInUserAsyncDelegate = () => Task.FromResult<UserInfo>(new UserInfo())
+                };
+            var orderService = new MockOrderService()
+                {
+                    // the order is invalid, it cannot be processed
+                    ProcessOrderAsyncDelegate = (a, b) =>
+                        {
+                            var modelValidationResult = new ModelValidationResult();
+                            modelValidationResult.ModelState.Add("someKey", new List<string>() { "the value of someKey is invalid" });
+                            throw new ModelValidationException(modelValidationResult);
+                        }
+                };
+            var resourcesService = new MockResourceLoader()
+                {
+                    GetStringDelegate = (key) => key
+                };
+            var alertService = new MockAlertMessageService()
+                {
+                    ShowAsyncDelegate = (dialogTitle, dialogMessage) =>
+        {
+                        successDialogCalled = dialogTitle.ToLower().Contains("purchased");
+                        errorDialogCalled = !successDialogCalled;
+                        return Task.FromResult(successDialogCalled);
+                    }
+                };
+
+            var target = new CheckoutSummaryPageViewModel(navigationService, orderService, null, null, null, null, accountService, null, resourcesService, alertService);
+            await target.SubmitCommand.Execute();
+
+            Assert.IsFalse(successDialogCalled);
+            Assert.IsTrue(errorDialogCalled);
+        }
+
+        [TestMethod]
+        public async Task Submit_WhenAnonymous_ShowsSignInFlyout()
+        {
+            bool showFlyoutCalled = false;
+            var accountService = new MockAccountService()
+                {
+                    GetSignedInUserAsyncDelegate = () => Task.FromResult<UserInfo>(null)
+                };
+            var flyoutService = new MockFlyoutService()
+        {
+                    ShowFlyoutDelegate = (s, o, arg3) =>
             {
                 showFlyoutCalled = true;
-                Assert.AreEqual("signIn", s);
+                Assert.AreEqual("SignIn", s);
+                        }
             };
-            var target = new CheckoutSummaryPageViewModel(navigationService, null, null, null, null, accountService, settingsCharmService, null, null);
 
-            target.SubmitCommand.Execute();
+            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), null, null, null, null, null, accountService, flyoutService, null, null);
+            await target.SubmitCommand.Execute();
 
             Assert.IsTrue(showFlyoutCalled);
         }
@@ -57,9 +126,9 @@ namespace Kona.UILogic.Tests.ViewModels
         [TestMethod]
         public void SelectShippingMethod_Recalculates_Order()
         {
-            var shippingMethods = new List<ShippingMethod>() { new ShippingMethod() { Id = 1,  Cost = 0 } };
-            var shoppingCartItems = new List<ShoppingCartItem>() { new ShoppingCartItem() {  Quantity = 1, Currency = "USD", Product = new Product() } };
-            var mockOrder = new Order()
+            var shippingMethods = new List<ShippingMethod>() { new ShippingMethod() { Id = 1, Cost = 0 } };
+            var shoppingCartItems = new List<ShoppingCartItem>() { new ShoppingCartItem() { Quantity = 1, Currency = "USD", Product = new Product() } };
+            var order = new Order()
             {
                 ShoppingCart = new ShoppingCart(shoppingCartItems) { Currency = "USD", TotalPrice = 100 },
                 ShippingAddress = new Address(),
@@ -67,16 +136,19 @@ namespace Kona.UILogic.Tests.ViewModels
                 PaymentMethod = new PaymentMethod() { CardNumber = "1234" },
                 ShippingMethod = shippingMethods.First()
             };
-            var mockShippingMethodService = new MockShippingMethodService() 
+            var shippingMethodService = new MockShippingMethodService() 
             {
                 GetShippingMethodsAsyncDelegate = () => Task.FromResult<IEnumerable<ShippingMethod>>(shippingMethods) 
             };
+            var orderRepository = new MockOrderRepository() { GetCurrentOrderAsyncDelegate = () => order };
+            var shoppingCartRepository = new MockShoppingCartRepository();
+            shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult(order.ShoppingCart);
 
-            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), new MockOrderService(), mockShippingMethodService,
-                                                          null, new MockShoppingCartRepository(),
-                                                          new MockAccountService(), new MockSettingsCharmService(), new MockResourceLoader(), null);
+            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), new MockOrderService(), orderRepository, shippingMethodService,
+                                                          null, shoppingCartRepository,
+                                                          new MockAccountService(), new MockFlyoutService(), new MockResourceLoader(), null);
 
-            target.OnNavigatedTo(mockOrder, NavigationMode.New, null);
+            target.OnNavigatedTo(null, NavigationMode.New, null);
 
             Assert.AreEqual("$0.00", target.ShippingCost);
             Assert.AreEqual("$100.00", target.OrderSubtotal);
@@ -95,7 +167,7 @@ namespace Kona.UILogic.Tests.ViewModels
         {
             var shippingMethods = new List<ShippingMethod>() { new ShippingMethod() { Id = 1, Cost = 0 } };
             var shoppingCartItems = new List<ShoppingCartItem>() { new ShoppingCartItem() { Quantity = 1, Currency = "USD", Product = new Product() } };
-            var mockOrder = new Order()
+            var order = new Order()
             {
                 ShoppingCart = new ShoppingCart(shoppingCartItems) { Currency = "USD", FullPrice = 100 },
                 ShippingAddress = new Address(),
@@ -103,16 +175,19 @@ namespace Kona.UILogic.Tests.ViewModels
                 PaymentMethod = new PaymentMethod() { CardNumber = "1234" },
                 ShippingMethod = shippingMethods.First()
             };
-            var mockShippingMethodService = new MockShippingMethodService()
+            var shippingMethodService = new MockShippingMethodService()
             {
                 GetShippingMethodsAsyncDelegate = () => Task.FromResult<IEnumerable<ShippingMethod>>(shippingMethods)
             };
-            
-            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), new MockOrderService(), mockShippingMethodService,
-                                                          null, new MockShoppingCartRepository(),
-                                                          new MockAccountService(), new MockSettingsCharmService(), new MockResourceLoader(), null);
+            var orderRepository = new MockOrderRepository() {GetCurrentOrderAsyncDelegate = () => order};
+            var shoppingCartRepository = new MockShoppingCartRepository();
+            shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult(order.ShoppingCart);
 
-            target.OnNavigatedTo(mockOrder, NavigationMode.New, null);
+            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), new MockOrderService(), orderRepository, shippingMethodService,
+                                                          null, shoppingCartRepository,
+                                                          new MockAccountService(), new MockFlyoutService(), new MockResourceLoader(), null);
+
+            target.OnNavigatedTo(null, NavigationMode.New, null);
             Assert.IsFalse(target.IsBottomAppBarOpened);
 
             target.SelectedCheckoutData = target.CheckoutDataViewModels.First();
@@ -123,19 +198,19 @@ namespace Kona.UILogic.Tests.ViewModels
         public void EditCheckoutData_Calls_Proper_Flyout()
         {
             string requestedFlyoutName = string.Empty;
-            var mockSettingsCharmService = new MockSettingsCharmService() { ShowFlyoutDelegate = (flyoutName, a, b) => Assert.IsTrue(flyoutName == requestedFlyoutName) };
+            var flyoutService = new MockFlyoutService() { ShowFlyoutDelegate = (flyoutName, a, b) => Assert.IsTrue(flyoutName == requestedFlyoutName) };
 
-            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), null, null, null, null, null, mockSettingsCharmService, null, null);
+            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), null, null, null, null, null, null, flyoutService, null, null);
 
-            requestedFlyoutName = "editShippingAddress";
+            requestedFlyoutName = "ShippingAddress";
             target.SelectedCheckoutData = new CheckoutDataViewModel(null, null, null, null, null, null, Constants.ShippingAddress, null);
             target.EditCheckoutDataCommand.Execute().Wait();
 
-            requestedFlyoutName = "editBillingAddress";
+            requestedFlyoutName = "BillingAddress";
             target.SelectedCheckoutData = new CheckoutDataViewModel(null, null, null, null, null, null, Constants.BillingAddress, null);
             target.EditCheckoutDataCommand.Execute().Wait();
 
-            requestedFlyoutName = "editPaymentMethod";
+            requestedFlyoutName = "PaymentMethod";
             target.SelectedCheckoutData = new CheckoutDataViewModel(null, null, null, null, null, null, Constants.PaymentMethod, null);
             target.EditCheckoutDataCommand.Execute().Wait();
         }
@@ -145,7 +220,7 @@ namespace Kona.UILogic.Tests.ViewModels
         {
             var shippingMethods = new List<ShippingMethod>() { new ShippingMethod() { Id = 1, Cost = 0 } };
             var shoppingCartItems = new List<ShoppingCartItem>() { new ShoppingCartItem() { Quantity = 1, Currency = "USD", Product = new Product() } };
-            var mockOrder = new Order()
+            var order = new Order()
             {
                 ShoppingCart = new ShoppingCart(shoppingCartItems) { Currency = "USD", FullPrice = 100 },
                 ShippingAddress = new Address(),
@@ -153,29 +228,31 @@ namespace Kona.UILogic.Tests.ViewModels
                 PaymentMethod = new PaymentMethod() { CardNumber = "1234" },
                 ShippingMethod = shippingMethods.First()
             };
-            var mockShippingMethodService = new MockShippingMethodService()
+            var shippingMethodService = new MockShippingMethodService()
             {
                 GetShippingMethodsAsyncDelegate = () => Task.FromResult<IEnumerable<ShippingMethod>>(shippingMethods)
             };
-            var mockSettingsCharmService = new MockSettingsCharmService();
-            mockSettingsCharmService.ShowFlyoutDelegate = (flyoutName, param, success) =>
+            var flyoutService = new MockFlyoutService();
+            flyoutService.ShowFlyoutDelegate = (flyoutName, param, success) =>
             { 
                 // Update CheckoutData information and call success
-                var paymentMethod = param as PaymentMethod;
-                paymentMethod.CardNumber = "5678";
+                            ((PaymentMethod)param).CardNumber = "5678";
                 success.Invoke();
             };
-            
-            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), new MockOrderService(), mockShippingMethodService,
-                                                          null, new MockShoppingCartRepository(),
-                                                          new MockAccountService(), mockSettingsCharmService, new MockResourceLoader(), null);
+            var orderRepository = new MockOrderRepository() { GetCurrentOrderAsyncDelegate = () => order };
+            var shoppingCartRepository = new MockShoppingCartRepository();
+            shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult(order.ShoppingCart);
 
-            target.OnNavigatedTo(mockOrder, NavigationMode.New, null);
+            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), new MockOrderService(), orderRepository, shippingMethodService,
+                                                          null, shoppingCartRepository,
+                                                          new MockAccountService(), flyoutService, new MockResourceLoader(), null);
+
+            target.OnNavigatedTo(null, NavigationMode.New, null);
             target.SelectedCheckoutData = target.CheckoutDataViewModels[2];
             target.EditCheckoutDataCommand.Execute().Wait();
 
             // Check if order information has changed
-            Assert.IsTrue(mockOrder.PaymentMethod.CardNumber == "5678");
+            Assert.IsTrue(order.PaymentMethod.CardNumber == "5678");
             Assert.IsTrue(((PaymentMethod)target.CheckoutDataViewModels[2].Context).CardNumber == "5678");
         }
 
@@ -183,7 +260,7 @@ namespace Kona.UILogic.Tests.ViewModels
         public void AddCheckoutData_Calls_Proper_Flyout()
         {
             string requestedFlyoutName = string.Empty;
-            var mockSettingsCharmService = new MockSettingsCharmService()
+            var MockFlyoutService = new MockFlyoutService()
             {
                 ShowFlyoutDelegate = (flyoutName, action, b) =>
                 {
@@ -191,17 +268,17 @@ namespace Kona.UILogic.Tests.ViewModels
                 }
             };
 
-            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), null, null, null, null, null, mockSettingsCharmService, null, null);
+            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), null, null, null, null, null, null, MockFlyoutService, null, null);
 
-            requestedFlyoutName = "addShippingAddress";
+            requestedFlyoutName = "ShippingAddress";
             target.SelectedCheckoutData = new CheckoutDataViewModel(null, null, null, null, null, null, Constants.ShippingAddress, null);
             target.AddCheckoutDataCommand.Execute().Wait();
 
-            requestedFlyoutName = "addBillingAddress";
+            requestedFlyoutName = "BillingAddress";
             target.SelectedCheckoutData = new CheckoutDataViewModel(null, null, null, null, null, null, Constants.BillingAddress, null);
             target.AddCheckoutDataCommand.Execute().Wait();
 
-            requestedFlyoutName = "addPaymentMethod";
+            requestedFlyoutName = "PaymentMethod";
             target.SelectedCheckoutData = new CheckoutDataViewModel(null, null, null, null, null, null, Constants.PaymentMethod, null);
             target.AddCheckoutDataCommand.Execute().Wait();
         }

@@ -36,7 +36,7 @@ namespace Kona.Infrastructure.Tests
                 var frame = new FrameFacadeAdapter(new Frame());
                 var frameSessionState = new MockFrameSessionState();
                 frameSessionState.GetSessionStateForFrameDelegate = (currentFrame) => new Dictionary<string, object>();
-                var restorableStateService = new MockRestorableStateService();
+                var restorableStateService = new MockSuspensionManagerState();
                 var navigationService = new FrameNavigationService(frame, frameSessionState, (pageToken) => typeof(MockPage), restorableStateService);
 
                 bool result = navigationService.Navigate("Mock", 1);
@@ -97,7 +97,7 @@ namespace Kona.Infrastructure.Tests
                     toReturn.Add("someValue", 1);
                     return toReturn;
                 };
-                var restorableStateService = new MockRestorableStateService();
+                var restorableStateService = new MockSuspensionManagerState();
                 var navigationService = new FrameNavigationService(frame, frameSessionState, (pageToken) => typeof(MockPage), restorableStateService);
 
                 navigationService.Navigate("Mock", 1);
@@ -158,7 +158,7 @@ namespace Kona.Infrastructure.Tests
                     toReturn.Add("someValue", 1);
                     return toReturn;
                 };
-                var restorableStateService = new MockRestorableStateService();
+                var restorableStateService = new MockSuspensionManagerState();
                 var navigationService = new FrameNavigationService(frame, frameSessionState, (pageToken) => typeof(MockPage), restorableStateService);
 
                 navigationService.Navigate("Mock", 1);
@@ -190,7 +190,7 @@ namespace Kona.Infrastructure.Tests
                     toReturn.Add("someValue", 1);
                     return toReturn;
                 };
-                var restorableStateService = new MockRestorableStateService();
+                var restorableStateService = new MockSuspensionManagerState();
                 var navigationService = new FrameNavigationService(frame, frameSessionState, (pageToken) => typeof(MockPage), restorableStateService);
 
                 navigationService.Navigate("Mock", 1);
@@ -217,8 +217,8 @@ namespace Kona.Infrastructure.Tests
                 var frame = new FrameFacadeAdapter(new Frame());
                 var frameSessionState = new MockFrameSessionState();
                 frameSessionState.GetSessionStateForFrameDelegate = (currentFrame) => new Dictionary<string, object>();
-                var restorableStateService = new MockRestorableStateService();
-                var navigationService = new FrameNavigationService(frame, frameSessionState, (pageToken) => typeof(MockPage), restorableStateService);
+                var suspensionManagerState = new MockSuspensionManagerState();
+                var navigationService = new FrameNavigationService(frame, frameSessionState, (pageToken) => typeof(MockPage), suspensionManagerState);
 
                 bool resultFirstNavigation = navigationService.Navigate("MockPage", 1);
 

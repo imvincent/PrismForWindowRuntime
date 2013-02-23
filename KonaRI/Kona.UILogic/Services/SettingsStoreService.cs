@@ -19,7 +19,7 @@ namespace Kona.UILogic.Services
         // <snippet500>
         private ApplicationDataContainer _settingsContainer;
 
-        public SettingsStoreService() : this(ApplicationData.Current.LocalSettings) { }
+        public SettingsStoreService() : this(ApplicationData.Current.RoamingSettings) { }
 
         public SettingsStoreService(ApplicationDataContainer applicationDataContainer)
         {

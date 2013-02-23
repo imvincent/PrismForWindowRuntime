@@ -6,11 +6,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Kona.Infrastructure;
 using HelloWorldWithContainer.Services;
+using Kona.Infrastructure;
 
 namespace HelloWorldWithContainer.ViewModels
 {
@@ -41,7 +38,5 @@ namespace HelloWorldWithContainer.ViewModels
             get { return _dataRepository.GetUserEnteredData(); }
             set { _dataRepository.SetUserEnteredData(value); }
         }
-
-
     }
 }

@@ -9,6 +9,7 @@
 using System.ComponentModel.DataAnnotations;
 using Kona.UILogic.Services;
 using Kona.Infrastructure;
+using Windows.Storage.Streams;
 
 namespace Kona.UILogic.Models
 {
@@ -48,6 +49,8 @@ namespace Kona.UILogic.Models
             get { return _cardNumber; }
             set { SetProperty(ref _cardNumber, value); }
         }
+
+        public IBuffer CardNumberBuffer { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "RequiredErrorMessage")]
         [RegularExpression(NAMES_REGEX_PATTERN, ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "RegexErrorMessage")]

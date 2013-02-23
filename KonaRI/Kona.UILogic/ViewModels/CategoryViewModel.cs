@@ -58,9 +58,9 @@ namespace Kona.UILogic.ViewModels
         {
             get
             {
-                if (this._image == null && this._category.ImageLocalUri != null)
+                if (this._image == null && this._category.ImageUri != null)
                 {
-                    this._image = new BitmapImage(this._category.ImageLocalUri);
+                    this._image = new BitmapImage(this._category.ImageUri);
                 }
                 return this._image;
             }

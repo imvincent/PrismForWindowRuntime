@@ -26,8 +26,7 @@
     <Grid Style="{StaticResource LayoutRootStyle}">
         <Grid.RowDefinitions>
             <RowDefinition Height="140" />
-            <RowDefinition Height="46*" />
-            <RowDefinition Height="111*" />
+            <RowDefinition  />
         </Grid.RowDefinitions>
 
         <!-- Back button and page title -->
@@ -55,7 +54,7 @@
                 <Grid.Resources>
                     <Style x:Name="SummarySubheaderTextStyle"
                            TargetType="TextBlock"
-                           BasedOn="{StaticResource SubheaderTextStyle}">
+                           BasedOn="{StaticResource GroupHeaderTextStyle}">
                         <Setter Property="Margin"
                                 Value="85,0,0,0"></Setter>
                     </Style>
@@ -96,7 +95,7 @@
                            Grid.Row="0"
                            Grid.Column="0"
                            Foreground="{StaticResource AWShopperAccentBrush}"
-                           Style="{StaticResource SubheaderTextStyle}" />
+                           Style="{StaticResource GroupHeaderTextStyle}" />
                 <StackPanel x:Name="OverviewPanel"
                             Grid.Row="7"
                             Grid.Column="0"
@@ -194,7 +193,6 @@
                             Command="{Binding SubmitCommand}"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Top"
-                            FontSize="25"
                             Background="{StaticResource AWShopperAccentBrush}"
                             Foreground="White" />
                 </StackPanel>
@@ -296,7 +294,6 @@
                         Grid.Row="2"
                         Width="370"
                         Margin="10,5"
-                        FontSize="25"
                         Background="{StaticResource AWShopperAccentBrush}"
                         Foreground="White"
                         Command="{Binding AddCheckoutDataCommand}" />
@@ -339,6 +336,14 @@
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Thickness>0</Thickness>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.Margin)"
+                                                       Storyboard.TargetName="ContentGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Thickness>0,0,0,60</Thickness>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>

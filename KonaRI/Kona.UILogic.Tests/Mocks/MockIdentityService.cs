@@ -23,7 +23,7 @@ namespace Kona.UILogic.Tests.Mocks
             return LogOnAsyncDelegate(userId, password);
         }
 
-        public Task<bool> VerifyActiveSession(string userId, string serverCookieHeader)
+        public Task<bool> VerifyActiveSessionAsync(string userId, string serverCookieHeader)
         {
             return VerifyActiveSessionDelegate(userId, serverCookieHeader);
         }

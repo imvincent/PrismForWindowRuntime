@@ -115,7 +115,7 @@
     <Compile Include="Mocks\MockPage.cs" />
     <Compile Include="Mocks\MockPageViewModel.cs" />
     <Compile Include="Mocks\MockResourceLoader.cs" />
-    <Compile Include="Mocks\MockRestorableStateService.cs" />
+    <Compile Include="Mocks\MockSuspensionManagerState.cs" />
     <Compile Include="Mocks\MockViewModelWithNoRestorableStateAttributes.cs" />
     <Compile Include="Mocks\MockViewModelWithRestorableStateAttributes.cs" />
     <Compile Include="Mocks\MockViewModelWithRestorableStateCollection.cs" />

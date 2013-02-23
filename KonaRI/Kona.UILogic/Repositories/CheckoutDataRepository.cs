@@ -10,21 +10,27 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Kona.UILogic.Models;
 using Kona.UILogic.Services;
+using Windows.Security.Cryptography;
+using Windows.Security.Cryptography.DataProtection;
+using Windows.Storage.Streams;
 
 namespace Kona.UILogic.Repositories
 {
     public class CheckoutDataRepository : ICheckoutDataRepository
     {
         private readonly ISettingsStoreService _settingsStoreService;
+        private readonly IEncryptionService _encryptionService;
         private IList<Address> _shippingAddresses;
         private IList<Address> _billingAddresses;
         private IList<PaymentMethod> _paymentMethods;
 
-        public CheckoutDataRepository(ISettingsStoreService settingsStoreService)
+        public CheckoutDataRepository(ISettingsStoreService settingsStoreService, IEncryptionService encryptionService)
         {
             _settingsStoreService = settingsStoreService;
+            _encryptionService = encryptionService;
         }
 
         public Address GetShippingAddress(string id)
@@ -37,9 +43,9 @@ namespace Kona.UILogic.Repositories
             return GetAllBillingAddresses().FirstOrDefault(b => b.Id == id);
         }
 
-        public PaymentMethod GetPaymentMethod(string id)
+        public async Task<PaymentMethod> GetPaymentMethodAsync(string id)
         {
-            return GetAllPaymentMethods().FirstOrDefault(p => p.Id == id);
+            return (await GetAllPaymentMethodsAsync()).FirstOrDefault(p => p.Id == id);
         }
 
         public Address GetDefaultShippingAddress()
@@ -58,12 +64,12 @@ namespace Kona.UILogic.Repositories
             return GetBillingAddress(defaultValueId);
         }
 
-        public PaymentMethod GetDefaultPaymentMethod()
+        public async Task<PaymentMethod> GetDefaultPaymentMethodAsync()
         {
             var defaultValueId = _settingsStoreService.GetValue<string>(Constants.Default, Constants.PaymentMethod);
             if (string.IsNullOrEmpty(defaultValueId)) return null;
 
-            return GetPaymentMethod(defaultValueId);
+            return await GetPaymentMethodAsync(defaultValueId);
         }
 
         public IReadOnlyCollection<Address> GetAllShippingAddresses()
@@ -88,11 +94,15 @@ namespace Kona.UILogic.Repositories
         }
         // </snippet503>
 
-        public IReadOnlyCollection<PaymentMethod> GetAllPaymentMethods()
+        public async Task<IReadOnlyCollection<PaymentMethod>> GetAllPaymentMethodsAsync()
         {
             if (_paymentMethods == null)
             {
                 _paymentMethods = _settingsStoreService.GetAllEntities<PaymentMethod>(Constants.PaymentMethod).ToList();
+                foreach (var paymentMethod in _paymentMethods)
+                {
+                    paymentMethod.CardNumber = await _encryptionService.DecryptMessage(paymentMethod.CardNumberBuffer);
+                }
             }
 
             return new ReadOnlyCollection<PaymentMethod>(_paymentMethods);
@@ -100,15 +110,20 @@ namespace Kona.UILogic.Repositories
 
         public Address SaveShippingAddress(Address address)
         {
+            address.Id = Guid.NewGuid().ToString();
             Address savedAddress = GetAllShippingAddresses().FirstOrDefault(c => IsMatchingAddress(c, address));
 
             if (savedAddress == null)
             {
-                address.Id = Guid.NewGuid().ToString();
                 _shippingAddresses.Add(address);
                 _settingsStoreService.SaveEntity(Constants.ShippingAddress, address.Id, address);
-                
-                return address;
+                savedAddress = address;
+            }
+
+            // If no default value is stored, use this one
+            if (GetDefaultShippingAddress() == null)
+            {
+                SetDefaultShippingAddress(savedAddress);
             }
 
             return savedAddress;
@@ -117,32 +132,43 @@ namespace Kona.UILogic.Repositories
         // <snippet502>
         public Address SaveBillingAddress(Address address)
         {
+            address.Id = Guid.NewGuid().ToString();
             Address savedAddress = GetAllBillingAddresses().FirstOrDefault(c => IsMatchingAddress(c, address));
 
             if (savedAddress == null)
             {
-                address.Id = Guid.NewGuid().ToString();
                 _billingAddresses.Add(address);
                 _settingsStoreService.SaveEntity(Constants.BillingAddress, address.Id, address);
-                
-                return address;
+                savedAddress = address;
+            }
+
+            // If no default value is stored, use this one
+            if (GetDefaultBillingAddress() == null)
+            {
+                SetDefaultBillingAddress(savedAddress);
             }
 
             return savedAddress;
         }
         // </snippet502>
 
-        public PaymentMethod SavePaymentMethod(PaymentMethod paymentMethod)
+        public async Task<PaymentMethod> SavePaymentMethodAsync(PaymentMethod paymentMethod)
         {
-            PaymentMethod savedPaymentMethod = GetAllPaymentMethods().FirstOrDefault(c => IsMatchingPaymentMethod(c, paymentMethod));
+            paymentMethod.Id = Guid.NewGuid().ToString();
+            PaymentMethod savedPaymentMethod = (await GetAllPaymentMethodsAsync()).FirstOrDefault(c => IsMatchingPaymentMethod(c, paymentMethod));
 
             if (savedPaymentMethod == null)
             {
-                paymentMethod.Id = Guid.NewGuid().ToString();
+                paymentMethod.CardNumberBuffer = await _encryptionService.EncryptMessage(paymentMethod.CardNumber);
                 _paymentMethods.Add(paymentMethod);
                 _settingsStoreService.SaveEntity(Constants.PaymentMethod, paymentMethod.Id, paymentMethod);
+                savedPaymentMethod = paymentMethod;
+            }
 
-                return paymentMethod;
+            // If no default value is stored, use this one
+            if (GetDefaultPaymentMethodAsync() == null)
+            {
+                SetDefaultPaymentMethod(savedPaymentMethod);
             }
 
             return savedPaymentMethod;
@@ -155,7 +181,7 @@ namespace Kona.UILogic.Repositories
                 throw new ArgumentNullException("address", "address is null");
             }
 
-            _settingsStoreService.SaveValue<string>(Constants.Default, Constants.ShippingAddress, address.Id);
+            _settingsStoreService.SaveValue(Constants.Default, Constants.ShippingAddress, address.Id);
         }
 
         public void SetDefaultBillingAddress(Address address)
@@ -165,7 +191,7 @@ namespace Kona.UILogic.Repositories
                 throw new ArgumentNullException("address", "address is null");
             }
 
-            _settingsStoreService.SaveValue<string>(Constants.Default, Constants.BillingAddress, address.Id);
+            _settingsStoreService.SaveValue(Constants.Default, Constants.BillingAddress, address.Id);
         }
 
         public void SetDefaultPaymentMethod(PaymentMethod paymentMethod)
@@ -175,7 +201,7 @@ namespace Kona.UILogic.Repositories
                 throw new ArgumentNullException("paymentMethod", "paymentMethod is null");
             }
 
-            _settingsStoreService.SaveValue<string>(Constants.Default, Constants.PaymentMethod, paymentMethod.Id);
+            _settingsStoreService.SaveValue(Constants.Default, Constants.PaymentMethod, paymentMethod.Id);
         }
 
         public void RemoveDefaultShippingAddress()

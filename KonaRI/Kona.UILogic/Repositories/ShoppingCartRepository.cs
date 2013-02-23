@@ -25,33 +25,32 @@ namespace Kona.UILogic.Repositories
         private readonly IAccountService _accountService;
         private readonly IEventAggregator _eventAggregator;
         private readonly IProductCatalogRepository _productCatalogRepository;
-        private readonly IRestorableStateService _restorableStateService;
-        private readonly ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
+        private readonly ISuspensionManagerState _suspensionManagerState;
 
         private string _shoppingCartId;
         private ShoppingCart _cachedShoppingCart = null;
         
-        public ShoppingCartRepository(IShoppingCartService shoppingCartService, IAccountService accountService, IEventAggregator eventAggregator, IProductCatalogRepository productCatalogRepository, IRestorableStateService restorableStateService)
+        public ShoppingCartRepository(IShoppingCartService shoppingCartService, IAccountService accountService, IEventAggregator eventAggregator, IProductCatalogRepository productCatalogRepository, ISuspensionManagerState suspensionManagerState)
         {
             _shoppingCartService = shoppingCartService;
             _accountService = accountService;
             _eventAggregator = eventAggregator;
             _productCatalogRepository = productCatalogRepository;
-            _restorableStateService = restorableStateService;
+            _suspensionManagerState = suspensionManagerState;
 
             if (accountService != null)
             {
                 _accountService.UserChanged += _accountService_UserChanged;
             }
 
-            if (_restorableStateService != null && _restorableStateService.GetState(ShoppingCartIdKey) != null)
+            if (_suspensionManagerState != null && _suspensionManagerState.SessionState.ContainsKey(ShoppingCartIdKey))
             {
-                _shoppingCartId = _restorableStateService.GetState(ShoppingCartIdKey).ToString();
+                _shoppingCartId = _suspensionManagerState.SessionState[ShoppingCartIdKey].ToString();
             }
             else
             {
                 _shoppingCartId = Guid.NewGuid().ToString();
-                _restorableStateService.SaveState(ShoppingCartIdKey, _shoppingCartId);
+                _suspensionManagerState.SessionState[ShoppingCartIdKey] = _shoppingCartId;
             }
         }
 
@@ -78,7 +77,7 @@ namespace Kona.UILogic.Repositories
                 _shoppingCartId = Guid.NewGuid().ToString();
             }
 
-            _localSettings.Values[ShoppingCartIdKey] = _shoppingCartId;
+            _suspensionManagerState.SessionState[ShoppingCartIdKey] = _shoppingCartId;
             RaiseShoppingCartUpdated();
         }
 
@@ -93,7 +92,7 @@ namespace Kona.UILogic.Repositories
             {
                 //Update ImageName with path to local instance of image.
                 var product = await _productCatalogRepository.GetProductAsync(shoppingCartItem.Product.ProductNumber);
-                shoppingCartItem.Product.ImageName = product.ImageName;
+                shoppingCartItem.Product.ImageUri = product.ImageUri;
             }
             _cachedShoppingCart = cart;
             return cart;

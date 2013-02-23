@@ -6,14 +6,12 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Kona.Infrastructure;
-using Kona.UILogic.Models;
+using Kona.Infrastructure.Interfaces;
 using Kona.UILogic.Repositories;
-using Windows.Foundation;
 using Windows.UI.Xaml.Navigation;
 using Kona.UILogic.Services;
 using System.Net.Http;
@@ -28,25 +26,31 @@ namespace Kona.UILogic.ViewModels
         private readonly IAlertMessageService _alertService;
         private readonly IResourceLoader _resourceLoader;
         private readonly ITileService _tileService;
+        private readonly ISearchPaneService _searchPaneService;
         private IReadOnlyCollection<ProductViewModel> _items;
         private ProductViewModel _selectedProduct;
         private bool _isSelectedProductPinned;
         private string _title;
         private bool _isAppBarSticky;
 
-        public ItemDetailPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService, IShoppingCartRepository shoppingCartRepository, IAlertMessageService alertMessageService, IResourceLoader resourceLoader, ITileService tileService)
+        public ItemDetailPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService, IShoppingCartRepository shoppingCartRepository, IAlertMessageService alertMessageService, IResourceLoader resourceLoader, ITileService tileService, ISearchPaneService searchPaneService)
         {
             _productCatalogRepository = productCatalogRepository;
             _shoppingCartRepository = shoppingCartRepository;
             _alertService = alertMessageService;
             _resourceLoader = resourceLoader;
             _tileService = tileService;
+            _searchPaneService = searchPaneService;
             _isAppBarSticky = false;
 
             GoBackCommand = new DelegateCommand(navigationService.GoBack, navigationService.CanGoBack);
             AddToCartCommand = DelegateCommand.FromAsyncHandler(AddToCart, CanAddToCart);
+            // <snippet802>
             PinProductCommand = DelegateCommand.FromAsyncHandler(PinProduct, () => SelectedProduct != null);
+            // </snippet802>
+            // <snippet805>
             UnpinProductCommand = DelegateCommand.FromAsyncHandler(UnpinProduct, () => SelectedProduct != null);
+            // </snippet805>
         }
 
         public DelegateCommand GoBackCommand { get; private set; }
@@ -98,10 +102,20 @@ namespace Kona.UILogic.ViewModels
                 SelectedProduct = Items.First(p => p.ProductNumber == productNumber);
                 Title = SelectedProduct.Title;
                 IsSelectedProductPinned = _tileService.SecondaryTileExists(SelectedProduct.ProductNumber);
+                _searchPaneService.ShowOnKeyboardInput(true);
             }
             catch (HttpRequestException)
             {
                 var task = _alertService.ShowAsync(_resourceLoader.GetString("ErrorServiceUnreachable"), _resourceLoader.GetString("Error"));
+            }
+        }
+
+        public override void OnNavigatedFrom(Dictionary<string, object> viewState, bool suspending)
+        {
+            base.OnNavigatedFrom(viewState, suspending);
+            if (!suspending)
+            {
+                _searchPaneService.ShowOnKeyboardInput(false);
             }
         }
 
@@ -118,14 +132,22 @@ namespace Kona.UILogic.ViewModels
 
         private async Task PinProduct()
         {
-            var product = SelectedProduct;
-            bool isPinned = _tileService.SecondaryTileExists(product.ProductNumber);
+            if (SelectedProduct == null)
+            {
+                return;
+            }
 
-            if (product != null && !isPinned)
+            // <snippet803>
+            bool isPinned = _tileService.SecondaryTileExists(SelectedProduct.ProductNumber);
+            // </snippet803>
+
+            if (!isPinned)
             {
                 IsAppBarSticky = true;
 
-                isPinned = await _tileService.PinWideSecondaryTile(product.ProductNumber, product.Title, product.Description, product.ProductNumber);
+                // <snippet804>
+                isPinned = await _tileService.PinWideSecondaryTile(SelectedProduct.ProductNumber, SelectedProduct.Title, SelectedProduct.Description, SelectedProduct.ProductNumber);
+                // </snippet804>
                 IsSelectedProductPinned = isPinned;
 
                 IsAppBarSticky = false;
@@ -134,14 +156,22 @@ namespace Kona.UILogic.ViewModels
 
         private async Task UnpinProduct()
         {
-            var product = SelectedProduct;
-            bool isPinned = _tileService.SecondaryTileExists(product.ProductNumber);
+            if (SelectedProduct == null)
+            {
+                return;
+            }
 
-            if (product != null && isPinned)
+            // <snippet806>
+            bool isPinned = _tileService.SecondaryTileExists(SelectedProduct.ProductNumber);
+            // </snippet806>
+
+            if (isPinned)
             {
                 IsAppBarSticky = true;
 
-                isPinned = (await _tileService.UnpinTile(product.ProductNumber)) == false;
+                // <snippet807>
+                isPinned = (await _tileService.UnpinTile(SelectedProduct.ProductNumber)) == false;
+                // </snippet807>
                 IsSelectedProductPinned = isPinned;
 
                 IsAppBarSticky = false;

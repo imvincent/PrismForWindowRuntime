@@ -118,19 +118,19 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ErrorFirstNameRegex" xml:space="preserve">
-    <value>First Name must contain only letters and spaces</value>
+    <value>First Name must contain only letters and spaces. Hypens are also allowed, but they cannot occur in sequences.</value>
   </data>
   <data name="ErrorFirstNameRequired" xml:space="preserve">
     <value>First Name is required</value>
   </data>
   <data name="ErrorLastNameRegex" xml:space="preserve">
-    <value>Last Name must contain only letters and spaces</value>
+    <value>Last Name must contain only letters and spaces. Hypens are also allowed, but they cannot occur in sequences.</value>
   </data>
   <data name="ErrorLastNameRequired" xml:space="preserve">
     <value>Last Name is required</value>
   </data>
   <data name="ErrorMiddleNameRegex" xml:space="preserve">
-    <value>Middle Name must contain only letters and spaces</value>
+    <value>Middle Name must contain only letters and spaces. Hypens are also allowed, but they cannot occur in sequences.</value>
   </data>
   <data name="ErrorMiddleNameRequired" xml:space="preserve">
     <value>Middle Name is required</value>
@@ -143,5 +143,8 @@
   </data>
   <data name="MiddleNameTitle.Text" xml:space="preserve">
     <value>Middle Name</value>
+  </data>
+  <data name="ValidateTitle" xml:space="preserve">
+    <value>Validate</value>
   </data>
 </root>

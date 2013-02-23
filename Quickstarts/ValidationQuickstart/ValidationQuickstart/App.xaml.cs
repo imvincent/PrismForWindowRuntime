@@ -25,6 +25,11 @@ using Windows.UI.Xaml.Navigation;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
 
+// Please note that this QuickStart is based on the Blank Application template to illustrate the
+// validation concepts provided in this guidance. This QuickStart app does not support many features
+// required for Windows Store Apps such as Suspend/Terminate/Resume.
+// Please see the HelloWorld QuickStarts for examples of using the MvvmAppBase.
+
 namespace ValidationQuickStart
 {
     /// <summary>

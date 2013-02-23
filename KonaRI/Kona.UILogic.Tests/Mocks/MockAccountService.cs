@@ -17,18 +17,18 @@ namespace Kona.UILogic.Tests.Mocks
     {
         public Func<string> GetUserIdDelegate { get; set; }
 
-        public Func<string, string, Task<bool>> SignInUserAsyncDelegate { get; set; }
+        public Func<string, string, bool,  Task<bool>> SignInUserAsyncDelegate { get; set; }
 
         public Func<Task<UserInfo>> GetSignedInUserAsyncDelegate { get; set; } 
 
         public Action SignOutDelegate { get; set; }
 
-        public async Task<bool> SignInUserAsync(string userName, string password)
+        public async Task<bool> SignInUserAsync(string userName, string password, bool useCredentialStore)
         {
-            return await this.SignInUserAsyncDelegate(userName, password);
+            return await this.SignInUserAsyncDelegate(userName, password, useCredentialStore);
         }
 
-        public UserInfo LastSignedInUser { get; set; }
+        public UserInfo SignedInUser { get; set; }
 
         public async Task<UserInfo> GetSignedInUserAsync()
         {

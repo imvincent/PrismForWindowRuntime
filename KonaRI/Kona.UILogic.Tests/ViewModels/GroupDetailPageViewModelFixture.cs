@@ -6,6 +6,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Kona.UILogic.Models;
@@ -26,6 +27,7 @@ namespace Kona.UILogic.Tests.ViewModels
         {
             var repository = new MockProductCatalogRepository();
             var navigationService = new MockNavigationService();
+            var searchPaneService = new MockSearchPaneService();
 
             repository.GetCategoryAsyncDelegate = (categoryId) =>
             {
@@ -56,7 +58,7 @@ namespace Kona.UILogic.Tests.ViewModels
                 return Task.FromResult(categories);
             };
 
-            var viewModel = new GroupDetailPageViewModel(repository, navigationService, null, null);
+            var viewModel = new GroupDetailPageViewModel(repository, navigationService, null, null, searchPaneService);
             viewModel.OnNavigatedTo(1, NavigationMode.New, null);
 
             Assert.IsNotNull(viewModel.Items);
@@ -89,7 +91,7 @@ namespace Kona.UILogic.Tests.ViewModels
                 return Task.FromResult(string.Empty);
             };
 
-            var viewModel = new GroupDetailPageViewModel(repository, navigationService, alertService, resourceLoader);
+            var viewModel = new GroupDetailPageViewModel(repository, navigationService, alertService, resourceLoader, new MockSearchPaneService());
             viewModel.OnNavigatedTo("1", NavigationMode.New, null);
 
             Assert.IsTrue(alertCalled);
@@ -101,20 +103,30 @@ namespace Kona.UILogic.Tests.ViewModels
         {
             var repository = new MockProductCatalogRepository();
             var navigationService = new MockNavigationService();
+            var productToNavigate = new ProductViewModel(new Product()
+                                        {
+                                            ListPrice = 100,
+                                            DiscountPercentage = 50,
+                                            ProductNumber = "p1",
+                                            ImageUri = new Uri("http://image"),
+                                            Currency = "USD",
+                                            Title = "My Title",
+                                            Description = "My Description",
+                                        });
 
             navigationService.NavigateDelegate = (pageName, productNumber) =>
             {
-                Assert.AreEqual("ItemDetailPage", pageName);
-                Assert.AreEqual(1, productNumber);
+                Assert.AreEqual("ItemDetail", pageName);
+                Assert.AreEqual(productToNavigate.ProductNumber, productNumber);
                 return true;
             };
 
-            var viewModel = new GroupDetailPageViewModel(repository, navigationService, null, null);
-            viewModel.ProductNavigationAction.Invoke(1);
+            var viewModel = new GroupDetailPageViewModel(repository, navigationService, null, null, null);
+            viewModel.ProductNavigationAction.Invoke(productToNavigate);
         }
 
         [TestMethod]
-        public void ProductNav_With_Null_Parameter()
+        public void ProductNav_With_Null_Parameter_Does_Not_Navigate()
         {
             var repository = new MockProductCatalogRepository();
             var navigationService = new MockNavigationService();
@@ -125,7 +137,7 @@ namespace Kona.UILogic.Tests.ViewModels
                 return false;
             };
 
-            var viewModel = new GroupDetailPageViewModel(repository, navigationService, null, null);
+            var viewModel = new GroupDetailPageViewModel(repository, navigationService, null, null, null);
             viewModel.ProductNavigationAction.Invoke(null);
         }
 
@@ -136,9 +148,9 @@ namespace Kona.UILogic.Tests.ViewModels
             var navigationService = new MockNavigationService();
 
             navigationService.CanGoBackDelegate = () => false;
-            navigationService.GoBackDelegate = () => Assert.Fail();
+            navigationService.GoBackDelegate = Assert.Fail;
 
-            var viewModel = new GroupDetailPageViewModel(repository, navigationService, null, null);
+            var viewModel = new GroupDetailPageViewModel(repository, navigationService, null, null, null);
             bool canExecute = viewModel.GoBackCommand.CanExecute();
 
             if (canExecute) viewModel.GoBackCommand.Execute();
@@ -153,7 +165,7 @@ namespace Kona.UILogic.Tests.ViewModels
             navigationService.CanGoBackDelegate = () => true;
             navigationService.GoBackDelegate = () => Assert.IsTrue(true);
 
-            var viewModel = new GroupDetailPageViewModel(repository, navigationService, null, null);
+            var viewModel = new GroupDetailPageViewModel(repository, navigationService, null, null, null);
             bool canExecute = viewModel.GoBackCommand.CanExecute();
 
             if (canExecute) viewModel.GoBackCommand.Execute();

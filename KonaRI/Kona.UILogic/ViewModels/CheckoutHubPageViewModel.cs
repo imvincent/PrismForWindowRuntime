@@ -16,44 +16,42 @@ using Kona.UILogic.Models;
 using Kona.UILogic.Repositories;
 using Kona.UILogic.Services;
 using System.Net.Http;
-using Windows.UI.Popups;
 using System.Globalization;
 using Windows.UI.ViewManagement;
 
 namespace Kona.UILogic.ViewModels
 {
-    public class CheckoutHubPageViewModel : ViewModel, INavigationAware, IHandleWindowSizeChanged
+    public class CheckoutHubPageViewModel : ViewModel, INavigationAware
     {
         private readonly INavigationService _navigationService;
         private readonly IAccountService _accountService;
-        private readonly IOrderService _orderService;
-        private readonly IShippingMethodService _shippingMethodService;
+        private readonly IOrderRepository _orderRepository;
         private readonly IShoppingCartRepository _shoppingCartRepository;
         private readonly IShippingAddressUserControlViewModel _shippingAddressViewModel;
         private readonly IBillingAddressUserControlViewModel _billingAddressViewModel;
         private readonly IPaymentMethodUserControlViewModel _paymentMethodViewModel;
-        private readonly ISettingsCharmService _settingsCharmService;
+        private readonly IFlyoutService _flyoutService;
         private readonly IAlertMessageService _alertMessageService;
+        private readonly IResourceLoader _resourceLoader;
         private bool _useSameAddressAsShipping;
         private bool _isShippingAddressInvalid;
         private bool _isBillingAddressInvalid;
         private bool _isPaymentMethodInvalid;
-        private bool _isUnsnapping;
 
-        public CheckoutHubPageViewModel(INavigationService navigationService, IAccountService accountService, IOrderService orderService, ShippingMethodServiceProxy shippingMethodService, IShoppingCartRepository shoppingCartRepository,
-                                        IShippingAddressUserControlViewModel shippingAddressViewModel, IBillingAddressUserControlViewModel billingAddressViewModel, IPaymentMethodUserControlViewModel paymentMethodViewModel, ISettingsCharmService settingsCharmService, IAlertMessageService alertMessageService)
+        public CheckoutHubPageViewModel(INavigationService navigationService, IAccountService accountService, IOrderRepository orderRepository, IShoppingCartRepository shoppingCartRepository,
+                                        IShippingAddressUserControlViewModel shippingAddressViewModel, IBillingAddressUserControlViewModel billingAddressViewModel, IPaymentMethodUserControlViewModel paymentMethodViewModel,
+                                        IFlyoutService flyoutService, IResourceLoader resourceLoader, IAlertMessageService alertMessageService)
         {
             _navigationService = navigationService;
             _accountService = accountService;
-            _orderService = orderService;
-            _shippingMethodService = shippingMethodService;
+            _orderRepository = orderRepository;
             _shoppingCartRepository = shoppingCartRepository;
-
             _shippingAddressViewModel = shippingAddressViewModel;
             _billingAddressViewModel = billingAddressViewModel;
             _paymentMethodViewModel = paymentMethodViewModel;
-            _settingsCharmService = settingsCharmService;
+            _flyoutService = flyoutService;
             _alertMessageService = alertMessageService;
+            _resourceLoader = resourceLoader;
 
             GoBackCommand = new DelegateCommand(navigationService.GoBack, navigationService.CanGoBack);
             GoNextCommand = new DelegateCommand(GoNext);
@@ -123,50 +121,31 @@ namespace Kona.UILogic.ViewModels
         private async void GoNext()
         {
             IsShippingAddressInvalid = ShippingAddressViewModel.ValidateForm() == false;
-            IsBillingAddressInvalid = UseSameAddressAsShipping ? false : BillingAddressViewModel.ValidateForm() == false;
+            IsBillingAddressInvalid = !UseSameAddressAsShipping && BillingAddressViewModel.ValidateForm() == false;
             IsPaymentMethodInvalid = PaymentMethodViewModel.ValidateForm() == false;
 
-            if (!IsShippingAddressInvalid && !IsBillingAddressInvalid && !IsPaymentMethodInvalid)
-            {
+            if (IsShippingAddressInvalid || IsBillingAddressInvalid || IsPaymentMethodInvalid) return;
+
                 if (await _accountService.GetSignedInUserAsync() == null)
                 {
-                    if (ApplicationView.Value == ApplicationViewState.Snapped)
-                    {
-                        _isUnsnapping = true;
-                        ApplicationView.TryUnsnap();
-                    }
-                    _settingsCharmService.ShowFlyout("signIn", null, successAction: async () => await ProcessFormAsync());
+                    _flyoutService.ShowFlyout("SignIn", null, successAction: async () => await ProcessFormAsync());
                 }
                 else
                 {
                     await ProcessFormAsync();
                 }
             }
-        }
 
         private async Task ProcessFormAsync()
         {
             string errorMessage = string.Empty;
-
-            // Create an order with the values entered in the form 
-            Order order = new Order
-                {
-                    UserId = (await _accountService.GetSignedInUserAsync()).UserName,
-                    ShippingAddress = ShippingAddressViewModel.Address,
-                    BillingAddress = UseSameAddressAsShipping ? ShippingAddressViewModel.Address : BillingAddressViewModel.Address,
-                    PaymentMethod = PaymentMethodViewModel.PaymentMethod,
-                    ShippingMethod = await _shippingMethodService.GetBasicShippingMethodAsync(),
-                    ShoppingCart = await _shoppingCartRepository.GetShoppingCartAsync()
-                };
+            var user = await _accountService.GetSignedInUserAsync();
+            var shoppingCart = await _shoppingCartRepository.GetShoppingCartAsync();
 
             // <snippet912>
             try
             {
-                // Call the service to create the order
-                Order createdOrder = await _orderService.CreateOrderAsync(order, _accountService.ServerCookieHeader);
-                order.Id = createdOrder.Id;
-
-                // If everything is OK, process the form information
+                // If everything is OK, process the form information and navigate to the next page
                 if (UseSameAddressAsShipping)
                 {
                     BillingAddressViewModel.Address = ShippingAddressViewModel.Address;
@@ -176,7 +155,12 @@ namespace Kona.UILogic.ViewModels
                 BillingAddressViewModel.ProcessForm();
                 PaymentMethodViewModel.ProcessForm();
 
-                _navigationService.Navigate("CheckoutSummary", order);
+                // Create an order with the values entered in the form
+                await _orderRepository.CreateBasicOrderAsync(user.UserName, shoppingCart, ShippingAddressViewModel.Address,
+                                                                            BillingAddressViewModel.Address,
+                                                                            PaymentMethodViewModel.PaymentMethod);
+
+                _navigationService.Navigate("CheckoutSummary", null);
             }
             catch (ModelValidationException mvex)
             {
@@ -186,12 +170,12 @@ namespace Kona.UILogic.ViewModels
 
             catch (HttpRequestException ex)
             {
-                errorMessage = string.Format(CultureInfo.CurrentCulture, ErrorMessagesHelper.GeneralServiceErrorMessage, Environment.NewLine, ex.Message);
+                errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, ex.Message);
             }
 
             if (!string.IsNullOrWhiteSpace(errorMessage))
             {
-                await _alertMessageService.ShowAsync(errorMessage, ErrorMessagesHelper.ErrorProcessingOrder);
+                await _alertMessageService.ShowAsync(errorMessage, _resourceLoader.GetString("ErrorProcessingOrder"));
             }
         }
 
@@ -216,15 +200,6 @@ namespace Kona.UILogic.ViewModels
             if (shippingAddressErrors.Count > 0) _shippingAddressViewModel.Address.Errors.SetAllErrors(shippingAddressErrors);
             if (billingAddressErrors.Count > 0) _billingAddressViewModel.Address.Errors.SetAllErrors(billingAddressErrors);
             if (paymentMethodErrors.Count > 0) _paymentMethodViewModel.PaymentMethod.Errors.SetAllErrors(paymentMethodErrors);
-        }
-
-        public void WindowCurrentSizeChanged()
-        {
-            if (_isUnsnapping)
-            {
-                _settingsCharmService.ShowFlyout("signIn", null, successAction: async () => await ProcessFormAsync());
-                _isUnsnapping = false;
-            }
         }
     }
 }

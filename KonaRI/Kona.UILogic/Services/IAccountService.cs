@@ -16,11 +16,11 @@ namespace Kona.UILogic.Services
     {
         string ServerCookieHeader { get; }
 
-        UserInfo LastSignedInUser { get; }
+        UserInfo SignedInUser { get; }
         
         Task<UserInfo> GetSignedInUserAsync();
         
-        Task<bool> SignInUserAsync(string userName, string password);
+        Task<bool> SignInUserAsync(string userName, string password, bool useCredentialStore);
         
         void SignOut();
         

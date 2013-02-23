@@ -47,6 +47,7 @@ namespace Kona.WebServices.Controllers
         {
             var rootCategories = _categoryRepository.GetAll().Where(c => c.ParentId == 0).ToList();
             FillProducts(rootCategories, productsQueryString);
+
             return rootCategories;
         }
 
@@ -95,7 +96,7 @@ namespace Kona.WebServices.Controllers
                     }
                     category.TotalNumberOfItems = productList.Count;
                     category.Products = maxNumberOfItems > 0
-                                            ? productList.Where(p => p.ImageName != "no_image_available_large.gif")
+                                            ? productList.Where(p => !p.ImageUri.AbsoluteUri.EndsWith("no_image_available_large.gif"))
                                                          .Take(maxNumberOfItems)
                                             : productList;
                 }
@@ -118,7 +119,19 @@ namespace Kona.WebServices.Controllers
                     var productList = new List<Product>();
                     foreach (var subcategory in subcategories)
                     {
-                        productList.AddRange(_productRepository.GetProductsFromCategory(subcategory.Id).Where(p=> p.Title.ToLowerInvariant().Contains(queryString.ToLowerInvariant())));
+                        if (!string.IsNullOrEmpty(queryString))
+                        {
+                            productList.AddRange(
+                                _productRepository.GetProductsFromCategory(subcategory.Id)
+                                                  .Where(
+                                                      p =>
+                                                      p.Title.ToLowerInvariant()
+                                                       .Contains(queryString.ToLowerInvariant())));
+                        }
+                        else
+                        {
+                            productList.AddRange(_productRepository.GetProductsFromCategory(subcategory.Id));
+                        }
                     }
                     category.TotalNumberOfItems = productList.Count;
                     category.Products = productList;
@@ -126,7 +139,20 @@ namespace Kona.WebServices.Controllers
                 else
                 {
                     //Today's Deals Category
-                    category.Products = _productRepository.GetTodaysDealsProducts().Where(p => p.Title.ToLowerInvariant().Contains(queryString.ToLowerInvariant()));
+                    if (!string.IsNullOrEmpty(queryString))
+                    {
+                        category.Products =
+                            _productRepository.GetTodaysDealsProducts()
+                                              .Where(
+                                                  p =>
+                                                  p.Title.ToLowerInvariant().Contains(queryString.ToLowerInvariant()));
+                    }
+                    else
+                    {
+                        {
+                            category.Products = _productRepository.GetTodaysDealsProducts();
+                        }
+                    }
                     category.TotalNumberOfItems = category.Products.Count();
                 }
             }

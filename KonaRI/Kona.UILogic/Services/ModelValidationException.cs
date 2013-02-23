@@ -14,12 +14,6 @@ namespace Kona.UILogic.Services
 {
     public class ModelValidationException : Exception
     {
-        public ModelValidationException() { }
-
-        public ModelValidationException(string message): base(message) { }
-
-        public ModelValidationException(string message, Exception innerException):base(message, innerException) { }
-
         public ModelValidationException(ModelValidationResult validationResult)
         {
             ValidationResult = validationResult;
@@ -33,6 +27,7 @@ namespace Kona.UILogic.Services
             {
                 string result = string.Empty;
                 bool firstItem = true;
+
                 foreach (var key in ValidationResult.ModelState.Keys)
                 {
                     if (!firstItem) result += "\n";
@@ -41,6 +36,7 @@ namespace Kona.UILogic.Services
                     result += string.Format(CultureInfo.CurrentCulture, "{0} : {1}", key, errors);
                     firstItem = false;
                 }
+
                 return result;
             }
         }

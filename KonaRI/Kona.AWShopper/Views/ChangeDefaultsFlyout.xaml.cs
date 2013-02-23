@@ -7,15 +7,15 @@
 
 
 using Kona.Infrastructure.Flyouts;
-using Windows.ApplicationModel.Resources;
+using Kona.Infrastructure.Interfaces;
 using Windows.UI.Xaml;
 
 namespace Kona.AWShopper.Views
 {
     public sealed partial class ChangeDefaultsFlyout : FlyoutView
     {
-        public ChangeDefaultsFlyout(string commandId, string commandTitle)
-            : base(commandId, commandTitle, StandardFlyoutSize.Narrow)
+        public ChangeDefaultsFlyout(ISearchPaneService searchPaneService)
+            : base(StandardFlyoutSize.Narrow, searchPaneService)
         {
             InitializeComponent();
         }

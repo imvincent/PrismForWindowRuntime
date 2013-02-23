@@ -6,21 +6,19 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Kona.Infrastructure.Interfaces;
+using System.Collections.Generic;
 
 namespace HelloWorldWithContainer.Services
 {
     public class DataRepository : IDataRepository
     {
         private const string UserEnteredData = "UserEnteredData";
-        IRestorableStateService _stateService;
+        ISuspensionManagerState _suspensionManagerState;
 
-        public DataRepository(IRestorableStateService restorableStateService)
+        public DataRepository(ISuspensionManagerState suspensionManagerState)
         {
-            _stateService = restorableStateService;
+            _suspensionManagerState = suspensionManagerState;
         }
 
         public List<string> GetKonaFeatures()
@@ -37,12 +35,14 @@ namespace HelloWorldWithContainer.Services
 
         public string GetUserEnteredData()
         {
-            return _stateService.GetState(UserEnteredData) as string;
+            return _suspensionManagerState.SessionState.ContainsKey(UserEnteredData)
+                ? _suspensionManagerState.SessionState[UserEnteredData] as string
+                : string.Empty;
         }
 
         public void SetUserEnteredData(string data)
         {
-            _stateService.SaveState(UserEnteredData, data);
+            _suspensionManagerState.SessionState[UserEnteredData] = data;
         }
     }
 }

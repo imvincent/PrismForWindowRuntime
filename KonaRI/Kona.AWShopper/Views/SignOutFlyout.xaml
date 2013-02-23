@@ -8,8 +8,7 @@
                     mc:Ignorable="d"
                     d:DesignHeight="768"
                     d:DesignWidth="364"
-                    Infrastructure:ViewModelLocator.AutoWireViewModel="true"
-                    ExcludeFromSettingsPane="{Binding ExcludeFromSettingsPane}">
+                    Infrastructure:ViewModelLocator.AutoWireViewModel="true">
 
     <Border BorderBrush="{StaticResource AWShopperFlyoutHeaderBackground}"
             BorderThickness="1,0,0,0">
@@ -40,9 +39,11 @@
                                Margin="10,0,0,0"
                                FontFamily="Segoe UI"
                                FontWeight="SemiLight"
-                               FontSize="24.6667"
+                               FontSize="24"
                                Text="Logout"
-                               Foreground="White" />
+                               Foreground="White"
+                               Width="225" />
+                    <Image Source="ms-appx:///Assets/SmallLogo.png" />
                 </StackPanel>
             </Grid>
 
@@ -66,6 +67,7 @@
                                 Content="Logout"
                                 Width="280"
                                 Margin="0,25,0,0"
+                                Foreground="White"
                                 Command="{Binding SignOutCommand}"
                                 AutomationProperties.AutomationId="LogoutButton"
                                 Style="{StaticResource LightButtonStyle}" />

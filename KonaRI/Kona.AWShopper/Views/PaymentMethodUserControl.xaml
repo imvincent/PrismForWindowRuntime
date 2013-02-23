@@ -14,7 +14,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!-- Card Information -->
@@ -42,6 +41,7 @@
                                        Style="{StaticResource FormFieldStyle}"
                                        Grid.Row="1" Grid.Column="0" 
                                        Text="{Binding PaymentMethod.CardNumber, Mode=TwoWay}"
+                                       InputScope="Number"
                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding PaymentMethod.Errors[CardNumber]}" />
             <TextBlock x:Name="ErrorsCardNumber" Style="{StaticResource ErrorMessageStyle}"
                        Grid.Row="2" Grid.Column="0"
@@ -90,7 +90,8 @@
                                        Style="{StaticResource FormFieldStyle}"
                                        Grid.Row="1" Grid.Column="0"
                                        Text="{Binding PaymentMethod.ExpirationMonth, Mode=TwoWay}"
-                                       Watermark="Month" 
+                                       Watermark="Month"
+                                       InputScope="Number"
                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding PaymentMethod.Errors[ExpirationMonth]}" />
             <TextBlock x:Name="ErrorsExpirationMonth" Style="{StaticResource ErrorMessageStyle}"
                        Grid.Row="2" Grid.Column="0"
@@ -103,7 +104,8 @@
                                        Style="{StaticResource FormFieldStyle}"
                                        Grid.Row="1" Grid.Column="1"
                                        Text="{Binding PaymentMethod.ExpirationYear, Mode=TwoWay}"
-                                       Watermark="Year" 
+                                       Watermark="Year"
+                                       InputScope="Number"
                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding PaymentMethod.Errors[ExpirationYear]}" />
             <TextBlock x:Name="ErrorsExpirationYear" Style="{StaticResource ErrorMessageStyle}"
                        Grid.Row="2" Grid.Column="1"
@@ -119,6 +121,7 @@
                                        Style="{StaticResource FormFieldStyle}"
                                        Grid.Row="1" Grid.Column="2" 
                                        Text="{Binding PaymentMethod.Phone, Mode=TwoWay}"
+                                       InputScope="TelephoneNumber"
                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding PaymentMethod.Errors[Phone]}"/>
             <TextBlock x:Name="ErrorsPhone" Style="{StaticResource ErrorMessageStyle}"
                        Grid.Row="2" Grid.Column="2"
@@ -145,17 +148,12 @@
                                        Style="{StaticResource FormFieldStyle}"
                                        Grid.Row="1" Grid.Column="0" 
                                        Text="{Binding PaymentMethod.CardVerificationCode, Mode=TwoWay}"
+                                       InputScope="Number"
                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding PaymentMethod.Errors[CardVerificationCode]}" />
             <TextBlock x:Name="ErrorsCardVerificationCode" Style="{StaticResource ErrorMessageStyle}"
                         Grid.Row="2" Grid.Column="0"
                         Text="{Binding PaymentMethod.Errors[CardVerificationCode], Converter={StaticResource FirstErrorConverter}}" TextWrapping="Wrap" />
         </Grid>
-
-        <CheckBox x:Name="SetAsDefaultCheckbox" x:Uid="SetAsDefaultCheckbox" 
-                  AutomationProperties.AutomationId="SetAsDefaultCheckBox" 
-                  Grid.Row="3" Margin="0,10,0,0"
-                  IsChecked="{Binding SetAsDefault, Mode=TwoWay}" 
-                  Content="Set as Default" />
 
         <VisualStateManager.VisualStateGroups>
 
@@ -504,13 +502,6 @@
                                     <Thickness>0,20,20,0</Thickness>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="SetAsDefaultCheckbox">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<Visibility>Collapsed</Visibility>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>

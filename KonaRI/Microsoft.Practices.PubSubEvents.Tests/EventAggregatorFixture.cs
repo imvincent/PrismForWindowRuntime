@@ -6,8 +6,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-
-using Microsoft.Practices.PubSubEvents;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 
 namespace Microsoft.Practices.PubSubEvents.Tests
@@ -27,6 +25,4 @@ namespace Microsoft.Practices.PubSubEvents.Tests
 
         public class MockEventBase : EventBase { }
     }
-
-
 }

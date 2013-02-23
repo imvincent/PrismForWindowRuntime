@@ -41,32 +41,8 @@ namespace Kona.UILogic.Repositories
                 // Retrieve the items from the service
                 var items = await _productCatalogService.GetCategoriesAsync(maxAmountOfProducts);
 
-                // Save the images locally
-                // Update the item's local URI
-                foreach (var item in items)
-                {
-                    if (item.ImageExternalUri != null)
-                    {
-                        string imageFileName = item.ImageExternalUri.ToString().Substring(item.ImageExternalUri.ToString().LastIndexOf('/') + 1);
-                        item.ImageLocalUri = await _cacheService.SaveExternalDataAsync(imageFileName, item.ImageExternalUri);
-
-                        // TODO Save the images locally for each subcategory & update the item's local URI
-                        if (item.Products != null)
-                        {
-                            foreach (var subItem in item.Products)
-                            {
-                                if (subItem.ImageName != null)
-                                {
-                                    var localUri = await _cacheService.SaveExternalDataAsync(subItem.ImageName, new Uri("/Images/" + subItem.ImageName, UriKind.Relative));
-                                    subItem.ImageName = localUri.ToString();
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // Save the items in the cache
-                await _cacheService.SaveDataAsync(cacheFileName, items);
+                var cacheTask = SaveCategoriesToCache(items, cacheFileName)
+                    .ContinueWith(t => { var exeptionToBeLogged = t.Exception; }, TaskContinuationOptions.OnlyOnFaulted);
 
                 return items;
             }
@@ -75,34 +51,8 @@ namespace Kona.UILogic.Repositories
 
         public async Task<ReadOnlyCollection<Category>> GetFilteredProductsAsync(string queryString)
         {
-
             // Retrieve the items from the service
             var items = await _productCatalogService.GetFilteredProductsAsync(queryString);
-
-            // Save the images locally
-            // Update the item's local URI
-            foreach (var item in items)
-            {
-                if (item.ImageExternalUri != null)
-                {
-                    string imageFileName = item.ImageExternalUri.ToString().Substring(item.ImageExternalUri.ToString().LastIndexOf('/') + 1);
-                    item.ImageLocalUri = await _cacheService.SaveExternalDataAsync(imageFileName, item.ImageExternalUri);
-
-                    // TODO Save the images locally for each subcategory & update the item's local URI
-                    if (item.Products != null)
-                    {
-                        foreach (var subItem in item.Products)
-                        {
-                            if (subItem.ImageName != null)
-                            {
-                                var localUri = await _cacheService.SaveExternalDataAsync(subItem.ImageName, new Uri("/Images/" + subItem.ImageName, UriKind.Relative));
-                                subItem.ImageName = localUri.ToString();
-                            }
-                        }
-                    }
-                }
-            }
-
             return items;
         }
 
@@ -118,39 +68,16 @@ namespace Kona.UILogic.Repositories
             else
             {
                 // Retrieve the items from the service
-                var items = await _productCatalogService.GetSubcategoriesAsync(categoryId);
+                var categories = await _productCatalogService.GetSubcategoriesAsync(categoryId);
 
-                // Save the images locally
-                // Update the item's local URI
-                foreach (var item in items)
-                {
-                    if (item.ImageExternalUri != null)
-                    {
-                        string imageFileName = item.ImageExternalUri.ToString().Substring(item.ImageExternalUri.ToString().LastIndexOf('/') + 1);
-                        item.ImageLocalUri = await _cacheService.SaveExternalDataAsync(imageFileName, item.ImageExternalUri);
-                    }
-                    if (item.Products != null)
-                    {
-                        foreach (var product in item.Products)
-                        {
-                            if (product.ImageName != null)
-                            {
-                                var localUri = await _cacheService.SaveExternalDataAsync(product.ImageName, new Uri("/Images/" + product.ImageName, UriKind.Relative));
-                                product.ImageName = localUri.ToString();
-                            }
-                        }
-                    }
-                }
+                var cacheTask = SaveCategoriesToCache(categories, cacheFileName)
+                    .ContinueWith(t => { var exeptionToBeLogged = t.Exception; }, TaskContinuationOptions.OnlyOnFaulted);
 
-                if (items.Count > 0)
-                {
-                    // Save the items in the cache
-                    await _cacheService.SaveDataAsync(cacheFileName, items);
-                }
-
-                return items;
+                return categories;
             }
         }
+
+
 
         public async Task<ReadOnlyCollection<Product>> GetProductsAsync(int categoryId)
         {
@@ -164,23 +91,12 @@ namespace Kona.UILogic.Repositories
             else
             {
                 // Retrieve the items from the service
-                var items = await _productCatalogService.GetProductsAsync(categoryId);
+                var products  = await _productCatalogService.GetProductsAsync(categoryId);
 
-                // Save the images locally
-                // Update the item's local URI
-                foreach (var item in items)
-                {
-                    if (item.ImageName != null)
-                    {
-                        var localUri = await _cacheService.SaveExternalDataAsync(item.ImageName, new Uri("/Images/" + item.ImageName, UriKind.Relative));
-                        item.ImageName = localUri.ToString();
-                    }
-                }
+                var cacheTask = SaveProductsToCache(products, cacheFileName)
+                    .ContinueWith(t => { var exeptionToBeLogged = t.Exception; }, TaskContinuationOptions.OnlyOnFaulted);
 
-                // Save the items in the cache
-                await _cacheService.SaveDataAsync(cacheFileName, items);
-
-                return items;
+                return products;
             }
         }
 
@@ -193,16 +109,14 @@ namespace Kona.UILogic.Repositories
                 // Retrieve the items from the cache
                 return await _cacheService.GetDataAsync<Category>(cacheFileName);
             }
-            else
-            {
-                // Retrieve the items from the service
-                var category = await _productCatalogService.GetCategoryAsync(categoryId);
+            
+            // Retrieve the items from the service
+            var category = await _productCatalogService.GetCategoryAsync(categoryId);
 
-                // Save the items in the cache
-                await _cacheService.SaveDataAsync(cacheFileName, category);
+            // Save the items in the cache
+            await _cacheService.SaveDataAsync(cacheFileName, category);
 
-                return category;
-            }
+            return category;
         }
 
         public async Task<Product> GetProductAsync(string productNumber)
@@ -214,22 +128,67 @@ namespace Kona.UILogic.Repositories
                 // Retrieve the items from the cache
                 return await _cacheService.GetDataAsync<Product>(cacheFileName);
             }
-            else
+            
+            // Retrieve the items from the service
+            var product = await _productCatalogService.GetProductAsync(productNumber);
+
+            if (product.ImageUri != null)
             {
-                // Retrieve the items from the service
-                var product = await _productCatalogService.GetProductAsync(productNumber);
+                product.ImageUri = await _cacheService.SaveExternalDataAsync(product.ImageUri);
+            }
 
-                if (product.ImageName != null)
+            // Save the items in the cache
+            await _cacheService.SaveDataAsync(cacheFileName, product);
+
+            return product;
+        }
+
+        private async Task SaveCategoriesToCache(ReadOnlyCollection<Category> categories, string cacheFileName)
+        {
+            // Save the images locally
+            // Update the item's local URI
+            foreach (var category in categories)
+            {
+                if (category.ImageUri != null)
                 {
-                    var localUri = await _cacheService.SaveExternalDataAsync(product.ImageName, new Uri("/Images/" + product.ImageName, UriKind.Relative));
-                    product.ImageName = localUri.ToString();
+                    category.ImageUri = await _cacheService.SaveExternalDataAsync(category.ImageUri);
                 }
+                if (category.Products != null)
+                {
+                    foreach (var product in category.Products)
+                    {
+                        if (product.ImageUri != null)
+                        {
+                            product.ImageUri =
+                                await
+                                _cacheService.SaveExternalDataAsync(product.ImageUri);
+                        }
+                    }
+                }
+            }
 
+            if (categories.Count > 0)
+            {
                 // Save the items in the cache
-                await _cacheService.SaveDataAsync(cacheFileName, product);
-
-                return product;
+                await _cacheService.SaveDataAsync(cacheFileName, categories);
             }
         }
+
+        private async Task SaveProductsToCache(ReadOnlyCollection<Product> products, string cacheFileName)
+        {
+            // Save the images locally
+            // Update the item's local URI
+            foreach (var product in products)
+            {
+                if (product.ImageUri != null)
+                {
+                    product.ImageUri = await _cacheService.SaveExternalDataAsync(product.ImageUri);
+                }
+            }
+
+            // Save the items in the cache
+            await _cacheService.SaveDataAsync(cacheFileName, products);
+        }
+
     }
 }

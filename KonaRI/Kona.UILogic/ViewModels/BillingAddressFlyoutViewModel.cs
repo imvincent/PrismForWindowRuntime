@@ -78,6 +78,7 @@ namespace Kona.UILogic.ViewModels
                 if (_successAction != null)
                 {
                     _successAction();
+                    _successAction = null;
                 }
             }
         }

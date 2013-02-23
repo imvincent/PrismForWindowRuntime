@@ -7,14 +7,14 @@
 
 
 using Kona.Infrastructure.Flyouts;
-using Windows.UI.Xaml.Controls;
+using Kona.Infrastructure.Interfaces;
 
 namespace Kona.AWShopper.Views
 {
     public sealed partial class BillingAddressFlyout : FlyoutView
     {
-        public BillingAddressFlyout(string commandId, string commandTitle)
-            : base(commandId, commandTitle, StandardFlyoutSize.Narrow)
+        public BillingAddressFlyout(ISearchPaneService searchPaneService)
+            : base(StandardFlyoutSize.Narrow, searchPaneService)
         {
             this.InitializeComponent();
         }

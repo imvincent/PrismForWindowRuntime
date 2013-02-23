@@ -36,17 +36,21 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Button x:Name="backButton" AutomationProperties.AutomationId="ItemDetailsPageBackButton"
+            <Button x:Name="backButton"
+                    AutomationProperties.AutomationId="ItemDetailsPageBackButton"
                     Command="{Binding GoBackCommand}"
                     Style="{StaticResource BackButtonStyle}" />
             <TextBlock x:Name="pageTitle"
                        Text="Product Information"
                        Style="{StaticResource PageHeaderTextStyle}"
                        Grid.Column="1" />
-            <views:ShoppingCartTabUserControl x:Name="shoppingCartTabUserControl" Grid.Column="2" Margin="20" RenderTransformOrigin="0.5,0.5">
+            <views:SearchUserControl x:Name="searchUserControl" Grid.Column="2"
+                                     Margin="15,15,0,15" />
+            <views:ShoppingCartTabUserControl x:Name="shoppingCartTabUserControl" Grid.Column="3" Margin="15" RenderTransformOrigin="0.5,0.5">
                 <views:ShoppingCartTabUserControl.RenderTransform>
-                    <CompositeTransform/>
+                    <CompositeTransform />
                 </views:ShoppingCartTabUserControl.RenderTransform>
             </views:ShoppingCartTabUserControl>
         </Grid>
@@ -74,31 +78,58 @@
                         UserControl chosen as the templated item because it supports visual state management
                         Loaded/unloaded events explicitly subscribe to view state updates from the page
                     -->
-                    <UserControl Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates">
-                        <ScrollViewer x:Name="scrollViewer" Grid.Row="1" Padding="120,0,0,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    <UserControl Loaded="StartLayoutUpdates"
+                                 Unloaded="StopLayoutUpdates">
+                        <ScrollViewer x:Name="scrollViewer"
+                                      Grid.Row="1"
+                                      Padding="120,0,0,0"
+                                      VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Auto">
                             <Grid x:Name="mainGrid">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Grid x:Name="grid1" Column="0" Width="320">
+                                <Grid x:Name="grid1"
+                                      Column="0"
+                                      Width="320">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-                                    <TextBlock x:Uid="OverviewLabel" Grid.Row="0" FontWeight="SemiLight" FontSize="28" Foreground="{StaticResource AWShopperAccentBrush}" Text="Overview" />
-                                    <Image Grid.Row="1" x:Name="image" Height="300" Width="300" Margin="0,20,0,20" Source="{Binding Image}" Stretch="UniformToFill" />
-                                    <Button Grid.Row="2" x:Uid="AddToCartButton" AutomationProperties.AutomationId="AddToCartButton" Content="Add to Cart" Command="{Binding AddToCartCommand}" Background="{StaticResource AWShopperAccentBrush}" Margin="10,10,10,10" HorizontalAlignment="Stretch"/>
+                                    <TextBlock x:Uid="OverviewLabel"
+                                               x:Name="OverviewLabel"
+                                               Grid.Row="0"
+                                               Style="{StaticResource GroupHeaderTextStyle}"
+                                               Foreground="{StaticResource AWShopperAccentBrush}"
+                                               Text="Overview" />
+                                    <Image Grid.Row="1"
+                                           x:Name="ProductImage"
+                                           Height="320"
+                                           Width="320"
+                                           Margin="0,20,0,0"
+                                           Source="{Binding Image}"
+                                           Stretch="UniformToFill" />
+                                    <Button Grid.Row="2"
+                                            x:Uid="AddToCartButton"
+                                            AutomationProperties.AutomationId="AddToCartButton"
+                                            Content="Add to Cart"
+                                            Command="{Binding AddToCartCommand}"
+                                            Background="{StaticResource AWShopperAccentBrush}"
+                                            Margin="0,10,0,10"
+                                            HorizontalAlignment="Stretch" />
                                 </Grid>
-                                <Grid x:Name="grid2" Column="1" Width="320">
+                                <Grid x:Name="grid2"
+                                      Column="1"
+                                      Width="320"
+                                      Margin="25,0,0,0">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
@@ -107,28 +138,76 @@
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0" Text="{Binding Title}" MaxHeight="160" Margin="10,50,10,0" FontWeight="SemiLight" FontSize="32" TextWrapping="Wrap" TextTrimming="WordEllipsis" />
-                                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,10,10,0">
-                                        <TextBlock x:Uid="InventoryStatusLabel" Text="Inventory Status:" FontStyle="Oblique" FontSize="16" />
-                                        <TextBlock Text="In Stock" FontStyle="Oblique" FontSize="16" Margin="10,0,0,0" />
+                                    <TextBlock Grid.Row="0"
+                                               Text="{Binding Title}"
+                                               MaxHeight="160"
+                                               Margin="10,50,10,0"
+                                               FontWeight="SemiLight"
+                                               FontSize="32"
+                                               TextWrapping="Wrap"
+                                               TextTrimming="WordEllipsis" />
+                                    <StackPanel Grid.Row="1"
+                                                Orientation="Horizontal"
+                                                Margin="10,10,10,0">
+                                        <TextBlock x:Uid="InventoryStatusLabel"
+                                                   Text="Inventory Status:"
+                                                   FontStyle="Oblique"
+                                                   FontSize="16" />
+                                        <TextBlock Text="In Stock"
+                                                   FontStyle="Oblique"
+                                                   FontSize="16"
+                                                   Margin="10,0,0,0" />
                                     </StackPanel>
-                                    <TextBlock x:Uid="SalePriceLabel" Grid.Row="2" Text="Sale Price" FontWeight="Bold" Margin="10,5,5,0" FontSize="16" />
-                                    <TextBlock Grid.Row="3" Text="{Binding SalePrice}" FontWeight="ExtraBold" Margin="10,5,5,0" FontSize="48" />
-                                    <StackPanel Grid.Row="4" Margin="10,10,10,10">
-                                        <TextBlock x:Uid="ReviewsLabel" Text="12 Reviews:" FontWeight="Bold" FontSize="16" />
-                                        <TextBlock Text="" FontFamily="Segoe UI Symbol" Foreground="Yellow" FontSize="20"></TextBlock>
+                                    <TextBlock x:Uid="SalePriceLabel"
+                                               Grid.Row="2"
+                                               Text="Sale Price"
+                                               FontWeight="Bold"
+                                               Margin="10,5,5,0"
+                                               FontSize="16" />
+                                    <TextBlock Grid.Row="3"
+                                               Text="{Binding SalePrice}"
+                                               FontWeight="ExtraBold"
+                                               Margin="10,5,5,0"
+                                               FontSize="48" />
+                                    <StackPanel Grid.Row="4"
+                                                Margin="10,10,10,10">
+                                        <TextBlock x:Uid="ReviewsLabel"
+                                                   Text="12 Reviews:"
+                                                   FontWeight="Bold"
+                                                   FontSize="16" />
+                                        <TextBlock Text=""
+                                                   FontFamily="Segoe UI Symbol"
+                                                   Foreground="Yellow"
+                                                   FontSize="20"></TextBlock>
                                     </StackPanel>
-                                    <TextBlock Grid.Row="5" Text="{Binding Description}" MaxHeight="220" Margin="10,10,10,10" FontSize="20" TextWrapping="Wrap" TextTrimming="WordEllipsis" />
+                                    <TextBlock Grid.Row="5"
+                                               Text="{Binding Description}"
+                                               MaxHeight="220"
+                                               Margin="10,10,10,10"
+                                               FontSize="20"
+                                               TextWrapping="Wrap"
+                                               TextTrimming="WordEllipsis" />
                                 </Grid>
-                                <Grid x:Name="grid3" Column="2" Width="450">
+                                <Grid x:Name="grid3"
+                                      Column="2"
+                                      Width="450"
+                                      Margin="25,0,0,0">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-                                    <TextBlock x:Uid="DetailsLabel" Grid.Row="0" FontWeight="SemiLight" FontSize="28" Foreground="{StaticResource AWShopperAccentBrush}" Text="Details" />
-                                    <Grid Grid.Row="1" Background="{StaticResource AWShopperItemBackgroundBrush}" Margin="10,20,10,10">
+                                    <TextBlock x:Uid="DetailsLabel"
+                                               x:Name="DetailsLabel"
+                                               Grid.Row="0"
+                                               Style="{StaticResource GroupHeaderTextStyle}"
+                                               Foreground="{StaticResource AWShopperAccentBrush}"
+                                               Text="Details" />
+                                    <Grid x:Name="DetailsGrid"
+                                          Grid.Row="1"
+                                          Background="{StaticResource AWShopperItemBackgroundBrush}"
+                                          Margin="0,20,10,10">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="120" />
                                             <ColumnDefinition />
@@ -147,28 +226,148 @@
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
-                                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" FontWeight="SemiLight" FontSize="24" Margin="10" Text="Vivamus Sagittis Lacus" />
-                                        <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Bold" FontSize="14" Margin="10,5,10,5" Foreground="{StaticResource AWShopperItemForegroundBrush}" Text="Ridiculus" />
-                                        <TextBlock Grid.Row="1" Grid.Column="1" FontSize="14" Margin="10,5,10,5" Text="Ridiculus" TextWrapping="Wrap" />
-                                        <TextBlock Grid.Row="2" Grid.Column="0" FontWeight="Bold" FontSize="14" Margin="10,5,10,5" Foreground="{StaticResource AWShopperItemForegroundBrush}" Text="Pallentesque" />
-                                        <TextBlock Grid.Row="2" Grid.Column="1" FontSize="14" Margin="10,5,10,5" Text="Mattis Cras Euismod Nibh" TextWrapping="Wrap" />
-                                        <TextBlock Grid.Row="3" Grid.Column="0" FontWeight="Bold" FontSize="14" Margin="10,5,10,5" Foreground="{StaticResource AWShopperItemForegroundBrush}" Text="Sit" />
-                                        <TextBlock Grid.Row="3" Grid.Column="1" FontSize="14" Margin="10,5,10,5" Text="Amet Malesuada Euismod Egestas Fusce" TextWrapping="Wrap" />
-                                        <TextBlock Grid.Row="4" Grid.Column="0" FontWeight="Bold" FontSize="14" Margin="10,5,10,5" Foreground="{StaticResource AWShopperItemForegroundBrush}" Text="Commodo" />
-                                        <TextBlock Grid.Row="4" Grid.Column="1" FontSize="14" Margin="10,5,10,5" Text="Commodo" TextWrapping="Wrap" />
-                                        <TextBlock Grid.Row="5" Grid.Column="0" FontWeight="Bold" FontSize="14" Margin="10,5,10,5" Foreground="{StaticResource AWShopperItemForegroundBrush}" Text="Purus" />
-                                        <TextBlock Grid.Row="5" Grid.Column="1" FontSize="14" Margin="10,5,10,5" Text="Ridiculus Amet Malesuada Euismod Egestas" TextWrapping="Wrap" />
-                                        <TextBlock Grid.Row="6" Grid.Column="0" FontWeight="Bold" FontSize="14" Margin="10,5,10,5" Foreground="{StaticResource AWShopperItemForegroundBrush}" Text="Amet" />
-                                        <TextBlock Grid.Row="6" Grid.Column="1" FontSize="14" Margin="10,5,10,5" Text="3453453" TextWrapping="Wrap" />
-                                        <TextBlock Grid.Row="7" Grid.Column="0" FontWeight="Bold" FontSize="14" Margin="10,5,10,5" Foreground="{StaticResource AWShopperItemForegroundBrush}" Text="Vestibulum" />
-                                        <TextBlock Grid.Row="7" Grid.Column="1" FontSize="14" Margin="10,5,10,5" Text="Commodo" TextWrapping="Wrap" />
-                                        <TextBlock Grid.Row="8" Grid.Column="0" FontWeight="Bold" FontSize="14" Margin="10,5,10,5" Foreground="{StaticResource AWShopperItemForegroundBrush}" Text="Mollis" />
-                                        <TextBlock Grid.Row="8" Grid.Column="1" FontSize="14" Margin="10,5,10,5" Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in massa turpis, ut fringilla quam. Vivamus mattis, mi in porta consequat, augue nunc volutpat ante, sed rhoncus ligula ante sed erat." TextWrapping="Wrap" />
-                                        <TextBlock Grid.Row="9" Grid.ColumnSpan="2" FontWeight="SemiLight" FontSize="24" Margin="10" Text="Ullamcorper Fermentum" />
-                                        <TextBlock Grid.Row="10" Grid.Column="0" FontWeight="Bold" FontSize="14" Margin="10,5,10,5" Foreground="{StaticResource AWShopperItemForegroundBrush}" Text="Ridiculus" />
-                                        <TextBlock Grid.Row="10" Grid.Column="1" FontSize="14" Margin="10,5,10,5" Text="Ridiculus" TextWrapping="Wrap" />
-                                        <TextBlock Grid.Row="11" Grid.Column="0" FontWeight="Bold" FontSize="14" Margin="10,5,10,5" Foreground="{StaticResource AWShopperItemForegroundBrush}" Text="Pallentesque" />
-                                        <TextBlock Grid.Row="11" Grid.Column="1" FontSize="14" Margin="10,5,10,5" Text="Mattis Cras Euismod Nibh" TextWrapping="Wrap" />
+                                        <TextBlock Grid.Row="0"
+                                                   Grid.ColumnSpan="2"
+                                                   FontWeight="SemiLight"
+                                                   FontSize="24"
+                                                   Margin="10"
+                                                   Text="Vivamus Sagittis Lacus" />
+                                        <TextBlock Grid.Row="1"
+                                                   Grid.Column="0"
+                                                   FontWeight="Bold"
+                                                   FontSize="14"
+                                                   Margin="10,5,10,5"
+                                                   Foreground="{StaticResource AWShopperItemForegroundBrush}"
+                                                   Text="Ridiculus" />
+                                        <TextBlock Grid.Row="1"
+                                                   Grid.Column="1"
+                                                   FontSize="14"
+                                                   Margin="10,5,10,5"
+                                                   Text="Ridiculus"
+                                                   TextWrapping="Wrap" />
+                                        <TextBlock Grid.Row="2"
+                                                   Grid.Column="0"
+                                                   FontWeight="Bold"
+                                                   FontSize="14"
+                                                   Margin="10,5,10,5"
+                                                   Foreground="{StaticResource AWShopperItemForegroundBrush}"
+                                                   Text="Pallentesque" />
+                                        <TextBlock Grid.Row="2"
+                                                   Grid.Column="1"
+                                                   FontSize="14"
+                                                   Margin="10,5,10,5"
+                                                   Text="Mattis Cras Euismod Nibh"
+                                                   TextWrapping="Wrap" />
+                                        <TextBlock Grid.Row="3"
+                                                   Grid.Column="0"
+                                                   FontWeight="Bold"
+                                                   FontSize="14"
+                                                   Margin="10,5,10,5"
+                                                   Foreground="{StaticResource AWShopperItemForegroundBrush}"
+                                                   Text="Sit" />
+                                        <TextBlock Grid.Row="3"
+                                                   Grid.Column="1"
+                                                   FontSize="14"
+                                                   Margin="10,5,10,5"
+                                                   Text="Amet Malesuada Euismod Egestas Fusce"
+                                                   TextWrapping="Wrap" />
+                                        <TextBlock Grid.Row="4"
+                                                   Grid.Column="0"
+                                                   FontWeight="Bold"
+                                                   FontSize="14"
+                                                   Margin="10,5,10,5"
+                                                   Foreground="{StaticResource AWShopperItemForegroundBrush}"
+                                                   Text="Commodo" />
+                                        <TextBlock Grid.Row="4"
+                                                   Grid.Column="1"
+                                                   FontSize="14"
+                                                   Margin="10,5,10,5"
+                                                   Text="Commodo"
+                                                   TextWrapping="Wrap" />
+                                        <TextBlock Grid.Row="5"
+                                                   Grid.Column="0"
+                                                   FontWeight="Bold"
+                                                   FontSize="14"
+                                                   Margin="10,5,10,5"
+                                                   Foreground="{StaticResource AWShopperItemForegroundBrush}"
+                                                   Text="Purus" />
+                                        <TextBlock Grid.Row="5"
+                                                   Grid.Column="1"
+                                                   FontSize="14"
+                                                   Margin="10,5,10,5"
+                                                   Text="Ridiculus Amet Malesuada Euismod Egestas"
+                                                   TextWrapping="Wrap" />
+                                        <TextBlock Grid.Row="6"
+                                                   Grid.Column="0"
+                                                   FontWeight="Bold"
+                                                   FontSize="14"
+                                                   Margin="10,5,10,5"
+                                                   Foreground="{StaticResource AWShopperItemForegroundBrush}"
+                                                   Text="Amet" />
+                                        <TextBlock Grid.Row="6"
+                                                   Grid.Column="1"
+                                                   FontSize="14"
+                                                   Margin="10,5,10,5"
+                                                   Text="3453453"
+                                                   TextWrapping="Wrap" />
+                                        <TextBlock Grid.Row="7"
+                                                   Grid.Column="0"
+                                                   FontWeight="Bold"
+                                                   FontSize="14"
+                                                   Margin="10,5,10,5"
+                                                   Foreground="{StaticResource AWShopperItemForegroundBrush}"
+                                                   Text="Vestibulum" />
+                                        <TextBlock Grid.Row="7"
+                                                   Grid.Column="1"
+                                                   FontSize="14"
+                                                   Margin="10,5,10,5"
+                                                   Text="Commodo"
+                                                   TextWrapping="Wrap" />
+                                        <TextBlock Grid.Row="8"
+                                                   Grid.Column="0"
+                                                   FontWeight="Bold"
+                                                   FontSize="14"
+                                                   Margin="10,5,10,5"
+                                                   Foreground="{StaticResource AWShopperItemForegroundBrush}"
+                                                   Text="Mollis" />
+                                        <TextBlock Grid.Row="8"
+                                                   Grid.Column="1"
+                                                   FontSize="14"
+                                                   Margin="10,5,10,5"
+                                                   Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in massa turpis, ut fringilla quam. Vivamus mattis, mi in porta consequat, augue nunc volutpat ante, sed rhoncus ligula ante sed erat."
+                                                   TextWrapping="Wrap" />
+                                        <TextBlock Grid.Row="9"
+                                                   Grid.ColumnSpan="2"
+                                                   FontWeight="SemiLight"
+                                                   FontSize="24"
+                                                   Margin="10"
+                                                   Text="Ullamcorper Fermentum" />
+                                        <TextBlock Grid.Row="10"
+                                                   Grid.Column="0"
+                                                   FontWeight="Bold"
+                                                   FontSize="14"
+                                                   Margin="10,5,10,5"
+                                                   Foreground="{StaticResource AWShopperItemForegroundBrush}"
+                                                   Text="Ridiculus" />
+                                        <TextBlock Grid.Row="10"
+                                                   Grid.Column="1"
+                                                   FontSize="14"
+                                                   Margin="10,5,10,5"
+                                                   Text="Ridiculus"
+                                                   TextWrapping="Wrap" />
+                                        <TextBlock Grid.Row="11"
+                                                   Grid.Column="0"
+                                                   FontWeight="Bold"
+                                                   FontSize="14"
+                                                   Margin="10,5,10,5"
+                                                   Foreground="{StaticResource AWShopperItemForegroundBrush}"
+                                                   Text="Pallentesque" />
+                                        <TextBlock Grid.Row="11"
+                                                   Grid.Column="1"
+                                                   FontSize="14"
+                                                   Margin="10,5,10,5"
+                                                   Text="Mattis Cras Euismod Nibh"
+                                                   TextWrapping="Wrap" />
 
                                     </Grid>
                                 </Grid>
@@ -177,106 +376,160 @@
 
                                 <!-- Visual states reflect the application's view state inside the FlipView -->
                                 <VisualStateGroup x:Name="ApplicationViewStates">
-                                    <VisualState x:Name="FullScreenLandscape"/>
-                                    <VisualState x:Name="Filled"/>
-                                    <VisualState x:Name="FullScreenPortrait"/>
+                                    <VisualState x:Name="FullScreenLandscape" />
+                                    <VisualState x:Name="Filled" />
+                                    <VisualState x:Name="FullScreenPortrait" />
                                     <VisualState x:Name="Snapped">
                                         <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="grid2">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)"
+                                                                           Storyboard.TargetName="mainGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <x:Double>300</x:Double>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"
+                                                                           Storyboard.TargetName="mainGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Thickness>20,0,0,60</Thickness>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)"
+                                                                           Storyboard.TargetName="grid1">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <x:Double>260</x:Double>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)"
+                                                                           Storyboard.TargetName="grid2">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <x:Double>260</x:Double>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)"
+                                                                           Storyboard.TargetName="grid2">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
                                                         <x:Int32>1</x:Int32>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="grid2">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)"
+                                                                           Storyboard.TargetName="grid2">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
                                                         <x:Int32>0</x:Int32>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="mainGrid">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"
+                                                                           Storyboard.TargetName="grid2">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
-                                                        <x:Double>300</x:Double>
+                                                        <Thickness>-10,0,0,0</Thickness>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="grid1">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)"
+                                                                           Storyboard.TargetName="grid3">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
-                                                        <x:Double>300</x:Double>
+                                                        <x:Double>260</x:Double>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="grid2">
-                                                <DiscreteObjectKeyFrame KeyTime="0">
-                                                    <DiscreteObjectKeyFrame.Value>
-                                                        <x:Double>300</x:Double>
-                                                    </DiscreteObjectKeyFrame.Value>
-                                                </DiscreteObjectKeyFrame>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="grid3">
-                                                <DiscreteObjectKeyFrame KeyTime="0">
-                                                    <DiscreteObjectKeyFrame.Value>
-                                                        <x:Double>290</x:Double>
-                                                    </DiscreteObjectKeyFrame.Value>
-                                                </DiscreteObjectKeyFrame>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)" Storyboard.TargetName="grid3">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)"
+                                                                           Storyboard.TargetName="grid3">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
                                                         <x:Int32>3</x:Int32>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)" Storyboard.TargetName="grid3">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)"
+                                                                           Storyboard.TargetName="grid3">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
                                                         <x:Int32>0</x:Int32>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="image">
-                                                <DiscreteObjectKeyFrame KeyTime="0">
-                                                    <DiscreteObjectKeyFrame.Value>
-                                                        <x:Double>275</x:Double>
-                                                    </DiscreteObjectKeyFrame.Value>
-                                                </DiscreteObjectKeyFrame>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="image">
-                                                <DiscreteObjectKeyFrame KeyTime="0">
-                                                    <DiscreteObjectKeyFrame.Value>
-                                                        <x:Double>275</x:Double>
-                                                    </DiscreteObjectKeyFrame.Value>
-                                                </DiscreteObjectKeyFrame>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="scrollViewer">
-                                                <DiscreteObjectKeyFrame KeyTime="0">
-                                                    <DiscreteObjectKeyFrame.Value>
-                                                        <x:Double>315</x:Double>
-                                                    </DiscreteObjectKeyFrame.Value>
-                                                </DiscreteObjectKeyFrame>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.Padding)" Storyboard.TargetName="scrollViewer">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"
+                                                                           Storyboard.TargetName="grid3">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
                                                         <Thickness>0</Thickness>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ScrollViewer.VerticalScrollMode)" Storyboard.TargetName="scrollViewer">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)"
+                                                                           Storyboard.TargetName="ProductImage">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <x:Double>260</x:Double>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Height)"
+                                                                           Storyboard.TargetName="ProductImage">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <x:Double>260</x:Double>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)"
+                                                                           Storyboard.TargetName="scrollViewer">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <x:Double>315</x:Double>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.Padding)"
+                                                                           Storyboard.TargetName="scrollViewer">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Thickness>0</Thickness>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ScrollViewer.VerticalScrollMode)"
+                                                                           Storyboard.TargetName="scrollViewer">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
                                                         <ScrollMode>Enabled</ScrollMode>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ScrollViewer.HorizontalScrollMode)" Storyboard.TargetName="scrollViewer">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ScrollViewer.HorizontalScrollMode)"
+                                                                           Storyboard.TargetName="scrollViewer">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
                                                         <ScrollMode>Disabled</ScrollMode>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"
+                                                                           Storyboard.TargetName="DetailsLabel">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Thickness>5,0</Thickness>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"
+                                                                           Storyboard.TargetName="DetailsGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Thickness>5,20,0,10</Thickness>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
@@ -321,28 +574,38 @@
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="{StaticResource SnappedPageHeaderTextStyle}" />
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="shoppingCartTabUserControl">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"
+                                                       Storyboard.TargetName="shoppingCartTabUserControl">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Thickness>0</Thickness>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <DoubleAnimation Duration="0" To="0.75" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="shoppingCartTabUserControl" d:IsOptimized="True"/>
-                        <DoubleAnimation Duration="0" To="0.75" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="shoppingCartTabUserControl" d:IsOptimized="True"/>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="pageTitle">
+                        <DoubleAnimation Duration="0"
+                                         To="0.75"
+                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                                         Storyboard.TargetName="shoppingCartTabUserControl"
+                                         d:IsOptimized="True" />
+                        <DoubleAnimation Duration="0"
+                                         To="0.75"
+                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                                         Storyboard.TargetName="shoppingCartTabUserControl"
+                                         d:IsOptimized="True" />
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"
+                                                       Storyboard.TargetName="pageTitle">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Thickness>0,0,0,40</Thickness>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="flipView">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Double>320</x:Double>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="searchUserControl">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<Visibility>Collapsed</Visibility>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>

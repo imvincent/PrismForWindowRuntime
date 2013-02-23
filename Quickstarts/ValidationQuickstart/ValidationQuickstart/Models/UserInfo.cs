@@ -19,10 +19,10 @@ namespace ValidationQuickStart.Models
 
         // We allow all Unicode letter characters as well as internal spaces and hypens, as long as these do not occur in sequences
         // <snippet1300>
-        private const string REGEX_PATTERN = @"\A\p{L}+([\p{Zs}\-][\p{L}]+)*\z";
+        private const string RegexPattern = @"\A\p{L}+([\p{Zs}\-][\p{L}]+)*\z";
 
         [Required(ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "FirstNameRequired")]
-        [RegularExpression(REGEX_PATTERN, ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "FirstNameRegex")]
+        [RegularExpression(RegexPattern, ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "FirstNameRegex")]
         public string FirstName
         {
             get { return _firstName; }
@@ -31,7 +31,7 @@ namespace ValidationQuickStart.Models
         // </snippet1300>
 
         [Required(ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "MiddleNameRequired")]
-        [RegularExpression(REGEX_PATTERN, ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "MiddleNameRegex")]
+        [RegularExpression(RegexPattern, ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "MiddleNameRegex")]
         public string MiddleName
         {
             get { return _middleName; }
@@ -39,12 +39,11 @@ namespace ValidationQuickStart.Models
         }
 
         [Required(ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "LastNameRequired")]
-        [RegularExpression(REGEX_PATTERN, ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "LastNameRegex")]
+        [RegularExpression(RegexPattern, ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "LastNameRegex")]
         public string LastName
         {
             get { return _lastName; }
             set { SetProperty(ref _lastName, value); }
         }
     }
-
 }

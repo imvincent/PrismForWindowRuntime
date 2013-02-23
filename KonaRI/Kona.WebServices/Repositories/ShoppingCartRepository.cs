@@ -15,8 +15,23 @@ namespace Kona.WebServices.Repositories
 {
     public class ShoppingCartRepository : IShoppingCartRepository
     {
+        private static string _imageServerPath;
+
+        static ShoppingCartRepository()
+        {
+            _imageServerPath = System.Configuration.ConfigurationManager.AppSettings["ImageServerPath"];
+            if (_imageServerPath == null)
+            {
+                _imageServerPath = "http://localhost/";
+            }
+
+            _shoppingCarts = GetDefaultShoppingCarts();
+        }
+
+        public static string ImageServerPath { get { return _imageServerPath; } }
+
         // key: user | value: shopping cart items
-        private static Dictionary<string, ShoppingCart> _shoppingCarts = GetDefaultShoppingCarts();
+        private static Dictionary<string, ShoppingCart> _shoppingCarts;
         // Can't lock on _shoppingCarts because it gets overwritten in Reset method
         private static object _lock = new object();
 
@@ -24,9 +39,9 @@ namespace Kona.WebServices.Repositories
         {
             var shoppingCarts = new Dictionary<string, ShoppingCart>();
             var shoppingCartItems = new List<ShoppingCartItem>();
-            shoppingCartItems.Add(new ShoppingCartItem { Currency = "USD", Quantity = 1, Product = new Product { Currency = "USD", Title = "Mountain-400-W Silver, 42", ProductNumber = "BK-M38S-42", SubcategoryId = 1, Description = "This bike delivers a high-level of performance on a budget. It is responsive and maneuverable, and offers peace-of-mind when you decide to go off-road.", ListPrice = 769.4900, DiscountPercentage = 25, Weight = 27.13, Color = "Silver", ImageName = "hotrodbike_f_large.gif" } });
-            shoppingCartItems.Add(new ShoppingCartItem { Currency = "USD", Quantity = 1, Product = new Product { Currency = "USD", Title = "Touring Pedal", ProductNumber = "PD-T852", SubcategoryId = 13, Description = "A stable pedal for all-day riding.", ListPrice = 80.9900, Weight = 0, Color = "Silver/Black", ImageName = "clipless_pedals_large.gif" } });
-            shoppingCartItems.Add(new ShoppingCartItem { Currency = "USD", Quantity = 1, Product = new Product { Currency = "USD", Title = "LL Touring Frame - Yellow, 62", ProductNumber = "FR-T67Y-62", SubcategoryId = 16, Description = "Lightweight butted aluminum frame provides a more upright riding position for a trip around town.  Our ground-breaking design provides optimum comfort.", ListPrice = 333.4200, Weight = 3.20, Color = "Yellow", ImageName = "frame_large.gif" } });
+            shoppingCartItems.Add(new ShoppingCartItem { Currency = "USD", Quantity = 1, Product = new Product { Currency = "USD", Title = "Mountain-400-W Silver, 42", ProductNumber = "BK-M38S-42", SubcategoryId = 1, Description = "This bike delivers a high-level of performance on a budget. It is responsive and maneuverable, and offers peace-of-mind when you decide to go off-road.", ListPrice = 769.4900, DiscountPercentage = 25, Weight = 27.13, Color = "Silver", ImageUri = new Uri(ImageServerPath + "hotrodbike_f_large.gif") } });
+            shoppingCartItems.Add(new ShoppingCartItem { Currency = "USD", Quantity = 1, Product = new Product { Currency = "USD", Title = "Touring Pedal", ProductNumber = "PD-T852", SubcategoryId = 13, Description = "A stable pedal for all-day riding.", ListPrice = 80.9900, Weight = 0, Color = "Silver/Black", ImageUri = new Uri(ImageServerPath + "clipless_pedals_large.gif") } });
+            shoppingCartItems.Add(new ShoppingCartItem { Currency = "USD", Quantity = 1, Product = new Product { Currency = "USD", Title = "LL Touring Frame - Yellow, 62", ProductNumber = "FR-T67Y-62", SubcategoryId = 16, Description = "Lightweight butted aluminum frame provides a more upright riding position for a trip around town.  Our ground-breaking design provides optimum comfort.", ListPrice = 333.4200, Weight = 3.20, Color = "Yellow", ImageUri = new Uri(ImageServerPath + "frame_large.gif") } });
             shoppingCarts.Add("JohnDoe", new ShoppingCart(shoppingCartItems) { Currency = "USD", FullPrice = 1183.90, TotalPrice = 1183.90 });
             return shoppingCarts;
         }

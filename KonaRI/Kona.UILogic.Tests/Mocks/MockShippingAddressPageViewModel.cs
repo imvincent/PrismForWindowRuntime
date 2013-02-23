@@ -34,17 +34,17 @@ namespace Kona.UILogic.Tests.Mocks
 
         public void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void OnNavigatedFrom(Dictionary<string, object> viewState, bool suspending)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void GoNext()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void ProcessForm()
@@ -58,7 +58,6 @@ namespace Kona.UILogic.Tests.Mocks
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
 
         public Task PopulateStatesAsync()
         {

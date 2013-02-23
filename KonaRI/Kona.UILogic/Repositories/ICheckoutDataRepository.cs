@@ -7,6 +7,7 @@
 
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Kona.UILogic.Models;
 
 namespace Kona.UILogic.Repositories
@@ -15,19 +16,19 @@ namespace Kona.UILogic.Repositories
     {
         Address GetShippingAddress(string id);
         Address GetBillingAddress(string id);
-        PaymentMethod GetPaymentMethod(string id);
+        Task<PaymentMethod> GetPaymentMethodAsync(string id);
 
         Address GetDefaultShippingAddress();
         Address GetDefaultBillingAddress();
-        PaymentMethod GetDefaultPaymentMethod();
+        Task<PaymentMethod> GetDefaultPaymentMethodAsync();
 
         IReadOnlyCollection<Address> GetAllShippingAddresses();
         IReadOnlyCollection<Address> GetAllBillingAddresses();
-        IReadOnlyCollection<PaymentMethod> GetAllPaymentMethods();
+        Task<IReadOnlyCollection<PaymentMethod>> GetAllPaymentMethodsAsync();
 
         Address SaveShippingAddress(Address address);
         Address SaveBillingAddress(Address address);
-        PaymentMethod SavePaymentMethod(PaymentMethod paymentMethod);
+        Task<PaymentMethod> SavePaymentMethodAsync(PaymentMethod paymentMethod);
 
         void SetDefaultShippingAddress(Address address);
         void SetDefaultBillingAddress(Address address);

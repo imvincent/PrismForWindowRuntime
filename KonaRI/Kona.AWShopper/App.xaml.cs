@@ -6,9 +6,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using Kona.AWShopper.Views;
 using Kona.Infrastructure;
-using Kona.Infrastructure.Flyouts;
 using Kona.Infrastructure.Interfaces;
 using Kona.UILogic.Models;
 using Kona.UILogic.Repositories;
@@ -21,14 +19,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Resources;
-using Windows.UI.ApplicationSettings;
 using Windows.UI.Notifications;
+using Windows.UI.Xaml;
 
 namespace Kona.AWShopper
 {
     sealed partial class App : MvvmAppBase
     {
-        // New up the singleton container that will be used for type resolution in the app
+        // Create the singleton container that will be used for type resolution in the app
         IUnityContainer _container = new UnityContainer();
 
         //Bootstrap: App singleton service declarations
@@ -38,8 +36,10 @@ namespace Kona.AWShopper
         public App()
         {
             this.InitializeComponent();
+            this.RequestedTheme = ApplicationTheme.Dark;
         }
 
+        // <snippet812>
         public override void OnLaunchApplication(LaunchActivatedEventArgs args)
         {
             if (string.IsNullOrEmpty(args.Arguments))
@@ -54,10 +54,18 @@ namespace Kona.AWShopper
                 NavigationService.Navigate("ItemDetail", args.Arguments);
             }
         }
+        // </snippet812>
 
         public override void OnSearchApplication(SearchEventArgs args)
         {
-            NavigationService.Navigate("SearchResults", args.QueryText);
+            if (!string.IsNullOrEmpty(args.QueryText))
+            {
+                NavigationService.Navigate("SearchResults", args.QueryText);
+            }
+            else
+            {
+                NavigationService.Navigate("Hub", null);
+            }
         }
 
         public override void OnRegisterKnownTypesforSerialization()
@@ -66,35 +74,38 @@ namespace Kona.AWShopper
             SuspensionManager.KnownTypes.Add(typeof(Address));
             SuspensionManager.KnownTypes.Add(typeof(PaymentMethod));
             SuspensionManager.KnownTypes.Add(typeof(UserInfo));
+            SuspensionManager.KnownTypes.Add(typeof(ShippingMethod));
             SuspensionManager.KnownTypes.Add(typeof(ReadOnlyDictionary<string, ReadOnlyCollection<string>>));
-
-            var restorableStateService = (FileBackedRestorableStateService)RestorableStateService;
-            restorableStateService.KnownTypes.Add(typeof(Order));
-            restorableStateService.KnownTypes.Add(typeof(UserInfo));
+            SuspensionManager.KnownTypes.Add(typeof(Order));
+            SuspensionManager.KnownTypes.Add(typeof(UserInfo));
         }
 
         public override void OnInitialize(IActivatedEventArgs args)
         {
             _eventAggregator = new EventAggregator();
 
-            _container.RegisterInstance<INavigationService>(this.NavigationService);
-            _container.RegisterInstance<IRestorableStateService>(this.RestorableStateService);
+            _container.RegisterInstance<INavigationService>(NavigationService);
+            _container.RegisterInstance<ISuspensionManagerState>(SuspensionManagerState);
+            _container.RegisterInstance<IFlyoutService>(FlyoutService);
             _container.RegisterInstance<IEventAggregator>(_eventAggregator);
-            _container.RegisterInstance<ISettingsCharmService>(CreateSettingsCharmService());
             _container.RegisterInstance<ISettingsStoreService>(new SettingsStoreService());
             _container.RegisterInstance<IAssetsService>(new AssetsService("Logo.png", "WideLogo.scale-100.png"));
             _container.RegisterInstance<IResourceLoader>(new ResourceLoaderAdapter(new ResourceLoader()));
+
             _container.RegisterType<IRequestService, RequestService>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IAccountService, AccountService>(new ContainerControlledLifetimeManager());
             _container.RegisterType<ICredentialStore, RoamingCredentialStore>(new ContainerControlledLifetimeManager());
             _container.RegisterType<ICacheService, TemporaryFolderCacheService>(new ContainerControlledLifetimeManager());
             _container.RegisterType<ITileService, TileService>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IAlertMessageService, AlertMessageService>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<ISearchPaneService, SearchPaneService>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IEncryptionService, EncryptionService>(new ContainerControlledLifetimeManager());
 
             // Register repositories
             _container.RegisterType<IProductCatalogRepository, ProductCatalogRepository>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IShoppingCartRepository, ShoppingCartRepository>(new ContainerControlledLifetimeManager());
             _container.RegisterType<ICheckoutDataRepository, CheckoutDataRepository>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IOrderRepository, OrderRepository>(new ContainerControlledLifetimeManager());
 
             // Register web service proxies
             _container.RegisterType<IProductCatalogService, ProductCatalogServiceProxy>(new ContainerControlledLifetimeManager());
@@ -116,39 +127,39 @@ namespace Kona.AWShopper
                     var viewModelType = Type.GetType(viewModelTypeName);
                     return viewModelType;
                 });
-
-            // Set a factory for the ViewModelLocator to use the container to construct view models so their 
-            // dependencies get injected by the container
-            ViewModelLocator.SetDefaultViewModelFactory((viewModelType) => _container.Resolve(viewModelType));
             //</snippet302>
 
+            // <snippet800>
             _tileUpdater = TileUpdateManager.CreateTileUpdaterForApplication();
             _tileUpdater.EnableNotificationQueue(true);
             _tileUpdater.StartPeriodicUpdate(new Uri(Kona.UILogic.Constants.ServerAddress + "/api/TileNotification"), PeriodicUpdateRecurrence.HalfHour);
+            // </snippet800>
         }
 
-        // <snippet518>
-        private static ISettingsCharmService CreateSettingsCharmService()
+        public override object Resolve(Type type)
         {
-            // TODO: use localized strings here
-            // TODO: display flyouts only when available (e.g: display "sign out" flyout only if user is logged in)
-            Func<IEnumerable<FlyoutView>> flyoutsFactory = () => new List<FlyoutView>()
-                {
-                    new SignInFlyout("signIn", "Login"),
-                    new SignOutFlyout("signOut", "Logout"),
-                    new ShippingAddressFlyout("addShippingAddress", "Add Shipping Address"),
-                    new BillingAddressFlyout("addBillingAddress", "Add Billing Address"),
-                    new PaymentMethodFlyout("addPaymentMethod", "Add Payment Information"),
-                    new ShippingAddressFlyout("editShippingAddress", "Edit Shipping Address") { ExcludeFromSettingsPane = true },
-                    new BillingAddressFlyout("editBillingAddress", "Edit Billing Address") { ExcludeFromSettingsPane = true },
-                    new PaymentMethodFlyout("editPaymentMethod", "Edit Payment Information") { ExcludeFromSettingsPane = true },
-                    new ChangeDefaultsFlyout("changeDefaults", "Change Defaults"),
-                };
-
-            var settingsCharmService = new SettingsCharmService(flyoutsFactory);
-            SettingsPane.GetForCurrentView().CommandsRequested += settingsCharmService.OnCommandsRequested;
-            return settingsCharmService;
+            // Use the container to resolve types (e.g. ViewModels and Flyouts)
+            // so their dependencies get injected
+            return _container.Resolve(type);
         }
-        // </snippet518>
+
+        public override IList<SettingsCharmItem> GetSettingsCharmItems()
+        {
+            var settingsCharmItems = new List<SettingsCharmItem>();
+            var accountService = _container.Resolve<IAccountService>();
+            if (accountService.SignedInUser == null)
+            {
+                settingsCharmItems.Add(new SettingsCharmItem("Login", "SignIn"));
+            }
+            else
+            {
+                settingsCharmItems.Add(new SettingsCharmItem("Logout", "SignOut"));
+            }
+            settingsCharmItems.Add(new SettingsCharmItem("Add Shipping Address", "ShippingAddress"));
+            settingsCharmItems.Add(new SettingsCharmItem("Add Billing Address", "BillingAddress"));
+            settingsCharmItems.Add(new SettingsCharmItem("Add Payment Information", "PaymentMethod"));
+            settingsCharmItems.Add(new SettingsCharmItem("Change Defaults", "ChangeDefaults"));
+            return settingsCharmItems;
+        }
     }
 }

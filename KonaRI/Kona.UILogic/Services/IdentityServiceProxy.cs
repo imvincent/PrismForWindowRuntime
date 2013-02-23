@@ -67,7 +67,7 @@ namespace Kona.UILogic.Services
         }
         // </snippet508>
 
-        public async Task<bool> VerifyActiveSession(string userId, string serverCookieHeader)
+        public async Task<bool> VerifyActiveSessionAsync(string userId, string serverCookieHeader)
         {
             using (var handler = new HttpClientHandler { CookieContainer = new CookieContainer() })
             {

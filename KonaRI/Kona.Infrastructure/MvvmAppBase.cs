@@ -7,14 +7,16 @@
 
 
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using System.Threading.Tasks;
+using Kona.Infrastructure.Flyouts;
 using Kona.Infrastructure.Interfaces;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Search;
+using Windows.UI.ApplicationSettings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -37,30 +39,54 @@ namespace Kona.Infrastructure
         }
 
         public INavigationService NavigationService { get; set; }
-        public IRestorableStateService RestorableStateService { get; set; }
+        public ISuspensionManagerState SuspensionManagerState { get; set; }
+        public IFlyoutService FlyoutService { get; set; }
+        public SettingsCharmService SettingsCharmService { get; set; }
         public bool IsSuspending { get; private set; }
 
         public abstract void OnLaunchApplication(LaunchActivatedEventArgs args);
         public virtual void OnSearchApplication(SearchEventArgs args) { }
 
-        public virtual Func<string, Type> GetPageNameToTypeResolver()
+        public virtual Type GetPageType(string pageToken)
         {
             var assemblyQualifiedAppType = this.GetType().GetTypeInfo().AssemblyQualifiedName;
 
             var pageNameWithParameter = assemblyQualifiedAppType.Replace(this.GetType().FullName, this.GetType().Namespace + ".Views.{0}Page");
 
-            Func<string, Type> navigationResolver = (string pageToken) =>
-            {
-                var viewFullName = string.Format(CultureInfo.InvariantCulture, pageNameWithParameter, pageToken);
-                var viewType = Type.GetType(viewFullName);
+            var viewFullName = string.Format(CultureInfo.InvariantCulture, pageNameWithParameter, pageToken);
+            var viewType = Type.GetType(viewFullName);
 
-                return viewType;
-            };
-            return navigationResolver;
+            return viewType;
         }
 
         public virtual void OnRegisterKnownTypesforSerialization() { }
         public virtual void OnInitialize(IActivatedEventArgs args) { }
+        public virtual FlyoutView CreateFlyoutView(string flyoutName)
+        {
+            var assemblyQualifiedAppType = this.GetType().GetTypeInfo().AssemblyQualifiedName;
+
+            var flyoutNameWithParameter = assemblyQualifiedAppType.Replace(this.GetType().FullName, this.GetType().Namespace + ".Views.{0}Flyout");
+
+            var flyoutFullName = string.Format(CultureInfo.InvariantCulture, flyoutNameWithParameter, flyoutName);
+            var flyoutType = Type.GetType(flyoutFullName);
+            if (flyoutType == null)
+            {
+                throw new InvalidOperationException("Could not find associated Flyout in the Views folder.");
+            }
+
+            var flyoutInstance = Resolve(flyoutType);
+            return flyoutInstance as FlyoutView;
+        }
+
+        public virtual IList<SettingsCharmItem> GetSettingsCharmItems()
+        {
+            return null;
+        }
+
+        public virtual object Resolve(Type type)
+        {
+            return Activator.CreateInstance(type);
+        }
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
@@ -123,12 +149,23 @@ namespace Kona.Infrastructure
                 //Associate the frame with a SuspensionManager key                                
                 SuspensionManager.RegisterFrame(frameFacade, "AppFrame");
 
-                RestorableStateService = new FileBackedRestorableStateService();
-                NavigationService = CreateNavigationService(frameFacade, RestorableStateService);
+                //Initialize MvvmAppBase common services
+                SuspensionManagerState = new SuspensionManagerState();
+                NavigationService = CreateNavigationService(frameFacade, SuspensionManagerState);
+                FlyoutService = new FlyoutService();
+                FlyoutService.FlyoutResolver = CreateFlyoutView;
+                // <snippet518>
+                SettingsCharmService = new SettingsCharmService(GetSettingsCharmItems, FlyoutService);
+                SettingsPane.GetForCurrentView().CommandsRequested += SettingsCharmService.OnCommandsRequested;
+                // </snippet518>
+
+                // Set a factory for the ViewModelLocator to use the default resolution mechanism to construct view models
+                ViewModelLocator.SetDefaultViewModelFactory(Resolve);
+
                 OnRegisterKnownTypesforSerialization();
                 if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
-                    await RestorableStateService.RestoreAsync();
+                    await SuspensionManager.RestoreSessionStateAsync();
                 }
 
                 OnInitialize(args);
@@ -138,7 +175,7 @@ namespace Kona.Infrastructure
                     // Restore the saved session state and navigate to the last page visited
                     try
                     {
-                        await SuspensionManager.RestoreAsync();
+                        SuspensionManager.RestoreFrameState();
                         NavigationService.RestoreSavedNavigation();
                     }
                     catch (SuspensionManagerException)
@@ -156,11 +193,11 @@ namespace Kona.Infrastructure
         }
 
         // <snippet403>
-        private INavigationService CreateNavigationService(IFrameFacade rootFrame, IRestorableStateService restorableStateService)
+        private INavigationService CreateNavigationService(IFrameFacade rootFrame, ISuspensionManagerState suspensionManagerSessionState)
         {
             var sessionStateWrapper = new FrameSessionStateWrapper();
 
-            var navigationService = new FrameNavigationService(rootFrame, sessionStateWrapper, GetPageNameToTypeResolver(), restorableStateService);
+            var navigationService = new FrameNavigationService(rootFrame, sessionStateWrapper, GetPageType, suspensionManagerSessionState);
             return navigationService;
         }
         // </snippet403>
@@ -186,9 +223,6 @@ namespace Kona.Infrastructure
 
                 // Save application state
                 await SuspensionManager.SaveAsync();
-
-                // Save service related state
-                await RestorableStateService.SaveAsync();
 
                 //TODO: Stop any background activity
                 deferral.Complete();

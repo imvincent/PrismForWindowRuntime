@@ -18,44 +18,36 @@ namespace Kona.UILogic.Tests.ViewModels
     public class SignOutFlyoutViewModelFixture
     {
         [TestMethod]
-        public void SignOut_CallsSignOutinAccountServiceAndRemovesSavedCredentials()
+        public async Task SignOut_CallsSignOutinAccountServiceAndRemovesSavedCredentials()
         {
-            var closeFlyoutCalled = false;
-            var accountServiceSignOutCalled = false;
-            var clearHistoryCalled = false;
-            var navigateCalled = false;
-            var accountService = new MockAccountService();
-            accountService.SignOutDelegate = () =>
-                                                 {
-                                                     accountServiceSignOutCalled = true;
-                                                 };
-            accountService.GetSignedInUserAsyncDelegate = () => Task.FromResult(new UserInfo());
-            var credentialStoreRemoveCredsCalled = false;
-            var credentialStore = new MockCredentialStore();
-            credentialStore.RemovedSavedCredentialsDelegate = s =>
-                                                                  {
-                                                                      credentialStoreRemoveCredsCalled = true;
-                                                                      Assert.AreEqual("KonaRI", s);
-                                                                  };
-            var navigationService = new MockNavigationService();
-            navigationService.ClearHistoryDelegate = () => { clearHistoryCalled = true; };
-            navigationService.NavigateDelegate = (s, o) =>
-                                                     {
-                                                         navigateCalled = true;
-                                                         Assert.AreEqual("Hub", s);
-                                                         return true;
-                                                     };
-            var target = new SignOutFlyoutViewModel(accountService, credentialStore, navigationService);
-            target.CloseFlyout = () =>
-                                     {
-                                         closeFlyoutCalled = true;
-                                     };
+            bool closeFlyoutCalled = false;
+            bool accountServiceSignOutCalled = false;
+            bool clearHistoryCalled = false;
+            bool navigateCalled = false;
+
+            var accountService = new MockAccountService
+                {
+                    SignOutDelegate = () => accountServiceSignOutCalled = true,
+                    GetSignedInUserAsyncDelegate = () => Task.FromResult(new UserInfo())
+                };
+
+            var navigationService = new MockNavigationService
+                {
+                    ClearHistoryDelegate = () => clearHistoryCalled = true,
+                    NavigateDelegate = (s, o) =>
+                        {
+                            navigateCalled = true;
+                            Assert.AreEqual("Hub", s);
+                            return true;
+                        }
+                };
+
+            var target = new SignOutFlyoutViewModel(accountService, navigationService) { CloseFlyout = () => closeFlyoutCalled = true };
 
             target.Open(null, null);
-            target.SignOutCommand.Execute();
+            await target.SignOutCommand.Execute();
 
             Assert.IsTrue(accountServiceSignOutCalled);
-            Assert.IsTrue(credentialStoreRemoveCredsCalled);
             Assert.IsTrue(closeFlyoutCalled);
             Assert.IsTrue(clearHistoryCalled);
             Assert.IsTrue(navigateCalled);

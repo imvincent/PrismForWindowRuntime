@@ -53,8 +53,7 @@ namespace Kona.AWShopper.DesignViewModels
                     State = "Washington",
                     ZipCode = "54321",
                     Phone = "1234 5678 9876" 
-                },
-                SetAsDefault = true
+                }
             };
 
             BillingAddressViewModel = new BillingAddressUserControlViewModel(null, null, null);

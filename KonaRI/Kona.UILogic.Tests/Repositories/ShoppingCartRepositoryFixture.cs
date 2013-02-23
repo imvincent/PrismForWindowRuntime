@@ -35,7 +35,7 @@ namespace Kona.UILogic.Tests.Repositories
                                                    });
             var eventAggregator = new MockEventAggregator();
             eventAggregator.GetEventDelegate = type => shoppingCartItemUpdatedEvent;
-            var target = new ShoppingCartRepository(shoppingCartService, new MockAccountService(), eventAggregator, new MockProductCatalogRepository(), new MockRestorableStateService());
+            var target = new ShoppingCartRepository(shoppingCartService, new MockAccountService(), eventAggregator, new MockProductCatalogRepository(), new MockSuspensionManagerState());
 
             target.AddProductToShoppingCartAsync("TestProductId");
 
@@ -56,7 +56,7 @@ namespace Kona.UILogic.Tests.Repositories
             });
             var eventAggregator = new MockEventAggregator();
             eventAggregator.GetEventDelegate = type => shoppingCartItemUpdatedEvent;
-            var target = new ShoppingCartRepository(shoppingCartService, new MockAccountService(), eventAggregator, new MockProductCatalogRepository(), new MockRestorableStateService());
+            var target = new ShoppingCartRepository(shoppingCartService, new MockAccountService(), eventAggregator, new MockProductCatalogRepository(), new MockSuspensionManagerState());
 
             target.RemoveProductFromShoppingCartAsync("TestProductId");
 
@@ -67,44 +67,47 @@ namespace Kona.UILogic.Tests.Repositories
         public async Task CartItemUpdatedEventRaised_WhenItemRemoved()
         {
             var shoppingCartItemUpdatedRaised = false;
-            var shoppingCartService = new MockShoppingCartService();
-            shoppingCartService.RemoveShoppingCartItemDelegate =
-                (s, s1) =>
-                    {
-                        Assert.AreEqual("TestShoppingCartItemId", s1);
-                        return Task.FromResult(string.Empty);
-                    };
+            var shoppingCartService = new MockShoppingCartService()
+                {
+                    RemoveShoppingCartItemDelegate = (s, s1) =>
+                        {
+                            Assert.AreEqual("TestShoppingCartItemId", s1);
+                            return Task.FromResult(string.Empty);
+                        }
+                };
             var shoppingCartItemUpdatedEvent = new ShoppingCartItemUpdatedEvent();
-            shoppingCartItemUpdatedEvent.Subscribe((_) =>
-            {
-                shoppingCartItemUpdatedRaised = true;
-            });
-            var eventAggregator = new MockEventAggregator();
-            eventAggregator.GetEventDelegate = type => shoppingCartItemUpdatedEvent;
-            var target = new ShoppingCartRepository(shoppingCartService, new MockAccountService(), eventAggregator, new MockProductCatalogRepository(), new MockRestorableStateService());
-            
-            target.RemoveShoppingCartItemAsync("TestShoppingCartItemId");
+            shoppingCartItemUpdatedEvent.Subscribe((a) => shoppingCartItemUpdatedRaised = true);
+
+            var eventAggregator = new MockEventAggregator()
+                {
+                    GetEventDelegate = (a) => shoppingCartItemUpdatedEvent
+                };
+
+            var target = new ShoppingCartRepository(shoppingCartService, new MockAccountService(), eventAggregator, new MockProductCatalogRepository(), new MockSuspensionManagerState());
+            await target.RemoveShoppingCartItemAsync("TestShoppingCartItemId");
 
             Assert.IsTrue(shoppingCartItemUpdatedRaised);
         }
 
         [TestMethod]
-        public async Task CartUpdatedEventRaised_WhenUserChanged()
+        public void CartUpdatedEventRaised_WhenUserChanged()
         {
             var shoppingCartUpdatedRaised = false;
             var accountService = new MockAccountService();
-            var shoppingCartUpdatedEvent = new MockShoppingCartUpdatedEvent();
-            shoppingCartUpdatedEvent.PublishDelegate = (() =>
-            {
-                shoppingCartUpdatedRaised = true;
-            });
-            var eventAggregator = new MockEventAggregator();
-            eventAggregator.GetEventDelegate = type => shoppingCartUpdatedEvent;
-            var shoppingCartService = new MockShoppingCartService();
-            shoppingCartService.MergeShoppingCartsAsyncDelegate = (s, s1) => Task.FromResult(string.Empty);
+            var shoppingCartUpdatedEvent = new MockShoppingCartUpdatedEvent()
+                {
+                    PublishDelegate = () => shoppingCartUpdatedRaised = true
+                };
+            var eventAggregator = new MockEventAggregator()
+                {
+                    GetEventDelegate = (a) => shoppingCartUpdatedEvent
+                };
+            var shoppingCartService = new MockShoppingCartService()
+                {
+                    MergeShoppingCartsAsyncDelegate = (s, s1) => Task.FromResult(string.Empty)
+                };
 
-            var target = new ShoppingCartRepository(shoppingCartService, accountService, eventAggregator, new MockProductCatalogRepository(), new MockRestorableStateService());
-
+            var target = new ShoppingCartRepository(shoppingCartService, accountService, eventAggregator, new MockProductCatalogRepository(), new MockSuspensionManagerState());
             accountService.RaiseUserChanged(new UserInfo { UserName = "TestUserName" }, null);
 
             Assert.IsTrue(shoppingCartUpdatedRaised);
@@ -113,7 +116,7 @@ namespace Kona.UILogic.Tests.Repositories
         [TestMethod]
         public void ShoppingCartMerged_WhenAnonymousUserLogsIn()
         {
-            var mergeShoppingCartsCalled = false;
+            bool mergeShoppingCartsCalled = false;
             var anonymousCartItems = new List<ShoppingCartItem>
                                          {
                                              new ShoppingCartItem
@@ -125,40 +128,42 @@ namespace Kona.UILogic.Tests.Repositories
                                                  {Quantity = 2, Product = new Product {ProductNumber = "123"}}
                                          };
 
-            var shoppingCartService = new MockShoppingCartService();
-            shoppingCartService.GetShoppingCartAsyncDelegate = s =>
-                                                                   {
-                                                                       switch (s)
-                                                                       {
-                                                                           case "AnonymousId":
-                                                                               return
-                                                                                   Task.FromResult(
-                                                                                       new ShoppingCart(
-                                                                                           anonymousCartItems));
-                                                                           default:
-                                                                               return
-                                                                                   Task.FromResult(
-                                                                                       new ShoppingCart(
-                                                                                           testUserCartItems));
-                                                                       }
-                                                                   };
-            shoppingCartService.MergeShoppingCartsAsyncDelegate = (s, s1) =>
-                                                                      {
-                                                                          mergeShoppingCartsCalled = true;
-                                                                          Assert.AreEqual("AnonymousId", s);
-                                                                          Assert.AreEqual("TestUserName", s1);
-                                                                          return Task.FromResult(string.Empty);
-                                                                      };
+            var shoppingCartService = new MockShoppingCartService()
+                {
+                    GetShoppingCartAsyncDelegate = s =>
+                        {
+                            switch (s)
+                            {
+                                case "AnonymousId": 
+                                    return Task.FromResult(new ShoppingCart(anonymousCartItems));
+                                default:
+                                    return Task.FromResult(new ShoppingCart(testUserCartItems));
+                            }
+                        },
+                    MergeShoppingCartsAsyncDelegate = (s, s1) =>
+                        {
+                            mergeShoppingCartsCalled = true;
+                            Assert.AreEqual("AnonymousId", s);
+                            Assert.AreEqual("TestUserName", s1);
+                            return Task.FromResult(string.Empty);
+                        }
+                };
 
             var accountService = new MockAccountService();
-            var eventAggregator = new MockEventAggregator();
-            var shoppingCartUpdatedEvent = new MockShoppingCartUpdatedEvent{PublishDelegate = ()=>{}};
-            eventAggregator.GetEventDelegate = type => shoppingCartUpdatedEvent;
-            var restorableStateService = new MockRestorableStateService();
-            restorableStateService.SaveState(ShoppingCartRepository.ShoppingCartIdKey, "AnonymousId");
-            var target = new ShoppingCartRepository(shoppingCartService, accountService, eventAggregator, null, restorableStateService);
+            var shoppingCartUpdatedEvent = new MockShoppingCartUpdatedEvent
+                {
+                    PublishDelegate = () => { }
+                };
+            
+            var eventAggregator = new MockEventAggregator()
+                {
+                    GetEventDelegate = (a) => shoppingCartUpdatedEvent
+                };
+            var suspensionManagerState = new MockSuspensionManagerState();
+            suspensionManagerState.SessionState[ShoppingCartRepository.ShoppingCartIdKey] = "AnonymousId";
 
-            accountService.RaiseUserChanged(new UserInfo{UserName = "TestUserName"}, null);
+            var target = new ShoppingCartRepository(shoppingCartService, accountService, eventAggregator, null, suspensionManagerState);
+            accountService.RaiseUserChanged(new UserInfo { UserName = "TestUserName" }, null);
 
             Assert.IsTrue(mergeShoppingCartsCalled);
         }
@@ -166,20 +171,22 @@ namespace Kona.UILogic.Tests.Repositories
         [TestMethod]
         public async Task GetShoppingCartAsync_CachesCart()
         {
-            var shoppingCartService = new MockShoppingCartService();
+
             var shoppingCart = new ShoppingCart(new Collection<ShoppingCartItem>());
-            shoppingCartService.GetShoppingCartAsyncDelegate = s => Task.FromResult(shoppingCart);
-            var target = new ShoppingCartRepository(shoppingCartService, null, null, null, new MockRestorableStateService());
+            var shoppingCartService = new MockShoppingCartService()
+                {
+                    GetShoppingCartAsyncDelegate = s => Task.FromResult(shoppingCart)
+                };
 
+            var target = new ShoppingCartRepository(shoppingCartService, null, null, null, new MockSuspensionManagerState());
             var firstCartReturned = await target.GetShoppingCartAsync();
-
             shoppingCartService.GetShoppingCartAsyncDelegate = s =>
             {
                 Assert.Fail("Should not have called proxy second time.");
                 return Task.FromResult((ShoppingCart)null);
             };
-            var secondCartReturned = await target.GetShoppingCartAsync();
 
+            var secondCartReturned = await target.GetShoppingCartAsync();
             Assert.AreSame(shoppingCart, firstCartReturned);
             Assert.AreSame(shoppingCart, secondCartReturned);
         }
@@ -187,16 +194,20 @@ namespace Kona.UILogic.Tests.Repositories
         [TestMethod]
         public async Task Add_InvalidatesCachedCart()
         {
-            var shoppingCartService = new MockShoppingCartService();
-            shoppingCartService.AddProductToShoppingCartAsyncDelegate =
-                (s, s1) => Task.FromResult(new ShoppingCartItem());
-            shoppingCartService.GetShoppingCartAsyncDelegate = s => Task.FromResult(new ShoppingCart(new Collection<ShoppingCartItem>()) { Id = "first" });
-            var eventAggregator = new MockEventAggregator();
-            eventAggregator.GetEventDelegate = type => new MockShoppingCartUpdatedEvent();
-            var target = new ShoppingCartRepository(shoppingCartService, null, eventAggregator, null, new MockRestorableStateService());
+            var shoppingCartService = new MockShoppingCartService
+                {
+                    AddProductToShoppingCartAsyncDelegate = (s, s1) => Task.FromResult(new ShoppingCartItem()),
+                    GetShoppingCartAsyncDelegate = s => Task.FromResult(new ShoppingCart(new Collection<ShoppingCartItem>()) {Id = "first"})
+                };
+            var eventAggregator = new MockEventAggregator
+                {
+                    GetEventDelegate = type => new ShoppingCartItemUpdatedEvent()
+                };
+
+            var target = new ShoppingCartRepository(shoppingCartService, null, eventAggregator, null, new MockSuspensionManagerState());
             var firstCartReturned = await target.GetShoppingCartAsync();
 
-            target.AddProductToShoppingCartAsync("TestProductId");
+            await target.AddProductToShoppingCartAsync("TestProductId");
 
             shoppingCartService.GetShoppingCartAsyncDelegate = s => Task.FromResult(new ShoppingCart(new Collection<ShoppingCartItem>()) { Id = "second" });
             var secondCartReturned = await target.GetShoppingCartAsync();
@@ -209,16 +220,19 @@ namespace Kona.UILogic.Tests.Repositories
         [TestMethod]
         public async Task Remove_InvalidatesCachedCart()
         {
-            var shoppingCartService = new MockShoppingCartService();
-            shoppingCartService.RemoveShoppingCartItemDelegate =
-                (s, s1) => Task.FromResult(string.Empty);
-            shoppingCartService.GetShoppingCartAsyncDelegate = s => Task.FromResult(new ShoppingCart(new Collection<ShoppingCartItem>()) { Id = "first" });
-            var eventAggregator = new MockEventAggregator();
-            eventAggregator.GetEventDelegate = type => new MockShoppingCartUpdatedEvent();
-            var target = new ShoppingCartRepository(shoppingCartService, null, eventAggregator, null, new MockRestorableStateService());
+            var shoppingCartService = new MockShoppingCartService
+                {
+                    RemoveShoppingCartItemDelegate = (s, s1) => Task.FromResult(string.Empty),
+                    GetShoppingCartAsyncDelegate = s => Task.FromResult(new ShoppingCart(new Collection<ShoppingCartItem>()) {Id = "first"})
+                };
+            var eventAggregator = new MockEventAggregator
+                {
+                    GetEventDelegate = type => new ShoppingCartItemUpdatedEvent()
+                };
+            var target = new ShoppingCartRepository(shoppingCartService, null, eventAggregator, null, new MockSuspensionManagerState());
             var firstCartReturned = await target.GetShoppingCartAsync();
 
-            target.RemoveShoppingCartItemAsync("TestShoppingCartItemId");
+            await target.RemoveShoppingCartItemAsync("TestShoppingCartItemId");
 
             shoppingCartService.GetShoppingCartAsyncDelegate = s => Task.FromResult(new ShoppingCart(new Collection<ShoppingCartItem>()) { Id = "second" });
             var secondCartReturned = await target.GetShoppingCartAsync();

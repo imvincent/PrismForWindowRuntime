@@ -14,7 +14,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!-- Name -->
@@ -257,6 +256,7 @@
                                        IsEnabled="{Binding IsEnabled}"
                                        Watermark="Zip Code"
                                        AutomationProperties.IsRequiredForForm="True"
+                                       InputScope="Number"
                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[ZipCode]}" />
             <TextBlock x:Name="ErrorZipCode"
                        Style="{StaticResource ErrorMessageStyle}"
@@ -293,6 +293,7 @@
                                        Grid.Column="0"
                                        Text="{Binding Address.Phone, Mode=TwoWay}"
                                        IsEnabled="{Binding IsEnabled}"
+                                       InputScope="TelephoneNumber"
                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[Phone]}" />
             <TextBlock x:Name="ErrorPhone"
                        Style="{StaticResource ErrorMessageStyle}"
@@ -301,14 +302,6 @@
                        Text="{Binding Address.Errors[Phone], Converter={StaticResource FirstErrorConverter}}"
                        TextWrapping="Wrap" />
         </Grid>
-
-        <CheckBox x:Name="SetAsDefaultCheckbox"
-                  x:Uid="SetAsDefaultCheckbox"
-                  AutomationProperties.AutomationId="SetAsDefaultCheckBox"
-                  Grid.Row="4"
-                  Margin="0,10,0,0"
-                  IsChecked="{Binding SetAsDefault, Mode=TwoWay}"
-                  Content="Set as default" />
 
         <VisualStateManager.VisualStateGroups>
 
@@ -547,15 +540,6 @@
                 </VisualState>
                 <VisualState x:Name="Flyout">
                     <Storyboard>
-                        <!-- Set as default -->
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Visibility)"
-                                                       Storyboard.TargetName="SetAsDefaultCheckbox">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:String>Collapsed</x:String>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
                         <!-- Content -->
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.Margin"
                                                        Storyboard.TargetName="ContentGrid">

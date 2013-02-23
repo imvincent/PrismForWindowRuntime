@@ -20,22 +20,40 @@ namespace Kona.UILogic.Services
     {
         public const string ServerCookieHeaderKey = "AccountService_ServerCookieHeader";
         public const string SignedInUserKey = "AccountService_SignedInUser";
+        private const string UserNameKey = "AccountService_UserName";
+        private const string PasswordKey = "AccountService_Password";
 
         private readonly IIdentityService _identityService;
-        private readonly IRestorableStateService _stateService;
+        private readonly ISuspensionManagerState _suspensionManagerState;
         private readonly ICredentialStore _credentialStore;
         private string _serverCookieHeader;
         private UserInfo _signedInUser;
+        private string _userName;
+        private string _password;
 
-        public AccountService(IIdentityService identityService, IRestorableStateService stateService, ICredentialStore credentialStore)
+        public AccountService(IIdentityService identityService, ISuspensionManagerState suspensionManagerState, ICredentialStore credentialStore)
         {
             _identityService = identityService;
-            _stateService = stateService;
+            _suspensionManagerState = suspensionManagerState;
             _credentialStore = credentialStore;
-            if (_stateService != null)
+            if (_suspensionManagerState != null)
             {
-                _serverCookieHeader = _stateService.GetState(ServerCookieHeaderKey) as string;
-                _signedInUser = _stateService.GetState(SignedInUserKey) as UserInfo;
+                if (_suspensionManagerState.SessionState.ContainsKey(ServerCookieHeaderKey))
+                {
+                    _serverCookieHeader = _suspensionManagerState.SessionState[ServerCookieHeaderKey] as string;
+                }
+                if (_suspensionManagerState.SessionState.ContainsKey(SignedInUserKey))
+                {
+                    _signedInUser = _suspensionManagerState.SessionState[SignedInUserKey] as UserInfo;
+                }
+                if (_suspensionManagerState.SessionState.ContainsKey(UserNameKey))
+                {
+                    _userName = _suspensionManagerState.SessionState[UserNameKey].ToString();
+                }
+                if (_suspensionManagerState.SessionState.ContainsKey(PasswordKey))
+                {
+                    _password = _suspensionManagerState.SessionState[PasswordKey].ToString();
+                }
             }
         }
 
@@ -44,25 +62,35 @@ namespace Kona.UILogic.Services
             get { return _serverCookieHeader; }
         }
 
-        public UserInfo LastSignedInUser { get { return _signedInUser; } }
+        public UserInfo SignedInUser { get { return _signedInUser; } }
 
         /// <summary>
         /// Gets the current active user signed in the app.
         /// </summary>
-        /// <returns>A Task that, when complete, stores an active user that is ready to be used for any operation agains the service.</returns>
+        /// <returns>A Task that, when complete, retrieves an active user that is ready to be used for any operation against the service.</returns>
         public async Task<UserInfo> GetSignedInUserAsync()
         {
             try
             {
                 // If user is logged in, verify that the session in the service is still active
-                if (_signedInUser != null && _serverCookieHeader != null && await _identityService.VerifyActiveSession(_signedInUser.UserName, _serverCookieHeader))
+                if (_signedInUser != null && _serverCookieHeader != null && await _identityService.VerifyActiveSessionAsync(_signedInUser.UserName, _serverCookieHeader))
                 {
                     return _signedInUser;
                 }
             }
             catch (SecurityException)
             {
-                //User's session has expired.
+                // User's session has expired.
+            }
+
+            // Attempt to sign in using credentials stored in session state
+            // If succeeds, ask for a new active session
+            if (_userName != null && _password != null)
+            {
+                if (await SignInUserAsync(_userName, _password, false))
+                {
+                    return _signedInUser;
+                }
             }
 
             // Attempt to sign in using credentials stored locally
@@ -71,7 +99,7 @@ namespace Kona.UILogic.Services
             if (savedCredentials != null)
             {
                 savedCredentials.RetrievePassword();
-                if (await SignInUserAsync(savedCredentials.UserName, savedCredentials.Password))
+                if (await SignInUserAsync(savedCredentials.UserName, savedCredentials.Password, false))
                 {
                     return _signedInUser;
                 }
@@ -80,25 +108,41 @@ namespace Kona.UILogic.Services
             return null;
         }
 
-        public async Task<bool> SignInUserAsync(string userName, string password)
+        public async Task<bool> SignInUserAsync(string userName, string password, bool useCredentialStore)
         {
             try
             {
                 // <snippet507>
                 var result = await _identityService.LogOnAsync(userName, password);
                 // </snippet507>
-                _serverCookieHeader = result.ServerCookieHeader;
-                _stateService.SaveState(ServerCookieHeaderKey, _serverCookieHeader);
-                var previousSignedInUser = _signedInUser;
+
+                UserInfo previousUser = _signedInUser;
                 _signedInUser = result.UserInfo;
-                _stateService.SaveState(SignedInUserKey, _signedInUser);
-                RaiseUserChanged(result.UserInfo, previousSignedInUser);
+
+                // Save Server cookie & SignedInUser in the StateService
+                _serverCookieHeader = result.ServerCookieHeader;
+                _suspensionManagerState.SessionState[ServerCookieHeaderKey] = _serverCookieHeader;
+                _suspensionManagerState.SessionState[SignedInUserKey] = _signedInUser;
+
+                // Save username and password in state service
+                _userName = userName;
+                _password = password;
+                _suspensionManagerState.SessionState[UserNameKey] = userName;
+                _suspensionManagerState.SessionState[PasswordKey] = password;
+
+                if (useCredentialStore)
+                {
+                    // Save credentials in the CredentialStore
+                    _credentialStore.SaveCredentials("KonaRI", userName, password);
+                }
+
+                RaiseUserChanged(_signedInUser, previousUser);
                 return true;
             }
             catch (HttpRequestException)
             {
                 _serverCookieHeader = string.Empty;
-                _stateService.SaveState(ServerCookieHeaderKey, _serverCookieHeader);
+                _suspensionManagerState.SessionState[ServerCookieHeaderKey] = _serverCookieHeader;
             }
 
             return false;
@@ -117,10 +161,14 @@ namespace Kona.UILogic.Services
 
         public void SignOut()
         {
-            _serverCookieHeader = null;
-            var previousSignedInUser = _signedInUser;
+            var previousUser = _signedInUser;
             _signedInUser = null;
-            RaiseUserChanged(null, previousSignedInUser);
+            _serverCookieHeader = null;
+
+            // remove user from the CredentialStore, if any
+            _credentialStore.RemovedSavedCredentials("KonaRI");
+
+            RaiseUserChanged(_signedInUser, previousUser);
         }
     }
 }

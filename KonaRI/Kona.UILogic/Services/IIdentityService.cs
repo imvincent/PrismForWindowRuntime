@@ -14,6 +14,6 @@ namespace Kona.UILogic.Services
     public interface IIdentityService
     {
         Task<LogOnResult> LogOnAsync(string userId, string password);
-        Task<bool> VerifyActiveSession(string userId, string serverCookieHeader);
+        Task<bool> VerifyActiveSessionAsync(string userId, string serverCookieHeader);
     }
 }

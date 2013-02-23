@@ -20,9 +20,6 @@ namespace Kona.UILogic.ViewModels
         [RestorableState]
         Address Address { get; set; }
 
-        [RestorableState]
-        bool SetAsDefault { get; set; }
-
         IReadOnlyCollection<ComboBoxItemValue> States { get; set; }
         string EntityId { get; set; }
         void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState);

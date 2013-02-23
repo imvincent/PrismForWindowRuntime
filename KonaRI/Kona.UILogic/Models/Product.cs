@@ -6,6 +6,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System;
+
 namespace Kona.UILogic.Models
 {
     public class Product
@@ -16,7 +18,7 @@ namespace Kona.UILogic.Models
 
         public string Description { get; set; }
 
-        public string ImageName { get; set; }
+        public Uri ImageUri { get; set; }
 
         public int SubcategoryId { get; set; }
 

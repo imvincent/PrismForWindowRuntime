@@ -25,7 +25,7 @@ namespace Kona.UILogic.Tests.Repositories
         {
             var cacheService = new MockCacheService();
             cacheService.DataExistsAndIsValidAsyncDelegate = s => Task.FromResult(false);
-            cacheService.SaveExternalDataAsyncDelegate = (uri, s) => Task.FromResult(new Uri("http://test.org"));
+            cacheService.SaveExternalDataAsyncDelegate = s => Task.FromResult(new Uri("http://test.org"));
             cacheService.SaveDataAsyncDelegate = (s, c) => Task.FromResult(new Uri("http://test.org"));
 
             var productCatalogService = new MockProductCatalogService();
@@ -83,7 +83,7 @@ namespace Kona.UILogic.Tests.Repositories
         {
             var cacheService = new MockCacheService();
             cacheService.DataExistsAndIsValidAsyncDelegate = s => Task.FromResult(false);
-            cacheService.SaveExternalDataAsyncDelegate = (uri, s) => Task.FromResult(new Uri("http://test.org"));
+            cacheService.SaveExternalDataAsyncDelegate = s => Task.FromResult(new Uri("http://test.org"));
 
             cacheService.SaveDataAsyncDelegate = (s, o) =>
             {
@@ -115,7 +115,7 @@ namespace Kona.UILogic.Tests.Repositories
         {
             var cacheService = new MockCacheService();
             cacheService.DataExistsAndIsValidAsyncDelegate = s => Task.FromResult(false);
-            cacheService.SaveExternalDataAsyncDelegate = (uri, s) => Task.FromResult(new Uri("http://test.org"));
+            cacheService.SaveExternalDataAsyncDelegate = s => Task.FromResult(new Uri("http://test.org"));
             cacheService.SaveDataAsyncDelegate = (s, c) => Task.FromResult(new Uri("http://test.org"));
 
             var productCatalogService = new MockProductCatalogService();
@@ -170,7 +170,7 @@ namespace Kona.UILogic.Tests.Repositories
         {
             var cacheService = new MockCacheService();
             cacheService.DataExistsAndIsValidAsyncDelegate = s => Task.FromResult(false);
-            cacheService.SaveExternalDataAsyncDelegate = (uri, s) => Task.FromResult(new Uri("http://test.org"));
+            cacheService.SaveExternalDataAsyncDelegate = s => Task.FromResult(new Uri("http://test.org"));
             cacheService.SaveDataAsyncDelegate = (s, o) => 
             {
                 var collection = (ReadOnlyCollection<Category>)o;

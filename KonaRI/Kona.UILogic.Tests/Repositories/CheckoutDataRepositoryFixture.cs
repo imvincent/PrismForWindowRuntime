@@ -8,10 +8,13 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Kona.UILogic.Models;
 using Kona.UILogic.Repositories;
+using Kona.UILogic.Services;
 using Kona.UILogic.Tests.Mocks;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using Windows.Storage.Streams;
 
 namespace Kona.UILogic.Tests.Repositories
 {
@@ -19,14 +22,16 @@ namespace Kona.UILogic.Tests.Repositories
     public class CheckoutDataRepositoryFixture
     {
         [TestMethod]
-        public void GetEntity_Returns_Entity()
+        public async Task GetEntity_Returns_Entity()
         {
             var service = SetupService();
-            var target = new CheckoutDataRepository(service);
+            var encryptionService = new MockEncryptionService();
+            encryptionService.DecryptMessageDelegate = buffer => Task.FromResult("1234");
+            var target = new CheckoutDataRepository(service, encryptionService);
 
             var shippingAddress = target.GetShippingAddress("3");
             var bilingAddress = target.GetBillingAddress("2");
-            var paymentMethod = target.GetPaymentMethod("1");
+            var paymentMethod = await target.GetPaymentMethodAsync("1");
 
             Assert.AreEqual(shippingAddress.FirstName, "Anne");
             Assert.AreEqual(bilingAddress.FirstName, "Jane");
@@ -34,14 +39,16 @@ namespace Kona.UILogic.Tests.Repositories
         }
 
         [TestMethod]
-        public void GetDefaultValues_Returns_DefaultValues()
+        public async Task GetDefaultValues_Returns_DefaultValues()
         {
             var service = SetupService();
-            var target = new CheckoutDataRepository(service);
+            var encryptionService = new MockEncryptionService();
+            encryptionService.DecryptMessageDelegate = buffer => Task.FromResult("1234");
+            var target = new CheckoutDataRepository(service, encryptionService);
 
             var defaultShippingAddress = target.GetDefaultShippingAddress();
             var defaultBilingAddress = target.GetDefaultBillingAddress();
-            var defaultPaymentMethod = target.GetDefaultPaymentMethod();
+            var defaultPaymentMethod = await target.GetDefaultPaymentMethodAsync();
 
             Assert.IsNotNull(defaultShippingAddress);
             Assert.AreEqual(defaultShippingAddress.Id, "3");
@@ -51,14 +58,16 @@ namespace Kona.UILogic.Tests.Repositories
         }
 
         [TestMethod]
-        public void GetAllEntities_Returns_AllEntities()
+        public async Task GetAllEntities_Returns_AllEntities()
         {
             var service = SetupService();
-            var target = new CheckoutDataRepository(service);
+            var encryptionService = new MockEncryptionService();
+            encryptionService.DecryptMessageDelegate = buffer => Task.FromResult("1234");
+            var target = new CheckoutDataRepository(service, encryptionService);
 
             var shippingAddresses = target.GetAllShippingAddresses();
             var bilingAddresses = target.GetAllBillingAddresses();
-            var paymentMethods = target.GetAllPaymentMethods();
+            var paymentMethods = await target.GetAllPaymentMethodsAsync();
 
             Assert.AreEqual(3, shippingAddresses.Count());
             Assert.AreEqual(2, bilingAddresses.Count());
@@ -66,14 +75,24 @@ namespace Kona.UILogic.Tests.Repositories
         }
 
         [TestMethod]
-        public void SaveEntity_SavesEntity()
+        public async Task SaveEntity_SavesEntity()
         {
+            var encryptedCardNumber = false;
             var service = SetupService();
-            var target = new CheckoutDataRepository(service);
+            var encryptionService = new MockEncryptionService();
+            encryptionService.EncryptMessageDelegate = s =>
+                                                           {
+                                                               Assert.AreEqual("12345", s);
+                                                               encryptedCardNumber = true;
+                                                               return Task.FromResult<IBuffer>(null);
+                                                           };
+            encryptionService.DecryptMessageDelegate = buffer => Task.FromResult("1111");
+
+            var target = new CheckoutDataRepository(service, encryptionService);
 
             var savedShippingAddress = target.SaveShippingAddress(new Address() { FirstName = "TestFirstName", LastName = "TestLastName" });
             var savedBillingAddress = target.SaveBillingAddress(new Address() { FirstName = "TestFirstName", LastName = "TestLastName" });
-            var savedPaymentMethod = target.SavePaymentMethod(new PaymentMethod() { CardholderName = "TestCardholderName" });
+            var savedPaymentMethod = await target.SavePaymentMethodAsync(new PaymentMethod() { CardholderName = "TestCardholderName", CardNumber = "12345"});
 
             Assert.IsNotNull(savedShippingAddress);
             Assert.IsNotNull(savedBillingAddress);
@@ -81,22 +100,26 @@ namespace Kona.UILogic.Tests.Repositories
 
             var shippingAddress = target.GetShippingAddress(savedShippingAddress.Id);
             var billingAddress = target.GetBillingAddress(savedBillingAddress.Id);
-            var paymentMethod = target.GetPaymentMethod(savedPaymentMethod.Id);
+            var paymentMethod = await target.GetPaymentMethodAsync(savedPaymentMethod.Id);
             
             Assert.AreEqual(savedShippingAddress.Id, shippingAddress.Id);
             Assert.AreEqual(savedBillingAddress.Id, billingAddress.Id);
             Assert.AreEqual(savedPaymentMethod.Id, paymentMethod.Id);
+
+            Assert.IsTrue(encryptedCardNumber);
         }
 
         [TestMethod]
-        public void SetDefaultEntity_SetsDefaultEntity()
+        public async Task SetDefaultEntity_SetsDefaultEntity()
         {
             var service = SetupService();
-            var target = new CheckoutDataRepository(service);
+            var encryptionService = new MockEncryptionService();
+            encryptionService.DecryptMessageDelegate = buffer => Task.FromResult("1234");
+            var target = new CheckoutDataRepository(service, encryptionService);
 
             var defaultShippingAddress = target.GetDefaultShippingAddress();
             var defaultBillingAddress = target.GetDefaultBillingAddress();
-            var defaultPaymentMethod = target.GetDefaultPaymentMethod();
+            var defaultPaymentMethod = await target.GetDefaultPaymentMethodAsync();
 
             Assert.IsNotNull(defaultShippingAddress);
             Assert.AreEqual(defaultShippingAddress.Id, "3");
@@ -106,11 +129,11 @@ namespace Kona.UILogic.Tests.Repositories
 
             target.SetDefaultShippingAddress(target.GetShippingAddress("2"));
             target.SetDefaultBillingAddress(target.GetBillingAddress("1"));
-            target.SetDefaultPaymentMethod(target.GetPaymentMethod("1"));
+            target.SetDefaultPaymentMethod(await target.GetPaymentMethodAsync("1"));
 
             defaultShippingAddress = target.GetDefaultShippingAddress();
             defaultBillingAddress = target.GetDefaultBillingAddress();
-            defaultPaymentMethod = target.GetDefaultPaymentMethod();
+            defaultPaymentMethod = await target.GetDefaultPaymentMethodAsync();
 
             Assert.IsNotNull(defaultShippingAddress);
             Assert.AreEqual(defaultShippingAddress.Id, "2");
@@ -121,15 +144,17 @@ namespace Kona.UILogic.Tests.Repositories
         }
 
         [TestMethod]
-        public void RemoveDefaultEntity_RemovesDefaultEntity()
+        public async Task RemoveDefaultEntity_RemovesDefaultEntity()
         {
             var service = SetupService();
-            var target = new CheckoutDataRepository(service);
-            target.SetDefaultPaymentMethod(target.GetPaymentMethod("1"));
+            var encryptionService = new MockEncryptionService();
+            encryptionService.DecryptMessageDelegate = buffer => Task.FromResult("1234");
+            var target = new CheckoutDataRepository(service, encryptionService);
+            target.SetDefaultPaymentMethod(await target.GetPaymentMethodAsync("1"));
 
             var defaultShippingAddress = target.GetDefaultShippingAddress();
             var defaultBillingAddress = target.GetDefaultBillingAddress();
-            var defaultPaymentMethod = target.GetDefaultPaymentMethod();
+            var defaultPaymentMethod = await target.GetDefaultPaymentMethodAsync();
 
             Assert.IsNotNull(defaultShippingAddress);
             Assert.IsNotNull(defaultBillingAddress);
@@ -141,7 +166,7 @@ namespace Kona.UILogic.Tests.Repositories
 
             defaultShippingAddress = target.GetDefaultShippingAddress();
             defaultBillingAddress = target.GetDefaultBillingAddress();
-            defaultPaymentMethod = target.GetDefaultPaymentMethod();
+            defaultPaymentMethod = await target.GetDefaultPaymentMethodAsync();
 
             Assert.IsNull(defaultShippingAddress);
             Assert.IsNull(defaultBillingAddress);

@@ -7,9 +7,8 @@
 
 
 using System;
+using System.Runtime.Serialization;
 using Kona.Infrastructure;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
 
 namespace Kona.UILogic.ViewModels
 {

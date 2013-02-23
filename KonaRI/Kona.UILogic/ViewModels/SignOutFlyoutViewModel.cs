@@ -17,20 +17,18 @@ namespace Kona.UILogic.ViewModels
     public class SignOutFlyoutViewModel : BindableBase, IFlyoutViewModel
     {
         private readonly IAccountService _accountService;
-        private readonly ICredentialStore _credentialStore;
         private readonly INavigationService _navigationService;
         private UserInfo _userInfo;
         private DelegateCommand _signOutCommand;
         private string _userName;
 
-        public SignOutFlyoutViewModel(IAccountService accountService, ICredentialStore credentialStore, INavigationService navigationService)
+        public SignOutFlyoutViewModel(IAccountService accountService, INavigationService navigationService)
         {
             _accountService = accountService;
-            _credentialStore = credentialStore;
             _navigationService = navigationService;
             GoBackCommand = new DelegateCommand(() => GoBack());
             if (_accountService != null)
-                _userInfo = _accountService.LastSignedInUser;
+                _userInfo = _accountService.SignedInUser;
         }
 
 
@@ -62,7 +60,6 @@ namespace Kona.UILogic.ViewModels
 
         private void SignOut()
         {
-            _credentialStore.RemovedSavedCredentials("KonaRI");
             _accountService.SignOut();
             _navigationService.ClearHistory();
             _navigationService.Navigate("Hub", null);
@@ -79,6 +76,5 @@ namespace Kona.UILogic.ViewModels
         {
             get { return _userInfo == null; }
         }
-
     }
 }

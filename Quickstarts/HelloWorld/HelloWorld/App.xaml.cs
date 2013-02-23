@@ -6,17 +6,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Kona.Infrastructure;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using HelloWorld.Views;
-using HelloWorld.ViewModels;
 using HelloWorld.Services;
+using HelloWorld.ViewModels;
+using HelloWorld.Views;
+using Kona.Infrastructure;
+using Windows.ApplicationModel.Activation;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
 
@@ -25,7 +19,9 @@ namespace HelloWorld
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
+    // <snippet3200>
     sealed partial class App : MvvmAppBase
+    // </snippet3200>
     {
         // Declare any app services that you want to hold on to as singletons
         IDataRepository _dataRepository;
@@ -53,15 +49,17 @@ namespace HelloWorld
         /// This is the place you initialize your services and set default factory or default resolver for the view model locator
         /// </summary>
         /// <param name="args">The same launch arguments passed when the app starts.</param>
+        // <snippet3201>
         public override void OnInitialize(IActivatedEventArgs args)
         {
             // New up the singleton data repository, and pass it the state service it depends on from the base class
-            _dataRepository = new DataRepository(RestorableStateService);
+            _dataRepository = new DataRepository(SuspensionManagerState);
 
             // Register factory methods for the ViewModelLocator for each view model that takes dependencies so that you can pass in the
             // dependent services from the factory method here.
             ViewModelLocator.Register(typeof(MainPage).ToString(), () => new MainPageViewModel(_dataRepository, NavigationService));
             ViewModelLocator.Register(typeof(UserInputPage).ToString(), () => new UserInputPageViewModel(_dataRepository, NavigationService));
         }
+        // </snippet3201>
     }
 }

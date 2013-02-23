@@ -6,17 +6,16 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System.Linq;
 using Kona.UILogic.Models;
 using Kona.UILogic.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace Kona.AWShopper.DesignViewModels
 {
     public class ItemDetailsPageDesignViewModel
     {
-
         public ItemDetailsPageDesignViewModel()
         {
             FillWithDummyData();
@@ -24,17 +23,27 @@ namespace Kona.AWShopper.DesignViewModels
 
         public ProductViewModel SelectedProduct { get; set; }
 
-        public ObservableCollection<ProductViewModel> Items { get; private set; }
+        public IEnumerable<ProductViewModel> Items { get; private set; }
 
         private void FillWithDummyData()
         {
-            Items = new ObservableCollection<ProductViewModel>(new List<ProductViewModel> {
-            new ProductViewModel(
-                new Product() { Title = "Product 1",  Description = "Description of Product 1", ListPrice = 99.99, DiscountPercentage = 0, ProductNumber = "1", ImageName = (new Uri("ms-appx:///Assets/StoreLogo.png")).AbsoluteUri, Currency= "USD" }
+            Items = new List<ProductViewModel> 
+            {
+                new ProductViewModel(
+                    new Product()
+                        {
+                            Title = "Product 1",  
+                            Description = "Description of Product 1", 
+                            ListPrice = 99.99, 
+                            DiscountPercentage = 0, 
+                            ProductNumber = "1", 
+                            ImageUri = new Uri("ms-appx:///Assets/WideLogo.scale-100.png"), 
+                            Currency= "USD"
+                        }
                 )
-            });
+            };
 
-            SelectedProduct = Items[0];
+            SelectedProduct = Items.First();
         }
     }
 }

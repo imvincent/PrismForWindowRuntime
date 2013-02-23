@@ -23,9 +23,6 @@ namespace Kona.UILogic.ViewModels
         [RestorableState]
         PaymentMethod PaymentMethod { get; set; }
 
-        [RestorableState]
-        bool SetAsDefault { get; set; }
-
         string EntityId { get; set; }
         void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState);
         void OnNavigatedFrom(Dictionary<string, object> viewState, bool suspending);

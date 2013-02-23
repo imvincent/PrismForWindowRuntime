@@ -21,7 +21,6 @@ namespace Kona.UILogic.ViewModels
     public class BillingAddressUserControlViewModel : ViewModel, IBillingAddressUserControlViewModel
     {
         private Address _address;
-        private bool _setAsDefault;
         private IReadOnlyCollection<ComboBoxItemValue> _states;
         private readonly ILocationService _locationService;
         private readonly IResourceLoader _resourceLoader;
@@ -43,13 +42,6 @@ namespace Kona.UILogic.ViewModels
             set { SetProperty(ref _address, value); }
         }
 
-        [RestorableState]
-        public bool SetAsDefault
-        {
-            get { return _setAsDefault; }
-            set { SetProperty(ref _setAsDefault, value); }
-        }
-
         public IReadOnlyCollection<ComboBoxItemValue> States
         {
             get { return _states; }
@@ -63,7 +55,7 @@ namespace Kona.UILogic.ViewModels
             {
                 if (SetProperty(ref _isEnabled, value))
                 {
-                    // Enable/Disable validation if the page is disabled
+                    // Enable/Disable validation based on the value of this property
                     Address.IsValidationEnabled = IsEnabled;
                 }
             }
@@ -133,18 +125,7 @@ namespace Kona.UILogic.ViewModels
 
         public void ProcessForm()
         {
-            var savedAddress = _checkoutDataRepository.SaveBillingAddress(_address);
-
-            //If matching saved address found, use saved address
-            if (savedAddress.Id != Address.Id)
-            {
-                Address = savedAddress;
-            }
-
-            if (SetAsDefault)
-            {
-                _checkoutDataRepository.SetDefaultBillingAddress(savedAddress);
-            }
+            _checkoutDataRepository.SaveBillingAddress(_address);
         }
 
         public async Task PopulateStatesAsync()

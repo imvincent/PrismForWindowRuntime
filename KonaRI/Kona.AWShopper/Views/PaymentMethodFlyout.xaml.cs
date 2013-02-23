@@ -7,14 +7,15 @@
 
 
 using Kona.Infrastructure.Flyouts;
+using Kona.Infrastructure.Interfaces;
 using Windows.UI.Xaml.Controls;
 
 namespace Kona.AWShopper.Views
 {
     public sealed partial class PaymentMethodFlyout : FlyoutView
     {
-        public PaymentMethodFlyout(string commandId, string commandTitle)
-            : base(commandId, commandTitle, StandardFlyoutSize.Narrow)
+        public PaymentMethodFlyout(ISearchPaneService searchPaneService)
+            : base(StandardFlyoutSize.Narrow, searchPaneService)
         {
             this.InitializeComponent();
         }

@@ -17,8 +17,8 @@ namespace Kona.UILogic.Services
 
         Task<T> GetDataAsync<T>(string cacheKey);
 
-        Task<Uri> SaveDataAsync<T>(string cacheKey, T content);
+        Task SaveDataAsync<T>(string cacheKey, T content);
 
-        Task<Uri> SaveExternalDataAsync(string cacheKey, Uri dataUrl);
+        Task<Uri> SaveExternalDataAsync(Uri dataUrl);
     }
 }

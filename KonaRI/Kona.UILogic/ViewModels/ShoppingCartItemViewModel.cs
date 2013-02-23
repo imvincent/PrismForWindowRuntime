@@ -25,7 +25,7 @@ namespace Kona.UILogic.ViewModels
         private int _quantity;
         private double _listPrice;
         private double _discountPercentage;
-        private string _imagePath;
+        private Uri _imageUri;
         private CurrencyFormatter _currencyFormatter;
 
         public ShoppingCartItemViewModel(ShoppingCartItem shoppingCartItem)
@@ -41,7 +41,7 @@ namespace Kona.UILogic.ViewModels
             _quantity = shoppingCartItem.Quantity;
             _listPrice = shoppingCartItem.Product.ListPrice;
             _discountPercentage = shoppingCartItem.Product.DiscountPercentage;
-            _imagePath = shoppingCartItem.Product.ImageName;
+            _imageUri = shoppingCartItem.Product.ImageUri;
             EntityId = shoppingCartItem.Id;
             ProductId = shoppingCartItem.Product.ProductNumber;
             _currencyFormatter = new CurrencyFormatter(shoppingCartItem.Currency);
@@ -96,7 +96,7 @@ namespace Kona.UILogic.ViewModels
 
         public ImageSource Image
         {
-            get { return new BitmapImage(new Uri(_imagePath, UriKind.Absolute)); }
+            get { return new BitmapImage(_imageUri); }
         }
 
         public double DiscountedPriceDouble { get { return Math.Round(FullPriceDouble*(1 - DiscountPercentage/100), 2); } }

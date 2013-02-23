@@ -153,6 +153,9 @@
     <Compile Include="Views\SearchResultsPage.xaml.cs">
       <DependentUpon>SearchResultsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SearchUserControl.xaml.cs">
+      <DependentUpon>SearchUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ShippingAddressFlyout.xaml.cs">
       <DependentUpon>ShippingAddressFlyout.xaml</DependentUpon>
     </Compile>
@@ -168,7 +171,6 @@
     <Compile Include="Views\PaymentMethodUserControl.xaml.cs">
       <DependentUpon>PaymentMethodUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Common\RichTextColumns.cs" />
     <Compile Include="Views\GroupDetailPage.xaml.cs">
       <DependentUpon>GroupDetailPage.xaml</DependentUpon>
     </Compile>
@@ -255,6 +257,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\SearchResultsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SearchUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

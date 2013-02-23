@@ -6,11 +6,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using HelloWorld.Services;
 using Kona.Infrastructure;
+using System.Collections.Generic;
 
 namespace HelloWorld.ViewModels
 {

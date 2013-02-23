@@ -51,7 +51,7 @@ namespace EventAggregatorQuickstart
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
                 var frameFacade = new FrameFacadeAdapter(rootFrame);
-                _navigationService = _bootstrapper.CreateNavigationService(frameFacade, new FileBackedRestorableStateService());
+                _navigationService = _bootstrapper.CreateNavigationService(frameFacade, new SuspensionManagerState());
                 _bootstrapper.Bootstrap(_navigationService);
 
                 if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)

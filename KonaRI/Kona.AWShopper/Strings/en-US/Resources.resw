@@ -450,4 +450,13 @@
   <data name="Page.FlowDirection" xml:space="preserve">
     <value>LeftToRight</value>
   </data>
+  <data name="NoSearchResultsLabel.Text" xml:space="preserve">
+    <value>No products match your search.</value>
+  </data>
+  <data name="ResultsForLabel.Text" xml:space="preserve">
+    <value>Results for&amp;#x00a0;</value>
+  </data>
+  <data name="SearchPageTitle.Text" xml:space="preserve">
+    <value>Search</value>
+  </data>
 </root>

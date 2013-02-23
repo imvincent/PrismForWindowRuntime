@@ -60,7 +60,7 @@ namespace Kona.WebServices.Controllers
             if (ModelState.IsValid)
             {
                 order = _orderRepository.Create(order);
-                var response = Request.CreateResponse(HttpStatusCode.Created, order);
+                var response = Request.CreateResponse(HttpStatusCode.Created, order.Id);
                 response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = order.Id }));
                 return response;
             }
@@ -97,7 +97,7 @@ namespace Kona.WebServices.Controllers
                 }
             }
 
-            // Only get here if there are modelstate errors
+            // Only get here if there are ModelState errors
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
         }
 

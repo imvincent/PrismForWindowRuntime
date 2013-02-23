@@ -19,9 +19,7 @@ namespace Kona.WebServices.Models
 
         public string Title { get; set; }
 
-        public Uri ImageExternalUri { get; set; }
-
-        public Uri ImageLocalUri { get; set; }
+        public Uri ImageUri { get; set; }
 
         public IEnumerable<Category> Subcategories { get; set; }
 

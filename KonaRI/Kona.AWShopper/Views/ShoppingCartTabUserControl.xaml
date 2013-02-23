@@ -8,7 +8,7 @@
     xmlns:designViewModels="using:Kona.AWShopper.DesignViewModels"
     infrastructure:ViewModelLocator.AutoWireViewModel="true"
     mc:Ignorable="d"
-    Width="100" Height="100"
+    Width="80" Height="80"
     d:DesignHeight="300" d:DesignWidth="400"
     d:DataContext="{d:DesignInstance designViewModels:ShoppingCartTabDesignViewModel, IsDesignTimeCreatable=True}">
     
@@ -89,22 +89,26 @@
     </UserControl.Resources>
 
     <Grid>
-        <Button x:Uid="ShoppingCartButton" AutomationProperties.AutomationId="ShoppingCartButton" Command="{Binding ShoppingCartTabCommand}" Width="100" Height="100" BorderBrush="White" Style="{StaticResource ButtonStyle1}">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding ItemCount}" Width="Auto" MaxWidth="27" HorizontalAlignment="Right"  FontSize="16" FontWeight="ExtraBold" VerticalAlignment="Center" />
+        <Button x:Uid="ShoppingCartButton" AutomationProperties.AutomationId="ShoppingCartButton" Command="{Binding ShoppingCartTabCommand}" Width="80" Height="80" BorderBrush="White" Style="{StaticResource ButtonStyle1}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="17" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding ItemCount}" Width="Auto" MaxWidth="27" Grid.Column="0"  Margin="-10,0,0,0"  FontSize="16" FontWeight="ExtraBold" VerticalAlignment="Center" HorizontalAlignment="Right" />
                 <Viewbox Width="40" Height="40" Grid.Column="1" HorizontalAlignment="Left" Margin="-5,0,0,10">
                     <Canvas Width="60" Height="60" Canvas.Left="0" Canvas.Top="0">
                         <Path Fill="{StaticResource AWShopperItemForegroundLighterBrush}"  Data="F1 M 372.601,181.645L 364.733,181.645L 363.407,175.361C 363.161,174.768 362.819,174.233 362.681,173.593L 338.831,60.2533C 338.792,60.192 338.845,60.108 338.831,60.0707L 336.244,47.9467L 348.789,47.9467L 359.097,47.9467L 568.193,47.9467L 576.223,12.1387L 584.832,12.1387L 587.523,12.1387L 629.964,12.1387L 632.588,12.1387L 642.752,12.1387L 642.752,32.5213L 632.588,32.5213L 629.964,32.5213L 592.823,32.5213L 559.036,173.624L 550.945,215.913C 550.573,217.804 549.62,219.367 548.384,220.716C 553.027,225.077 555.971,231.195 555.971,238.057C 555.971,251.279 545.319,262 532.067,262C 518.821,262 508.1,251.279 508.1,238.057C 508.1,232.785 510.129,228.151 512.988,224.187L 413.115,224.187C 416.004,228.151 418.055,232.785 418.055,238.057C 418.055,251.279 407.319,262 394.044,262C 380.867,262 370.147,251.279 370.147,238.057C 370.147,232.785 372.205,228.151 375.087,224.187L 356.887,224.187C 356.855,224.187 356.756,224.132 356.688,224.132L 346.325,224.132L 346.325,203.804L 356.887,203.804L 362.681,203.804L 532.463,203.804L 536.725,181.676L 372.655,181.676L 372.601,181.645 Z " Stretch="Fill">
                             <Path.RenderTransform>
                                 <TransformGroup>
-                                    <ScaleTransform ScaleX=".15" ScaleY=".15" />
-                                    <TranslateTransform X="20" Y="20" />
+                                    <ScaleTransform ScaleX=".13" ScaleY=".13" />
+                                    <TranslateTransform X="13" Y="20" />
                                 </TransformGroup>
                             </Path.RenderTransform>
                         </Path>
                     </Canvas>
                 </Viewbox>
-            </StackPanel>
+            </Grid>
         </Button>
     </Grid>
 </UserControl>

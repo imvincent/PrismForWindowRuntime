@@ -7,13 +7,14 @@
 
 
 using Kona.Infrastructure.Flyouts;
+using Kona.Infrastructure.Interfaces;
 
 namespace Kona.AWShopper.Views
 {
     public sealed partial class SignOutFlyout : FlyoutView
     {
-        public SignOutFlyout(string commandId, string commandTitle)
-            : base(commandId, commandTitle, StandardFlyoutSize.Narrow)
+        public SignOutFlyout(ISearchPaneService searchPaneService)
+            : base(StandardFlyoutSize.Narrow, searchPaneService)
         {
             this.InitializeComponent();
         }
