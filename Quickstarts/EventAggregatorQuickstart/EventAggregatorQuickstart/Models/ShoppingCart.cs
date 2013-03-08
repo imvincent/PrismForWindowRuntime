@@ -11,14 +11,29 @@ using System.Collections.Generic;
 namespace EventAggregatorQuickstart
 {
     // <snippet3101>
+    // Thread-safe shopping cart
     public class ShoppingCart
     {
-        public ShoppingCart()
+        private List<ShoppingCartItem> _items = new List<ShoppingCartItem>();
+
+        public void AddItem(ShoppingCartItem item)
         {
-            Items = new List<ShoppingCartItem>();
+            lock (_items)
+            {
+                _items.Add(item);
+            }
         }
-        public string UserId { get; set; }
-        public List<ShoppingCartItem> Items { get; set; }
+
+        public int Count
+        {
+            get
+            {
+                lock (_items)
+                {
+                    return _items.Count;
+                }
+            }
+        }
     }
     // </snippet3101>
 }

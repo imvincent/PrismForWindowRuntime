@@ -6,8 +6,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using Kona.Infrastructure;
 using System;
+using Microsoft.Practices.StoreApps.Infrastructure;
+using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
@@ -51,7 +52,7 @@ namespace EventAggregatorQuickstart
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
                 var frameFacade = new FrameFacadeAdapter(rootFrame);
-                _navigationService = _bootstrapper.CreateNavigationService(frameFacade, new SuspensionManagerState());
+                _navigationService = _bootstrapper.CreateNavigationService(frameFacade, new SessionStateService());
                 _bootstrapper.Bootstrap(_navigationService);
 
                 if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)

@@ -104,7 +104,7 @@
     </Compile>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Models\ShoppingCartItem.cs" />
-    <Compile Include="NonUISubscriber.cs" />
+    <Compile Include="BackgroundSubscriber.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -156,13 +156,13 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\KonaRI\Kona.Infrastructure\Kona.Infrastructure.csproj">
-      <Project>{a2303152-0f67-4ca5-8639-0a16e64a8b6d}</Project>
-      <Name>Kona.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\KonaRI\Microsoft.Practices.PubSubEvents\Microsoft.Practices.PubSubEvents.csproj">
+    <ProjectReference Include="..\..\..\PubSubEvents\Microsoft.Practices.PubSubEvents.csproj">
       <Project>{d5d2645c-03eb-48b0-9873-0904fcdb2ced}</Project>
       <Name>Microsoft.Practices.PubSubEvents</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\StoreApps.Infrastructure\Microsoft.Practices.StoreApps.Infrastructure.csproj">
+      <Project>{a2303152-0f67-4ca5-8639-0a16e64a8b6d}</Project>
+      <Name>Microsoft.Practices.StoreApps.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">

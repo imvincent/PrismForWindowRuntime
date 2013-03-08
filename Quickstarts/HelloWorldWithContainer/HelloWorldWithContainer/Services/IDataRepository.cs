@@ -12,7 +12,7 @@ namespace HelloWorldWithContainer.Services
 {
     public interface IDataRepository
     {
-        List<string> GetKonaFeatures();
+        List<string> GetFeatures();
         string GetUserEnteredData();
         void SetUserEnteredData(string data);
     }

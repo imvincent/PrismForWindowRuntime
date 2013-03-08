@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventAggregatorQuickstart", "EventAggregatorQuickstart\EventAggregatorQuickstart.csproj", "{49FDF118-A3A7-4A18-9550-D4F91B2A7B6C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kona.Infrastructure", "..\..\KonaRI\Kona.Infrastructure\Kona.Infrastructure.csproj", "{A2303152-0F67-4CA5-8639-0A16E64A8B6D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Practices.StoreApps.Infrastructure", "..\..\StoreApps.Infrastructure\Microsoft.Practices.StoreApps.Infrastructure.csproj", "{A2303152-0F67-4CA5-8639-0A16E64A8B6D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Practices.PubSubEvents", "..\..\KonaRI\Microsoft.Practices.PubSubEvents\Microsoft.Practices.PubSubEvents.csproj", "{D5D2645C-03EB-48B0-9873-0904FCDB2CED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Practices.PubSubEvents", "..\..\PubSubEvents\Microsoft.Practices.PubSubEvents.csproj", "{D5D2645C-03EB-48B0-9873-0904FCDB2CED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

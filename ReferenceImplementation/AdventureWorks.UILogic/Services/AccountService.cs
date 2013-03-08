@@ -1,0 +1,186 @@
+// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+// PARTICULAR PURPOSE.
+//
+// Copyright (c) Microsoft Corporation. All rights reserved
+
+
+using System;
+using System.Threading.Tasks;
+using AdventureWorks.UILogic.Models;
+using System.Security;
+using System.Net.Http;
+using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
+
+namespace AdventureWorks.UILogic.Services
+{
+    public class AccountService : IAccountService
+    {
+        public const string ServerCookieHeaderKey = "AccountService_ServerCookieHeader";
+        public const string SignedInUserKey = "AccountService_SignedInUser";
+        public const string PasswordVaultResourceName = "AWShopper";
+        private const string UserNameKey = "AccountService_UserName";
+        private const string PasswordKey = "AccountService_Password";
+        
+
+        private readonly IIdentityService _identityService;
+        private readonly ISessionStateService _sessionStateService;
+        private readonly ICredentialStore _credentialStore;
+        private string _serverCookieHeader;
+        private UserInfo _signedInUser;
+        private string _userName;
+        private string _password;
+
+        public AccountService(IIdentityService identityService, ISessionStateService sessionStateService, ICredentialStore credentialStore)
+        {
+            _identityService = identityService;
+            _sessionStateService = sessionStateService;
+            _credentialStore = credentialStore;
+            if (_sessionStateService != null)
+            {
+                if (_sessionStateService.SessionState.ContainsKey(ServerCookieHeaderKey))
+                {
+                    _serverCookieHeader = _sessionStateService.SessionState[ServerCookieHeaderKey] as string;
+                }
+                if (_sessionStateService.SessionState.ContainsKey(SignedInUserKey))
+                {
+                    _signedInUser = _sessionStateService.SessionState[SignedInUserKey] as UserInfo;
+                }
+                if (_sessionStateService.SessionState.ContainsKey(UserNameKey))
+                {
+                    _userName = _sessionStateService.SessionState[UserNameKey].ToString();
+                }
+                if (_sessionStateService.SessionState.ContainsKey(PasswordKey))
+                {
+                    _password = _sessionStateService.SessionState[PasswordKey].ToString();
+                }
+            }
+        }
+
+        public string ServerCookieHeader
+        {
+            get { return _serverCookieHeader; }
+        }
+
+        public UserInfo SignedInUser { get { return _signedInUser; } }
+
+        /// <summary>
+        /// Gets the current active user signed in the app.
+        /// </summary>
+        /// <returns>A Task that, when complete, retrieves an active user that is ready to be used for any operation against the service.</returns>
+        public async Task<UserInfo> VerifyUserAuthenticationAsync()
+        {
+            try
+            {
+                // If user is logged in, verify that the session in the service is still active
+                if (_signedInUser != null && _serverCookieHeader != null && await _identityService.VerifyActiveSessionAsync(_signedInUser.UserName, _serverCookieHeader))
+                {
+                    return _signedInUser;
+                }
+            }
+            catch (SecurityException)
+            {
+                // User's session has expired.
+            }
+
+            // Attempt to sign in using credentials stored in session state
+            // If succeeds, ask for a new active session
+            if (_userName != null && _password != null)
+            {
+                if (await SignInUserAsync(_userName, _password, false))
+                {
+                    return _signedInUser;
+                }
+            }
+
+            // Attempt to sign in using credentials stored locally
+            // If succeeds, ask for a new active session
+            var savedCredentials = _credentialStore.GetSavedCredentials(PasswordVaultResourceName);
+            if (savedCredentials != null)
+            {
+                savedCredentials.RetrievePassword();
+                if (await SignInUserAsync(savedCredentials.UserName, savedCredentials.Password, false))
+                {
+                    return _signedInUser;
+                }
+            }
+
+            return null;
+        }
+
+        public async Task<bool> SignInUserAsync(string userName, string password, bool useCredentialStore)
+        {
+            try
+            {
+                // <snippet507>
+                var result = await _identityService.LogOnAsync(userName, password);
+                // </snippet507>
+
+                UserInfo previousUser = _signedInUser;
+                _signedInUser = result.UserInfo;
+
+                // Save Server cookie & SignedInUser in the StateService
+                _serverCookieHeader = result.ServerCookieHeader;
+                _sessionStateService.SessionState[ServerCookieHeaderKey] = _serverCookieHeader;
+                _sessionStateService.SessionState[SignedInUserKey] = _signedInUser;
+
+                // Save username and password in state service
+                _userName = userName;
+                _password = password;
+                _sessionStateService.SessionState[UserNameKey] = userName;
+                _sessionStateService.SessionState[PasswordKey] = password;
+
+                if (useCredentialStore)
+                {
+                    // Save credentials in the CredentialStore
+                    _credentialStore.SaveCredentials(PasswordVaultResourceName, userName, password);
+                }
+
+                RaiseUserChanged(_signedInUser, previousUser);
+                return true;
+            }
+            catch (HttpRequestException ex)
+            {
+                if (ex.InnerException is System.Net.WebException)
+                {
+                    throw ex.InnerException;
+                }
+                _serverCookieHeader = string.Empty;
+                _sessionStateService.SessionState[ServerCookieHeaderKey] = _serverCookieHeader;
+            }
+
+            return false;
+        }
+
+        public event EventHandler<UserChangedEventArgs> UserChanged;
+
+        private void RaiseUserChanged(UserInfo newUserInfo, UserInfo oldUserInfo)
+        {
+            var handler = UserChanged;
+            if (handler != null)
+            {
+                handler(this, new UserChangedEventArgs(newUserInfo, oldUserInfo));
+            }
+        }
+
+        public void SignOut()
+        {
+            var previousUser = _signedInUser;
+            _signedInUser = null;
+            _serverCookieHeader = null;
+            _userName = null;
+            _password = null;
+
+            _sessionStateService.SessionState.Remove(ServerCookieHeaderKey);
+            _sessionStateService.SessionState.Remove(SignedInUserKey);
+            _sessionStateService.SessionState.Remove(UserNameKey);
+            _sessionStateService.SessionState.Remove(PasswordKey);
+
+            // remove user from the CredentialStore, if any
+            _credentialStore.RemoveSavedCredentials(PasswordVaultResourceName);
+
+            RaiseUserChanged(_signedInUser, previousUser);
+        }
+    }
+}

@@ -1,0 +1,80 @@
+﻿<Infrastructure:FlyoutView x:Class="AdventureWorks.AWShopper.Views.PaymentMethodFlyout"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="using:AdventureWorks.AWShopper.Views"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:behaviors="using:AdventureWorks.AWShopper.Behaviors"
+                    xmlns:Infrastructure="using:Microsoft.Practices.StoreApps.Infrastructure"
+                    xmlns:Flyouts="using:Microsoft.Practices.StoreApps.Infrastructure.Flyouts"
+                    x:Uid="Page"
+                    mc:Ignorable="d"
+                    d:DesignHeight="768"
+                    d:DesignWidth="364"
+                    Infrastructure:ViewModelLocator.AutoWireViewModel="true">
+
+    <Border BorderBrush="{StaticResource AWShopperFlyoutHeaderBackground}"
+            BorderThickness="1,0,0,0">
+        <Grid VerticalAlignment="Stretch"
+              Background="{StaticResource LightBackground}">
+
+            <!-- Root grid definition -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Header area for panel -->
+            <Grid Background="{StaticResource AWShopperFlyoutHeaderBackground}"
+                  Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal"
+                            Grid.Column="0"
+                            Margin="40, 32, 0, 13">
+                    <Button Command="{Binding GoBackCommand}"
+                            AutomationProperties.AutomationId="EditPaymentMethodFlyoutBackButton"
+                            Margin="0,3,0,0"
+                            Style="{StaticResource SettingsBackButtonStyle}" />
+                    <TextBlock Margin="10,0,0,0"
+                               FontFamily="Segoe UI"
+                               FontWeight="SemiLight"
+                               FontSize="24"
+                               Width="225"
+                               Text="{Binding HeaderLabel}"
+                               TextTrimming="WordEllipsis"
+                               Foreground="White" />
+                    <Image Source="ms-appx:///Assets/SmallLogo.png" />
+                </StackPanel>
+            </Grid>
+
+            <!-- Settings Panel Content -->
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          Grid.Row="1">
+                <Grid Margin="10"
+                      VerticalAlignment="Top"
+                      Grid.RowSpan="3">
+
+                    <StackPanel x:Name="FlyoutContent">
+                        <local:PaymentMethodUserControl x:Name="paymentMethodUC"
+                                                        Grid.Column="2"
+                                                        Grid.Row="1"
+                                                        behaviors:ChangeVisualState.VisualState="Flyout"
+                                                        DataContext="{Binding PaymentMethodViewModel}" />
+                        <Button x:Uid="SaveButton"
+                                AutomationProperties.AutomationId="SaveButton"
+                                Content="Save"
+                                Background="{StaticResource AWShopperAccentBrush}"
+                                HorizontalAlignment="Stretch"
+                                Margin="20,20,20,0"
+                                Command="{Binding SaveCommand}"
+                                Style="{StaticResource LightButtonStyle}"
+                                Foreground="White" />
+                    </StackPanel>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</Infrastructure:FlyoutView>

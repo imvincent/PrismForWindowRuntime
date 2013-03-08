@@ -6,11 +6,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using Kona.Infrastructure;
 using Microsoft.Practices.PubSubEvents;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Microsoft.Practices.StoreApps.Infrastructure;
 
 namespace EventAggregatorQuickstart
 {
@@ -35,11 +35,8 @@ namespace EventAggregatorQuickstart
         private void PublishOnUIThread()
         {
             AddItemToCart();
-            lock (_cart) // lock for multithreaded access to cart
-            {
-                // Fire the event on the UI thread
-                _eventAggregator.GetEvent<ShoppingCartChangedEvent>().Publish(_cart);
-            }
+            // Fire the event on the UI thread
+            _eventAggregator.GetEvent<ShoppingCartChangedEvent>().Publish(_cart);
         }
 
         private void PublishOnBackgroundThread()
@@ -47,22 +44,16 @@ namespace EventAggregatorQuickstart
             AddItemToCart();
             Task.Factory.StartNew(() => 
                 {
-                    lock (_cart) // lock for multithreaded access to cart
-                    {
-                        // Fire the event on a background thread
-                        _eventAggregator.GetEvent<ShoppingCartChangedEvent>().Publish(_cart);
-                        Debug.WriteLine(String.Format("Publishing from thread: {0}", Environment.CurrentManagedThreadId));
-                    }
+                    // Fire the event on a background thread
+                    _eventAggregator.GetEvent<ShoppingCartChangedEvent>().Publish(_cart);
+                    Debug.WriteLine(String.Format("Publishing from thread: {0}", Environment.CurrentManagedThreadId));
                 });
         }
 
         private void AddItemToCart()
         {
-            lock (_cart) // lock for multithreaded access to cart
-            {
-                ShoppingCartItem item = new ShoppingCartItem { Name = "Widget", Cost = 19.99m };
-                _cart.Items.Add(item);
-            }
+            var item = new ShoppingCartItem("Widget", 19.99m);
+            _cart.AddItem(item);
         }
         // </snippet3102>
     }

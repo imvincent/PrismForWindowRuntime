@@ -7,19 +7,18 @@
 
 
 using HelloWorld.Services;
-using Kona.Infrastructure;
 using System.Collections.Generic;
+using Microsoft.Practices.StoreApps.Infrastructure;
+using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
 
 namespace HelloWorld.ViewModels
 {
     public class MainPageViewModel : ViewModel
     {
         IDataRepository _dataRepository;
-        private readonly INavigationService _navService;
-        
+
         public MainPageViewModel(IDataRepository dataRepository, INavigationService navService)
         {
-            _navService = navService;
             _dataRepository = dataRepository;
             NavigateCommand = new DelegateCommand(() => navService.Navigate("UserInput", null));
         }
@@ -28,7 +27,7 @@ namespace HelloWorld.ViewModels
 
         public List<string> DisplayItems
         {
-            get { return _dataRepository.GetKonaFeatures(); }
+            get { return _dataRepository.GetFeatures(); }
         }
     }
 }

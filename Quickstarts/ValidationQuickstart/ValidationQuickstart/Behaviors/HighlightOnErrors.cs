@@ -8,7 +8,7 @@
 
 using System.Collections.ObjectModel;
 using System.Linq;
-using Kona.Infrastructure;
+using Microsoft.Practices.StoreApps.Infrastructure;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

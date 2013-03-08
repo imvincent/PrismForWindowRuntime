@@ -101,13 +101,6 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <ProjectReference Include="..\..\..\KonaRI\Kona.Infrastructure\Kona.Infrastructure.csproj">
-      <Project>{a2303152-0f67-4ca5-8639-0a16e64a8b6d}</Project>
-      <Name>Kona.Infrastructure</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -165,6 +158,12 @@
     <Reference Include="Microsoft.Practices.Unity.WinRT">
       <HintPath>..\packages\Unity.3.0.1208-Preview\lib\WinRT45\Microsoft.Practices.Unity.WinRT.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\StoreApps.Infrastructure\Microsoft.Practices.StoreApps.Infrastructure.csproj">
+      <Project>{a2303152-0f67-4ca5-8639-0a16e64a8b6d}</Project>
+      <Name>Microsoft.Practices.StoreApps.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

@@ -7,7 +7,8 @@
 
 
 using HelloWorld.Services;
-using Kona.Infrastructure;
+using Microsoft.Practices.StoreApps.Infrastructure;
+using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
 
 namespace HelloWorld.ViewModels
 {

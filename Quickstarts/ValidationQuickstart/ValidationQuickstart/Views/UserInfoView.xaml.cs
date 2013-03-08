@@ -6,8 +6,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using Kona.Infrastructure;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.Practices.StoreApps.Infrastructure;
 
 namespace ValidationQuickStart.Views
 {

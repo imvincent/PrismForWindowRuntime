@@ -6,6 +6,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using Microsoft.Practices.StoreApps.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -56,6 +57,12 @@ namespace ValidationQuickStart
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
             Frame rootFrame = Window.Current.Content as Frame;
+
+            // NOTE: This Quickstart does not intend to demonstrate how to properly manage suspend/resume.
+            // For more information about that functionality, please refer to the Reference Implementation.
+            
+            // We return a new instance every time the session state is requested
+            VisualStateAwarePage.GetSessionStateForFrame = (a) => new Dictionary<string, object>();
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active

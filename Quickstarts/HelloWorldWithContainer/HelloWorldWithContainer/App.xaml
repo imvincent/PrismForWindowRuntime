@@ -1,15 +1,14 @@
-﻿<kona:MvvmAppBase x:Class="HelloWorldWithContainer.App"
+﻿<Infrastructure:MvvmAppBase x:Class="HelloWorldWithContainer.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="using:HelloWorldWithContainer"
-             xmlns:kona="using:Kona.Infrastructure">
+             xmlns:Infrastructure="using:Microsoft.Practices.StoreApps.Infrastructure">
 
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Common/StandardStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <x:String x:Key="AppName">Kona: Hello World (with Container)!</x:String>
+            <x:String x:Key="AppName">Hello World (with Container)!</x:String>
         </ResourceDictionary>
     </Application.Resources>
-</kona:MvvmAppBase>
+</Infrastructure:MvvmAppBase>

@@ -9,7 +9,7 @@
 using HelloWorld.Services;
 using HelloWorld.ViewModels;
 using HelloWorld.Views;
-using Kona.Infrastructure;
+using Microsoft.Practices.StoreApps.Infrastructure;
 using Windows.ApplicationModel.Activation;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
@@ -35,13 +35,13 @@ namespace HelloWorld
         /// to the page approriate based on a search, sharing, or secondary tile launch of the app
         /// </summary>
         /// <param name="args">The launch arguments passed to the application</param>
-        public override void OnLaunchApplication(LaunchActivatedEventArgs args)
+        protected override void OnLaunchApplication(LaunchActivatedEventArgs args)
         {
             // Use the logical name for the view to navigate to. The default convention
             // in the NavigationService will be to append "Page" to the name and look 
             // for that page in a .Views child namespace in the project. IF you want another convention
             // for mapping view names to view types, you can override 
-            // the KonaApplication.GetPageNameToTypeResolver method
+            // the MvvmAppBase.GetPageNameToTypeResolver method
             NavigationService.Navigate("Main", null);
         }
 
@@ -50,10 +50,10 @@ namespace HelloWorld
         /// </summary>
         /// <param name="args">The same launch arguments passed when the app starts.</param>
         // <snippet3201>
-        public override void OnInitialize(IActivatedEventArgs args)
+        protected override void OnInitialize(IActivatedEventArgs args)
         {
             // New up the singleton data repository, and pass it the state service it depends on from the base class
-            _dataRepository = new DataRepository(SuspensionManagerState);
+            _dataRepository = new DataRepository(SessionStateService);
 
             // Register factory methods for the ViewModelLocator for each view model that takes dependencies so that you can pass in the
             // dependent services from the factory method here.

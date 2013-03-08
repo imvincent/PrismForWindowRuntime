@@ -2,14 +2,13 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:EventAggregatorQuickstart"
-             xmlns:kona="using:Kona.Infrastructure"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
+             xmlns:Infrastructure="using:Microsoft.Practices.StoreApps.Infrastructure" mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="400">
     <UserControl.Resources>
-        <kona:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <Infrastructure:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
     <Grid>
         <Border BorderThickness="5"
@@ -28,13 +27,13 @@
                                Text="{Binding ItemsInCart}"
                                Margin="5" />
                 </StackPanel>
-                <Button Command="{Binding AddNonUISubscriberCommand}"
-                        Content="Add Non-UI Subscriber"
+                <Button Command="{Binding AddBackgroundSubscriberCommand}"
+                        Content="Add Background Subscriber"
                         HorizontalAlignment="Center"
                         Margin="20"
                         VerticalAlignment="Top" />
-                <Button Command="{Binding GCNonUISubscriberCommand}"
-                        Content="GC Non-UI Subscriber"
+                <Button Command="{Binding GCBackgroundSubscriberCommand}"
+                        Content="GC Background Subscriber"
                         HorizontalAlignment="Center"
                         Margin="20"
                         VerticalAlignment="Top" />

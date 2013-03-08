@@ -6,7 +6,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using Kona.Infrastructure;
+using Microsoft.Practices.StoreApps.Infrastructure;
 
 namespace HelloWorld.Views
 {

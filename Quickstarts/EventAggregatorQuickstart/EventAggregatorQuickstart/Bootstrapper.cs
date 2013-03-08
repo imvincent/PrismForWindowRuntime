@@ -6,12 +6,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using Kona.Infrastructure;
-using Kona.Infrastructure.Interfaces;
 using Microsoft.Practices.PubSubEvents;
 using System;
 using System.Globalization;
-using Windows.UI.Xaml.Controls;
+using Microsoft.Practices.StoreApps.Infrastructure;
+using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
 
 namespace EventAggregatorQuickstart
 {
@@ -30,10 +29,8 @@ namespace EventAggregatorQuickstart
             ViewModelLocator.Register(typeof(MainPage).ToString(), () => new MainPageViewModel(_eventAggregator));
         }
 
-        public INavigationService CreateNavigationService(IFrameFacade rootFrame, ISuspensionManagerState suspensionManagerState)
+        public INavigationService CreateNavigationService(IFrameFacade rootFrame, ISessionStateService sessionStateService)
         {
-            var sessionStateWrapper = new FrameSessionStateWrapper();
-
             Func<string, Type> navigationResolver = (string pageToken) =>
             {
                 // We set a custom namespace for the View
@@ -45,7 +42,7 @@ namespace EventAggregatorQuickstart
                 return viewType;
             };
 
-            var navigationService = new FrameNavigationService(rootFrame, sessionStateWrapper, navigationResolver, suspensionManagerState);
+            var navigationService = new FrameNavigationService(rootFrame, navigationResolver, sessionStateService);
             return navigationService;
         }
     }

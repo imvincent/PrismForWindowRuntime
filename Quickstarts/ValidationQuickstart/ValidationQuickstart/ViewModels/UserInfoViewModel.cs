@@ -10,7 +10,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
-using Kona.Infrastructure;
+using Microsoft.Practices.StoreApps.Infrastructure;
 using ValidationQuickStart.Models;
 
 namespace ValidationQuickStart.ViewModels

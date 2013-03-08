@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidationQuickstart", "ValidationQuickstart\ValidationQuickstart.csproj", "{13345912-82E7-4FD7-B9FD-D1E069D35D72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kona.Infrastructure", "..\..\KonaRI\Kona.Infrastructure\Kona.Infrastructure.csproj", "{A2303152-0F67-4CA5-8639-0A16E64A8B6D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Practices.StoreApps.Infrastructure", "..\..\StoreApps.Infrastructure\Microsoft.Practices.StoreApps.Infrastructure.csproj", "{A2303152-0F67-4CA5-8639-0A16E64A8B6D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

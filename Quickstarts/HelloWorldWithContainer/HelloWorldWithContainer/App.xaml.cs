@@ -7,8 +7,8 @@
 
 
 using HelloWorldWithContainer.Services;
-using Kona.Infrastructure;
-using Kona.Infrastructure.Interfaces;
+using Microsoft.Practices.StoreApps.Infrastructure;
+using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
 using Microsoft.Practices.Unity;
 using Windows.ApplicationModel.Activation;
 
@@ -35,13 +35,13 @@ namespace HelloWorldWithContainer
         /// to the page approriate based on a search, sharing, or secondary tile launch of the app
         /// </summary>
         /// <param name="args">The launch arguments passed to the application</param>
-        public override void OnLaunchApplication(LaunchActivatedEventArgs args)
+        protected override void OnLaunchApplication(LaunchActivatedEventArgs args)
         {
             // Use the logical name for the view to navigate to. The default convention
             // in the NavigationService will be to append "Page" to the name and look 
             // for that page in a .Views child namespace in the project. IF you want another convention
             // for mapping view names to view types, you can override 
-            // the KonaApplication.GetPageNameToTypeResolver method
+            // the MvvmAppBase.GetPageNameToTypeResolver method
             NavigationService.Navigate("Main", null);
         }
 
@@ -50,10 +50,10 @@ namespace HelloWorldWithContainer
         /// </summary>
         /// <param name="args">The same launch arguments passed when the app starts.</param>
         // <snippet3302>
-        public override void OnInitialize(IActivatedEventArgs args)
+        protected override void OnInitialize(IActivatedEventArgs args)
         {
-            // Register the two KonaApplication services with the container so that view models can take dependencies on them
-            _container.RegisterInstance<ISuspensionManagerState>(SuspensionManagerState);
+            // Register MvvmAppBase services with the container so that view models can take dependencies on them
+            _container.RegisterInstance<ISessionStateService>(SessionStateService);
             _container.RegisterInstance<INavigationService>(NavigationService);
             // Register any app specific types with the container
             _container.RegisterType<IDataRepository, DataRepository>();

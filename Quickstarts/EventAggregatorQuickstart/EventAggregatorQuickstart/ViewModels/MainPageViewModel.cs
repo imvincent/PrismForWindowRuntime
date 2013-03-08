@@ -6,9 +6,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using Kona.Infrastructure;
+using EventAggregatorQuickstart.ViewModels;
 using Microsoft.Practices.PubSubEvents;
 using System;
+using Microsoft.Practices.StoreApps.Infrastructure;
 
 namespace EventAggregatorQuickstart
 {
