@@ -26,8 +26,6 @@ namespace AdventureWorks.UILogic.Models
 
         public const string PaymentMethodLogo = "ms-appx:///Assets/paymentMethodLogo.png";
 
-        public const string Default = "Default";
-
         public const string AdventureWorksUILogicResourceMapId = "/AdventureWorks.UILogic/Resources/";
     }
 }

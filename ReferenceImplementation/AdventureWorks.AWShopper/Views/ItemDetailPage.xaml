@@ -14,7 +14,8 @@
                                      d:DataContext="{d:DesignInstance designViewModels:ItemDetailsPageDesignViewModel, IsDesignTimeCreatable=True}">
 
     <Page.TopAppBar>
-        <AppBar Style="{StaticResource AppBarStyle}">
+        <AppBar Style="{StaticResource AppBarStyle}"
+                x:Uid="TopAppBar">
             <views:TopAppBarUserControl />
         </AppBar>
     </Page.TopAppBar>
@@ -44,6 +45,7 @@
                     Command="{Binding GoBackCommand}"
                     Style="{StaticResource BackButtonStyle}" />
             <TextBlock x:Name="pageTitle"
+                       x:Uid="ProductInformationTitle"
                        Text="Product Information"
                        Style="{StaticResource PageHeaderTextStyle}"
                        Grid.Column="1" />
@@ -123,7 +125,7 @@
                                            Width="320"
                                            Margin="0,20,0,0"
                                            Source="{Binding Image}"
-                                           Stretch="UniformToFill" />
+                                           Stretch="Uniform" />
                                     <Button Grid.Row="2"
                                             x:Uid="AddToCartButton"
                                             AutomationProperties.AutomationId="AddToCartButton"
@@ -625,6 +627,7 @@
     <Page.BottomAppBar>
         <AppBar Style="{StaticResource AppBarStyle}"
                 AutomationProperties.AutomationId="BottomAppBar"
+                x:Uid="BottomAppBar"
                 IsSticky="{Binding IsBottomAppBarSticky, Mode=TwoWay}"
                 IsOpen="{Binding IsBottomAppBarOpened, Mode=TwoWay}">
             <Grid>

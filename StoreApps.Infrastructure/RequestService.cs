@@ -19,12 +19,12 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
     /// </summary>
     public class RequestService : IRequestService
     {
-        // <snippet517>
         /// <summary>
         /// Gets the external resource asynchronously.
         /// </summary>
         /// <param name="resourceUrl">The resource URL.</param>
         /// <returns>A task of a byte array</returns>
+        // <snippet517>
         public async Task<byte[]> GetExternalResourceAsync(Uri resourceUrl)
         {
             using (HttpClient request = new HttpClient())

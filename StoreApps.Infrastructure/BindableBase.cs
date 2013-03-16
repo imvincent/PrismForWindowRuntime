@@ -11,12 +11,14 @@ using System.Runtime.CompilerServices;
 
 namespace Microsoft.Practices.StoreApps.Infrastructure
 {
-    // <snippet306>
     /// <summary>
     /// Implementation of <see cref="INotifyPropertyChanged"/> to simplify models.
     /// </summary>
     public abstract class BindableBase : INotifyPropertyChanged
     {
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
@@ -56,5 +58,4 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
             }
         }
     }
-    // </snippet306>
 }

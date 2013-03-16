@@ -17,6 +17,12 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
     /// </summary>
     public class SettingsCharmLinkItem : ISettingsCharmItem
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SettingsCharmLinkItem"/> class.
+        /// </summary>
+        /// <param name="title">The title.</param>
+        /// <param name="id">The id.</param>
+        /// <param name="linkUri">The link URI.</param>
         public SettingsCharmLinkItem(string title, string id, Uri linkUri) 
         {
             Title = title;

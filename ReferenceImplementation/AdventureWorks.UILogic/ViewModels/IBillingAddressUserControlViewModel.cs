@@ -22,7 +22,7 @@ namespace AdventureWorks.UILogic.ViewModels
         IReadOnlyCollection<ComboBoxItemValue> States { get; set; }
         void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState);
         void OnNavigatedFrom(Dictionary<string, object> viewState, bool suspending);
-        void ProcessForm();
+        Task ProcessFormAsync();
         bool ValidateForm();
         Task PopulateStatesAsync();
         event PropertyChangedEventHandler PropertyChanged;

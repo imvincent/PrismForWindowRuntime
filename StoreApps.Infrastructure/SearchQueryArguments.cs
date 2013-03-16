@@ -17,7 +17,6 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
     /// </summary>
     public class SearchQueryArguments
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchQueryArguments"/> class using an instance that implements the ISearchActivatedEventArgs interface.
         /// </summary>

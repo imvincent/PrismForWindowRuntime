@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
 
-  <Identity Name="60c300d1-a42e-405b-918e-b4342003c279"
-            Publisher="CN=v-brnoye"
+  <Identity Name="Microsoft.SDKSamples.HelloWorldWithContainer.CS"
+            Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
             Version="1.0.0.0" />
 
   <Properties>
-    <DisplayName>HelloWorldWithContainer</DisplayName>
-    <PublisherDisplayName>v-brnoye</PublisherDisplayName>
+    <DisplayName>HelloWorldWithContainer C# Sample</DisplayName>
+    <PublisherDisplayName>Microsoft Corporation</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -25,14 +25,14 @@
         Executable="$targetnametoken$.exe"
         EntryPoint="HelloWorldWithContainer.App">
         <VisualElements
-            DisplayName="HelloWorldWithContainer"
+            DisplayName="HelloWorldWithContainer C# Sample"
             Logo="Assets\Logo.png"
             SmallLogo="Assets\SmallLogo.png"
-            Description="HelloWorldWithContainer"
+            Description="HelloWorldWithContainer C# Sample"
             ForegroundText="light"
-            BackgroundColor="#464646">
-            <DefaultTile ShowName="allLogos" />
-            <SplashScreen Image="Assets\SplashScreen.png" />
+            BackgroundColor="#00b2f0">
+            <DefaultTile ShowName="allLogos" ShortName="HelloWorldWithContainer C# Sample" />
+            <SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#00b2f0" />
         </VisualElements>
     </Application>
   </Applications>

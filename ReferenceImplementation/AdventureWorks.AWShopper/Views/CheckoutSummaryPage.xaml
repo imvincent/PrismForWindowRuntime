@@ -11,7 +11,8 @@
                                      Infrastructure:ViewModelLocator.AutoWireViewModel="true"
                                      d:DataContext="{d:DesignInstance designViewModels:CheckoutSummaryPageDesignViewModel, IsDesignTimeCreatable=True}">
     <Page.TopAppBar>
-        <AppBar Style="{StaticResource AppBarStyle}">
+        <AppBar Style="{StaticResource AppBarStyle}"
+                x:Uid="TopAppBar">
             <Views:TopAppBarUserControl />
         </AppBar>
     </Page.TopAppBar>
@@ -24,7 +25,7 @@
     <Grid Style="{StaticResource LayoutRootStyle}">
         <Grid.RowDefinitions>
             <RowDefinition Height="140" />
-            <RowDefinition  />
+            <RowDefinition />
         </Grid.RowDefinitions>
 
         <!-- Back button and page title -->
@@ -672,7 +673,8 @@
 
     <Page.BottomAppBar>
         <AppBar Style="{StaticResource AppBarStyle}"
-                IsOpen="{Binding IsBottomAppBarOpened, Mode=TwoWay}">
+                IsOpen="{Binding IsBottomAppBarOpened, Mode=TwoWay}"
+                x:Uid="BottomAppBar">
             <Grid>
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Left">

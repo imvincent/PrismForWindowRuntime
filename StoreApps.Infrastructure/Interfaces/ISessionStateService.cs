@@ -66,12 +66,12 @@ namespace Microsoft.Practices.StoreApps.Infrastructure.Interfaces
         void RestoreFrameState();
 
         /// <summary>
-        /// Registers a <see cref="Frame"/> instance to allow its navigation history to be saved to
+        /// Registers a <see cref="IFrameFacade"/> instance to allow its navigation history to be saved to
         /// and restored from <see cref="SessionState"/>.  Frames should be registered once
         /// immediately after creation if they will participate in session state management.  Upon
         /// registration if state has already been restored for the specified key
         /// the navigation history will immediately be restored.  Subsequent invocations of
-        /// <see cref="RestoreAsync"/> will also restore navigation history.
+        /// <see cref="RestoreFrameState"/> will also restore navigation history.
         /// </summary>
         /// <param name="frame">An instance whose navigation history should be managed by
         /// <see cref="SessionStateServiceException"/></param>
@@ -80,7 +80,7 @@ namespace Microsoft.Practices.StoreApps.Infrastructure.Interfaces
         void RegisterFrame(IFrameFacade frame, String sessionStateKey);
 
         /// <summary>
-        /// Disassociates a <see cref="Frame"/> previously registered by <see cref="RegisterFrame"/>
+        /// Disassociates a <see cref="IFrameFacade"/> previously registered by <see cref="RegisterFrame"/>
         /// from <see cref="SessionState"/>.  Any navigation state previously captured will be
         /// removed.
         /// </summary>
@@ -89,7 +89,7 @@ namespace Microsoft.Practices.StoreApps.Infrastructure.Interfaces
         void UnregisterFrame(IFrameFacade frame);
 
         /// <summary>
-        /// Provides storage for session state associated with the specified <see cref="Frame"/>.
+        /// Provides storage for session state associated with the specified <see cref="IFrameFacade"/>.
         /// Frames that have been previously registered with <see cref="RegisterFrame"/> have
         /// their session state saved and restored automatically as a part of the global
         /// <see cref="SessionState"/>.  Frames that are not registered have transient state

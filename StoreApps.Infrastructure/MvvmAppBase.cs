@@ -93,7 +93,7 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
         /// Gets the type of the page based on a page token.
         /// </summary>
         /// <param name="pageToken">The page token.</param>
-        /// <returns></returns>
+        /// <returns>The type of the page which corresponds to the specified token.</returns>
         protected virtual Type GetPageType(string pageToken)
         {
             var assemblyQualifiedAppType = this.GetType().GetTypeInfo().AssemblyQualifiedName;
@@ -143,7 +143,7 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
         /// <summary>
         /// Gets the settings charm items.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The list of seetting charm items that will populate the settings charm.</returns>
         protected virtual IList<ISettingsCharmItem> GetSettingsCharmItems()
         {
             return null;
@@ -153,7 +153,7 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
         /// Resolves the specified type.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <returns></returns>
+        /// <returns>A concrete instance of the specified type.</returns>
         protected virtual object Resolve(Type type)
         {
             return Activator.CreateInstance(type);
@@ -197,11 +197,11 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
             }
         }
 
-        // <snippet1001>
         /// <summary>
         /// Invoked when the application is activated through a search association.
         /// </summary>
         /// <param name="args">Event data for the event.</param>
+        // <snippet1001>
         protected async override void OnSearchActivated(SearchActivatedEventArgs args)
         {
             // If the Window isn't already using Frame navigation, insert our own Frame
@@ -222,7 +222,7 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
         /// Initializes the frame and its content.
         /// </summary>
         /// <param name="args">The <see cref="IActivatedEventArgs"/> instance containing the event data.</param>
-        /// <returns>A task of a Frame</returns>
+        /// <returns>A task of a Frame that holds the app content.</returns>
         private async Task<Frame> InitializeFrameAsync(IActivatedEventArgs args)
         {
             var rootFrame = Window.Current.Content as Frame;
@@ -286,13 +286,13 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
             return rootFrame;
         }
 
-        // <snippet403>
         /// <summary>
         /// Creates the navigation service.
         /// </summary>
         /// <param name="rootFrame">The root frame.</param>
         /// <param name="sessionStateService">The session state service.</param>
-        /// <returns></returns>
+        /// <returns>The initialized navigation service.</returns>
+        // <snippet403>
         private INavigationService CreateNavigationService(IFrameFacade rootFrame, ISessionStateService sessionStateService)
         {
             var navigationService = new FrameNavigationService(rootFrame, GetPageType, sessionStateService);
@@ -321,7 +321,6 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
                 // Save application state
                 await SessionStateService.SaveAsync();
 
-                //TODO: Stop any background activity
                 deferral.Complete();
             }
             finally
@@ -331,12 +330,12 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
         }
         // </snippet701>
 
-        // <snippet1000>
         /// <summary>
         /// Called when a search is performed when the application is running.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="args">The <see cref="SearchPaneQuerySubmittedEventArgs"/> instance containing the event data.</param>
+        // <snippet1000>
         private void OnQuerySubmitted(SearchPane sender, SearchPaneQuerySubmittedEventArgs args)
         {
             var searchQueryArguments = new SearchQueryArguments(args);

@@ -70,6 +70,7 @@ namespace AdventureWorks.UILogic.ViewModels
             private set { SetProperty(ref _results, value); }
         }
 
+        [RestorableState]
         public int TotalCount
         {
             get { return _totalCount; }
@@ -132,7 +133,7 @@ namespace AdventureWorks.UILogic.ViewModels
 
             if (!string.IsNullOrWhiteSpace(errorMessage))
             {
-                await _alertMessageService.ShowAsync(_resourceLoader.GetString("ErrorServiceUnreachable"), errorMessage);
+                await _alertMessageService.ShowAsync(errorMessage, _resourceLoader.GetString("ErrorServiceUnreachable"));
             }
 
         }

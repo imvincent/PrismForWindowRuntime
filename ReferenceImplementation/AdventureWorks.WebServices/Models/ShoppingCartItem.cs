@@ -6,8 +6,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System;
-
 namespace AdventureWorks.WebServices.Models
 {
     public class ShoppingCartItem
@@ -15,8 +13,6 @@ namespace AdventureWorks.WebServices.Models
         public string Id { get; set; }
 
         public Product Product{ get; set;}
-
-        public bool IsGift { get; set; }
 
         public int Quantity { get; set; }
 

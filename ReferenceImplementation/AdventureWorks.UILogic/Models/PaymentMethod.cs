@@ -43,7 +43,6 @@ namespace AdventureWorks.UILogic.Models
 
         [Required(ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "RequiredErrorMessage")]
         [StringLength(20, MinimumLength = 4, ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "CardNumberInvalidLengthErrorMessage")]
-        [RegularExpression(NUMBERS_REGEX_PATTERN, ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "RegexErrorMessage")]
         public string CardNumber
         {
             get { return _cardNumber; }
@@ -88,5 +87,7 @@ namespace AdventureWorks.UILogic.Models
             get { return _cardVerificationCode; }
             set { SetProperty(ref _cardVerificationCode, value); }
         }
+
+        public bool IsDefault { get; set; }
     }
 }

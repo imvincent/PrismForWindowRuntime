@@ -34,7 +34,5 @@ namespace AdventureWorks.WebServices.Controllers
         {
             return _stateRepository.GetAll().Select(c => c.Name);
         }
-
-        // TODO: add countries here
     }
 }

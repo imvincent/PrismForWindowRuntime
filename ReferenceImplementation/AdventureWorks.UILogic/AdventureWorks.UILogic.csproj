@@ -104,6 +104,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="Models\AddressType.cs" />
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Models\ShoppingCartItemUpdatedEvent.cs" />
     <Compile Include="Models\ShoppingCartUpdatedEvent.cs" />
@@ -129,10 +130,10 @@
     <Compile Include="Repositories\OrderRepository.cs" />
     <Compile Include="Repositories\ProductCatalogRepository.cs" />
     <Compile Include="Repositories\ShoppingCartRepository.cs" />
-    <Compile Include="Services\IValidationService.cs" />
-    <Compile Include="Services\ValidationServiceProxy.cs" />
-    <Compile Include="Services\EncryptionService.cs" />
-    <Compile Include="Services\IEncryptionService.cs" />
+    <Compile Include="Services\IPaymentMethodService.cs" />
+    <Compile Include="Services\PaymentMethodServiceProxy.cs" />
+    <Compile Include="Services\IAddressService.cs" />
+    <Compile Include="Services\AddressServiceProxy.cs" />
     <Compile Include="ViewModels\CategoryPageViewModel.cs" />
     <Compile Include="ViewModels\SearchUserControlViewModel.cs" />
     <Compile Include="Services\AccountService.cs" />
@@ -141,21 +142,18 @@
     <Compile Include="Services\IAlertMessageService.cs" />
     <Compile Include="Services\ISecondaryTileService.cs" />
     <Compile Include="Services\ModelValidationException.cs" />
-    <Compile Include="Services\ResetOrdersAndShoppingCartServiceStateProxy.cs" />
     <Compile Include="Services\ShippingMethodServiceProxy.cs" />
     <Compile Include="Services\IAccountService.cs" />
     <Compile Include="Services\ICacheService.cs" />
     <Compile Include="Services\IdentityServiceProxy.cs" />
     <Compile Include="Services\ILocationService.cs" />
     <Compile Include="Services\IOrderService.cs" />
-    <Compile Include="Services\ISettingsStoreService.cs" />
     <Compile Include="Services\IShippingMethodService.cs" />
     <Compile Include="Services\LocationServiceProxy.cs" />
     <Compile Include="Services\OrderServiceProxy.cs" />
     <Compile Include="Services\ProductCatalogServiceProxy.cs" />
     <Compile Include="Services\ErrorMessagesHelper.cs" />
     <Compile Include="Services\RoamingCredentialStore.cs" />
-    <Compile Include="Services\SettingsStoreService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IIdentityService.cs" />
     <Compile Include="Repositories\IProductCatalogRepository.cs" />
@@ -168,11 +166,11 @@
     <Compile Include="ViewModels\CheckoutDataViewModel.cs" />
     <Compile Include="ViewModels\CheckoutHubPageViewModel.cs" />
     <Compile Include="ViewModels\CheckoutSummaryPageViewModel.cs" />
-    <Compile Include="ViewModels\ChangeDefaultsFlyoutViewModel.cs" />
-    <Compile Include="ViewModels\BillingAddressFlyoutViewModel.cs" />
+    <Compile Include="ViewModels\ChangeDefaultsPageViewModel.cs" />
+    <Compile Include="ViewModels\BillingAddressPageViewModel.cs" />
     <Compile Include="ViewModels\SearchResultsPageViewModel.cs" />
-    <Compile Include="ViewModels\ShippingAddressFlyoutViewModel.cs" />
-    <Compile Include="ViewModels\PaymentMethodFlyoutViewModel.cs" />
+    <Compile Include="ViewModels\ShippingAddressPageViewModel.cs" />
+    <Compile Include="ViewModels\PaymentMethodPageViewModel.cs" />
     <Compile Include="ViewModels\ProductViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartTabUserControlViewModel.cs" />
     <Compile Include="ViewModels\SignOutFlyoutViewModel.cs" />

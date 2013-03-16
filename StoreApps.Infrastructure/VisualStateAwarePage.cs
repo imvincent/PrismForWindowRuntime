@@ -17,12 +17,24 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Microsoft.Practices.StoreApps.Infrastructure
 {
+    /// <summary>
+    /// This is the base class that can be used for pages that need to be aware of its layout changes and update its visual state accordingly.
+    /// </summary>
     public class VisualStateAwarePage : Page
     {
+        /// <summary>
+        /// Gets or sets the get session state for frame.
+        /// </summary>
+        /// <value>
+        /// The session state for the frame.
+        /// </value>
         public static Func<IFrameFacade, IDictionary<string, object>> GetSessionStateForFrame { get; set; }
  
         private List<Control> _visualStateAwareControls;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VisualStateAwarePage"/> class.
+        /// </summary>
         public VisualStateAwarePage()
         {
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled) return;

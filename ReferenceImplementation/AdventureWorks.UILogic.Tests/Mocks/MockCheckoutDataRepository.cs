@@ -16,21 +16,21 @@ namespace AdventureWorks.UILogic.Tests.Mocks
 {
     public class MockCheckoutDataRepository : ICheckoutDataRepository
     {
-        public Func<string, Address> GetShippingAddressDelegate { get; set; }
-        public Func<string, Address> GetBillingAddresDelegate { get; set; }
+        public Func<string, Task<Address>> GetShippingAddressAsyncDelegate { get; set; }
+        public Func<string, Task<Address>> GetBillingAddressAsyncDelegate { get; set; }
         public Func<string, Task<PaymentMethod>> GetPaymentMethodDelegate { get; set; }
-        public Func<Address> GetDefaultShippingAddressDelegate { get; set; }
-        public Func<Address> GetDefaultBillingAddresDelegate { get; set; }
-        public Func<Task<PaymentMethod>> GetDefaultPaymentMethodDelegate { get; set; } 
+        public Func<Task<Address>> GetDefaultShippingAddressAsyncDelegate { get; set; }
+        public Func<Task<Address>> GetDefaultBillingAddressAsyncDelegate { get; set; }
+        public Func<Task<PaymentMethod>> GetDefaultPaymentMethodAsyncDelegate { get; set; } 
 
-        public Address GetShippingAddress(string id)
+        public Task<Address> GetShippingAddressAsync(string id)
         {
-            return GetShippingAddressDelegate(id);
+            return GetShippingAddressAsyncDelegate(id);
         }
 
-        public Address GetBillingAddress(string id)
+        public Task<Address> GetBillingAddressAsync(string id)
         {
-            return GetBillingAddresDelegate(id);
+            return GetBillingAddressAsyncDelegate(id);
         }
 
         public Task<PaymentMethod> GetPaymentMethodAsync(string id)
@@ -38,27 +38,27 @@ namespace AdventureWorks.UILogic.Tests.Mocks
             return GetPaymentMethodDelegate(id);
         }
 
-        public Address GetDefaultShippingAddress()
+        public Task<Address> GetDefaultShippingAddressAsync()
         {
-            return GetDefaultShippingAddressDelegate();
+            return GetDefaultShippingAddressAsyncDelegate();
         }
 
-        public Address GetDefaultBillingAddress()
+        public Task<Address> GetDefaultBillingAddressAsync()
         {
-            return GetDefaultShippingAddressDelegate();
+            return GetDefaultBillingAddressAsyncDelegate();
         }
 
         public Task<PaymentMethod> GetDefaultPaymentMethodAsync()
         {
-            return GetDefaultPaymentMethodDelegate();
+            return GetDefaultPaymentMethodAsyncDelegate();
         }
 
-        public IReadOnlyCollection<Address> GetAllShippingAddresses()
+        public Task<IReadOnlyCollection<Address>> GetAllShippingAddressesAsync()
         {
             throw new NotImplementedException();
         }
 
-        public IReadOnlyCollection<Address> GetAllBillingAddresses()
+        public Task<IReadOnlyCollection<Address>> GetAllBillingAddressesAsync()
         {
             throw new NotImplementedException();
         }
@@ -68,17 +68,32 @@ namespace AdventureWorks.UILogic.Tests.Mocks
             throw new NotImplementedException();
         }
 
-        public void SaveShippingAddress(Address address)
+        public Task SaveShippingAddressAsync(Address address)
         {
             throw new NotImplementedException();
         }
 
-        public void SaveBillingAddress(Address address)
+        public Task SaveBillingAddressAsync(Address address)
         {
             throw new NotImplementedException();
         }
 
         public Task SavePaymentMethodAsync(PaymentMethod paymentMethod)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetDefaultShippingAddressAsync(string addressId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetDefaultBillingAddressAsync(string addressId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetDefaultPaymentMethodAsync(string paymentMethodId)
         {
             throw new NotImplementedException();
         }
@@ -98,17 +113,17 @@ namespace AdventureWorks.UILogic.Tests.Mocks
             throw new NotImplementedException();
         }
 
-        public void RemoveDefaultShippingAddress()
+        public Task RemoveDefaultShippingAddressAsync()
         {
             throw new NotImplementedException();
         }
 
-        public void RemoveDefaultBillingAddress()
+        public Task RemoveDefaultBillingAddressAsync()
         {
             throw new NotImplementedException();
         }
 
-        public void RemoveDefaultPaymentMethod()
+        public Task RemoveDefaultPaymentMethodAsync()
         {
             throw new NotImplementedException();
         }

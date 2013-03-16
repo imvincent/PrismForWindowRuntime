@@ -25,6 +25,7 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>bin\Debug\Microsoft.Practices.StoreApps.Infrastructure.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -103,7 +104,7 @@
   <ItemGroup>
     <Compile Include="AppManifestHelper.cs" />
     <Compile Include="BindableBase.cs" />
-    <Compile Include="BooleanToVisibilityConverter.cs" />
+    <Compile Include="SettingsCharmActionItem.cs" />
     <Compile Include="Interfaces\ISettingsCharmItem.cs" />
     <Compile Include="SettingsCharmLinkItem.cs" />
     <Compile Include="DelegateCommand.cs" />

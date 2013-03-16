@@ -72,6 +72,12 @@ namespace AdventureWorks.AWShopper.Views
             {
                 if (scrollViewer.ComputedHorizontalScrollBarVisibility == Visibility.Visible)
                 {
+                    // Setting the horizontal offset on the VirtualizingStackPanel is necessary
+                    // to scroll the data in the GridView to the previously known position.
+                    // Setting the horizontal offset of the ScrollViewer is necessary
+                    // to update the position of the scroll bar at the bottom of the GridView.
+                    // Without updating the ScrollViewer, the scroll bar would appear to be on the 
+                    // far left, even though the VirtualizingStackPanel has scrolled to the right.
                     virtualizingStackPanel.SetHorizontalOffset(_virtualizingStackPanelHorizontalOffset);
                     scrollViewer.ScrollToHorizontalOffset(_scrollViewerHorizontalOffset);
                 }

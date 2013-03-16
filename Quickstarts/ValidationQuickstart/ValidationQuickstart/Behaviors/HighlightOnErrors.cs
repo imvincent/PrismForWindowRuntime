@@ -17,7 +17,7 @@ namespace ValidationQuickStart.Behaviors
     public static class HighlightOnErrors
     {
         // <snippet1304> 
-        public static readonly DependencyProperty PropertyErrorsProperty =
+        public static DependencyProperty PropertyErrorsProperty =
             DependencyProperty.RegisterAttached("PropertyErrors", typeof(ReadOnlyCollection<string>), typeof(HighlightOnErrors),
                                                                    new PropertyMetadata(BindableValidator.EmptyErrorsCollection, OnPropertyErrorsChanged));
         // </snippet1304> 

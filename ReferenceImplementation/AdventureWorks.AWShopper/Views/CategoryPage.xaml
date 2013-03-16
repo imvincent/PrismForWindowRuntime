@@ -27,7 +27,8 @@
     </Page.Resources>
 
     <Page.TopAppBar>
-        <AppBar Style="{StaticResource AppBarStyle}">
+        <AppBar Style="{StaticResource AppBarStyle}"
+                x:Uid="TopAppBar">
             <views:TopAppBarUserControl />
         </AppBar>
     </Page.TopAppBar>
@@ -60,7 +61,8 @@
                    Margin="0,10,0,0"
                    Grid.Column="1"
                    HorizontalAlignment="Left" />
-            <views:SearchUserControl x:Name="searchUserControl" Grid.Column="2"
+            <views:SearchUserControl x:Name="searchUserControl"
+                                     Grid.Column="2"
                                      Margin="15,15,0,15" />
             <views:ShoppingCartTabUserControl x:Name="shoppingCartTabUserControl"
                                               Grid.Column="3"
@@ -142,7 +144,8 @@
                                                 behaviors:ListViewItemClickedToAction.Action="{Binding ProductNavigationAction}">
                     <GridView.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <VirtualizingStackPanel Orientation="Horizontal" Loaded="virtualizingStackPanel_Loaded" />
+                            <VirtualizingStackPanel Orientation="Horizontal"
+                                                    Loaded="virtualizingStackPanel_Loaded" />
                         </ItemsPanelTemplate>
                     </GridView.ItemsPanel>
                     <GridView.GroupStyle>
@@ -304,7 +307,8 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="searchUserControl">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                       Storyboard.TargetName="searchUserControl">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>

@@ -12,7 +12,7 @@ using Windows.UI.Xaml;
 namespace Microsoft.Practices.StoreApps.Infrastructure.Interfaces
 {
     /// <summary>
-    /// The IFrameFacade interface abstracts the Windows.UI.Xaml.Controls.Frame object for use by apps that derive from the MvvmBaseApp class. A Frame 
+    /// The IFrameFacade interface abstracts the Windows.UI.Xaml.Controls.Frame object for use by apps that derive from the MvvmAppBase class. A Frame 
     /// represents a content control that supports navigation. The default implementation of IFrameFacade is the FrameFacade class, which simply passes method 
     /// invocations to an underlying Windows.UI.Xaml.Controls.Frame object. However, in addition to the FrameFacade class, test environments may implement 
     /// this interface for the purposes of unit testing and integration testing. 

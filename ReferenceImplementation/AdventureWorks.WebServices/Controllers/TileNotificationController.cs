@@ -34,8 +34,8 @@ namespace AdventureWorks.WebServices.Controllers
         // <snippet801>
         public HttpResponseMessage GetTileNotification()
         {
-            var tileXml = GetDefaultTileXml("http://localhost:2112/Images/hotrodbike_f_large.gif",
-                                            "Mountain-400-W Silver, 42");
+            var tileXml = GetDefaultTileXml("http://localhost:2112/Images/hotrodbike_red_large.jpg",
+                                            "Mountain-400-W Red, 42");
             tileXml = string.Format(CultureInfo.InvariantCulture, tileXml, DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString());
 
             // create HTTP response

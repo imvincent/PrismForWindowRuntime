@@ -15,7 +15,6 @@
 // Code Analysis results, point to "Suppress Message", and click 
 // "In Suppression File".
 // You do not need to add suppressions to this file manually.
-
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0", Scope = "member", Target = "ValidationQuickStart.App.#OnLaunched(Windows.ApplicationModel.Activation.LaunchActivatedEventArgs)")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes", Scope = "member", Target = "ValidationQuickStart.App.#OnLaunched(Windows.ApplicationModel.Activation.LaunchActivatedEventArgs)")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Scope = "member", Target = "ValidationQuickStart.Behaviors.HighlightOnErrors.#PropertyErrorsProperty")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0", Scope = "member", Target = "ValidationQuickStart.App.#OnLaunched(Windows.ApplicationModel.Activation.LaunchActivatedEventArgs)", Justification = "Default code provided by Visual Studio Windows Store App template.")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes", Scope = "member", Target = "ValidationQuickStart.App.#OnLaunched(Windows.ApplicationModel.Activation.LaunchActivatedEventArgs)", Justification = "Default code provided by Visual Studio Windows Store App template.")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2211:NonConstantFieldsShouldNotBeVisible", Scope = "member", Target = "ValidationQuickStart.Behaviors.HighlightOnErrors.#PropertyErrorsProperty", Justification = "Static field always accessed from UI thread.")]

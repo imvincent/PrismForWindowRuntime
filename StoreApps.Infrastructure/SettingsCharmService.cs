@@ -36,12 +36,12 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
             _flyoutService = flyoutService;
         }
 
-        // <snippet519>
         /// <summary>
         /// Called when the Settings Charm is invoked, this handler populate the Settings Charm with the charm items returned by the getSettingCharm Items func.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="args">The <see cref="SettingsPaneCommandsRequestedEventArgs"/> instance containing the event data.</param>
+        // <snippet519>
         public void OnCommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
         {
             if (args == null || args.Request == null || args.Request.ApplicationCommands == null
@@ -71,7 +71,13 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
                         var linkItem = item as SettingsCharmLinkItem;
                         cmd = new SettingsCommand(linkItem.Id, linkItem.Title, async (o) => await Launcher.LaunchUriAsync(linkItem.LinkUri));
                     }
-                                           
+
+                    if (cmd == null && item.GetType() == typeof(SettingsCharmActionItem))
+                    {
+                        var actionItem = item as SettingsCharmActionItem;
+                        cmd = new SettingsCommand(actionItem.Id, actionItem.Title, (o) => actionItem.Action.Invoke());
+                    }
+
                     applicationCommands.Add(cmd);
                 }
             }

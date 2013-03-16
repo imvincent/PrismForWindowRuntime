@@ -1,7 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:controls="using:AdventureWorks.AWShopper.Controls"
-                    xmlns:behaviors="using:AdventureWorks.AWShopper.Behaviors">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <DataTemplate x:Key="AWShopperItemTemplate">
         <Grid>
@@ -11,6 +9,8 @@
             </Grid.RowDefinitions>
             <Image Stretch="UniformToFill"
                    Source="{Binding Image}"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
                    AutomationProperties.Name="{Binding Title}" />
             <StackPanel VerticalAlignment="Bottom"
                         Grid.Row="1"

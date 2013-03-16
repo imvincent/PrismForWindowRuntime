@@ -30,7 +30,6 @@
             <converters:BooleanNegationToVisibilityConverter x:Key="BooleanNegationToVisibilityConverter" />
             <converters:NullToVisibleConverter x:Key="NullToVisibleConverter" />
             <converters:NotNullToVisibleConverter x:Key="NotNullToVisibleConverter" />
-            <converters:IsGiftContentConverter x:Key="IsGiftContentConverter" />
             <converters:IsSignInInvalidConverter x:Key="IsSignInInvalidConverter" />
             <converters:FormStatusToVisibilityConverter x:Key="FormStatusToVisibilityConverter" />
             <converters:FormStatusToStyleConverter x:Key="FormStatusToStyleConverter" />

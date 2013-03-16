@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="39fe9467-f06e-4c0e-88da-112e61572543" Publisher="CN=patternsAndpractices" Version="1.0.0.0" />
+  <Identity Name="Microsoft.SDKSamples.AWShopper.CSharp" Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" Version="1.0.0.0" />
   <Properties>
-    <DisplayName>AdventureWorks.AWShopper</DisplayName>
-    <PublisherDisplayName>fcheung</PublisherDisplayName>
+    <PublisherDisplayName>Microsoft Corporation</PublisherDisplayName>
+    <DisplayName>AWShopper C# Sample</DisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Prerequisites>
@@ -15,8 +15,8 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="AWShopper">
-      <VisualElements DisplayName="AWShopper" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="AWShopper" ForegroundText="light" BackgroundColor="#353C41">
-        <DefaultTile ShowName="noLogos" ShortName="AWShopper" WideLogo="Assets\WideLogo.png" />
+      <VisualElements DisplayName="AWShopper C# sample" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="AWShopper C# sample" ForegroundText="light" BackgroundColor="#1d1d1d">
+        <DefaultTile ShowName="noLogos" ShortName="AWShopper C#" WideLogo="Assets\WideLogo.png" />
         <SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#1d1d1d" />
       </VisualElements>
       <Extensions>

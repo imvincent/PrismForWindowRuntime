@@ -43,7 +43,6 @@ namespace AdventureWorks.WebServices.Controllers
             foreach (var trimmedCategory in trimmedCategories)
             {
                 var products = trimmedCategory.Products.ToList();
-                products.Sort(Comparison);
                 if (maxAmountOfProducts > 0)
                 {
                     products = products.Take(maxAmountOfProducts).ToList();
@@ -64,8 +63,7 @@ namespace AdventureWorks.WebServices.Controllers
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-            var products = item.Products.ToList();
-            products.Sort(Comparison);
+            var products = item.Products.ToList();            
             item.Products = products;
 
             return item;
@@ -152,19 +150,6 @@ namespace AdventureWorks.WebServices.Controllers
             return null;
         }
 
-        private static int Comparison(Product product, Product product1)
-        {
-            if (product.ImageUri.AbsoluteUri.EndsWith("no_image_available_large.gif", StringComparison.OrdinalIgnoreCase) &&
-                   !product1.ImageUri.AbsoluteUri.EndsWith("no_image_available_large.gif", StringComparison.OrdinalIgnoreCase))
-            {
-                return 1;
-            }
-            if (!product.ImageUri.AbsoluteUri.EndsWith("no_image_available_large.gif", StringComparison.OrdinalIgnoreCase) &&
-                product1.ImageUri.AbsoluteUri.EndsWith("no_image_available_large.gif", StringComparison.OrdinalIgnoreCase))
-            {
-                return -1;
-            }
-            return 0;
-        }
+        
     }
 }

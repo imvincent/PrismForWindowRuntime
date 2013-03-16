@@ -10,6 +10,7 @@ using System;
 using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
 using Windows.ApplicationModel.Search;
 using Windows.UI.ApplicationSettings;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -71,7 +72,24 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
             // Create a new Popup to display the Flyout
             _popup = new Popup();
             _popup.IsLightDismissEnabled = true;
-            _popup.SetValue(Canvas.LeftProperty, Window.Current.Bounds.Width - FlyoutSize);
+            var frame = Window.Current.Content as Frame;
+            if (frame != null)
+            {
+                var page = frame.Content as Page;
+                if (page != null)
+                {
+                    var flowDirection = page.FlowDirection;
+                    if (flowDirection == FlowDirection.LeftToRight)
+                    {
+                        _popup.SetValue(Canvas.LeftProperty, Window.Current.Bounds.Width - FlyoutSize);
+                    }
+                    else
+                    {
+                        _popup.SetValue(Canvas.LeftProperty, FlyoutSize);
+                    }
+                }
+            }
+
             _popup.SetValue(Canvas.TopProperty, 0);
 
             // Handle the Closed & Activated events of the Popup

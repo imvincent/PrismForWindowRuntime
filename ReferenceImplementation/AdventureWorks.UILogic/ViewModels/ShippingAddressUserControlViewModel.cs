@@ -77,7 +77,7 @@ namespace AdventureWorks.UILogic.ViewModels
 
             if (navigationMode == NavigationMode.New)
             {
-                var defaultAddress = _checkoutDataRepository.GetDefaultShippingAddress();
+                var defaultAddress = await _checkoutDataRepository.GetDefaultShippingAddressAsync();
                 if (defaultAddress != null)
                 {
                     // Update the information and validate the values
@@ -141,9 +141,9 @@ namespace AdventureWorks.UILogic.ViewModels
             return _address.ValidateProperties();
         }
 
-        public void ProcessForm()
+        public async Task ProcessFormAsync()
         {
-            _checkoutDataRepository.SaveShippingAddress(Address);
+            await _checkoutDataRepository.SaveShippingAddressAsync(Address);
         }
     }
 }

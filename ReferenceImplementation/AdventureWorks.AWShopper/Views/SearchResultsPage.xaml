@@ -16,7 +16,7 @@
                                      d:DataContext="{d:DesignInstance designViewModels:SearchResultsPageDesignViewModel, IsDesignTimeCreatable=True}">
 
     <Page.Resources>
-        <Infrastructure:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <converters:BooleanNegationToVisibilityConverter x:Key="BooleanNegationToVisibilityConverter" />
         <DataTemplate x:Key="SearchResultsTemplate">
             <Grid Width="420"
@@ -88,7 +88,8 @@
 
     </Page.Resources>
     <Page.TopAppBar>
-        <AppBar Style="{StaticResource AppBarStyle}">
+        <AppBar Style="{StaticResource AppBarStyle}"
+                x:Uid="TopAppBar">
             <Views:TopAppBarUserControl />
         </AppBar>
     </Page.TopAppBar>
@@ -143,7 +144,8 @@
         </Grid>
 
         <Grid x:Name="resultsPanel"
-              Grid.Row="1" Visibility="{Binding NoResults, Converter={StaticResource BooleanNegationToVisibilityConverter}}">
+              Grid.Row="1"
+              Visibility="{Binding NoResults, Converter={StaticResource BooleanNegationToVisibilityConverter}}">
             <!--
             The body of the page in most view states uses an items controls to create multiple radio buttons
             for filtering above a horizontal scrolling grid of search results
@@ -182,17 +184,17 @@
                     </GridView.ItemContainerStyle>
                     <GridView.GroupStyle>
                         <GroupStyle>
-                        <GroupStyle.Panel>
-                            <ItemsPanelTemplate>
-                                <VariableSizedWrapGrid ItemWidth="250"
-                                                       ItemHeight="250"
-                                                       Orientation="Vertical"
-                                                       Margin="0,0,80,0" />
-                            </ItemsPanelTemplate>
-                        </GroupStyle.Panel>
+                            <GroupStyle.Panel>
+                                <ItemsPanelTemplate>
+                                    <VariableSizedWrapGrid ItemWidth="250"
+                                                           ItemHeight="250"
+                                                           Orientation="Vertical"
+                                                           Margin="0,0,80,0" />
+                                </ItemsPanelTemplate>
+                            </GroupStyle.Panel>
                         </GroupStyle>
                     </GridView.GroupStyle>
-                    
+
                 </GridView>
             </Grid>
 

@@ -50,7 +50,7 @@ namespace Microsoft.Practices.StoreApps.Infrastructure.Interfaces
         /// <summary>
         /// Validates the properties of the current instance.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns <c>true</c> if all properties pass the validation rules; otherwise, false.</returns>
         bool ValidateProperties();
 
         /// <summary>

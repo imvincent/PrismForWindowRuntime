@@ -18,23 +18,25 @@ namespace AdventureWorks.UILogic.Repositories
 {
     public class CheckoutDataRepository : ICheckoutDataRepository
     {
-        private readonly ISettingsStoreService _settingsStoreService;
-        private readonly IEncryptionService _encryptionService;
+        private readonly IAddressService _addressService;
+        private readonly IPaymentMethodService _paymentMethodService;
+        private IReadOnlyCollection<Address> _cachedAddresses;
+        private IReadOnlyCollection<PaymentMethod> _cachedPaymentMethods;
 
-        public CheckoutDataRepository(ISettingsStoreService settingsStoreService, IEncryptionService encryptionService)
+        public CheckoutDataRepository(IAddressService addressService, IPaymentMethodService paymentMethodService)
         {
-            _settingsStoreService = settingsStoreService;
-            _encryptionService = encryptionService;
+            _addressService = addressService;
+            _paymentMethodService = paymentMethodService;
         }
 
-        public Address GetShippingAddress(string id)
+        public async Task<Address> GetShippingAddressAsync(string id)
         {
-            return GetAllShippingAddresses().FirstOrDefault(s => s.Id == id);
+            return (await GetAllShippingAddressesAsync()).FirstOrDefault(s => s.Id == id);
         }
 
-        public Address GetBillingAddress(string id)
+        public async Task<Address> GetBillingAddressAsync(string id)
         {
-            return GetAllBillingAddresses().FirstOrDefault(b => b.Id == id);
+            return (await GetAllBillingAddressesAsync()).FirstOrDefault(b => b.Id == id);
         }
 
         public async Task<PaymentMethod> GetPaymentMethodAsync(string id)
@@ -42,95 +44,111 @@ namespace AdventureWorks.UILogic.Repositories
             return (await GetAllPaymentMethodsAsync()).FirstOrDefault(p => p.Id == id);
         }
 
-        public Address GetDefaultShippingAddress()
+        public async Task<Address> GetDefaultShippingAddressAsync()
         {
-            var defaultValueId = _settingsStoreService.GetValue<string>(Constants.Default, Constants.ShippingAddress);
-            if (string.IsNullOrEmpty(defaultValueId)) return null;
+            var addresses = await GetAllAddressesViaCacheAsync();
+            var defaultShippingAddress = (addresses != null)
+                                             ? addresses.Where(
+                                                 address =>
+                                                 address.AddressType == AddressType.Shipping && address.IsDefault).
+                                                   FirstOrDefault()
+                                             : null;
 
-            return GetShippingAddress(defaultValueId);
+            return defaultShippingAddress;
         }
 
-        public Address GetDefaultBillingAddress()
+        public async Task<Address> GetDefaultBillingAddressAsync()
         {
-            var defaultValueId = _settingsStoreService.GetValue<string>(Constants.Default, Constants.BillingAddress);
-            if (string.IsNullOrEmpty(defaultValueId)) return null;
+            var addresses = await GetAllAddressesViaCacheAsync();
+            var defaultBillingAddress = (addresses != null)
+                                             ? addresses.Where(
+                                                 address =>
+                                                 address.AddressType == AddressType.Billing && address.IsDefault).
+                                                   FirstOrDefault()
+                                             : null;
 
-            return GetBillingAddress(defaultValueId);
+            return defaultBillingAddress;
         }
 
         public async Task<PaymentMethod> GetDefaultPaymentMethodAsync()
         {
-            var defaultValueId = _settingsStoreService.GetValue<string>(Constants.Default, Constants.PaymentMethod);
-            if (string.IsNullOrEmpty(defaultValueId)) return null;
+            var paymentMethods = await GetAllPaymentMethodsViaCacheAsync();
+            var defaultPaymentMethod = (paymentMethods != null)
+                                             ? paymentMethods.Where(p => p.IsDefault).
+                                                   FirstOrDefault()
+                                             : null;
 
-            return await GetPaymentMethodAsync(defaultValueId);
+            return defaultPaymentMethod;
+
         }
 
-        public IReadOnlyCollection<Address> GetAllShippingAddresses()
+        public async Task<IReadOnlyCollection<Address>> GetAllShippingAddressesAsync()
         {
-            var shippingAddresses = _settingsStoreService.GetAllEntities<Address>(Constants.ShippingAddress);
+            var addresses = await GetAllAddressesViaCacheAsync();
+            var shippingAddresses = (addresses != null)
+                                        ? addresses.Where(address => address.AddressType == AddressType.Shipping)
+                                        : new List<Address>();
+
             return new ReadOnlyCollection<Address>(shippingAddresses.ToList());
         }
 
         // <snippet503>
-        public IReadOnlyCollection<Address> GetAllBillingAddresses()
+        public async Task<IReadOnlyCollection<Address>> GetAllBillingAddressesAsync()
         {
-            var billingAddresses = _settingsStoreService.GetAllEntities<Address>(Constants.BillingAddress).ToList();
+            var addresses = await GetAllAddressesViaCacheAsync();
+            var billingAddresses = (addresses != null)
+                                        ? addresses.Where(address => address.AddressType == AddressType.Billing)
+                                        : new List<Address>();
+
             return new ReadOnlyCollection<Address>(billingAddresses.ToList());
         }
         // </snippet503>
 
         public async Task<IReadOnlyCollection<PaymentMethod>> GetAllPaymentMethodsAsync()
         {
-            var paymentMethods = _settingsStoreService.GetAllEntities<PaymentMethod>(Constants.PaymentMethod);
-            try
-            {
-                foreach (var paymentMethod in paymentMethods)
-                {
-                    // Decrypt the Card number
-                    paymentMethod.CardNumber = await _encryptionService.DecryptMessage(paymentMethod.CardNumber);
-                }
-            }
-            catch (Exception)
-            {
-                //Problem decrypting payment method. Remove from settings store
-                _settingsStoreService.DeleteContainer(Constants.PaymentMethod);
-            }
-
-                    return new ReadOnlyCollection<PaymentMethod>(paymentMethods.ToList());
+            var paymentMethods = await GetAllPaymentMethodsViaCacheAsync();
+            return (paymentMethods != null)
+                       ? paymentMethods
+                       : new ReadOnlyCollection<PaymentMethod>(new List<PaymentMethod>());
         }
 
-        public void SaveShippingAddress(Address address)
+        public async Task SaveShippingAddressAsync(Address address)
         {
             if (address == null) throw new ArgumentNullException("address");
 
             address.Id = address.Id ?? Guid.NewGuid().ToString();
-
-            // Save the value in the Settings store 
-            _settingsStoreService.SaveEntity(Constants.ShippingAddress, address.Id, address);
+            address.AddressType = AddressType.Shipping;
 
             // If there's no default value stored, use this one
-            if (GetDefaultShippingAddress() == null)
+            if (await GetDefaultShippingAddressAsync() == null)
             {
-                SetDefaultShippingAddress(address.Id);
+                address.IsDefault = true;
             }
+
+            // Save the address to the service
+            await _addressService.SaveAddressAsync(address);
+            
+            ExpireCachedAddresses();
         }
 
         // <snippet502>
-        public void SaveBillingAddress(Address address)
+        public async Task SaveBillingAddressAsync(Address address)
         {
             if (address == null) throw new ArgumentNullException("address");
 
             address.Id = address.Id ?? Guid.NewGuid().ToString();
-
-            // Save the value in the Settings store 
-            _settingsStoreService.SaveEntity(Constants.BillingAddress, address.Id, address);
+            address.AddressType = AddressType.Billing;
 
             // If there's no default value stored, use this one
-            if (GetDefaultBillingAddress() == null)
+            if (await GetDefaultBillingAddressAsync() == null)
             {
-                SetDefaultBillingAddress(address.Id);
+                address.IsDefault = true;
             }
+
+            // Save the address in the service
+            await _addressService.SaveAddressAsync(address);
+
+            ExpireCachedAddresses();
         }
         // </snippet502>
 
@@ -140,11 +158,12 @@ namespace AdventureWorks.UILogic.Repositories
 
             paymentMethod.Id = paymentMethod.Id ?? Guid.NewGuid().ToString();
 
-            // Create a new instance with sensitive data encrypted
+            // Sensitive data replaced with asterisks. Configure secure transport layer (SSL)
+            // so that you can securely send sensitive data such as credit card data.
             var paymentMethodToSave = new PaymentMethod()
                 {
                     Id = paymentMethod.Id,
-                    CardNumber = await _encryptionService.EncryptMessage(paymentMethod.CardNumber),
+                    CardNumber = "********",
                     CardholderName = paymentMethod.CardholderName,
                     ExpirationMonth = paymentMethod.ExpirationMonth,
                     ExpirationYear = paymentMethod.ExpirationYear,
@@ -152,50 +171,98 @@ namespace AdventureWorks.UILogic.Repositories
                     CardVerificationCode = paymentMethod.CardVerificationCode
                 };
 
-            // Save the value in the Settings store 
-            _settingsStoreService.SaveEntity(Constants.PaymentMethod, paymentMethodToSave.Id, paymentMethodToSave);
-
             // If there's no default value stored, use this one
             if (await GetDefaultPaymentMethodAsync() == null)
             {
-                SetDefaultPaymentMethod(paymentMethodToSave.Id);
+                paymentMethodToSave.IsDefault = true;
             }
+
+            // Save the payment method to the service
+            await _paymentMethodService.SavePaymentMethodAsync(paymentMethodToSave);
+
+            ExpireCachedPaymentMethods();
         }
 
-        public void SetDefaultShippingAddress(string addressId)
+        public async Task RemoveDefaultShippingAddressAsync()
         {
-            if (string.IsNullOrWhiteSpace(addressId)) throw new ArgumentNullException("addressId", "addressId is null");
-            
-            _settingsStoreService.SaveValue(Constants.Default, Constants.ShippingAddress, addressId);
+            var defaultShippingAddress = await GetDefaultShippingAddressAsync();
+            if (defaultShippingAddress != null)
+            {
+                defaultShippingAddress.IsDefault = false;
+                await _addressService.SaveAddressAsync(defaultShippingAddress);
+            }
+
+            ExpireCachedAddresses();
         }
 
-        public void SetDefaultBillingAddress(string addressId)
+        public async Task RemoveDefaultBillingAddressAsync()
         {
-            if (string.IsNullOrWhiteSpace(addressId)) throw new ArgumentNullException("addressId", "addressId is null");
+            var defaultBillingAddress = await GetDefaultBillingAddressAsync();
+            if (defaultBillingAddress != null)
+            {
+                defaultBillingAddress.IsDefault = false;
+                await _addressService.SaveAddressAsync(defaultBillingAddress);
+            }
 
-            _settingsStoreService.SaveValue(Constants.Default, Constants.BillingAddress, addressId);
+            ExpireCachedAddresses();
         }
 
-        public void SetDefaultPaymentMethod(string paymentMethodId)
+        public async Task RemoveDefaultPaymentMethodAsync()
         {
-            if (string.IsNullOrWhiteSpace(paymentMethodId)) throw new ArgumentNullException("paymentMethodId", "paymentMethodId is null");
+            var defaultPaymentMethod = await GetDefaultPaymentMethodAsync();
+            if (defaultPaymentMethod != null)
+            {
+                defaultPaymentMethod.IsDefault = false;
+                await _paymentMethodService.SavePaymentMethodAsync(defaultPaymentMethod);
+            }
 
-            _settingsStoreService.SaveValue(Constants.Default, Constants.PaymentMethod, paymentMethodId);
+            ExpireCachedPaymentMethods();
         }
 
-        public void RemoveDefaultShippingAddress()
+        public async Task SetDefaultShippingAddressAsync(string addressId)
         {
-            _settingsStoreService.DeleteSetting(Constants.Default, Constants.ShippingAddress);
+            await _addressService.SetDefault(addressId, AddressType.Shipping);
+            ExpireCachedAddresses();
         }
 
-        public void RemoveDefaultBillingAddress()
+        public async Task SetDefaultBillingAddressAsync(string addressId)
         {
-            _settingsStoreService.DeleteSetting(Constants.Default, Constants.BillingAddress);
+            await _addressService.SetDefault(addressId, AddressType.Billing);
+            ExpireCachedAddresses();
         }
 
-        public void RemoveDefaultPaymentMethod()
+        public async Task SetDefaultPaymentMethodAsync(string paymentMethodId)
         {
-            _settingsStoreService.DeleteSetting(Constants.Default, Constants.PaymentMethod);
+            await _paymentMethodService.SetDefault(paymentMethodId);
+            ExpireCachedPaymentMethods();
+        }
+
+        private async Task<IReadOnlyCollection<Address>> GetAllAddressesViaCacheAsync()
+        {
+            if (_cachedAddresses == null)
+            {
+                _cachedAddresses = await _addressService.GetAddressesAsync();
+            }
+            return _cachedAddresses;
+        }
+
+        private void ExpireCachedAddresses()
+        {
+            _cachedAddresses = null;
+        }
+
+        private async Task<IReadOnlyCollection<PaymentMethod>> GetAllPaymentMethodsViaCacheAsync()
+        {
+            if (_cachedPaymentMethods == null)
+            {
+                _cachedPaymentMethods = await _paymentMethodService.GetPaymentMethodsAsync();
+            }
+            return _cachedPaymentMethods;
+        }
+
+        private void ExpireCachedPaymentMethods()
+        {
+            _cachedPaymentMethods = null;
         }
     }
 }

@@ -115,5 +115,9 @@ namespace AdventureWorks.UILogic.Models
             get { return _phone; }
             set { SetProperty(ref _phone, value); }
         }
+
+        public AddressType AddressType { get; set; }
+
+        public bool IsDefault { get; set; }
     }
 }

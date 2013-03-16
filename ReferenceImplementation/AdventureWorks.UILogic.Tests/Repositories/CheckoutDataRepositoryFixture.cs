@@ -24,13 +24,10 @@ namespace AdventureWorks.UILogic.Tests.Repositories
         [TestMethod]
         public async Task GetEntity_Returns_Entity()
         {
-            var service = SetupService();
-            var encryptionService = new MockEncryptionService();
-            encryptionService.DecryptMessageDelegate = buffer => Task.FromResult("1234");
-            var target = new CheckoutDataRepository(service, encryptionService);
+            var target = new CheckoutDataRepository(SetupAddressService(), SetupPaymentMethodService());
 
-            var shippingAddress = target.GetShippingAddress("3");
-            var bilingAddress = target.GetBillingAddress("2");
+            var shippingAddress = await target.GetShippingAddressAsync("3");
+            var bilingAddress = await target.GetBillingAddressAsync("2");
             var paymentMethod = await target.GetPaymentMethodAsync("1");
 
             Assert.AreEqual(shippingAddress.FirstName, "Anne");
@@ -41,13 +38,10 @@ namespace AdventureWorks.UILogic.Tests.Repositories
         [TestMethod]
         public async Task GetDefaultValues_Returns_DefaultValues()
         {
-            var service = SetupService();
-            var encryptionService = new MockEncryptionService();
-            encryptionService.DecryptMessageDelegate = buffer => Task.FromResult("1234");
-            var target = new CheckoutDataRepository(service, encryptionService);
+            var target = new CheckoutDataRepository(SetupAddressService(), SetupPaymentMethodService());
 
-            var defaultShippingAddress = target.GetDefaultShippingAddress();
-            var defaultBilingAddress = target.GetDefaultBillingAddress();
+            var defaultShippingAddress = await target.GetDefaultShippingAddressAsync();
+            var defaultBilingAddress = await target.GetDefaultBillingAddressAsync();
             var defaultPaymentMethod = await target.GetDefaultPaymentMethodAsync();
 
             Assert.IsNotNull(defaultShippingAddress);
@@ -60,13 +54,10 @@ namespace AdventureWorks.UILogic.Tests.Repositories
         [TestMethod]
         public async Task GetAllEntities_Returns_AllEntities()
         {
-            var service = SetupService();
-            var encryptionService = new MockEncryptionService();
-            encryptionService.DecryptMessageDelegate = buffer => Task.FromResult("1234");
-            var target = new CheckoutDataRepository(service, encryptionService);
+            var target = new CheckoutDataRepository(SetupAddressService(), SetupPaymentMethodService());
 
-            var shippingAddresses = target.GetAllShippingAddresses();
-            var bilingAddresses = target.GetAllBillingAddresses();
+            var shippingAddresses = await target.GetAllShippingAddressesAsync();
+            var bilingAddresses = await target.GetAllBillingAddressesAsync();
             var paymentMethods = await target.GetAllPaymentMethodsAsync();
 
             Assert.AreEqual(3, shippingAddresses.Count());
@@ -77,54 +68,36 @@ namespace AdventureWorks.UILogic.Tests.Repositories
         [TestMethod]
         public async Task SaveEntity_SavesEntity()
         {
-            var encryptedCardNumber = false;
-            var settingsStoreService = SetupService();
-            var encryptionService = new MockEncryptionService
-                {
-                    EncryptMessageDelegate = s =>
-                        {
-                            Assert.AreEqual("12345", s);
-                            encryptedCardNumber = true;
-                            return Task.FromResult("12345");
-                        },
-                    DecryptMessageDelegate = buffer => Task.FromResult("12345")
-                };
+            var target = new CheckoutDataRepository(SetupAddressService(), SetupPaymentMethodService());
 
-            var target = new CheckoutDataRepository(settingsStoreService, encryptionService);
-
-            target.SaveShippingAddress(new Address() { Id="test", FirstName = "TestFirstName", LastName = "TestLastName" });
-            target.SaveBillingAddress(new Address() { Id = "test", FirstName = "TestFirstName", LastName = "TestLastName" });
+            await target.SaveShippingAddressAsync(new Address() { Id="test", FirstName = "TestFirstName", LastName = "TestLastName", AddressType = AddressType.Shipping});
+            await target.SaveBillingAddressAsync(new Address() { Id = "test", FirstName = "TestFirstName", LastName = "TestLastName", AddressType = AddressType.Billing });
             await target.SavePaymentMethodAsync(new PaymentMethod() { Id = "test", CardNumber = "12345", CardVerificationCode = "1234", ExpirationMonth = "10", ExpirationYear = "2010", CardholderName = "TestCardholderName" });
 
-            var savedShippingAddress = target.GetShippingAddress("test");
-            var savedBillingAddress = target.GetBillingAddress("test");
+            var savedShippingAddress = await target.GetShippingAddressAsync("test");
+            var savedBillingAddress = await target.GetBillingAddressAsync("test");
             var savedPaymentMethod = await target.GetPaymentMethodAsync("test");
 
             Assert.IsNotNull(savedShippingAddress);
             Assert.IsNotNull(savedBillingAddress);
             Assert.IsNotNull(savedPaymentMethod);
 
-            var shippingAddress = target.GetShippingAddress(savedShippingAddress.Id);
-            var billingAddress = target.GetBillingAddress(savedBillingAddress.Id);
+            var shippingAddress = await target.GetShippingAddressAsync(savedShippingAddress.Id);
+            var billingAddress = await target.GetBillingAddressAsync(savedBillingAddress.Id);
             var paymentMethod = await target.GetPaymentMethodAsync(savedPaymentMethod.Id);
             
             Assert.AreEqual(savedShippingAddress.Id, shippingAddress.Id);
             Assert.AreEqual(savedBillingAddress.Id, billingAddress.Id);
             Assert.AreEqual(savedPaymentMethod.Id, paymentMethod.Id);
-
-            Assert.IsTrue(encryptedCardNumber);
         }
 
         [TestMethod]
         public async Task SetDefaultEntity_SetsDefaultEntity()
         {
-            var service = SetupService();
-            var encryptionService = new MockEncryptionService();
-            encryptionService.DecryptMessageDelegate = buffer => Task.FromResult("1234");
-            var target = new CheckoutDataRepository(service, encryptionService);
+            var target = new CheckoutDataRepository(SetupAddressService(), SetupPaymentMethodService());
 
-            var defaultShippingAddress = target.GetDefaultShippingAddress();
-            var defaultBillingAddress = target.GetDefaultBillingAddress();
+            var defaultShippingAddress = await target.GetDefaultShippingAddressAsync();
+            var defaultBillingAddress = await target.GetDefaultBillingAddressAsync();
             var defaultPaymentMethod = await target.GetDefaultPaymentMethodAsync();
 
             Assert.IsNotNull(defaultShippingAddress);
@@ -133,12 +106,12 @@ namespace AdventureWorks.UILogic.Tests.Repositories
             Assert.AreEqual(defaultBillingAddress.Id, "2");
             Assert.IsNull(defaultPaymentMethod);
 
-            target.SetDefaultShippingAddress("2");
-            target.SetDefaultBillingAddress("1");
-            target.SetDefaultPaymentMethod("1");
+            await target.SetDefaultShippingAddressAsync("2");
+            await target.SetDefaultBillingAddressAsync("1");
+            await target.SetDefaultPaymentMethodAsync("1");
 
-            defaultShippingAddress = target.GetDefaultShippingAddress();
-            defaultBillingAddress = target.GetDefaultBillingAddress();
+            defaultShippingAddress = await target.GetDefaultShippingAddressAsync();
+            defaultBillingAddress = await target.GetDefaultBillingAddressAsync();
             defaultPaymentMethod = await target.GetDefaultPaymentMethodAsync();
 
             Assert.IsNotNull(defaultShippingAddress);
@@ -152,26 +125,23 @@ namespace AdventureWorks.UILogic.Tests.Repositories
         [TestMethod]
         public async Task RemoveDefaultEntity_RemovesDefaultEntity()
         {
-            var service = SetupService();
-            var encryptionService = new MockEncryptionService();
-            encryptionService.DecryptMessageDelegate = buffer => Task.FromResult("1234");
-            var target = new CheckoutDataRepository(service, encryptionService);
-            target.SetDefaultPaymentMethod("1");
+            var target = new CheckoutDataRepository(SetupAddressService(), SetupPaymentMethodService());
+            await target.SetDefaultPaymentMethodAsync("1");
 
-            var defaultShippingAddress = target.GetDefaultShippingAddress();
-            var defaultBillingAddress = target.GetDefaultBillingAddress();
+            var defaultShippingAddress = await target.GetDefaultShippingAddressAsync();
+            var defaultBillingAddress = await target.GetDefaultBillingAddressAsync();
             var defaultPaymentMethod = await target.GetDefaultPaymentMethodAsync();
 
             Assert.IsNotNull(defaultShippingAddress);
             Assert.IsNotNull(defaultBillingAddress);
             Assert.IsNotNull(defaultPaymentMethod);
 
-            target.RemoveDefaultShippingAddress();
-            target.RemoveDefaultBillingAddress();
-            target.RemoveDefaultPaymentMethod();
+            await target.RemoveDefaultShippingAddressAsync();
+            await target.RemoveDefaultBillingAddressAsync();
+            await target.RemoveDefaultPaymentMethodAsync();
 
-            defaultShippingAddress = target.GetDefaultShippingAddress();
-            defaultBillingAddress = target.GetDefaultBillingAddress();
+            defaultShippingAddress = await target.GetDefaultShippingAddressAsync();
+            defaultBillingAddress = await target.GetDefaultBillingAddressAsync();
             defaultPaymentMethod = await target.GetDefaultPaymentMethodAsync();
 
             Assert.IsNull(defaultShippingAddress);
@@ -179,21 +149,38 @@ namespace AdventureWorks.UILogic.Tests.Repositories
             Assert.IsNull(defaultPaymentMethod);
         }
 
-        private static MockSettingsStoreService SetupService()
+        [TestMethod]
+        public async Task GetAllPaymentMethodsAsync_ReturnsEmptyCollection_WhenServiceReturnsNull()
         {
-            var service = new MockSettingsStoreService();
+            var paymentMethodService = new MockPaymentMethodService();
+            paymentMethodService.PaymentMethods = null;
 
-            service.SaveEntity(Constants.ShippingAddress, "1", new Address() { Id = "1", FirstName = "Bill", MiddleInitial = "B", LastName = "Doe", City = "Redmond", State = "Washington" });
-            service.SaveEntity(Constants.ShippingAddress, "2", new Address() { Id = "2", FirstName = "Jack", MiddleInitial = "B", LastName = "Doe", City = "Redmond", State = "Washington" });
-            service.SaveEntity(Constants.ShippingAddress, "3", new Address() { Id = "3", FirstName = "Anne", MiddleInitial = "B", LastName = "Doe", City = "Redmond", State = "Washington" });
+            var target = new CheckoutDataRepository(null, paymentMethodService);
 
-            service.SaveEntity(Constants.BillingAddress, "1", new Address() { Id = "1", FirstName = "John", MiddleInitial = "B", LastName = "Doe", City = "Redmond", State = "Washington" });
-            service.SaveEntity(Constants.BillingAddress, "2", new Address() { Id = "2", FirstName = "Jane", MiddleInitial = "B", LastName = "Doe", City = "Redmond", State = "Washington" });
+            var paymentMethods = await target.GetAllPaymentMethodsAsync();
 
-            service.SaveEntity(Constants.PaymentMethod, "1",  new PaymentMethod() { Id = "1", CardholderName = "John Doe", CardNumber = "123512523123", CardVerificationCode = "123" });
+            Assert.IsNotNull(paymentMethods);
+            Assert.AreEqual(0, paymentMethods.Count);
+        }
 
-            service.SaveValue(Constants.Default, Constants.ShippingAddress, "3");
-            service.SaveValue(Constants.Default, Constants.BillingAddress, "2");
+        private static MockAddressService SetupAddressService()
+        {
+            var service = new MockAddressService();
+
+            service.SaveEntity(new Address() { AddressType = AddressType.Shipping, Id = "1", FirstName = "Bill", MiddleInitial = "B", LastName = "Doe", City = "Redmond", State = "Washington" });
+            service.SaveEntity(new Address() { AddressType = AddressType.Shipping, Id = "2", FirstName = "Jack", MiddleInitial = "B", LastName = "Doe", City = "Redmond", State = "Washington" });
+            service.SaveEntity(new Address() { AddressType = AddressType.Shipping, Id = "3", FirstName = "Anne", MiddleInitial = "B", LastName = "Doe", City = "Redmond", State = "Washington", IsDefault = true});
+
+            service.SaveEntity(new Address() { AddressType = AddressType.Billing, Id = "1", FirstName = "John", MiddleInitial = "B", LastName = "Doe", City = "Redmond", State = "Washington" });
+            service.SaveEntity(new Address() { AddressType = AddressType.Billing, Id = "2", FirstName = "Jane", MiddleInitial = "B", LastName = "Doe", City = "Redmond", State = "Washington", IsDefault = true});
+
+            return service;
+        }
+
+        private static MockPaymentMethodService SetupPaymentMethodService()
+        {
+            var service = new MockPaymentMethodService();
+            service.SaveEntity(new PaymentMethod() { Id = "1", CardholderName = "John Doe", CardNumber = "123512523123", CardVerificationCode = "123" });
 
             return service;
         }

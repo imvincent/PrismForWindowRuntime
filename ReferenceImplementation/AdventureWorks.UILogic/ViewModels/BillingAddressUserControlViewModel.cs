@@ -93,7 +93,7 @@ namespace AdventureWorks.UILogic.ViewModels
 
             if (navigationMode == NavigationMode.New)
             {
-                var defaultAddress = _checkoutDataRepository.GetDefaultBillingAddress();
+                var defaultAddress = await _checkoutDataRepository.GetDefaultBillingAddressAsync();
                 if (defaultAddress != null)
                 {
                     // Update the information and validate the values
@@ -131,9 +131,9 @@ namespace AdventureWorks.UILogic.ViewModels
             return _address.ValidateProperties();
         }
 
-        public void ProcessForm()
+        public async Task ProcessFormAsync()
         {
-            _checkoutDataRepository.SaveBillingAddress(_address);
+            await _checkoutDataRepository.SaveBillingAddressAsync(_address);
         }
 
         public async Task PopulateStatesAsync()

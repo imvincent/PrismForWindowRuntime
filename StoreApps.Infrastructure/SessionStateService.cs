@@ -175,7 +175,7 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
         /// immediately after creation if they will participate in session state management.  Upon
         /// registration if state has already been restored for the specified key
         /// the navigation history will immediately be restored.  Subsequent invocations of
-        /// <see cref="RestoreAsync"/> will also restore navigation history.
+        /// <see cref="RestoreFrameState"/> will also restore navigation history.
         /// </summary>
         /// <param name="frame">An instance whose navigation history should be managed by
         /// <see cref="SessionStateServiceException"/></param>
@@ -283,21 +283,40 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
             frameState["Navigation"] = frame.GetNavigationState();
         }
     }
+    /// <summary>
+    /// The exception that is thrown when a session state service error is detected
+    /// </summary>
     public class SessionStateServiceException : Exception
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SessionStateServiceException"/> class.
+        /// </summary>
         public SessionStateServiceException() : base("Session state service failed")
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SessionStateServiceException"/> class.
+        /// </summary>
+        /// <param name="message">The message that describes the error.</param>
         public SessionStateServiceException(string message) : base(message)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SessionStateServiceException"/> class.
+        /// </summary>
+        /// <param name="exception">The exception.</param>
         public SessionStateServiceException(Exception exception)
             : base("Session state service failed", exception)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SessionStateServiceException"/> class.
+        /// </summary>
+        /// <param name="message">The error message that explains the reason for the exception.</param>
+        /// <param name="innerException">The exception that is the cause of the current exception, or a null reference if no inner exception is specified.</param>
         public SessionStateServiceException(string message, Exception innerException):base(message, innerException)
         {
         }

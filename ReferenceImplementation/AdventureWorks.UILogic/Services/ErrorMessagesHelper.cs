@@ -61,15 +61,5 @@ namespace AdventureWorks.UILogic.Services
             get { return ResourceLoader.GetString("ErrorProcessingOrder"); }
         }
         // </snippet407>
-
-        public static string Error
-        {
-            get { return ResourceLoader.GetString("Error"); }
-        }
-        
-        public static string ErrorServiceUnreachable
-        {
-            get { return ResourceLoader.GetString("ErrorServiceUnreachable"); }
-        }
     }
 }

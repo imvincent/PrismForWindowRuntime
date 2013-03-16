@@ -123,7 +123,6 @@
     <Compile Include="Converters\FirstErrorConverter.cs" />
     <Compile Include="Converters\FormStatusToStyleConverter.cs" />
     <Compile Include="Converters\FormStatusToVisibilityConverter.cs" />
-    <Compile Include="Converters\IsGiftContentConverter.cs" />
     <Compile Include="Converters\IsSignInInvalidConverter.cs" />
     <Compile Include="Converters\NotNullToVisibleConverter.cs" />
     <Compile Include="DesignViewModels\ChangeDefaultDesignViewModel.cs" />
@@ -141,8 +140,8 @@
     <Compile Include="Views\BillingAddressUserControl.xaml.cs">
       <DependentUpon>BillingAddressUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ChangeDefaultsFlyout.xaml.cs">
-      <DependentUpon>ChangeDefaultsFlyout.xaml</DependentUpon>
+    <Compile Include="Views\ChangeDefaultsPage.xaml.cs">
+      <DependentUpon>ChangeDefaultsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CheckoutHubPage.xaml.cs">
       <DependentUpon>CheckoutHubPage.xaml</DependentUpon>
@@ -150,8 +149,8 @@
     <Compile Include="Views\CheckoutSummaryPage.xaml.cs">
       <DependentUpon>CheckoutSummaryPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\BillingAddressFlyout.xaml.cs">
-      <DependentUpon>BillingAddressFlyout.xaml</DependentUpon>
+    <Compile Include="Views\BillingAddressPage.xaml.cs">
+      <DependentUpon>BillingAddressPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CategoryPage.xaml.cs">
       <DependentUpon>CategoryPage.xaml</DependentUpon>
@@ -162,11 +161,11 @@
     <Compile Include="Views\SearchUserControl.xaml.cs">
       <DependentUpon>SearchUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ShippingAddressFlyout.xaml.cs">
-      <DependentUpon>ShippingAddressFlyout.xaml</DependentUpon>
+    <Compile Include="Views\ShippingAddressPage.xaml.cs">
+      <DependentUpon>ShippingAddressPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PaymentMethodFlyout.xaml.cs">
-      <DependentUpon>PaymentMethodFlyout.xaml</DependentUpon>
+    <Compile Include="Views\PaymentMethodPage.xaml.cs">
+      <DependentUpon>PaymentMethodPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ShoppingCartTabUserControl.xaml.cs">
       <DependentUpon>ShoppingCartTabUserControl.xaml</DependentUpon>
@@ -212,13 +211,26 @@
   <ItemGroup>
     <Content Include="Assets\BannerLogo.png" />
     <Content Include="Assets\billingAddressLogo.png" />
-    <Content Include="Assets\Logo.png" />
+    <Content Include="Assets\Logo.scale-100.png" />
+    <Content Include="Assets\Logo.scale-140.png" />
+    <Content Include="Assets\Logo.scale-180.png" />
+    <Content Include="Assets\Logo.scale-80.png" />
     <Content Include="Assets\paymentMethodLogo.png" />
     <Content Include="Assets\shippingAddressLogo.png" />
-    <Content Include="Assets\SmallLogo.png" />
-    <Content Include="Assets\SplashScreen.png" />
-    <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\SmallLogo.scale-100.png" />
+    <Content Include="Assets\SmallLogo.scale-140.png" />
+    <Content Include="Assets\SmallLogo.scale-180.png" />
+    <Content Include="Assets\SmallLogo.scale-80.png" />
+    <Content Include="Assets\SplashScreen.scale-100.png" />
+    <Content Include="Assets\SplashScreen.scale-140.png" />
+    <Content Include="Assets\SplashScreen.scale-180.png" />
+    <Content Include="Assets\StoreLogo.scale-100.png" />
+    <Content Include="Assets\StoreLogo.scale-140.png" />
+    <Content Include="Assets\StoreLogo.scale-180.png" />
     <Content Include="Assets\WideLogo.scale-100.png" />
+    <Content Include="Assets\WideLogo.scale-140.png" />
+    <Content Include="Assets\WideLogo.scale-180.png" />
+    <Content Include="Assets\WideLogo.scale-80.png" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -239,7 +251,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ChangeDefaultsFlyout.xaml">
+    <Page Include="Views\ChangeDefaultsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -251,7 +263,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\BillingAddressFlyout.xaml">
+    <Page Include="Views\BillingAddressPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -267,11 +279,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ShippingAddressFlyout.xaml">
+    <Page Include="Views\ShippingAddressPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\PaymentMethodFlyout.xaml">
+    <Page Include="Views\PaymentMethodPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

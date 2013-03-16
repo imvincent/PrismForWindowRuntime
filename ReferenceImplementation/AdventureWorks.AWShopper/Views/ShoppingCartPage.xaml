@@ -13,7 +13,8 @@
                                      d:DataContext="{d:DesignInstance designViewModels:ShoppingCartPageDesignViewModel, IsDesignTimeCreatable=True}">
 
     <Page.TopAppBar>
-        <AppBar Style="{StaticResource AppBarStyle}">
+        <AppBar Style="{StaticResource AppBarStyle}"
+                x:Uid="TopAppBar">
             <Views:TopAppBarUserControl />
         </AppBar>
     </Page.TopAppBar>
@@ -88,7 +89,8 @@
                                FontSize="17.5"
                                Foreground="#A9B0B4"
                                Margin="10"
-                               VerticalAlignment="Bottom"></TextBlock>
+                               VerticalAlignment="Bottom"
+                               TextTrimming="WordEllipsis"></TextBlock>
                     <TextBlock x:Name="textBlock5"
                                Grid.Row="0"
                                Grid.Column="1"
@@ -96,7 +98,8 @@
                                HorizontalAlignment="Right"
                                FontSize="24"
                                Foreground="White"
-                               Margin="10"></TextBlock>
+                               Margin="10"
+                               TextTrimming="WordEllipsis"></TextBlock>
                     <TextBlock x:Uid="DiscountCodesLabel"
                                x:Name="textBlock3"
                                Grid.Row="1"
@@ -105,7 +108,8 @@
                                FontSize="17.5"
                                Foreground="#A9B0B4"
                                Margin="10"
-                               VerticalAlignment="Bottom" />
+                               VerticalAlignment="Bottom"
+                               TextTrimming="WordEllipsis" />
                     <TextBlock x:Name="textBlock6"
                                Grid.Row="1"
                                Grid.Column="1"
@@ -113,7 +117,8 @@
                                HorizontalAlignment="Right"
                                FontSize="24"
                                Foreground="White"
-                               Margin="10" />
+                               Margin="10"
+                               TextTrimming="WordEllipsis" />
                     <TextBlock x:Uid="TotalLabel"
                                x:Name="textBlock4"
                                Grid.Row="2"
@@ -122,7 +127,8 @@
                                FontSize="24"
                                Foreground="#A9B0B4"
                                Margin="10"
-                               VerticalAlignment="Bottom"></TextBlock>
+                               VerticalAlignment="Bottom"
+                               TextTrimming="WordEllipsis"></TextBlock>
                     <TextBlock x:Name="textBlock7"
                                Grid.Row="2"
                                Grid.Column="1"
@@ -130,7 +136,8 @@
                                HorizontalAlignment="Right"
                                FontSize="24"
                                Foreground="{StaticResource AWShopperAccentBrush}"
-                               Margin="10"></TextBlock>
+                               Margin="10"
+                               TextTrimming="WordEllipsis"></TextBlock>
                 </Grid>
                 <Button x:Name="CheckoutButton"
                         x:Uid="CheckoutButton"
@@ -195,8 +202,9 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0"
+                           x:Uid="EditQuantityLabel"
                            Margin="10"
-                           Text="Edit Amount"
+                           Text="Edit Quantity"
                            FontSize="34"
                            Foreground="White"></TextBlock>
                 <Grid x:Name="ContentPopupGrid"
@@ -577,7 +585,8 @@
     <Page.BottomAppBar>
         <AppBar Style="{StaticResource AppBarStyle}"
                 IsOpen="{Binding IsBottomAppBarOpened, Mode=TwoWay}"
-                AutomationProperties.AutomationId="BottomAppBar">
+                AutomationProperties.AutomationId="BottomAppBar"
+                x:Uid="BottomAppBar">
             <Grid>
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Left">

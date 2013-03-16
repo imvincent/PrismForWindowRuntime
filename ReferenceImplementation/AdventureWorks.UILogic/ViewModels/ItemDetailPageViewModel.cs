@@ -8,6 +8,7 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using AdventureWorks.UILogic.Repositories;
 using Microsoft.Practices.StoreApps.Infrastructure;
@@ -122,6 +123,7 @@ namespace AdventureWorks.UILogic.ViewModels
 
         public async override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewModelState)
         {
+            string errorMessage = string.Empty;
             try
             {
                 var productNumber = navigationParameter as string;
@@ -135,10 +137,16 @@ namespace AdventureWorks.UILogic.ViewModels
                 Title = SelectedProduct.Title;
                 _searchPaneService.ShowOnKeyboardInput(true);
             }
-            catch (HttpRequestException)
+            catch (HttpRequestException ex)
             {
-                var task = _alertService.ShowAsync(_resourceLoader.GetString("ErrorServiceUnreachable"), _resourceLoader.GetString("Error"));
+                errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, ex.Message);
             }
+
+            if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
+                await _alertService.ShowAsync(errorMessage, _resourceLoader.GetString("ErrorServiceUnreachable"));
+            }
+
             if (navigationMode != NavigationMode.New)
             {
                 base.OnNavigatedTo(navigationParameter, navigationMode, viewModelState);

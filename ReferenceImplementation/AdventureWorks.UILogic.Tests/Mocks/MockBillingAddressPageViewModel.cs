@@ -18,7 +18,7 @@ namespace AdventureWorks.UILogic.Tests.Mocks
     public class MockBillingAddressPageViewModel : IBillingAddressUserControlViewModel
     {
         public Func<bool> ValidateFormDelegate { get; set; }
-        public Action ProcessFormDelegate { get; set; }
+        public Func<Task> ProcessFormAsyncDelegate { get; set; }
 
         public Address Address { get; set; }        
 
@@ -61,9 +61,9 @@ namespace AdventureWorks.UILogic.Tests.Mocks
             throw new System.NotImplementedException();
         }
 
-        public void ProcessForm()
+        public async Task ProcessFormAsync()
         {
-            ProcessFormDelegate();
+            await ProcessFormAsyncDelegate();
         }
 
         public bool ValidateForm()

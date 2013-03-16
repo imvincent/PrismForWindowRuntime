@@ -238,5 +238,35 @@ namespace Microsoft.Practices.StoreApps.Infrastructure.Tests
                 Assert.AreEqual(4, frameSessionState.Count, "VM 1, 2, 1, and 3");
             });
         }
+
+        [TestMethod]
+        public async Task RestoreSavedNavigation_ClearsOldForwardNavigation()
+        {
+            await ExecuteOnUIThread(() =>
+            {
+                var frame = new FrameFacadeAdapter(new Frame());
+                var sessionStateService = new MockSessionStateService();
+                var frameSessionState = new Dictionary<string, object>();
+                sessionStateService.GetSessionStateForFrameDelegate = (currentFrame) => frameSessionState;
+                var navigationService = new FrameNavigationService(frame, (pageToken) => typeof(MockPageWithViewModel), sessionStateService);
+
+                navigationService.Navigate("Page1", 1);
+                Assert.AreEqual(1, frameSessionState.Count, "VM 1 state only");
+
+                navigationService.Navigate("Page2", 2);
+                Assert.AreEqual(2, frameSessionState.Count, "VM 1 and 2");
+
+                navigationService.Navigate("Page3", 3);
+                Assert.AreEqual(3, frameSessionState.Count, "VM 1, 2, and 3");
+
+                navigationService.GoBack();
+                Assert.AreEqual(2, ((Dictionary<string, object>)frameSessionState["ViewModel-2"]).Count);
+                Assert.AreEqual(3, frameSessionState.Count, "VM 1, 2, and 3");
+
+                navigationService.Navigate("Page4", 4);
+                Assert.AreEqual(0, ((Dictionary<string,object>)frameSessionState["ViewModel-2"]).Count);
+                Assert.AreEqual(3, frameSessionState.Count, "VM 1, 2, and 4");
+            });
+        }
     }
 }

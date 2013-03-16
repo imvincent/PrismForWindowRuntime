@@ -80,7 +80,9 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
         /// <summary>
         /// Validates the properties of the current instance.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// Returns <c>true</c> if all properties pass the validation rules; otherwise, false.
+        /// </returns>
         public bool ValidateProperties()
         {
             return _bindableValidator.ValidateProperties();

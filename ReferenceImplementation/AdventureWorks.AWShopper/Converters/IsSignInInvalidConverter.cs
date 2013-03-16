@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Data;
 namespace AdventureWorks.AWShopper.Converters
 {
     /// <summary>
-    /// Value converter that translates the gift boolean to a message.
+    /// Value converter that translates a boolean value to an invalid sign-in message.
     /// </summary>
     public sealed class IsSignInInvalidConverter : IValueConverter
     {

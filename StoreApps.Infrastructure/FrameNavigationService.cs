@@ -25,7 +25,6 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
         private readonly IFrameFacade _frame;
         private readonly Func<string, Type> _navigationResolver;
         private readonly ISessionStateService _sessionStateService;
-        private int _backStackDepth;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FrameNavigationService"/> class.
@@ -46,13 +45,13 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
             }
         }
 
-        // <snippet413>
         /// <summary>
         /// Navigates to the page with the specified page token, passing the specified parameter.
         /// </summary>
         /// <param name="pageToken">The page token.</param>
         /// <param name="parameter">The parameter.</param>
-        /// <returns></returns>
+        /// <returns>Returns <c>true</c> if the navigation succeds: otherwise, <c>false</c>.</returns>
+        // <snippet413>
         public bool Navigate(string pageToken, object parameter)
         {
             Type pageType = _navigationResolver(pageToken);
@@ -117,29 +116,34 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
         }
 
         /// <summary>
-        /// Gets the back stack depth.
-        /// </summary>
-        /// <value>
-        /// The back stack depth.
-        /// </value>
-        public int BackStackDepth { get { return _backStackDepth; }}
-
-        // <snippet705>
-        /// <summary>
         /// This method is triggered after navigating to a view model. It is used to load the view model state that was saved previously.
         /// </summary>
         /// <param name="navigationMode">The navigation mode.</param>
         /// <param name="parameter">The parameter.</param>
+        // <snippet705>
         private void NavigateToCurrentViewModel(NavigationMode navigationMode, object parameter)
         {
+            var frameState = _sessionStateService.GetSessionStateForFrame(_frame);
+            var viewModelKey = "ViewModel-" + _frame.BackStackDepth;
+
+            if (navigationMode == NavigationMode.New)
+            {
+                // Clear existing state for forward navigation when adding a new page/view model to the
+                // navigation stack
+                var nextViewModelKey = viewModelKey;
+                int nextViewModelIndex = _frame.BackStackDepth;
+                while (frameState.Remove(nextViewModelKey))
+                {
+                    nextViewModelIndex++;
+                    nextViewModelKey = "ViewModel-" + nextViewModelIndex;
+                }
+            }
+
             var newView = _frame.Content as FrameworkElement;
             if (newView == null) return;
-            var frameState = _sessionStateService.GetSessionStateForFrame(_frame);
             var newViewModel = newView.DataContext as INavigationAware;
             if (newViewModel != null)
             {
-                var viewModelKey = "ViewModel-" + _frame.BackStackDepth;
-                
                 Dictionary<string, object> viewModelState;
                 if (frameState.ContainsKey(viewModelKey))
                 {
@@ -155,11 +159,11 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
         }
         // </snippet705>
 
-        // <snippet702>
         /// <summary>
         /// Navigates away from the current viewmodel.
         /// </summary>
         /// <param name="suspending">True if it is navigating away from the viewmodel due to a suspend event.</param>
+        // <snippet702>
         private void NavigateFromCurrentViewModel(bool suspending)
         {
             var departingView = _frame.Content as FrameworkElement;
@@ -200,15 +204,6 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
             _sessionStateService.SessionState[LastNavigationPageKey] = _frame.Content.GetType().FullName;
             _sessionStateService.SessionState[LastNavigationParameterKey] = e.Parameter;
 
-            if (e.NavigationMode == NavigationMode.New)
-            {
-                _backStackDepth++;
-            }
-            else if (e.NavigationMode == NavigationMode.Back)
-            {
-                _backStackDepth--;
-            }
-
             NavigateToCurrentViewModel(e.NavigationMode, e.Parameter);
         }
 
@@ -217,7 +212,7 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
         /// </summary>
         /// <param name="obj1">First object to compare.</param>
         /// <param name="obj2">Second object to compare.</param>
-        /// <returns></returns>
+        /// <returns>Returns <c>true</c> if both parameters are equal; otherwise, <c>false</c>.</returns>
         private static bool AreEquals(object obj1, object obj2)
         {
             if (obj1 != null)

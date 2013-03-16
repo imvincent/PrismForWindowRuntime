@@ -30,7 +30,7 @@ namespace AdventureWorks.UILogic.Tests.Mocks
         public string EntityId { get; set; }
         public Func<bool> ValidateFormDelegate { get; set; }
 
-        public Action ProcessFormDelegate { get; set; }
+        public Func<Task> ProcessFormAsyncDelegate { get; set; }
 
         public void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState)
         {
@@ -47,9 +47,9 @@ namespace AdventureWorks.UILogic.Tests.Mocks
             throw new NotImplementedException();
         }
 
-        public void ProcessForm()
+        public Task ProcessFormAsync()
         {
-            ProcessFormDelegate();
+            return ProcessFormAsyncDelegate();
         }
 
         public bool ValidateForm()

@@ -7,6 +7,7 @@
 
 
 using System;
+using System.Globalization;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
 using AdventureWorks.UILogic.Services;
@@ -52,7 +53,7 @@ namespace AdventureWorks.UILogic.ViewModels
         private async void UpdateItemCountAsync(object notUsed)
         {
             ShoppingCart shoppingCart = null;
-            var serviceCallFailed = false;
+            string errorMessage = string.Empty;
 
             try
             {
@@ -60,17 +61,17 @@ namespace AdventureWorks.UILogic.ViewModels
                 await _accountService.VerifyUserAuthenticationAsync();
                 shoppingCart = await _shoppingCartRepository.GetShoppingCartAsync();
             }
-            catch (HttpRequestException)
+            catch (HttpRequestException ex)
             {
-                serviceCallFailed = true;
+                errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, ex.Message);
             }
             catch(FileNotFoundException){}
             catch(UnauthorizedAccessException){}
             catch(Exception){}
 
-            if (serviceCallFailed)
+            if (!string.IsNullOrWhiteSpace(errorMessage))
             {
-                await _alertMessageService.ShowAsync(_resourceLoader.GetString("ErrorServiceUnreachable"), _resourceLoader.GetString("Error"));
+                await _alertMessageService.ShowAsync(errorMessage, _resourceLoader.GetString("ErrorServiceUnreachable"));
             }
 
             if (shoppingCart == null)

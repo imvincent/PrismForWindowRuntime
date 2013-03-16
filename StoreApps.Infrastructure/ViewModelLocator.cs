@@ -65,10 +65,18 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
 
         #region Attached property with convention-or-mapping based approach
 
+        /// <summary>
+        /// The auto wire view model attached property
+        /// </summary>
         public static DependencyProperty AutoWireViewModelProperty =
             DependencyProperty.RegisterAttached("AutoWireViewModel", typeof(bool), typeof(ViewModelLocator), 
             new PropertyMetadata(false, AutoWireViewModelChanged));
 
+        /// <summary>
+        /// Gets the value of the AutoWireViewModel attached property.
+        /// </summary>
+        /// <param name="obj">The dependency object which has this attached property.</param>
+        /// <returns><c>True</c> if ViewModel Autowiring is enabled; otherwise, false.</returns>
         public static bool GetAutoWireViewModel(DependencyObject obj)
         {
             if (obj != null)
@@ -78,6 +86,11 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
             return false;
         }
 
+        /// <summary>
+        /// Sets the value of the AutoWireViewModel attached property.
+        /// </summary>
+        /// <param name="obj">The dependency object which has this attached property.</param>
+        /// <param name="value">if set to <c>true</c> the view model wiring will be performed.</param>
         public static void SetAutoWireViewModel(DependencyObject obj, bool value)
         {
             if (obj != null)
@@ -88,14 +101,14 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
 
         #endregion
 
-        // <snippet300>
-        // <snippet3303>
         /// <summary>
         /// Automatically looks up the viewmodel that correspond to the current view, using two strategies:
         /// the first one looks if there is a any mapping registered for that view, if not it will fallback to the convention based approach.
         /// </summary>
         /// <param name="d">The dependency object, typically a view.</param>
         /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
+        // <snippet300>
+        // <snippet3303>
         private static void AutoWireViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             FrameworkElement view = d as FrameworkElement;

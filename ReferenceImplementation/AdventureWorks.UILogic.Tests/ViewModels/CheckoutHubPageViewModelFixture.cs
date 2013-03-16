@@ -57,12 +57,20 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             var shippingAddressPageViewModel = new MockShippingAddressPageViewModel()
                 {
                     ValidateFormDelegate = () => true,
-                    ProcessFormDelegate = () => shippingInfoProcessed = true
+                    ProcessFormAsyncDelegate = () =>
+                                                   {
+                                                       shippingInfoProcessed = true;
+                                                       return Task.Delay(0);
+                                                   }
                 };
             var billingAddressPageViewModel = new MockBillingAddressPageViewModel()
                 {
                     ValidateFormDelegate = () => true,
-                    ProcessFormDelegate = () => billingInfoProcessed = true
+                    ProcessFormAsyncDelegate = () =>
+                                                   {
+                                                       billingInfoProcessed = true;
+                                                       return Task.Delay(0);
+                                                   }
                 };
             var paymentMethodPageViewModel = new MockPaymentMethodPageViewModel()
                 {
@@ -200,17 +208,18 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             var shippingAddressPageViewModel = new MockShippingAddressPageViewModel()
                 {
                     ValidateFormDelegate = () => true,
-                    ProcessFormDelegate = () => Task.Delay(0),
+                    ProcessFormAsyncDelegate = () => Task.Delay(0),
                     Address = mockAddress
                 };
             var billingAddressPageViewModel = new MockBillingAddressPageViewModel()
                 {
                     ValidateFormDelegate = () => true
                 };
-            billingAddressPageViewModel.ProcessFormDelegate = () =>
+            billingAddressPageViewModel.ProcessFormAsyncDelegate = () =>
                 {
                     // The Address have to be updated before the form is processed
                     Assert.IsTrue(compareAddressesFunc(shippingAddressPageViewModel.Address, billingAddressPageViewModel.Address));
+                    return Task.Delay(0);
                 };
             var paymentMethodPageViewModel = new MockPaymentMethodPageViewModel()
                 {

@@ -14,7 +14,8 @@
                                      d:DataContext="{d:DesignInstance designViewModels:GroupDetailPageDesignViewModel, IsDesignTimeCreatable=True}">
 
     <Page.TopAppBar>
-        <AppBar Style="{StaticResource AppBarStyle}">
+        <AppBar Style="{StaticResource AppBarStyle}"
+                x:Uid="TopAppBar">
             <views:TopAppBarUserControl />
         </AppBar>
     </Page.TopAppBar>

@@ -30,7 +30,9 @@ namespace AdventureWorks.AWShopper
     sealed partial class App : MvvmAppBase
     {
         // Create the singleton container that will be used for type resolution in the app
+        // <snippet321>
         private readonly IUnityContainer _container = new UnityContainer();
+        // </snippet321>
 
         //Bootstrap: App singleton service declarations
         private IEventAggregator _eventAggregator;
@@ -42,6 +44,7 @@ namespace AdventureWorks.AWShopper
             this.RequestedTheme = ApplicationTheme.Dark;
         }
 
+        // <snippet320>
         // <snippet812>
         // <snippet404>
         protected override void OnLaunchApplication(LaunchActivatedEventArgs args)
@@ -54,12 +57,13 @@ namespace AdventureWorks.AWShopper
             }
             else
             {
-            // Navigate to the initial page
+                // Navigate to the initial page
                 NavigationService.Navigate("Hub", null);
             }
         }
         // </snippet404>
         // </snippet812>
+        // </snippet320>
 
         // <snippet1002>
         protected override void OnSearchApplication(SearchQueryArguments args)
@@ -94,14 +98,14 @@ namespace AdventureWorks.AWShopper
         {
             _eventAggregator = new EventAggregator();
 
+            // <snippet322>
             _container.RegisterInstance<INavigationService>(NavigationService);
             _container.RegisterInstance<ISessionStateService>(SessionStateService);
             _container.RegisterInstance<IFlyoutService>(FlyoutService);
             _container.RegisterInstance<IEventAggregator>(_eventAggregator);
-            _container.RegisterInstance<ISettingsStoreService>(new SettingsStoreService());
             _container.RegisterInstance<IResourceLoader>(new ResourceLoaderAdapter(new ResourceLoader()));
+            // </snippet322>
 
-            // <snippet302>
             _container.RegisterType<IRequestService, RequestService>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IAccountService, AccountService>(new ContainerControlledLifetimeManager());
             _container.RegisterType<ICredentialStore, RoamingCredentialStore>(new ContainerControlledLifetimeManager());
@@ -109,8 +113,6 @@ namespace AdventureWorks.AWShopper
             _container.RegisterType<ISecondaryTileService, SecondaryTileService>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IAlertMessageService, AlertMessageService>(new ContainerControlledLifetimeManager());
             _container.RegisterType<ISearchPaneService, SearchPaneService>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IEncryptionService, EncryptionService>(new ContainerControlledLifetimeManager());
-            // </snippet302>
 
             // Register repositories
             _container.RegisterType<IProductCatalogRepository, ProductCatalogRepository>(new ContainerControlledLifetimeManager());
@@ -125,7 +127,8 @@ namespace AdventureWorks.AWShopper
             _container.RegisterType<IShippingMethodService, ShippingMethodServiceProxy>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IIdentityService, IdentityServiceProxy>(new ContainerControlledLifetimeManager());
             _container.RegisterType<ILocationService, LocationServiceProxy>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IValidationService, ValidationServiceProxy>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IAddressService, AddressServiceProxy>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IPaymentMethodService, PaymentMethodServiceProxy>(new ContainerControlledLifetimeManager());
 
             // Register child view models
             _container.RegisterType<IShippingAddressUserControlViewModel, ShippingAddressUserControlViewModel>();
@@ -161,19 +164,20 @@ namespace AdventureWorks.AWShopper
         {
             var settingsCharmItems = new List<ISettingsCharmItem>();
             var accountService = _container.Resolve<IAccountService>();
+            var resourceLoader = _container.Resolve<IResourceLoader>();
+
             if (accountService.SignedInUser == null)
             {
-                settingsCharmItems.Add(new SettingsCharmFlyoutItem("Login", "SignIn"));
+                settingsCharmItems.Add(new SettingsCharmFlyoutItem(resourceLoader.GetString("LoginText"), "SignIn"));
             }
             else
             {
-                settingsCharmItems.Add(new SettingsCharmFlyoutItem("Logout", "SignOut"));
+                settingsCharmItems.Add(new SettingsCharmFlyoutItem(resourceLoader.GetString("LogoutText"), "SignOut"));
+                settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("AddShippingAddressTitle"), () => NavigationService.Navigate("ShippingAddress", null)));
+                settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("AddBillingAddressTitle"), () => NavigationService.Navigate("BillingAddress", null)));
+                settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("AddPaymentMethodTitle"), () => NavigationService.Navigate("PaymentMethod", null)));
+                settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("ChangeDefaults"), () => NavigationService.Navigate("ChangeDefaults", null)));
             }
-            var resourceLoader = _container.Resolve<IResourceLoader>();
-            settingsCharmItems.Add(new SettingsCharmFlyoutItem(resourceLoader.GetString("AddShippingAddressTitle"), "ShippingAddress"));
-            settingsCharmItems.Add(new SettingsCharmFlyoutItem(resourceLoader.GetString("AddBillingAddressTitle"), "BillingAddress"));
-            settingsCharmItems.Add(new SettingsCharmFlyoutItem(resourceLoader.GetString("AddPaymentMethodTitle"), "PaymentMethod"));
-            settingsCharmItems.Add(new SettingsCharmFlyoutItem(resourceLoader.GetString("ChangeDefaults"), "ChangeDefaults"));
             settingsCharmItems.Add(new SettingsCharmLinkItem(resourceLoader.GetString("PrivacyPolicy"), "PrivacyPolicy",
                                                                 new Uri(resourceLoader.GetString("PrivacyPolicyUrl"))));
 

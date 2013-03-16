@@ -87,7 +87,7 @@ namespace AdventureWorks.WebServices.Controllers
                             throw new HttpResponseException(HttpStatusCode.Unauthorized);
                     }
 
-                    if (HttpContext.Current != null) // TODO - hack to avoid null ref in unit test, should find way to make this happy in the unit test instead
+                    if (HttpContext.Current != null)
                         FormsAuthentication.SetAuthCookie(id, false);
                     return new UserInfo { UserName = id };
                 }

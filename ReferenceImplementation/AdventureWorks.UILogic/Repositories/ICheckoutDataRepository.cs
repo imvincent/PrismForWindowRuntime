@@ -14,28 +14,28 @@ namespace AdventureWorks.UILogic.Repositories
 {
     public interface ICheckoutDataRepository
     {
-        Address GetShippingAddress(string id);
-        Address GetBillingAddress(string id);
+        Task<Address> GetShippingAddressAsync(string id);
+        Task<Address> GetBillingAddressAsync(string id);
         Task<PaymentMethod> GetPaymentMethodAsync(string id);
 
-        Address GetDefaultShippingAddress();
-        Address GetDefaultBillingAddress();
+        Task<Address> GetDefaultShippingAddressAsync();
+        Task<Address> GetDefaultBillingAddressAsync();
         Task<PaymentMethod> GetDefaultPaymentMethodAsync();
 
-        IReadOnlyCollection<Address> GetAllShippingAddresses();
-        IReadOnlyCollection<Address> GetAllBillingAddresses();
+        Task<IReadOnlyCollection<Address>> GetAllShippingAddressesAsync();
+        Task<IReadOnlyCollection<Address>> GetAllBillingAddressesAsync();
         Task<IReadOnlyCollection<PaymentMethod>> GetAllPaymentMethodsAsync();
 
-        void SaveShippingAddress(Address address);
-        void SaveBillingAddress(Address address);
+        Task SaveShippingAddressAsync(Address address);
+        Task SaveBillingAddressAsync(Address address);
         Task SavePaymentMethodAsync(PaymentMethod paymentMethod);
 
-        void SetDefaultShippingAddress(string addressId);
-        void SetDefaultBillingAddress(string addressId);
-        void SetDefaultPaymentMethod(string paymentMethodId);
+        Task SetDefaultShippingAddressAsync(string addressId);
+        Task SetDefaultBillingAddressAsync(string addressId);
+        Task SetDefaultPaymentMethodAsync(string paymentMethodId);
 
-        void RemoveDefaultShippingAddress();
-        void RemoveDefaultBillingAddress();
-        void RemoveDefaultPaymentMethod();
+        Task RemoveDefaultShippingAddressAsync();
+        Task RemoveDefaultBillingAddressAsync();
+        Task RemoveDefaultPaymentMethodAsync();
     }
 }

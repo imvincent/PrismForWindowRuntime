@@ -43,5 +43,9 @@ namespace AdventureWorks.WebServices.Models
 
         [Required(ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRequired")]
         public string CardVerificationCode { get; set; }
+
+        public string Id { get; set; }
+
+        public bool IsDefault { get; set; }
     }
 }

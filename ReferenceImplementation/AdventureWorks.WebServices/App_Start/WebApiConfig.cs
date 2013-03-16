@@ -17,12 +17,6 @@ namespace AdventureWorks.WebServices
             if (config == null || config.Routes == null) return;
 
             config.Routes.MapHttpRoute(
-                name: "ValidationApi",
-                routeTemplate: "api/validation/{action}",
-                defaults: new { controller = "validation"},
-                constraints: new { action = @"[^\d]+" });
-            
-            config.Routes.MapHttpRoute(
                 name: "ShippingMethodApi",
                 routeTemplate: "api/shippingmethod/{action}",
                 defaults: new { controller = "shippingmethod", action = "defaultAction" },
@@ -32,8 +26,6 @@ namespace AdventureWorks.WebServices
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional });
-
-
         }
     }
 }

@@ -12,7 +12,7 @@ using Windows.ApplicationModel.Resources;
 namespace Microsoft.Practices.StoreApps.Infrastructure
 {
     /// <summary>
-    /// The ResourceLoader class abstracts the Windows.ApplicationModel.Resources.ResourceLoader object for use by apps that derive from the MvvmBaseApp class.
+    /// The ResourceLoader class abstracts the Windows.ApplicationModel.Resources.ResourceLoader object for use by apps that derive from the MvvmAppBase class.
     /// A ResourceLoader represents a class that reads the assembly resouce file and looks for a named resource.
     /// This class simply passes method invocations to an underlying Windows.ApplicationModel.Resources.ResourceLoader object.
     /// </summary>

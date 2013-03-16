@@ -30,7 +30,7 @@ namespace Microsoft.Practices.StoreApps.Infrastructure.Interfaces
         /// Gets the saved credentials for the specified resource.
         /// </summary>
         /// <param name="resource">The resource name of which the credentials will be stored.</param>
-        /// <returns></returns>
+        /// <returns>The <see cref="PasswordCredential"/> instance containing all the saved credentials for the specified resource.</returns>
         PasswordCredential GetSavedCredentials(string resource);
 
         /// <summary>

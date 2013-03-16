@@ -10,7 +10,6 @@ using System.Globalization;
 using Microsoft.Practices.StoreApps.Infrastructure;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Data;
 using AdventureWorks.AWShopper.Common;
 
 // The Group Detail Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234229

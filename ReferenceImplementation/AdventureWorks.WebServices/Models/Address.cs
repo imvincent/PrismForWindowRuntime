@@ -66,6 +66,12 @@ namespace AdventureWorks.WebServices.Models
         [RegularExpression(NUMBERS_REGEX_PATTERN, ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRegex")]
         public string Phone { get; set; }
 
+        public string Id { get; set; }
+
+        public AddressType AddressType { get; set; }
+
+        public bool IsDefault { get; set; }
+
         // <snippet906>
         public static ValidationResult ValidateZipCodeState(object value, ValidationContext validationContext)
         {

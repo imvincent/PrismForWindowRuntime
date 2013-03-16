@@ -128,8 +128,10 @@ namespace AdventureWorks.UILogic.Services
                 // Save username and password in state service
                 _userName = userName;
                 _password = password;
+                // <snippet707>
                 _sessionStateService.SessionState[UserNameKey] = userName;
                 _sessionStateService.SessionState[PasswordKey] = password;
+                // </snippet707>
 
                 if (useCredentialStore)
                 {

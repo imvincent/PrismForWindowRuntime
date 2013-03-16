@@ -8,9 +8,18 @@
 
 namespace Microsoft.Practices.StoreApps.Infrastructure
 {
+    /// <summary>
+    /// Static class that contains the standard widths of flyouts
+    /// </summary>
     public static class StandardFlyoutSize 
-    { 
+    {
+        /// <summary>
+        /// Width of the Narrow Flyout views
+        /// </summary>
         public static readonly int Narrow = 364;
+        /// <summary>
+        /// Width of the Wide Flyout views
+        /// </summary>
         public static readonly int Wide = 646;
     }
 }

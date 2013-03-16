@@ -25,6 +25,10 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
         {
             if (client != null)
             {
+                // Setting the user's current language in the Accept-Language header.
+                // This doc http://msdn.microsoft.com/en-us/library/windows/apps/xaml/Hh967761(v=win.10).aspx 
+                // states that by default, the HTTP header is set to the user's language preferences.
+                // However the default behavior described does not seem to be implemented.
                 client.DefaultRequestHeaders.AcceptLanguage.Add(
                     new StringWithQualityHeaderValue(CultureInfo.CurrentUICulture.Name));
             }

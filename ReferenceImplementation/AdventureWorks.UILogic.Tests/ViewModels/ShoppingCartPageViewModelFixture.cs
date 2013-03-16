@@ -143,9 +143,9 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                 };
             var checkoutDataRepository = new MockCheckoutDataRepository()
                 {
-                    GetDefaultShippingAddressDelegate = () => null,
-                    GetDefaultBillingAddresDelegate =  () => null,
-                    GetDefaultPaymentMethodDelegate = () => Task.FromResult<PaymentMethod>(null)
+                    GetDefaultShippingAddressAsyncDelegate = () => null,
+                    GetDefaultBillingAddressAsyncDelegate =  () => null,
+                    GetDefaultPaymentMethodAsyncDelegate = () => Task.FromResult<PaymentMethod>(null)
                 };
             var eventAggregator = new MockEventAggregator
                 {

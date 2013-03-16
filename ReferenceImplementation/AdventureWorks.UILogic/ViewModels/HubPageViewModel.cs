@@ -6,6 +6,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System.Globalization;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
 using AdventureWorks.UILogic.Services;
@@ -29,7 +30,6 @@ namespace AdventureWorks.UILogic.ViewModels
         private readonly ISearchPaneService _searchPaneService;
         private IReadOnlyCollection<CategoryViewModel> _rootCategories;
 
-        // <snippet303>
         public HubPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService, IAlertMessageService alertMessageService, IResourceLoader resourceLoader, ISearchPaneService searchPaneService)
         {
             _productCatalogRepository = productCatalogRepository;
@@ -40,7 +40,6 @@ namespace AdventureWorks.UILogic.ViewModels
             ProductNavigationAction = NavigateToItem;
             GoBackCommand = new DelegateCommand(navigationService.GoBack, navigationService.CanGoBack);
         }
-        // </snippet303>
 
         // <snippet305>
         public IReadOnlyCollection<CategoryViewModel> RootCategories
@@ -67,22 +66,22 @@ namespace AdventureWorks.UILogic.ViewModels
 
         public async override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewModelState)
         {
+            string errorMessage = string.Empty;
             ReadOnlyCollection<Category> rootCategories = null;
-            var getCategoriesCallFailed = false;
             try
             {
                 // <snippet511>
                 rootCategories = await _productCatalogRepository.GetRootCategoriesAsync(5);
                 // </snippet511>
             }
-            catch (HttpRequestException)
+            catch (HttpRequestException ex)
             {
-                getCategoriesCallFailed = true;
+                errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, ex.Message);
             }
 
-            if (getCategoriesCallFailed)
+            if (!string.IsNullOrWhiteSpace(errorMessage))
             {
-                await _alertMessageService.ShowAsync(_resourceLoader.GetString("ErrorServiceUnreachable"), _resourceLoader.GetString("Error"));
+                await _alertMessageService.ShowAsync(errorMessage, _resourceLoader.GetString("ErrorServiceUnreachable"));
                 return;
             }
 

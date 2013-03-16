@@ -322,14 +322,14 @@ namespace AdventureWorks.UILogic.ViewModels
             var selectedData = SelectedCheckoutData;
             if (selectedData == null) return;
 
-            // Display flyout to add a new address/payment
-            string flyoutName = selectedData.DataType == Constants.ShippingAddress ? "ShippingAddress"
+            // Add a new address/payment
+            string addNewAddressType = selectedData.DataType == Constants.ShippingAddress ? "ShippingAddress"
                                     : selectedData.DataType == Constants.BillingAddress ? "BillingAddress" : "PaymentMethod";
 
             // Hide the Popup
             IsSelectCheckoutDataPopupOpened = false;
 
-            _flyoutService.ShowFlyout(flyoutName, null, null);
+            _navigationService.Navigate(addNewAddressType, null);
         }
 
         private void EditCheckoutData()
@@ -340,12 +340,8 @@ namespace AdventureWorks.UILogic.ViewModels
             // Hide the App Bar
             IsBottomAppBarOpened = false;
 
-            // Display flyout to edit selected address/payment
-            _flyoutService.ShowFlyout(selectedData.DataType, selectedData.EntityId, () => 
-                {
-                    // Update the CheckoutData values
-                    UpdateOrderCheckoutData(selectedData);
-                });
+            // Edit selected address/payment
+            _navigationService.Navigate(selectedData.DataType, selectedData.EntityId);
         }
 
         private async Task SelectCheckoutDataAsync()
@@ -356,12 +352,12 @@ namespace AdventureWorks.UILogic.ViewModels
             switch (selectedData.DataType)
             {
                 case Constants.ShippingAddress:
-                    checkoutData = _checkoutDataRepository.GetAllShippingAddresses().Select(address => CreateCheckoutData(address, Constants.ShippingAddress));
+                    checkoutData = (await _checkoutDataRepository.GetAllShippingAddressesAsync()).Select(address => CreateCheckoutData(address, Constants.ShippingAddress));
                     AllCheckoutDataViewModels = new ReadOnlyCollection<CheckoutDataViewModel>(checkoutData.ToList());
                     SelectCheckoutDataLabel = string.Format(CultureInfo.CurrentUICulture, _resourceLoader.GetString("SelectCheckoutData"), _resourceLoader.GetString("ShippingAddress"));
                     break;
                 case Constants.BillingAddress:
-                    checkoutData = _checkoutDataRepository.GetAllBillingAddresses().Select(address => CreateCheckoutData(address, Constants.BillingAddress));
+                    checkoutData = (await _checkoutDataRepository.GetAllBillingAddressesAsync()).Select(address => CreateCheckoutData(address, Constants.BillingAddress));
                     AllCheckoutDataViewModels = new ReadOnlyCollection<CheckoutDataViewModel>(checkoutData.ToList());
                     SelectCheckoutDataLabel = string.Format(CultureInfo.CurrentUICulture, _resourceLoader.GetString("SelectCheckoutData"), _resourceLoader.GetString("BillingAddress"));
                     break;
@@ -401,12 +397,12 @@ namespace AdventureWorks.UILogic.ViewModels
             switch (checkouData.DataType)
             {
                 case Constants.ShippingAddress:
-                    var updatedShippingAddress = _checkoutDataRepository.GetShippingAddress(checkouData.EntityId);
+                    var updatedShippingAddress = await _checkoutDataRepository.GetShippingAddressAsync(checkouData.EntityId);
                     CheckoutDataViewModels[0] = CreateCheckoutData(updatedShippingAddress, Constants.ShippingAddress);
                     _order.ShippingAddress = updatedShippingAddress;
                     break;
                 case Constants.BillingAddress:
-                    var updatedBillingAddress = _checkoutDataRepository.GetBillingAddress(checkouData.EntityId);
+                    var updatedBillingAddress = await _checkoutDataRepository.GetBillingAddressAsync(checkouData.EntityId);
                     CheckoutDataViewModels[1] = CreateCheckoutData(updatedBillingAddress, Constants.BillingAddress);
                     _order.BillingAddress = updatedBillingAddress;
                     break;

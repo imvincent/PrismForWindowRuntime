@@ -72,9 +72,9 @@ namespace AdventureWorks.UILogic.ViewModels
                                                                          .ToList());
             }
             catch (HttpRequestException ex)
-                {
-                errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, ex.Message);
-                }
+            {
+            errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, ex.Message);
+            }
 
             if (!string.IsNullOrWhiteSpace(errorMessage))
             {

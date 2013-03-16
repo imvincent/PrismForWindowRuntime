@@ -73,6 +73,12 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
             }
         }
 
+        /// <summary>
+        /// Gets the list of errors per property.
+        /// </summary>
+        /// <value>
+        /// The dictionary of property names and errors collection pairs.
+        /// </value>
         public IDictionary<string, ReadOnlyCollection<string>> Errors
         {
             get { return _errors; }
@@ -166,7 +172,7 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
         // <snippet909>
         public bool ValidateProperties()
         {
-            var propertiesWithNewErrors = new List<string>();
+            var propertiesWithChangedErrors = new List<string>();
 
             // Get all the properties decorated with the ValidationAttribute attribute.
             var propertiesToValidate = _entityToValidate.GetType()
@@ -180,14 +186,14 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
 
                 // If the errors have changed, save the property name to notify the update at the end of this method.
                 bool errorsChanged = SetPropertyErrors(propertyInfo.Name, propertyErrors);
-                if (errorsChanged && !propertiesWithNewErrors.Contains(propertyInfo.Name))
+                if (errorsChanged && !propertiesWithChangedErrors.Contains(propertyInfo.Name))
                 {
-                    propertiesWithNewErrors.Add(propertyInfo.Name);
+                    propertiesWithChangedErrors.Add(propertyInfo.Name);
                 }
             }
 
-            // Notify each property that contains new errors
-            foreach (string propertyName in propertiesWithNewErrors)
+            // Notify each property whose set of errors has changed since the last validation.  
+            foreach (string propertyName in propertiesWithChangedErrors)
             {
                 OnErrorsChanged(propertyName);
                 OnPropertyChanged(string.Format(CultureInfo.CurrentCulture, "Item[{0}]", propertyName));

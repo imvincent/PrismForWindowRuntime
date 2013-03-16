@@ -106,6 +106,13 @@ namespace AdventureWorks.UILogic.ViewModels
         {
             if (viewModelState == null) return;
 
+            // This ViewModel is an example of composition. The CheckoutHubPageViewModel manages
+            // three child view models (Shipping Address, Billing Address, and Payment Method).
+            // Since the FrameNavigationService calls this OnNavigatedTo method, passing in
+            // a viewModelState dictionary, it is the responsibility of the parent view model
+            // to manage separate dictionaries for each of its children. If the parent view model
+            // were to pass its viewModelState dictionary to each of its children, it would be very
+            // easy for one child view model to write over a sibling view model's state.
             if (navigationMode == NavigationMode.New)
             {
                 viewModelState["ShippingViewModel"] = new Dictionary<string, object>();
@@ -164,11 +171,24 @@ namespace AdventureWorks.UILogic.ViewModels
         {
             if (UseSameAddressAsShipping)
             {
-                BillingAddressViewModel.Address = ShippingAddressViewModel.Address;
+                BillingAddressViewModel.Address = new Address
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            AddressType = AddressType.Billing,
+                            FirstName = ShippingAddressViewModel.Address.FirstName,
+                            MiddleInitial = ShippingAddressViewModel.Address.MiddleInitial,
+                            LastName = ShippingAddressViewModel.Address.LastName,
+                            StreetAddress = ShippingAddressViewModel.Address.StreetAddress,
+                            OptionalAddress = ShippingAddressViewModel.Address.OptionalAddress,
+                            City = ShippingAddressViewModel.Address.City,
+                            State = ShippingAddressViewModel.Address.State,
+                            ZipCode = ShippingAddressViewModel.Address.ZipCode,
+                            Phone = ShippingAddressViewModel.Address.Phone
+                        };
             }
 
-            ShippingAddressViewModel.ProcessForm();
-            BillingAddressViewModel.ProcessForm();
+            await ShippingAddressViewModel.ProcessFormAsync();
+            await BillingAddressViewModel.ProcessFormAsync();
             await PaymentMethodViewModel.ProcessFormAsync();
 
             var user = _accountService.SignedInUser;

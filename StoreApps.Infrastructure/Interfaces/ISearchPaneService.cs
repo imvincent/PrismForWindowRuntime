@@ -9,7 +9,7 @@
 namespace Microsoft.Practices.StoreApps.Infrastructure.Interfaces
 {
     /// <summary>
-    /// The ISearchPaneService interface abstracts Windows.ApplicationModel.Search.SearchPane object for use by apps that derive from the MvvmBaseApp class.
+    /// The ISearchPaneService interface abstracts Windows.ApplicationModel.Search.SearchPane object for use by apps that derive from the MvvmAppBase class.
     /// The SearchPane class represents and manages the search pane that opens when a user activates the Search charm.
     /// The default implementation of ISearchPaneService is the SearchPaneService class, which simply passes method  invocations to an underlying
     /// Windows.ApplicationModel.Search.SearchPane object.

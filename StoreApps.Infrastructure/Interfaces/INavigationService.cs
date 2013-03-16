@@ -20,7 +20,7 @@ namespace Microsoft.Practices.StoreApps.Infrastructure.Interfaces
         /// </summary>
         /// <param name="pageToken">The page token.</param>
         /// <param name="parameter">The parameter.</param>
-        /// <returns></returns>
+        /// <returns>Returns <c>true</c> if navigation succeds; otherwise, <c>false</c></returns>
         bool Navigate(string pageToken, object parameter);
 
         /// <summary>
@@ -50,13 +50,5 @@ namespace Microsoft.Practices.StoreApps.Infrastructure.Interfaces
         /// Used for navigating away from the current view model due to a suspension event, in this way you can execute additional logic to handle suspensions.
         /// </summary>
         void Suspending();
-
-        /// <summary>
-        /// Gets the back stack depth.
-        /// </summary>
-        /// <value>
-        /// The back stack depth.
-        /// </value>
-        int BackStackDepth { get; }
     }
 }

@@ -222,9 +222,7 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 if (await _accountService.VerifyUserAuthenticationAsync() == null)
                 {
-                    // Set up navigate action depending on the application's state
-                    var navigateAction = await ResolveNavigationActionAsync();
-                    _flyoutService.ShowFlyout("SignIn", null, navigateAction);
+                    _flyoutService.ShowFlyout("SignIn", null, async () => await ResolveNavigationActionAsync());
                 }
                 else
                 {
@@ -252,8 +250,8 @@ namespace AdventureWorks.UILogic.ViewModels
             var navigationServiceReference = _navigationService;
 
             // Retrieve the default information for the Order
-            var defaultShippingAddress = _checkoutDataRepository.GetDefaultShippingAddress();
-            var defaultBillingAddress = _checkoutDataRepository.GetDefaultBillingAddress();
+            var defaultShippingAddress = await _checkoutDataRepository.GetDefaultShippingAddressAsync();
+            var defaultBillingAddress = await _checkoutDataRepository.GetDefaultBillingAddressAsync();
             var defaultPaymentMethod = await _checkoutDataRepository.GetDefaultPaymentMethodAsync();
 
             if (defaultShippingAddress == null || defaultBillingAddress == null || defaultPaymentMethod == null)
