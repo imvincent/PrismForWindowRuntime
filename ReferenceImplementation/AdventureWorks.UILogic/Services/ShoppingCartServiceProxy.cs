@@ -22,7 +22,6 @@ namespace AdventureWorks.UILogic.Services
         {
             using (var shoppingCartClient = new HttpClient())
             {
-                shoppingCartClient.AddCurrentCultureHeader();
                 var response = await shoppingCartClient.GetAsync(_shoppingCartBaseUrl + shoppingCartId);
                 response.EnsureSuccessStatusCode();
                 var result = await response.Content.ReadAsAsync<ShoppingCart>();
@@ -35,7 +34,6 @@ namespace AdventureWorks.UILogic.Services
         {
             using (var shoppingCartClient = new HttpClient())
             {
-                shoppingCartClient.AddCurrentCultureHeader();
                 string requestUrl = _shoppingCartBaseUrl + shoppingCartId + "?productIdToIncrement=" + productIdToIncrement;
                 var response = await shoppingCartClient.PostAsync(requestUrl, null);
                 response.EnsureSuccessStatusCode();
@@ -46,7 +44,6 @@ namespace AdventureWorks.UILogic.Services
         {
             using (var shoppingCartClient = new HttpClient())
             {
-                shoppingCartClient.AddCurrentCultureHeader();
                 string requestUrl = _shoppingCartBaseUrl + shoppingCartId + "?productIdToDecrement=" + productIdToDecrement;
                 var response = await shoppingCartClient.PostAsync(requestUrl, null);
                 response.EnsureSuccessStatusCode();
@@ -57,7 +54,6 @@ namespace AdventureWorks.UILogic.Services
         {
             using (var shoppingCartClient = new HttpClient())
             {
-                shoppingCartClient.AddCurrentCultureHeader();
                 string requestUrl = _shoppingCartBaseUrl + shoppingCartId + "?itemIdToRemove=" + itemIdToRemove;
                 var response = await shoppingCartClient.PutAsync(requestUrl, null);
                 response.EnsureSuccessStatusCode();
@@ -68,7 +64,6 @@ namespace AdventureWorks.UILogic.Services
         {
             using (var shoppingCartClient = new HttpClient())
             {
-                shoppingCartClient.AddCurrentCultureHeader();
                 var response = await shoppingCartClient.DeleteAsync(_shoppingCartBaseUrl + shoppingCartId);
                 response.EnsureSuccessStatusCode();
             }
@@ -78,7 +73,6 @@ namespace AdventureWorks.UILogic.Services
         {
             using (var shoppingCartClient = new HttpClient())
             {
-                shoppingCartClient.AddCurrentCultureHeader();
                 string requestUrl = _shoppingCartBaseUrl + authenticatedShoppingCartId + "?anonymousShoppingCartId=" + anonymousShoppingCartId;
                 var response = await shoppingCartClient.PostAsync(requestUrl, null);
                 response.EnsureSuccessStatusCode();

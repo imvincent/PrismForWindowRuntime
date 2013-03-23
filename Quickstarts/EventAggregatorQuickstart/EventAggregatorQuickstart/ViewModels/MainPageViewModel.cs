@@ -15,12 +15,14 @@ namespace EventAggregatorQuickstart
 {
     public class MainPageViewModel : ViewModel
     {
+        // <snippet3106>
         public MainPageViewModel(IEventAggregator eventAggregator)
         {
             // Pass the injected event aggregator singleton down to children since there is no container to do the dependency injection
             SubscriberViewModel = new SubscriberViewModel(eventAggregator);
             PublisherViewModel = new PublisherViewModel(eventAggregator);
         }
+        // </snippet3106>
 
         public SubscriberViewModel SubscriberViewModel { get; set; }
         public PublisherViewModel PublisherViewModel { get; set; }

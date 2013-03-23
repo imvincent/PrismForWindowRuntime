@@ -15,6 +15,8 @@ namespace AdventureWorks.UILogic.Tests.Mocks
 {
     public class MockShoppingCartRepository : IShoppingCartRepository
     {
+        public Func<Task> ClearCartAsyncDelegate { get; set; }
+
         public Func<Task<ShoppingCart>> GetShoppingCartAsyncDelegate { get; set; }
 
         public Func<string, Task> AddProductToShoppingCartAsyncDelegate { get; set; }
@@ -25,6 +27,10 @@ namespace AdventureWorks.UILogic.Tests.Mocks
 
         public Task ClearCartAsync()
         {
+            if (ClearCartAsyncDelegate != null)
+            {
+                return ClearCartAsyncDelegate();
+            }
             return Task.Factory.StartNew(() => { });
         }
 

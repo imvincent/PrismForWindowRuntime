@@ -62,14 +62,6 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
         protected IFlyoutService FlyoutService { get; set; }
 
         /// <summary>
-        /// Gets or sets the settings charm service.
-        /// </summary>
-        /// <value>
-        /// The settings charm service.
-        /// </value>
-        protected SettingsCharmService SettingsCharmService { get; set; }
-
-        /// <summary>
         /// Gets a value indicating whether the application is suspending.
         /// </summary>
         /// <value>
@@ -141,10 +133,10 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
         }
 
         /// <summary>
-        /// Gets the settings charm items.
+        /// Gets the settings charm action items.
         /// </summary>
-        /// <returns>The list of seetting charm items that will populate the settings charm.</returns>
-        protected virtual IList<ISettingsCharmItem> GetSettingsCharmItems()
+        /// <returns>The list of seetting charm action items that will populate the settings pane.</returns>
+        protected virtual IList<SettingsCharmActionItem> GetSettingsCharmActionItems()
         {
             return null;
         }
@@ -171,7 +163,7 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
 
             // If the app is launched via the app's primary tile, the args.TileId property
             // will have the same value as the AppUserModelId, which is set in the Package.appxmanifest.
-            // See http://msdn.microsoft.com/en-us/library/windows/apps/windows.applicationmodel.activation.launchactivatedeventargs.tileid
+            // See http://go.microsoft.com/fwlink/?LinkID=288842
             string tileId = AppManifestHelper.GetApplicationId();
 
             if (rootFrame != null && (rootFrame.Content == null || (args != null && args.TileId != tileId)))
@@ -248,8 +240,7 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
                 FlyoutService = new FlyoutService();
                 FlyoutService.FlyoutResolver = CreateFlyoutView;
                 // <snippet518>
-                SettingsCharmService = new SettingsCharmService(GetSettingsCharmItems, FlyoutService);
-                SettingsPane.GetForCurrentView().CommandsRequested += SettingsCharmService.OnCommandsRequested;
+                SettingsPane.GetForCurrentView().CommandsRequested += OnCommandsRequested;
                 // </snippet518>
 
                 // Set a factory for the ViewModelLocator to use the default resolution mechanism to construct view models
@@ -342,5 +333,29 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
             OnSearchApplication(searchQueryArguments);
         }
         // </snippet1000>
+
+        /// <summary>
+        /// Called when the Settings Charm is invoked, this handler populate the Settings Charm with the charm items returned by the getSettingCharm Items func.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="SettingsPaneCommandsRequestedEventArgs"/> instance containing the event data.</param>
+        // <snippet519>
+        private void OnCommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
+        {
+            if (args == null || args.Request == null || args.Request.ApplicationCommands == null)
+            {
+                return;
+            }
+
+            var applicationCommands = args.Request.ApplicationCommands;
+            var settingsCharmActionItems = GetSettingsCharmActionItems();
+
+            foreach (var item in settingsCharmActionItems)
+            {
+                var settingsCommand = new SettingsCommand(item.Id, item.Title, (o) => item.Action.Invoke());
+                applicationCommands.Add(settingsCommand);
+            }
+        }
+        // </snippet519>
     }
 }

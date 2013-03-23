@@ -22,7 +22,8 @@ namespace AdventureWorks.UILogic.Models
         public override string ToString()
         {
             // For Accessibility purposes
-            return Description; 
+            return string.Format(CultureInfo.InvariantCulture, "{0}, {1}, {2}", Description, EstimatedTime, Cost);
+
         }
     }
 }

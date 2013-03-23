@@ -638,13 +638,17 @@
                             AutomationProperties.AutomationId="PinAppBarButton"
                             Style="{StaticResource PinAppBarButtonStyle}"
                             Visibility="{Binding IsSelectedProductPinned, Converter={StaticResource BooleanNegationToVisibilityConverter}}"
-                            Command="{Binding PinProductCommand}" />
+                            Command="{Binding PinProductCommand}"
+                            Loaded="StartLayoutUpdates"
+                            Unloaded="StopLayoutUpdates" />
                     <Button x:Name="UnpinAppBarButton"
                             x:Uid="UnpinAppBarButton"
                             AutomationProperties.AutomationId="UnpinAppBarButton"
                             Style="{StaticResource UnpinAppBarButtonStyle}"
                             Visibility="{Binding IsSelectedProductPinned, Converter={StaticResource BooleanToVisibilityConverter}}"
-                            Command="{Binding UnpinProductCommand}" />
+                            Command="{Binding UnpinProductCommand}"
+                            Loaded="StartLayoutUpdates"
+                            Unloaded="StopLayoutUpdates" />
                 </StackPanel>
             </Grid>
         </AppBar>

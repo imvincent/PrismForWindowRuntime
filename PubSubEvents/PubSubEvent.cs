@@ -55,7 +55,7 @@ namespace Microsoft.Practices.PubSubEvents
         /// <returns>A <see cref="SubscriptionToken"/> that uniquely identifies the added subscription.</returns>
         /// <remarks>
         /// If <paramref name="keepSubscriberReferenceAlive"/> is set to <see langword="false" />, <see cref="PubSubEvent{TPayload}"/> will maintain a <seealso cref="WeakReference"/> to the Target of the supplied <paramref name="action"/> delegate.
-        /// If not using a WeakReference (<paramref name="keepSubscriberReferenceAlive"/> is <see langword="true" />), the user must explicitly call Unsubscribe for the event when disposing the subscriber in order to avoid memory leaks or unexepcted behavior.
+        /// If not using a WeakReference (<paramref name="keepSubscriberReferenceAlive"/> is <see langword="true" />), the user must explicitly call Unsubscribe for the event when disposing the subscriber in order to avoid memory leaks or unexpected behavior.
         /// <para/>
         /// The PubSubEvent collection is thread-safe.
         /// </remarks>
@@ -73,7 +73,7 @@ namespace Microsoft.Practices.PubSubEvents
         /// <returns>A <see cref="SubscriptionToken"/> that uniquely identifies the added subscription.</returns>
         /// <remarks>
         /// If <paramref name="keepSubscriberReferenceAlive"/> is set to <see langword="false" />, <see cref="PubSubEvent{TPayload}"/> will maintain a <seealso cref="WeakReference"/> to the Target of the supplied <paramref name="action"/> delegate.
-        /// If not using a WeakReference (<paramref name="keepSubscriberReferenceAlive"/> is <see langword="true" />), the user must explicitly call Unsubscribe for the event when disposing the subscriber in order to avoid memory leaks or unexepcted behavior.
+        /// If not using a WeakReference (<paramref name="keepSubscriberReferenceAlive"/> is <see langword="true" />), the user must explicitly call Unsubscribe for the event when disposing the subscriber in order to avoid memory leaks or unexpected behavior.
         /// <para/>
         /// The PubSubEvent collection is thread-safe.
         /// </remarks>
@@ -92,7 +92,7 @@ namespace Microsoft.Practices.PubSubEvents
         /// <returns>A <see cref="SubscriptionToken"/> that uniquely identifies the added subscription.</returns>
         /// <remarks>
         /// If <paramref name="keepSubscriberReferenceAlive"/> is set to <see langword="false" />, <see cref="PubSubEvent{TPayload}"/> will maintain a <seealso cref="WeakReference"/> to the Target of the supplied <paramref name="action"/> delegate.
-        /// If not using a WeakReference (<paramref name="keepSubscriberReferenceAlive"/> is <see langword="true" />), the user must explicitly call Unsubscribe for the event when disposing the subscriber in order to avoid memory leaks or unexepcted behavior.
+        /// If not using a WeakReference (<paramref name="keepSubscriberReferenceAlive"/> is <see langword="true" />), the user must explicitly call Unsubscribe for the event when disposing the subscriber in order to avoid memory leaks or unexpected behavior.
         /// 
         /// The PubSubEvent collection is thread-safe.
         /// </remarks>

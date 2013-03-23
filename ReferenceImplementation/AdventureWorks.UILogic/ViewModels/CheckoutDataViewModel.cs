@@ -7,6 +7,7 @@
 
 
 using System;
+using System.Globalization;
 using Microsoft.Practices.StoreApps.Infrastructure;
 
 namespace AdventureWorks.UILogic.ViewModels
@@ -30,7 +31,7 @@ namespace AdventureWorks.UILogic.ViewModels
         public override string ToString()
         {
             // For Accessibility purposes
-            return Title;
+            return string.Format(CultureInfo.InvariantCulture, "{0}, {1}, {2}, {3}, {4}", DataType, Title, FirstLine, SecondLine, BottomLine);
         }
     }
 }

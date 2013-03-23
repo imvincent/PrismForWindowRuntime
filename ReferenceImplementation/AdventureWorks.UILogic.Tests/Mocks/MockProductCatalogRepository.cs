@@ -53,5 +53,9 @@ namespace AdventureWorks.UILogic.Tests.Mocks
             return this.GetProductAsyncDelegate(productNumber);
         }
 
+        public string GetCategoryName(int parentId)
+        {
+            return "Accesories";
+        }
     }
 }

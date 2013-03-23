@@ -22,8 +22,13 @@ namespace AdventureWorks.AWShopper.DesignViewModels
         
         public IEnumerable<CategoryViewModel> RootCategories { get; set; }
 
+        public bool LoadingData { get; set; }
+
+        public string Title { get; set; }
+
         public void FillWithDummyData()
         {
+            Title = "Accesories";
             RootCategories = new List<CategoryViewModel>()
                 {
                     new CategoryViewModel(new Category()

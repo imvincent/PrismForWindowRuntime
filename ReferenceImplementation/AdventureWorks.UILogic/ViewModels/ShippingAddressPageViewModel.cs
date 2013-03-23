@@ -24,18 +24,15 @@ namespace AdventureWorks.UILogic.ViewModels
     public class ShippingAddressPageViewModel : ViewModel
     {
         private readonly IShippingAddressUserControlViewModel _shippingAddressViewModel;
-        private readonly ICheckoutDataRepository _checkoutDataRepository;
         private readonly IResourceLoader _resourceLoader;
         private readonly IAlertMessageService _alertMessageService;
         private readonly IAccountService _accountService;
         private readonly INavigationService _navigationService;
         private string _headerLabel;
 
-        public ShippingAddressPageViewModel(IShippingAddressUserControlViewModel shippingAddressViewModel, ICheckoutDataRepository checkoutDataRepository,
-                                              IResourceLoader resourceLoader, IAlertMessageService alertMessageService, IAccountService accountService, INavigationService navigationService)
+        public ShippingAddressPageViewModel(IShippingAddressUserControlViewModel shippingAddressViewModel, IResourceLoader resourceLoader, IAlertMessageService alertMessageService, IAccountService accountService, INavigationService navigationService)
         {
             _shippingAddressViewModel = shippingAddressViewModel;
-            _checkoutDataRepository = checkoutDataRepository;
             _resourceLoader = resourceLoader;
             _alertMessageService = alertMessageService;
             _accountService = accountService;
@@ -53,10 +50,10 @@ namespace AdventureWorks.UILogic.ViewModels
         public string HeaderLabel
         {
             get { return _headerLabel; }
-            set { SetProperty(ref _headerLabel, value); }
+            private set { SetProperty(ref _headerLabel, value); }
         }
 
-        public ICommand SaveCommand { get; set; }
+        public ICommand SaveCommand { get; private set; }
 
         public ICommand GoBackCommand { get; private set; }
 
@@ -70,12 +67,6 @@ namespace AdventureWorks.UILogic.ViewModels
                               ? _resourceLoader.GetString("AddShippingAddressTitle")
                               : _resourceLoader.GetString("EditShippingAddressTitle");
 
-            await ShippingAddressViewModel.PopulateStatesAsync();
-
-            if (addressId != null)
-            {
-                ShippingAddressViewModel.Address = await _checkoutDataRepository.GetShippingAddressAsync(addressId);
-            }
             ShippingAddressViewModel.OnNavigatedTo(navigationParameter, navigationMode, viewModelState);
         }
 

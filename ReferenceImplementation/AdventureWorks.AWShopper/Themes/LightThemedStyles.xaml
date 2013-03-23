@@ -1,15 +1,125 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <SolidColorBrush x:Key="LightBackground"
-                     Color="White" />
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Default">
+            <!-- Default theme resources -->
+            <SolidColorBrush x:Key="FlyoutBackground"
+                             Color="White" />
+            <SolidColorBrush x:Key="LightApplicationForegroundThemeBrush"
+                             Color="#DE000000" />
+            <SolidColorBrush x:Key="LightButtonBorderThemeBrush"
+                             Color="#33000000" />
+            <SolidColorBrush x:Key="LightButtonPointerOverBackgroundThemeBrush"
+                             Color="#D1CDCDCD" />
+            <SolidColorBrush x:Key="LightButtonPointerOverForegroundThemeBrush"
+                             Color="Black" />
+            <SolidColorBrush x:Key="LightButtonPressedBackgroundThemeBrush"
+                             Color="Black" />
+            <SolidColorBrush x:Key="LightButtonPressedForegroundThemeBrush"
+                             Color="White" />
+            <SolidColorBrush x:Key="LightApplicationPointerOverForegroundThemeBrush"
+                             Color="#CC000000" />
+            <SolidColorBrush x:Key="LightApplicationPressedForegroundThemeBrush"
+                             Color="#66000000" />
+            <SolidColorBrush x:Key="LightButtonDisabledBackgroundThemeBrush"
+                             Color="#66CACACA" />
+            <SolidColorBrush x:Key="LightButtonDisabledBorderThemeBrush"
+                             Color="#1A000000" />
+            <SolidColorBrush x:Key="LightButtonDisabledForegroundThemeBrush"
+                             Color="#66000000" />
+            <SolidColorBrush x:Key="LightTextBoxForegroundThemeBrush"
+                             Color="Black" />
+            <SolidColorBrush x:Key="LightTextBoxBackgroundThemeBrush"
+                             Color="White" />
+            <SolidColorBrush x:Key="LightTextBoxBorderThemeBrush"
+                             Color="#A3000000" />
+            <SolidColorBrush x:Key="LightCheckBoxContentForegroundThemeBrush"
+                             Color="#FF000000" />
+            <SolidColorBrush x:Key="LightCheckBoxForegroundThemeBrush"
+                             Color="#FF000000" />
+            <SolidColorBrush x:Key="LightCheckBoxPointerOverBackgroundThemeBrush"
+                             Color="#DEFFFFFF" />
+            <SolidColorBrush x:Key="LightCheckBoxPointerOverForegroundThemeBrush"
+                             Color="#FF000000" />
+            <SolidColorBrush x:Key="LightCheckBoxPointerOverBorderThemeBrush"
+                             Color="#70000000" />
+            <SolidColorBrush x:Key="LightCheckBoxPressedBackgroundThemeBrush"
+                             Color="#FF000000" />
+            <SolidColorBrush x:Key="LightCheckBoxPressedBorderThemeBrush"
+                             Color="#FF000000" />
+            <SolidColorBrush x:Key="LightCheckBoxPressedForegroundThemeBrush"
+                             Color="#FFFFFFFF" />
+            <SolidColorBrush x:Key="LightCheckBoxBackgroundThemeBrush"
+                             Color="#CCFFFFFF" />
+            <SolidColorBrush x:Key="LightCheckBoxBorderThemeBrush"
+                             Color="#45000000" />
+
+
+        </ResourceDictionary>
+
+        <ResourceDictionary x:Key="HighContrast">
+            <!-- High Contrast theme resources -->
+            <SolidColorBrush x:Key="FlyoutBackground"
+                             Color="Black" />
+            <SolidColorBrush x:Key="LightApplicationForegroundThemeBrush"
+                             Color="{StaticResource SystemColorWindowTextColor}" />
+            <SolidColorBrush x:Key="LightButtonBorderThemeBrush"
+                             Color="{StaticResource SystemColorButtonTextColor}" />
+            <SolidColorBrush x:Key="LightButtonPointerOverBackgroundThemeBrush"
+                             Color="{StaticResource SystemColorHighlightColor}" />
+            <SolidColorBrush x:Key="LightButtonPointerOverForegroundThemeBrush"
+                             Color="{StaticResource SystemColorHighlightTextColor}" />
+            <SolidColorBrush x:Key="LightButtonPressedBackgroundThemeBrush"
+                             Color="{StaticResource SystemColorButtonTextColor}" />
+            <SolidColorBrush x:Key="LightButtonPressedForegroundThemeBrush"
+                             Color="{StaticResource SystemColorButtonFaceColor}" />
+            <SolidColorBrush x:Key="LightApplicationPointerOverForegroundThemeBrush"
+                             Color="{StaticResource SystemColorHotlightColor}" />
+            <SolidColorBrush x:Key="LightApplicationPressedForegroundThemeBrush"
+                             Color="{StaticResource SystemColorHotlightColor}" />
+            <SolidColorBrush x:Key="LightButtonDisabledBackgroundThemeBrush"
+                             Color="{StaticResource SystemColorButtonFaceColor}" />
+            <SolidColorBrush x:Key="LightButtonDisabledBorderThemeBrush"
+                             Color="{StaticResource SystemColorGrayTextColor}" />
+            <SolidColorBrush x:Key="LightButtonDisabledForegroundThemeBrush"
+                             Color="{StaticResource SystemColorGrayTextColor}" />
+            <SolidColorBrush x:Key="LightTextBoxForegroundThemeBrush"
+                             Color="{StaticResource SystemColorButtonTextColor}" />
+            <SolidColorBrush x:Key="LightTextBoxBackgroundThemeBrush"
+                             Color="{StaticResource SystemColorButtonFaceColor}" />
+            <SolidColorBrush x:Key="LightTextBoxBorderThemeBrush"
+                             Color="{StaticResource SystemColorButtonTextColor}" />
+            <SolidColorBrush x:Key="LightCheckBoxContentForegroundThemeBrush"
+                             Color="{StaticResource SystemColorButtonTextColor}" />
+            <SolidColorBrush x:Key="LightCheckBoxForegroundThemeBrush"
+                             Color="{StaticResource SystemColorButtonTextColor}" />
+            <SolidColorBrush x:Key="LightCheckBoxPointerOverBackgroundThemeBrush"
+                             Color="{StaticResource SystemColorHighlightColor}" />
+            <SolidColorBrush x:Key="LightCheckBoxPointerOverForegroundThemeBrush"
+                             Color="{StaticResource SystemColorHighlightTextColor}" />
+            <SolidColorBrush x:Key="LightCheckBoxPointerOverBorderThemeBrush"
+                             Color="{StaticResource SystemColorButtonTextColor}" />
+            <SolidColorBrush x:Key="LightCheckBoxPressedBackgroundThemeBrush"
+                             Color="{StaticResource SystemColorButtonTextColor}" />
+            <SolidColorBrush x:Key="LightCheckBoxPressedBorderThemeBrush"
+                             Color="{StaticResource SystemColorButtonTextColor}" />
+            <SolidColorBrush x:Key="LightCheckBoxPressedForegroundThemeBrush"
+                             Color="{StaticResource SystemColorButtonFaceColor}" />
+            <SolidColorBrush x:Key="LightCheckBoxBackgroundThemeBrush"
+                             Color="{StaticResource SystemColorButtonFaceColor}" />
+            <SolidColorBrush x:Key="LightCheckBoxBorderThemeBrush"
+                             Color="{StaticResource SystemColorButtonTextColor}" />
+
+
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+
+
     <SolidColorBrush x:Key="LightFocusVisualWhiteStrokeThemeBrush"
                      Color="White" />
     <SolidColorBrush x:Key="LightFocusVisualBlackStrokeThemeBrush"
                      Color="Black" />
-
-    <SolidColorBrush x:Key="LightApplicationForegroundThemeBrush"
-                     Color="#DE000000" />
     <SolidColorBrush x:Key="LightApplicationSecondaryForegroundThemeBrush"
                      Color="#99000000" />
     <Thickness x:Key="TextControlBorderThemeThickness">2</Thickness>
@@ -156,36 +266,13 @@
                      Color="#FF929292" />
     <SolidColorBrush x:Key="LightToggleSwitchThumbDisabledBorderThemeBrush"
                      Color="#FF929292" />
-    <SolidColorBrush x:Key="LightCheckBoxBackgroundThemeBrush"
-                     Color="#CCFFFFFF" />
-    <SolidColorBrush x:Key="LightCheckBoxBorderThemeBrush"
-                     Color="#45000000" />
     <SolidColorBrush x:Key="LightCheckBoxContentDisabledForegroundThemeBrush"
                      Color="#66000000" />
-    <SolidColorBrush x:Key="LightCheckBoxContentForegroundThemeBrush"
-                     Color="#FF000000" />
     <SolidColorBrush x:Key="LightCheckBoxDisabledBackgroundThemeBrush"
                      Color="#66CACACA" />
     <SolidColorBrush x:Key="LightCheckBoxDisabledBorderThemeBrush"
                      Color="#26000000" />
     <SolidColorBrush x:Key="LightCheckBoxDisabledForegroundThemeBrush"
-                     Color="#66000000" />
-    <SolidColorBrush x:Key="LightCheckBoxForegroundThemeBrush"
-                     Color="#FF000000" />
-    <SolidColorBrush x:Key="LightCheckBoxPointerOverBackgroundThemeBrush"
-                     Color="#DEFFFFFF" />
-    <SolidColorBrush x:Key="LightCheckBoxPointerOverForegroundThemeBrush"
-                     Color="#FF000000" />
-    <SolidColorBrush x:Key="LightCheckBoxPointerOverBorderThemeBrush"
-                     Color="#70000000" />
-    <SolidColorBrush x:Key="LightCheckBoxPressedBackgroundThemeBrush"
-                     Color="#FF000000" />
-    <SolidColorBrush x:Key="LightCheckBoxPressedBorderThemeBrush"
-                     Color="#FF000000" />
-    <SolidColorBrush x:Key="LightCheckBoxPressedForegroundThemeBrush"
-                     Color="#FFFFFFFF" />
-    <SolidColorBrush x:Key="LightApplicationPointerOverForegroundThemeBrush" Color="#CC000000" />
-    <SolidColorBrush x:Key="LightApplicationPressedForegroundThemeBrush"
                      Color="#66000000" />
     <x:Double x:Key="CheckBoxBorderThemeThickness">2</x:Double>
     <Style x:Key="LightCheckBoxStyle"
@@ -414,12 +501,6 @@
                      Color="#26000000" />
     <SolidColorBrush x:Key="LightTextBoxDisabledForegroundThemeBrush"
                      Color="#FF666666" />
-    <SolidColorBrush x:Key="LightTextBoxForegroundThemeBrush"
-                     Color="Black" />
-    <SolidColorBrush x:Key="LightTextBoxBackgroundThemeBrush"
-                     Color="White" />
-    <SolidColorBrush x:Key="LightTextBoxBorderThemeBrush"
-                     Color="#A3000000" />
     <Style x:Name="LightTextBoxStyle"
            TargetType="TextBox">
         <Setter Property="MinWidth"
@@ -937,22 +1018,6 @@
                      Color="#B3B6B6B6" />
     <SolidColorBrush x:Key="LightButtonForegroundThemeBrush"
                      Color="Black" />
-    <SolidColorBrush x:Key="LightButtonBorderThemeBrush"
-                     Color="#33000000" />
-    <SolidColorBrush x:Key="LightButtonPointerOverBackgroundThemeBrush"
-                     Color="#D1CDCDCD" />
-    <SolidColorBrush x:Key="LightButtonPointerOverForegroundThemeBrush"
-                     Color="Black" />
-    <SolidColorBrush x:Key="LightButtonPressedBackgroundThemeBrush"
-                     Color="Black" />
-    <SolidColorBrush x:Key="LightButtonPressedForegroundThemeBrush"
-                     Color="White" />
-    <SolidColorBrush x:Key="LightButtonDisabledBackgroundThemeBrush"
-                     Color="#66CACACA" />
-    <SolidColorBrush x:Key="LightButtonDisabledBorderThemeBrush"
-                     Color="#1A000000" />
-    <SolidColorBrush x:Key="LightButtonDisabledForegroundThemeBrush"
-                     Color="#66000000" />
     <Style x:Key="LightButtonStyle"
            TargetType="Button">
         <Setter Property="Background"

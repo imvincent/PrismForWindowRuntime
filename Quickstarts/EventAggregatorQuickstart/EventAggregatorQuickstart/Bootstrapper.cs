@@ -22,12 +22,14 @@ namespace EventAggregatorQuickstart
         /// Make sure this is called after the UI thread is established
         /// </summary>
         /// <param name="navService"></param>
+        // <snippet3105>
         public void Bootstrap(INavigationService navService)
         {
             // Create the singleton EventAggregator so it can be dependency injected down to the view models who need it
             _eventAggregator  = new EventAggregator();
             ViewModelLocator.Register(typeof(MainPage).ToString(), () => new MainPageViewModel(_eventAggregator));
         }
+        // </snippet3105>
 
         public INavigationService CreateNavigationService(IFrameFacade rootFrame, ISessionStateService sessionStateService)
         {

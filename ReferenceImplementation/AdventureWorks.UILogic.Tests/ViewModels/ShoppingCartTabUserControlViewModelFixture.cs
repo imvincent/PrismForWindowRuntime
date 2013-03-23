@@ -110,7 +110,8 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
         public void ShoppingCartUpdated_WithNullCart_SetsItemCountZero()
         {
             var shoppingCartRepository = new MockShoppingCartRepository();
-            shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult<ShoppingCart>(null);
+            var shoppingCart = new ShoppingCart(new List<ShoppingCartItem> {new ShoppingCartItem {Quantity = 99}});
+            shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult(shoppingCart);
             var eventAggregator = new MockEventAggregator();
             var shoppingCartUpdatedEvent = new ShoppingCartUpdatedEvent();
             eventAggregator.GetEventDelegate = type =>
@@ -122,8 +123,12 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             var accountService = new MockAccountService();
             accountService.VerifyUserAuthenticationAsyncDelegate = () => Task.FromResult((UserInfo)null);
             var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, null, null, null, accountService);
-            target.ItemCount = 99;
 
+            shoppingCartUpdatedEvent.Publish(null);
+
+            Assert.AreEqual(99, target.ItemCount);
+
+            shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult<ShoppingCart>(null);
             shoppingCartUpdatedEvent.Publish(null);
 
             Assert.AreEqual(0, target.ItemCount);
@@ -142,7 +147,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             alertMessageService.ShowAsyncDelegate = (s, s1) =>
                                                         {
                                                             alertCalled = true;
-                                                            Assert.AreEqual("Error", s1);
+                                                            Assert.AreEqual("ErrorServiceUnreachable", s1);
                                                             return Task.FromResult(string.Empty);
                                                         };
             var accountService = new MockAccountService();

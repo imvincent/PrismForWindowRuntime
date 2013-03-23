@@ -24,18 +24,15 @@ namespace AdventureWorks.UILogic.ViewModels
     public class BillingAddressPageViewModel : ViewModel
     {
         private readonly IBillingAddressUserControlViewModel _billingAddressViewModel;
-        private readonly ICheckoutDataRepository _checkoutDataRepository;
         private readonly IResourceLoader _resourceLoader;
         private readonly IAlertMessageService _alertMessageService;
         private readonly IAccountService _accountService;
         private readonly INavigationService _navigationService;
         private string _headerLabel;
 
-        public BillingAddressPageViewModel(IBillingAddressUserControlViewModel billingAddressViewModel, ICheckoutDataRepository checkoutDataRepository,
-                                              IResourceLoader resourceLoader, IAlertMessageService alertMessageService, IAccountService accountService, INavigationService navigationService)
+        public BillingAddressPageViewModel(IBillingAddressUserControlViewModel billingAddressViewModel, IResourceLoader resourceLoader, IAlertMessageService alertMessageService, IAccountService accountService, INavigationService navigationService)
         {
             _billingAddressViewModel = billingAddressViewModel;
-            _checkoutDataRepository = checkoutDataRepository;
             _resourceLoader = resourceLoader;
             _alertMessageService = alertMessageService;
             _accountService = accountService;
@@ -53,10 +50,10 @@ namespace AdventureWorks.UILogic.ViewModels
         public string HeaderLabel
         {
             get { return _headerLabel; }
-            set { SetProperty(ref _headerLabel, value); }
+            private set { SetProperty(ref _headerLabel, value); }
         }
 
-        public ICommand SaveCommand { get; set; }
+        public ICommand SaveCommand { get; private set; }
 
         public ICommand GoBackCommand { get; private set; }
 
@@ -70,13 +67,7 @@ namespace AdventureWorks.UILogic.ViewModels
                               ? _resourceLoader.GetString("AddBillingAddressTitle")
                               : _resourceLoader.GetString("EditBillingAddressTitle");
 
-            await BillingAddressViewModel.PopulateStatesAsync();
-
-            if (addressId != null)
-            {
-                BillingAddressViewModel.Address = await _checkoutDataRepository.GetBillingAddressAsync(addressId);
-            }
-            base.OnNavigatedTo(navigationParameter, navigationMode, viewModelState);
+            BillingAddressViewModel.OnNavigatedTo(navigationParameter, navigationMode, viewModelState);
         }
 
         public override void OnNavigatedFrom(Dictionary<string, object> viewModelState, bool suspending)

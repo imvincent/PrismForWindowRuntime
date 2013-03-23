@@ -110,6 +110,7 @@
   <ItemGroup>
     <Compile Include="Mocks\MockAddressService.cs" />
     <Compile Include="Mocks\MockCheckoutDataRepository.cs" />
+    <Compile Include="Mocks\MockLocationService.cs" />
     <Compile Include="Mocks\MockOrderRepository.cs" />
     <Compile Include="Mocks\MockPaymentMethodService.cs" />
     <Compile Include="Mocks\MockSearchPaneService.cs" />
@@ -144,7 +145,9 @@
     <Compile Include="ViewModels\BillingAddressUserControlViewModelFixture.cs" />
     <Compile Include="ViewModels\CheckoutHubPageViewModelFixture.cs" />
     <Compile Include="ViewModels\CheckoutSummaryPageViewModelFixture.cs" />
+    <Compile Include="ViewModels\PaymentMethodUserControlViewModelFixture.cs" />
     <Compile Include="ViewModels\SearchResultsPageViewModelFixture.cs" />
+    <Compile Include="ViewModels\ShippingAddressuserControlViewModelFixture.cs" />
     <Compile Include="ViewModels\ShoppingCartTabUserControlViewModelFixture.cs" />
     <Compile Include="ViewModels\SignOutFlyoutViewModelFixture.cs" />
     <Compile Include="ViewModels\GroupDetailPageViewModelFixture.cs" />

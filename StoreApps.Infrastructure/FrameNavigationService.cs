@@ -110,10 +110,12 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
         /// <summary>
         /// Used for navigating away from the current view model due to a suspension event, in this way you can execute additional logic to handle suspensions.
         /// </summary>
+        // <snippet708>
         public void Suspending()
         {
             NavigateFromCurrentViewModel(true);
         }
+        // </snippet708>
 
         /// <summary>
         /// This method is triggered after navigating to a view model. It is used to load the view model state that was saved previously.

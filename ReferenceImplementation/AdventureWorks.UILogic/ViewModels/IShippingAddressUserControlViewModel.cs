@@ -19,12 +19,13 @@ namespace AdventureWorks.UILogic.ViewModels
     {
         [RestorableState]
         Address Address { get; set; }
-        IReadOnlyCollection<ComboBoxItemValue> States { get; set; }
+        IReadOnlyCollection<ComboBoxItemValue> States { get; }
         void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState);
         void OnNavigatedFrom(Dictionary<string, object> viewState, bool suspending);
         Task ProcessFormAsync();
         bool ValidateForm();
         Task PopulateStatesAsync();
         event PropertyChangedEventHandler PropertyChanged;
+        void SetLoadDefault(bool loadDefault);
     }
 }

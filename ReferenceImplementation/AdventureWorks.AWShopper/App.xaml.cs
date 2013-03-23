@@ -21,6 +21,7 @@ using System.Collections.ObjectModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Resources;
 using Windows.ApplicationModel.Search;
+using Windows.System;
 using Windows.UI.Notifications;
 using Windows.UI.Xaml;
 using AdventureWorks.AWShopper.Services;
@@ -106,7 +107,6 @@ namespace AdventureWorks.AWShopper
             _container.RegisterInstance<IResourceLoader>(new ResourceLoaderAdapter(new ResourceLoader()));
             // </snippet322>
 
-            _container.RegisterType<IRequestService, RequestService>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IAccountService, AccountService>(new ContainerControlledLifetimeManager());
             _container.RegisterType<ICredentialStore, RoamingCredentialStore>(new ContainerControlledLifetimeManager());
             _container.RegisterType<ICacheService, TemporaryFolderCacheService>(new ContainerControlledLifetimeManager());
@@ -160,28 +160,29 @@ namespace AdventureWorks.AWShopper
             return _container.Resolve(type);
         }
 
-        protected override IList<ISettingsCharmItem> GetSettingsCharmItems()
+        // <snippet506>
+        protected override IList<SettingsCharmActionItem> GetSettingsCharmActionItems()
         {
-            var settingsCharmItems = new List<ISettingsCharmItem>();
+            var settingsCharmItems = new List<SettingsCharmActionItem>();
             var accountService = _container.Resolve<IAccountService>();
             var resourceLoader = _container.Resolve<IResourceLoader>();
 
             if (accountService.SignedInUser == null)
             {
-                settingsCharmItems.Add(new SettingsCharmFlyoutItem(resourceLoader.GetString("LoginText"), "SignIn"));
+                settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("LoginText"), () => FlyoutService.ShowFlyout("SignIn")));
             }
             else
             {
-                settingsCharmItems.Add(new SettingsCharmFlyoutItem(resourceLoader.GetString("LogoutText"), "SignOut"));
+                settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("LogoutText"), () => FlyoutService.ShowFlyout("SignOut")));
                 settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("AddShippingAddressTitle"), () => NavigationService.Navigate("ShippingAddress", null)));
                 settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("AddBillingAddressTitle"), () => NavigationService.Navigate("BillingAddress", null)));
                 settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("AddPaymentMethodTitle"), () => NavigationService.Navigate("PaymentMethod", null)));
-                settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("ChangeDefaults"), () => NavigationService.Navigate("ChangeDefaults", null)));
+                settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("ChangeDefaults"), () => FlyoutService.ShowFlyout("ChangeDefaults")));
             }
-            settingsCharmItems.Add(new SettingsCharmLinkItem(resourceLoader.GetString("PrivacyPolicy"), "PrivacyPolicy",
-                                                                new Uri(resourceLoader.GetString("PrivacyPolicyUrl"))));
+            settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("PrivacyPolicy"), async () => await Launcher.LaunchUriAsync(new Uri(resourceLoader.GetString("PrivacyPolicyUrl")))));
 
             return settingsCharmItems;
         }
+        // </snippet506>
     }
 }

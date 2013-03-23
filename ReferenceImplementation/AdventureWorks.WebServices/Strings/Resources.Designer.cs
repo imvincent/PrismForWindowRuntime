@@ -79,7 +79,7 @@ namespace AdventureWorks.WebServices.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Zip Code is not valid for the selected State.
+        ///   Looks up a localized string similar to The Zip Code is not valid for the selected State. Try Washington and 98052..
         /// </summary>
         internal static string ErrorInvalidZipCodeInState {
             get {
@@ -138,6 +138,15 @@ namespace AdventureWorks.WebServices.Strings {
         internal static string InvalidPaymentMethod {
             get {
                 return ResourceManager.GetString("InvalidPaymentMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shopping cart has no items..
+        /// </summary>
+        internal static string InvalidShoppingCart {
+            get {
+                return ResourceManager.GetString("InvalidShoppingCart", resourceCulture);
             }
         }
     }

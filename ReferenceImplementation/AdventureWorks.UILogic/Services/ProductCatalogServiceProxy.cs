@@ -25,7 +25,6 @@ namespace AdventureWorks.UILogic.Services
         {
             using (var httpClient = new HttpClient())
             {
-                httpClient.AddCurrentCultureHeader();
                 var response = await httpClient.GetAsync(string.Format("{0}?parentId={1}&maxAmountOfProducts={2}", _categoriesBaseUrl, parentId, maxAmountOfProducts));
                 response.EnsureSuccessStatusCode();
                 var result = await response.Content.ReadAsAsync<ReadOnlyCollection<Category>>();
@@ -39,7 +38,6 @@ namespace AdventureWorks.UILogic.Services
         {
             using (var httpClient = new HttpClient())
             {
-                httpClient.AddCurrentCultureHeader();
                 var response = await httpClient.GetAsync(string.Format("{0}?queryString={1}", _productsBaseUrl, productsQueryString));
                 response.EnsureSuccessStatusCode();
                 var result = await response.Content.ReadAsAsync<SearchResult>();
@@ -52,7 +50,6 @@ namespace AdventureWorks.UILogic.Services
         {
             using (var httpClient = new HttpClient())
             {
-                httpClient.AddCurrentCultureHeader();
                 var response =
                     await httpClient.GetAsync(string.Format("{0}?categoryId={1}", _productsBaseUrl, categoryId));
                 response.EnsureSuccessStatusCode();
@@ -66,7 +63,6 @@ namespace AdventureWorks.UILogic.Services
         {
             using (var httpClient = new HttpClient())
             {
-                httpClient.AddCurrentCultureHeader();
                 var response = await httpClient.GetAsync(_categoriesBaseUrl + categoryId.ToString());
                 response.EnsureSuccessStatusCode();
                 var result = await response.Content.ReadAsAsync<Category>();
@@ -79,7 +75,6 @@ namespace AdventureWorks.UILogic.Services
         {
             using (var httpClient = new HttpClient())
             {
-                httpClient.AddCurrentCultureHeader();
                 var response = await httpClient.GetAsync(_productsBaseUrl + productNumber);
                 response.EnsureSuccessStatusCode();
                 var result = await response.Content.ReadAsAsync<Product>();

@@ -44,13 +44,13 @@ namespace AdventureWorks.UILogic.ViewModels
         public string Title
         {
             get { return _title; }
-            set { SetProperty(ref _title, value); }
+            private set { SetProperty(ref _title, value); }
         }
 
         public IReadOnlyCollection<ProductViewModel> Items
         {
             get { return _items; }
-            set { SetProperty(ref _items, value); }
+            private set { SetProperty(ref _items, value); }
         }
 
         public Action<object> ProductNavigationAction { get; private set; }
@@ -67,7 +67,9 @@ namespace AdventureWorks.UILogic.ViewModels
                 var category = await _productCatalogRepository.GetCategoryAsync(categoryId);
 
                 Title = category.Title;
-                Items = new ReadOnlyCollection<ProductViewModel>(category.Products
+
+                var products = await _productCatalogRepository.GetProductsAsync(categoryId);
+                Items = new ReadOnlyCollection<ProductViewModel>(products
                                                                          .Select(product => new ProductViewModel(product))
                                                                          .ToList());
             }

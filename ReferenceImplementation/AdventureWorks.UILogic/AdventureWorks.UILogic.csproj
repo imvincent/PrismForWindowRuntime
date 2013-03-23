@@ -135,6 +135,7 @@
     <Compile Include="Services\IAddressService.cs" />
     <Compile Include="Services\AddressServiceProxy.cs" />
     <Compile Include="ViewModels\CategoryPageViewModel.cs" />
+    <Compile Include="ViewModels\OrderConfirmationPageViewModel.cs" />
     <Compile Include="ViewModels\SearchUserControlViewModel.cs" />
     <Compile Include="Services\AccountService.cs" />
     <Compile Include="Services\DialogCommand.cs" />
@@ -166,7 +167,7 @@
     <Compile Include="ViewModels\CheckoutDataViewModel.cs" />
     <Compile Include="ViewModels\CheckoutHubPageViewModel.cs" />
     <Compile Include="ViewModels\CheckoutSummaryPageViewModel.cs" />
-    <Compile Include="ViewModels\ChangeDefaultsPageViewModel.cs" />
+    <Compile Include="ViewModels\ChangeDefaultsFlyoutViewModel.cs" />
     <Compile Include="ViewModels\BillingAddressPageViewModel.cs" />
     <Compile Include="ViewModels\SearchResultsPageViewModel.cs" />
     <Compile Include="ViewModels\ShippingAddressPageViewModel.cs" />

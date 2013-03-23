@@ -29,6 +29,7 @@ namespace AdventureWorks.UILogic.ViewModels
         private readonly IResourceLoader _resourceLoader;
         private readonly ISearchPaneService _searchPaneService;
         private IReadOnlyCollection<CategoryViewModel> _subcategories;
+        private string _title;
 
         public CategoryPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService, IAlertMessageService alertMessageService, IResourceLoader resourceLoader, ISearchPaneService searchPaneService)
         {
@@ -47,6 +48,13 @@ namespace AdventureWorks.UILogic.ViewModels
             private set { SetProperty(ref _subcategories, value); }
         }
 
+        [RestorableState]
+        public string Title
+        {
+            get { return _title; }
+            private set { SetProperty(ref _title, value); }
+        }
+
         public ICommand GoBackCommand { get; private set; }
 
         public Action<object> ProductNavigationAction { get; private set; }
@@ -62,6 +70,7 @@ namespace AdventureWorks.UILogic.ViewModels
 
         public async override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewModelState)
         {
+            base.OnNavigatedTo(navigationParameter, navigationMode, viewModelState);
             int parentCategoryId = int.Parse(navigationParameter.ToString());
             ReadOnlyCollection<Category> subCategories = null;
             string errorMessage = string.Empty;
@@ -79,6 +88,11 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 await _alertMessageService.ShowAsync(errorMessage, _resourceLoader.GetString("ErrorServiceUnreachable"));
                 return;
+            }
+
+            if (string.IsNullOrEmpty(Title))
+            {
+                Title = _productCatalogRepository.GetCategoryName(parentCategoryId);
             }
 
             var subCategoryViewModels = new List<CategoryViewModel>();

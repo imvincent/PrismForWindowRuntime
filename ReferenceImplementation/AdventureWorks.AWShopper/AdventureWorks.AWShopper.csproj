@@ -140,8 +140,8 @@
     <Compile Include="Views\BillingAddressUserControl.xaml.cs">
       <DependentUpon>BillingAddressUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ChangeDefaultsPage.xaml.cs">
-      <DependentUpon>ChangeDefaultsPage.xaml</DependentUpon>
+    <Compile Include="Views\ChangeDefaultsFlyout.xaml.cs">
+      <DependentUpon>ChangeDefaultsFlyout.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CheckoutHubPage.xaml.cs">
       <DependentUpon>CheckoutHubPage.xaml</DependentUpon>
@@ -154,6 +154,9 @@
     </Compile>
     <Compile Include="Views\CategoryPage.xaml.cs">
       <DependentUpon>CategoryPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OrderConfirmationPage.xaml.cs">
+      <DependentUpon>OrderConfirmationPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SearchResultsPage.xaml.cs">
       <DependentUpon>SearchResultsPage.xaml</DependentUpon>
@@ -251,7 +254,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ChangeDefaultsPage.xaml">
+    <Page Include="Views\ChangeDefaultsFlyout.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -268,6 +271,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\CategoryPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\OrderConfirmationPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

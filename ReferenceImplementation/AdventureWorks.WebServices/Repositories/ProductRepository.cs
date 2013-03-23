@@ -33,7 +33,7 @@ namespace AdventureWorks.WebServices.Repositories
         {
             lock (_products)
             {
-                return _products.Where(p => p.SubcategoryId == subcategoryId);
+                return _products.Where(p => p.SubcategoryId == subcategoryId).ToArray();
             }
         }
 

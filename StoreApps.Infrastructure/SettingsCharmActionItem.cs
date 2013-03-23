@@ -7,18 +7,17 @@
 
 
 using System;
-using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
 
 namespace Microsoft.Practices.StoreApps.Infrastructure
 {
     /// <summary>
-    /// The SettingsCharmActionItem is one of the item types that implement ISettingsCharmItem, used by the SettingsCharmService class to populate the SettingsPane.
+    /// The SettingsCharmActionItem is used by the SettingsCharmService class to populate the SettingsPane.
     /// This item type has an associated Action that will be executed when selecting it in the Settings Pane.
     /// </summary>
-    public class SettingsCharmActionItem : ISettingsCharmItem
+    public class SettingsCharmActionItem
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SettingsCharmFlyoutItem"/> class.
+        /// Initializes a new instance of the <see cref="SettingsCharmActionItem"/> class.
         /// </summary>
         /// <param name="title">The title.</param>
         /// <param name="action">The action to be performed when the settings charm is selected.</param>

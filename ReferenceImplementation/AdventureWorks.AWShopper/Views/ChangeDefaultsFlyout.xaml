@@ -5,17 +5,16 @@
                            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                            xmlns:designViewModels="using:AdventureWorks.AWShopper.DesignViewModels"
                            xmlns:Infrastructure="using:Microsoft.Practices.StoreApps.Infrastructure"
-                           xmlns:Flyouts="using:Microsoft.Practices.StoreApps.Infrastructure.Flyouts"
                            mc:Ignorable="d"
                            x:Uid="Page"
                            d:DesignHeight="768"
                            d:DesignWidth="364"
                            Infrastructure:ViewModelLocator.AutoWireViewModel="true"
                            d:DataContext="{d:DesignInstance designViewModels:ChangeDefaultsDesignViewModel, IsDesignTimeCreatable=True}">
-    <Border BorderBrush="{StaticResource AWShopperFlyoutHeaderBackground}"
+    <Border BorderBrush="{StaticResource AWShopperFlyoutBorderBrush}"
             BorderThickness="1,0,0,0">
         <Grid VerticalAlignment="Stretch"
-              Background="{StaticResource LightBackground}">
+              Background="{StaticResource FlyoutBackground}">
 
             <!-- Root grid definition -->
             <Grid.RowDefinitions>
@@ -43,8 +42,7 @@
                                FontWeight="SemiLight"
                                FontSize="24"
                                Width="225"
-                               Text="Change Defaults"
-                               Foreground="White" />
+                               Text="Change Defaults" />
                     <Image Source="ms-appx:///Assets/SmallLogo.png" />
                 </StackPanel>
             </Grid>
@@ -57,6 +55,7 @@
 
                     <!-- Shipping Address -->
                     <Button x:Name="ExpandShippingAddressButton"
+                            x:Uid="ExpandShippingAddressButton"
                             AutomationProperties.AutomationId="ExpandShippingAddressButton"
                             Style="{StaticResource LightTextPrimaryButtonStyle}"
                             Click="ExpandShippingAddressButton_Click">
@@ -76,6 +75,7 @@
                     <StackPanel Height="60"
                                 Margin="0,10,20,20">
                         <TextBlock Text="No default Shipping Address is selected."
+                                   x:Uid="NoDefaultShippingAddressLabel"
                                    Style="{StaticResource LightBasicTextStyle}"
                                    Visibility="{Binding SelectedShippingAddress, Converter={StaticResource NullToVisibleConverter}}" />
                         <ContentControl DataContext="{Binding SelectedShippingAddress}">
@@ -94,6 +94,7 @@
 
                     <!-- Billing Address -->
                     <Button x:Name="ExpandBillingAddressButton"
+                            x:Uid="ExpandBillingAddressButton"
                             AutomationProperties.AutomationId="ExpandBillingAddressButton"
                             Style="{StaticResource LightTextPrimaryButtonStyle}"
                             Click="ExpandBillingAddressButton_Click">
@@ -113,6 +114,7 @@
                     <StackPanel Height="60"
                                 Margin="0,10,20,20">
                         <TextBlock Text="No default Billing Address is selected."
+                                   x:Uid="NoDefaultBillingAddressLabel"
                                    Style="{StaticResource LightBasicTextStyle}"
                                    Visibility="{Binding SelectedBillingAddress, Converter={StaticResource NullToVisibleConverter}}" />
                         <ContentControl DataContext="{Binding SelectedBillingAddress}">
@@ -131,6 +133,7 @@
 
                     <!-- Payment Method -->
                     <Button x:Name="ExpandPaymentMethodButton"
+                            x:Uid="ExpandPaymentMethodButton"
                             AutomationProperties.AutomationId="ExpandPaymentMethodButton"
                             Style="{StaticResource LightTextPrimaryButtonStyle}"
                             Click="ExpandPaymentMethodButton_Click">
@@ -150,6 +153,7 @@
                     <StackPanel Height="60"
                                 Margin="0,10,20,20">
                         <TextBlock Text="No default Payment Method is selected."
+                                   x:Uid="NoDefaultPaymentMethodLabel"
                                    Style="{StaticResource LightBasicTextStyle}"
                                    Visibility="{Binding SelectedPaymentMethod, Converter={StaticResource NullToVisibleConverter}}" />
                         <ContentControl DataContext="{Binding SelectedPaymentMethod}">
@@ -165,6 +169,16 @@
                             </ContentControl.Content>
                         </ContentControl>
                     </StackPanel>
+
+                    <Button x:Uid="SaveButton"
+                            AutomationProperties.AutomationId="SaveButton"
+                            Background="{StaticResource AWShopperAccentBrush}"
+                            Content="Save"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,20,20,0"
+                            Foreground="{StaticResource AWShopperButtonForegroundBrush}"
+                            Command="{Binding SaveCommand}"
+                            Style="{StaticResource LightButtonStyle}" />
                 </StackPanel>
             </ScrollViewer>
 

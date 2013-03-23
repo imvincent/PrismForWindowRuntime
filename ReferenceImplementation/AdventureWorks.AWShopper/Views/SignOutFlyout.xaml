@@ -10,10 +10,10 @@
                     d:DesignWidth="364"
                     Infrastructure:ViewModelLocator.AutoWireViewModel="true">
 
-    <Border BorderBrush="{StaticResource AWShopperFlyoutHeaderBackground}"
+    <Border BorderBrush="{StaticResource AWShopperFlyoutBorderBrush}"
             BorderThickness="1,0,0,0">
         <Grid VerticalAlignment="Stretch"
-              Background="{StaticResource LightBackground}">
+              Background="{StaticResource FlyoutBackground}">
 
             <!-- Root grid definition -->
             <Grid.RowDefinitions>
@@ -41,7 +41,6 @@
                                FontWeight="SemiLight"
                                FontSize="24"
                                Text="Logout"
-                               Foreground="White"
                                Width="225" />
                     <Image Source="ms-appx:///Assets/SmallLogo.png" />
                 </StackPanel>

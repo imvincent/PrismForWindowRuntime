@@ -44,7 +44,7 @@ namespace AdventureWorks.WebServices.Repositories
                     throw new ArgumentNullException("item");
                 }
 
-                item.Id = _orders.Any() ? _orders.Max(c => c.Id) : 1;
+                item.Id = _orders.Any() ? _orders.Max(c => c.Id) + 1 : 1;
                 _orders.Add(item);
                 return item;
             }

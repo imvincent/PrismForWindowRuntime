@@ -85,26 +85,31 @@ namespace AdventureWorks.UILogic.ViewModels
         public bool IsShippingAddressInvalid
         {
             get { return _isShippingAddressInvalid; }
-            set { SetProperty(ref _isShippingAddressInvalid, value); }
+            private set { SetProperty(ref _isShippingAddressInvalid, value); }
         }
 
         [RestorableState]
         public bool IsBillingAddressInvalid
         {
             get { return _isBillingAddressInvalid; }
-            set { SetProperty(ref _isBillingAddressInvalid, value); }
+            private set { SetProperty(ref _isBillingAddressInvalid, value); }
         }
 
         [RestorableState]
         public bool IsPaymentMethodInvalid
         {
             get { return _isPaymentMethodInvalid; }
-            set { SetProperty(ref _isPaymentMethodInvalid, value); }
+            private set { SetProperty(ref _isPaymentMethodInvalid, value); }
         }
 
         public override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewModelState)
         {
             if (viewModelState == null) return;
+
+            // Try to populate address and payment method controls with default data if available
+            ShippingAddressViewModel.SetLoadDefault(true);
+            BillingAddressViewModel.SetLoadDefault(true);
+            PaymentMethodViewModel.SetLoadDefault(true);
 
             // This ViewModel is an example of composition. The CheckoutHubPageViewModel manages
             // three child view models (Shipping Address, Billing Address, and Payment Method).
@@ -187,9 +192,16 @@ namespace AdventureWorks.UILogic.ViewModels
                         };
             }
 
-            await ShippingAddressViewModel.ProcessFormAsync();
-            await BillingAddressViewModel.ProcessFormAsync();
-            await PaymentMethodViewModel.ProcessFormAsync();
+            try
+            {
+                await ShippingAddressViewModel.ProcessFormAsync();
+                await BillingAddressViewModel.ProcessFormAsync();
+                await PaymentMethodViewModel.ProcessFormAsync();
+            }
+            catch (ModelValidationException)
+            {
+                // Handle validation exceptions when the order is created.
+            }
 
             var user = _accountService.SignedInUser;
             var shoppingCart = await _shoppingCartRepository.GetShoppingCartAsync();

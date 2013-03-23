@@ -7,18 +7,21 @@
 
 
 using System;
+using System.Globalization;
 using AdventureWorks.UILogic.Models;
 using Microsoft.Practices.StoreApps.Infrastructure;
 using Windows.Globalization.NumberFormatting;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using System.Runtime.Serialization;
+using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
 
 namespace AdventureWorks.UILogic.ViewModels
 {
     [DataContract]
     public class ShoppingCartItemViewModel : ViewModel
     {
+        private readonly IResourceLoader _resourceLoader;
         private string _id;
         private string _title;
         private string _description;
@@ -28,8 +31,9 @@ namespace AdventureWorks.UILogic.ViewModels
         private Uri _imageUri;
         private CurrencyFormatter _currencyFormatter;
 
-        public ShoppingCartItemViewModel(ShoppingCartItem shoppingCartItem)
+        public ShoppingCartItemViewModel(ShoppingCartItem shoppingCartItem, IResourceLoader resourceLoader)
         {
+            _resourceLoader = resourceLoader;
             if (shoppingCartItem == null)
             {
                 throw new ArgumentNullException("shoppingCartItem", "shoppingCartItem cannot be null");
@@ -51,19 +55,16 @@ namespace AdventureWorks.UILogic.ViewModels
         public string Id
         {
             get { return _id; }
-            set { SetProperty(ref _id, value); }
         }
         
         public string Title
         {
             get { return _title; }
-            set { SetProperty(ref _title, value); }
         }
 
         public string Description
         {
             get { return _description; }
-            set { SetProperty(ref _description, value); }
         }
 
         public int Quantity
@@ -74,8 +75,9 @@ namespace AdventureWorks.UILogic.ViewModels
                 if (SetProperty(ref _quantity, value))
                 {
                     OnPropertyChanged("FullPrice");
-                    OnPropertyChanged("TotalPrice");
                     OnPropertyChanged("DiscountedPrice");
+                    OnPropertyChanged("FullPriceDouble");
+                    OnPropertyChanged("DiscountedPriceDouble");
                 }
             }
         }
@@ -90,7 +92,6 @@ namespace AdventureWorks.UILogic.ViewModels
         public double DiscountPercentage
         {
             get { return _discountPercentage; }
-            set { SetProperty(ref _discountPercentage, value); }
         }
 
         public ImageSource Image
@@ -107,7 +108,7 @@ namespace AdventureWorks.UILogic.ViewModels
 
         public override string ToString()
         {
-            return Title + ProductId;
+            return string.Format(CultureInfo.InvariantCulture, "{0}, {1}, {2}, {3} {4}, {5}", Title, Description, ProductId, _resourceLoader.GetString("Quantity"), Quantity, DiscountedPrice);
         }
     }
 }

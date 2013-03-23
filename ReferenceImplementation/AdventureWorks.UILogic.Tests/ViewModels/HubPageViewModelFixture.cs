@@ -21,11 +21,11 @@ using System.Collections.Generic;
 namespace AdventureWorks.UILogic.Tests.ViewModels
 {
     [TestClass]
-    public class HubPageModelFixture
+    public class HubPageViewModelFixture
     {
         // <snippet1201>
         [TestMethod]
-        public void OnNavigatedTo_Fill_RootCategories()
+        public async void OnNavigatedTo_Fill_RootCategories()
         {
             var repository = new MockProductCatalogRepository();
             var navigationService = new MockNavigationService();
@@ -108,7 +108,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             alertMessageService.ShowAsyncDelegate = (s, s1) =>
             {
                 alertCalled = true;
-                Assert.AreEqual("Error", s1);
+                Assert.AreEqual("ErrorServiceUnreachable", s1);
                 return Task.FromResult(string.Empty);
             };
             var target = new HubPageViewModel(productCatalogRepository, navService,

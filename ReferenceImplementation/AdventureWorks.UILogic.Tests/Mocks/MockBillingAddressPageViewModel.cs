@@ -45,7 +45,6 @@ namespace AdventureWorks.UILogic.Tests.Mocks
 
         public string EntityId { get; set; }
 
-
         public void OnNavigatedTo(object navigationParameter, Windows.UI.Xaml.Navigation.NavigationMode navigationMode, System.Collections.Generic.Dictionary<string, object> viewState)
         {
             throw new System.NotImplementedException();
@@ -72,6 +71,11 @@ namespace AdventureWorks.UILogic.Tests.Mocks
         }
 
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        public void SetLoadDefault(bool loadDefault)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool IsEnabled { get; set; }
 
         public Task PopulateStatesAsync()

@@ -124,7 +124,7 @@
     <value>This field contains invalid characters</value>
   </data>
   <data name="ErrorInvalidZipCodeInState" xml:space="preserve">
-    <value>The Zip Code is not valid for the selected State</value>
+    <value>The Zip Code is not valid for the selected State. Try Washington and 98052.</value>
   </data>
   <data name="ErrorRegex" xml:space="preserve">
     <value>This field contains invalid characters</value>
@@ -143,5 +143,8 @@
   </data>
   <data name="InvalidPaymentMethod" xml:space="preserve">
     <value>Invalid payment method</value>
+  </data>
+  <data name="InvalidShoppingCart" xml:space="preserve">
+    <value>Shopping cart has no items.</value>
   </data>
 </root>

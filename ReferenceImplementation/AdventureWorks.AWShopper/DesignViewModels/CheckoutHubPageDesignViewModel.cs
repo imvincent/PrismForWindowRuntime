@@ -38,7 +38,6 @@ namespace AdventureWorks.AWShopper.DesignViewModels
         {
             ShippingAddressViewModel = new ShippingAddressUserControlViewModel(null, null, null, null)
             {
-                States = new ReadOnlyCollection<ComboBoxItemValue>(new List<ComboBoxItemValue>() { new ComboBoxItemValue() { Id = "Washington", Value = "Washington" } }),
                 Address = new Address()
                 {
                     FirstName = "Name",

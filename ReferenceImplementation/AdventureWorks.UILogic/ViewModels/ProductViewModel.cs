@@ -7,6 +7,7 @@
 
 
 using System;
+using System.Globalization;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
 using Microsoft.Practices.StoreApps.Infrastructure;
@@ -80,7 +81,7 @@ namespace AdventureWorks.UILogic.ViewModels
 
         public override string ToString()
         {
-            return _product.ProductNumber;
+            return string.Format(CultureInfo.InvariantCulture, "{0}, {1}, {2}, {3}", Title, Description, ProductNumber, SalePrice);
         }
     }
 }

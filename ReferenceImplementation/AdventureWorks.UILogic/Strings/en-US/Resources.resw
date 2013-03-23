@@ -120,4 +120,7 @@
   <data name="MergedShoppingCartMessage" xml:space="preserve">
     <value>Your shopping cart has been merged. Please be aware that your shopping cart contains additional items.</value>
   </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
 </root>

@@ -7,6 +7,7 @@
 
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace AdventureWorks.UILogic.Repositories
     {
         private readonly IProductCatalogService _productCatalogService;
         private readonly ICacheService _cacheService;
+        private Dictionary<int, string> _rootCategoriesNames;
 
         public ProductCatalogRepository(IProductCatalogService productCatalogService, ICacheService cacheService)
         {
@@ -28,7 +30,16 @@ namespace AdventureWorks.UILogic.Repositories
 
         public async Task<ReadOnlyCollection<Category>> GetRootCategoriesAsync(int maxAmountOfProducts)
         {
-            return await GetSubcategoriesAsync(0, maxAmountOfProducts);
+            var rootCategories = await GetSubcategoriesAsync(0, maxAmountOfProducts);
+            if (_rootCategoriesNames == null)
+            {
+                _rootCategoriesNames = new Dictionary<int, string>();
+                foreach (var rootCategory in rootCategories)
+                {
+                    _rootCategoriesNames.Add(rootCategory.Id, rootCategory.Title);
+                }
+            }
+            return rootCategories;
         }
 
         // <snippet512>
@@ -127,6 +138,12 @@ namespace AdventureWorks.UILogic.Repositories
             await _cacheService.SaveDataAsync(cacheFileName, product);
 
             return product;
+        }
+
+        public string GetCategoryName(int parentId)
+        {
+            if (_rootCategoriesNames == null) return string.Empty;
+            return _rootCategoriesNames.ContainsKey(parentId) ? _rootCategoriesNames[parentId] : string.Empty;
         }
     }
 }

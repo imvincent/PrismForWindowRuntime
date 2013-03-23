@@ -36,17 +36,25 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                 if (categoryId == 1)
                 {
                     category = new Category { Id = categoryId,
-                        Title = "CategoryTitle",
-                        Products = new ReadOnlyCollection<Product>(
-                            new List<Product> {
-                                new Product(),
-                                new Product(),
-                                new Product()
-                            })
+                        Title = "CategoryTitle"
                     };
                 }
 
                 return Task.FromResult(category);
+            };
+            repository.GetProductsAsyncDelegate = i =>
+            {
+                ReadOnlyCollection<Product> products = null;
+                if (i == 1)
+                {
+                    products =new ReadOnlyCollection<Product>( new List<Product>
+                                    {
+                                        new Product(),
+                                        new Product(),
+                                        new Product()
+                                    });
+                }
+                return Task.FromResult(products);
             };
 
            var viewModel = new GroupDetailPageViewModel(repository, navigationService, null, null, searchPaneService);

@@ -7,6 +7,7 @@
 
 
 using System.Globalization;
+using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
 using AdventureWorks.UILogic.Services;
@@ -29,6 +30,7 @@ namespace AdventureWorks.UILogic.ViewModels
         private readonly IResourceLoader _resourceLoader;
         private readonly ISearchPaneService _searchPaneService;
         private IReadOnlyCollection<CategoryViewModel> _rootCategories;
+        private bool _loadingData;
 
         public HubPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService, IAlertMessageService alertMessageService, IResourceLoader resourceLoader, ISearchPaneService searchPaneService)
         {
@@ -39,6 +41,12 @@ namespace AdventureWorks.UILogic.ViewModels
             _searchPaneService = searchPaneService;
             ProductNavigationAction = NavigateToItem;
             GoBackCommand = new DelegateCommand(navigationService.GoBack, navigationService.CanGoBack);
+        }
+
+        public bool LoadingData
+        {
+            get { return _loadingData; }
+            private set { SetProperty(ref _loadingData, value); }
         }
 
         // <snippet305>
@@ -70,13 +78,22 @@ namespace AdventureWorks.UILogic.ViewModels
             ReadOnlyCollection<Category> rootCategories = null;
             try
             {
+                LoadingData = true;
                 // <snippet511>
+                // <snippet1100>
                 rootCategories = await _productCatalogRepository.GetRootCategoriesAsync(5);
+                // </snippet1100>
                 // </snippet511>
             }
             catch (HttpRequestException ex)
             {
-                errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, ex.Message);
+                errorMessage = string.Format(CultureInfo.CurrentCulture,
+                                             _resourceLoader.GetString("GeneralServiceErrorMessage"),
+                                             Environment.NewLine, ex.Message);
+            }
+            finally
+            {
+                LoadingData = false;    
             }
 
             if (!string.IsNullOrWhiteSpace(errorMessage))
@@ -97,6 +114,7 @@ namespace AdventureWorks.UILogic.ViewModels
         }
 
         // <snippet1006>
+        // <snippet709>
         public override void OnNavigatedFrom(Dictionary<string, object> viewModelState, bool suspending)
         {
             base.OnNavigatedFrom(viewModelState, suspending);
@@ -105,6 +123,7 @@ namespace AdventureWorks.UILogic.ViewModels
                 _searchPaneService.ShowOnKeyboardInput(false);
             }
         }
+        // </snippet709>
         // </snippet1006>
     }
 }

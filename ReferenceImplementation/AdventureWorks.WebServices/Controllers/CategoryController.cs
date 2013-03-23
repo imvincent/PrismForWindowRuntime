@@ -36,9 +36,10 @@ namespace AdventureWorks.WebServices.Controllers
         // <snippet514>
         public IEnumerable<Category> GetCategories(int parentId, int maxAmountOfProducts)
         {
-            var categories = _categoryRepository.GetAll().Where(c => c.ParentId == parentId).ToList();
-            FillProducts(categories);
+            var categories = _categoryRepository.GetAll().Where(c => c.ParentId == parentId);
+
             var trimmedCategories = categories.Select(NewCategory).ToList();
+            FillProducts(trimmedCategories);
 
             foreach (var trimmedCategory in trimmedCategories)
             {
@@ -63,28 +64,8 @@ namespace AdventureWorks.WebServices.Controllers
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-            var products = item.Products.ToList();            
-            item.Products = products;
 
             return item;
-        }
-
-        // GET /api/Category?categoryId={categoryId}
-        public IEnumerable<Category> GetSubcategories(int categoryId)
-        {
-            if (categoryId != 0)
-            {
-                var subcategories = _categoryRepository.GetAll().Where(c => c.ParentId == categoryId).ToList();
-                FillSubcategories(subcategories);
-                return subcategories;
-            }
-            else
-            {
-                var todaysDealsCategory = GetCategory(0);
-                todaysDealsCategory.Products = _productRepository.GetTodaysDealsProducts();
-                todaysDealsCategory.TotalNumberOfItems = _productRepository.GetTodaysDealsProducts().Count();
-                return new List<Category>() { todaysDealsCategory };
-            }
         }
 
         private void FillProducts(IEnumerable<Category> categories)
@@ -121,16 +102,6 @@ namespace AdventureWorks.WebServices.Controllers
             }
         }
 
-        private void FillSubcategories(IEnumerable<Category> subcategories)
-        {
-            foreach (var category in subcategories)
-            {
-                var productList = new List<Product>();
-                productList.AddRange(_productRepository.GetProductsForCategory(category.Id));
-                category.Products = productList;
-            }
-        }
-
         private static Category NewCategory(Category category)
         {
             if (category != null)
@@ -149,7 +120,5 @@ namespace AdventureWorks.WebServices.Controllers
             }
             return null;
         }
-
-        
     }
 }

@@ -32,7 +32,7 @@ namespace AdventureWorks.UILogic.Services
         // access that key. Cache read and write operations always wait for the prior task of the current cache key
         // to complete before they start. 
         // For a more general purpose approach to protecting read/write operations, please read this blog post by Stephen Toub
-        // http://blogs.msdn.com/b/pfxteam/archive/2012/02/12/10267069.aspx
+        // http://go.microsoft.com/fwlink/?LinkID=288843
         private Dictionary<string,Task> _cacheKeyPreviousTask = new Dictionary<string, Task>();
 
         // <snippet515>
@@ -44,7 +44,6 @@ namespace AdventureWorks.UILogic.Services
             return await result;
         }
         
-        /// <throws>FileNotFoundException</throws>
         private async Task<T> GetDataAsyncInternal<T>(string cacheKey)
         {
             StorageFile file = await _cacheFolder.GetFileAsync(cacheKey);
@@ -63,6 +62,7 @@ namespace AdventureWorks.UILogic.Services
         }
         // </snippet515>
 
+        // <snippet516>
         public async Task SaveDataAsync<T>(string cacheKey, T content)
         {
             await CacheKeyPreviousTask(cacheKey);
@@ -78,10 +78,7 @@ namespace AdventureWorks.UILogic.Services
             var textContent = Serialize<T>(content);
             await FileIO.WriteTextAsync(file, textContent);
         }
-
-        // <snippet516>
         // </snippet516>
-
         
         // Note: This method assumes that we are controlling the interleaving of async methods on a single thread.
         private async Task CacheKeyPreviousTask(string cacheKey)
@@ -160,7 +157,6 @@ namespace AdventureWorks.UILogic.Services
                     stream.Dispose();
                 }
             }
-
         }
     }
 }

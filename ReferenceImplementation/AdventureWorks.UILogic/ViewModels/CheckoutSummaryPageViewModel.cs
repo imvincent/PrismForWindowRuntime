@@ -65,7 +65,7 @@ namespace AdventureWorks.UILogic.ViewModels
             _accountService = accountService;
             _alertMessageService = alertMessageService;
 
-            SubmitCommand = DelegateCommand.FromAsyncHandler(Submit, CanSubmit);
+            SubmitCommand = DelegateCommand.FromAsyncHandler(SubmitAsync, CanSubmit);
             GoBackCommand = new DelegateCommand(_navigationService.GoBack);
 
             EditCheckoutDataCommand = new DelegateCommand(EditCheckoutData);
@@ -76,31 +76,31 @@ namespace AdventureWorks.UILogic.ViewModels
         public string OrderSubtotal
         {
             get { return _orderSubtotal; }
-            set { SetProperty(ref _orderSubtotal, value); }
+            private set { SetProperty(ref _orderSubtotal, value); }
         }
 
         public string ShippingCost
         {
             get { return _shippingCost; }
-            set { SetProperty(ref _shippingCost, value); }
+            private set { SetProperty(ref _shippingCost, value); }
         }
 
         public string TaxCost
         {
             get { return _taxCost; }
-            set { SetProperty(ref _taxCost, value); }
+            private set { SetProperty(ref _taxCost, value); }
         }
 
         public string GrandTotal
         {
             get { return _grandTotal; }
-            set { SetProperty(ref _grandTotal, value); }
+            private set { SetProperty(ref _grandTotal, value); }
         }
 
         public bool IsSelectCheckoutDataPopupOpened
         {
             get { return _isSelectCheckoutDataPopupOpened; }
-            set { SetProperty(ref _isSelectCheckoutDataPopupOpened, value); }
+            private set { SetProperty(ref _isSelectCheckoutDataPopupOpened, value); }
         }
 
         public bool IsBottomAppBarOpened
@@ -110,7 +110,7 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 // We always fire the PropertyChanged event because the 
                 // AppBar.IsOpen property doesn't notify when the property is set.
-                // See http://msdn.microsoft.com/en-us/library/windows/apps/windows.ui.xaml.controls.appbar.isopen.aspx
+                // See http://go.microsoft.com/fwlink/?LinkID=288840
                 _isBottomAppBarOpened = value;
                 OnPropertyChanged("IsBottomAppBarOpened");
             }
@@ -209,13 +209,18 @@ namespace AdventureWorks.UILogic.ViewModels
             _order.ShoppingCart = shoppingCart;
 
             // Populate the ShoppingCart items
-            var shoppingCartItemVMs = _order.ShoppingCart.ShoppingCartItems.Select(item => new ShoppingCartItemViewModel(item));
+            var shoppingCartItemVMs = _order.ShoppingCart.ShoppingCartItems.Select(item => new ShoppingCartItemViewModel(item, _resourceLoader));
             ShoppingCartItemViewModels = new ReadOnlyCollection<ShoppingCartItemViewModel>(shoppingCartItemVMs.ToList());
 
             // Populate the ShippingMethods and set the selected one
             var shippingMethods = await _shippingMethodService.GetShippingMethodsAsync();
             ShippingMethods = new ReadOnlyCollection<ShippingMethod>(shippingMethods.ToList());
             SelectedShippingMethod = _order.ShippingMethod != null ? ShippingMethods.FirstOrDefault(c => c.Id == _order.ShippingMethod.Id) : null;
+
+            // Update order's address and payment information
+            _order.ShippingAddress = await _checkoutDataRepository.GetShippingAddressAsync(_order.ShippingAddress.Id);
+            _order.BillingAddress  = await _checkoutDataRepository.GetBillingAddressAsync(_order.BillingAddress.Id);
+            _order.PaymentMethod   = await _checkoutDataRepository.GetPaymentMethodAsync(_order.PaymentMethod.Id);
 
             // Populate the CheckoutData items (Addresses & payment information)
             CheckoutDataViewModels = new ObservableCollection<CheckoutDataViewModel>
@@ -255,7 +260,7 @@ namespace AdventureWorks.UILogic.ViewModels
             return SelectedShippingMethod != null;
         }
 
-        private async Task Submit()
+        private async Task SubmitAsync()
         {
             string errorMessage = string.Empty;
             try
@@ -287,20 +292,9 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 await _orderService.ProcessOrderAsync(_order, _accountService.ServerCookieHeader);
 
-                string successTitle = _resourceLoader.GetString("OrderPurchasedTitle");
-                string successMessage = _resourceLoader.GetString("OrderPurchasedMessage");
-                var dialogOkCommand = new DialogCommand()
-                    {
-                        Label = _resourceLoader.GetString("DialogOkButtonLabel"),
-                        Invoked = async () =>
-                            {
-                                _navigationService.ClearHistory();
-                                _navigationService.Navigate("Hub", null);
-                                await _shoppingCartRepository.ClearCartAsync();
-                            }
-                    };
-
-                await _alertMessageService.ShowAsync(successMessage, successTitle, new List<DialogCommand>() { dialogOkCommand });
+                _navigationService.ClearHistory();
+                _navigationService.Navigate("OrderConfirmation", Guid.NewGuid().ToString());
+                await _shoppingCartRepository.ClearCartAsync();
                 return true;
             }
             catch (ModelValidationException mvex)

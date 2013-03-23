@@ -105,8 +105,6 @@
     <Compile Include="AppManifestHelper.cs" />
     <Compile Include="BindableBase.cs" />
     <Compile Include="SettingsCharmActionItem.cs" />
-    <Compile Include="Interfaces\ISettingsCharmItem.cs" />
-    <Compile Include="SettingsCharmLinkItem.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="DelegateCommandBase.cs" />
     <Compile Include="BindableValidator.cs" />
@@ -117,14 +115,12 @@
     <Compile Include="FrameNavigationService.cs" />
     <Compile Include="FrameFacadeAdapter.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="HttpClientExtensions.cs" />
     <Compile Include="Interfaces\ISessionStateService.cs" />
     <Compile Include="Interfaces\ICredentialStore.cs" />
     <Compile Include="Interfaces\IFlyoutViewModel.cs" />
     <Compile Include="Interfaces\IFrameFacade.cs" />
     <Compile Include="Interfaces\INavigationAware.cs" />
     <Compile Include="Interfaces\INavigationService.cs" />
-    <Compile Include="Interfaces\IRequestService.cs" />
     <Compile Include="Interfaces\IResourceLoader.cs" />
     <Compile Include="Interfaces\ISearchPaneService.cs" />
     <Compile Include="SearchQueryArguments.cs" />
@@ -134,13 +130,10 @@
     <Compile Include="MvvmAppBase.cs" />
     <Compile Include="ResourceLoaderAdapter.cs" />
     <Compile Include="SearchPaneService.cs" />
-    <Compile Include="SettingsCharmFlyoutItem.cs" />
-    <Compile Include="SettingsCharmService.cs" />
     <Compile Include="SessionStateService.cs" />
     <Compile Include="ValidatableBindableBase.cs" />
     <Compile Include="VisualStateAwarePage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RequestService.cs" />
     <Compile Include="RestorableStateAttribute.cs" />
     <Compile Include="ViewModel.cs" />
     <Compile Include="ViewModelLocator.cs" />
@@ -151,10 +144,7 @@
   <ItemGroup>
     <None Include="Microsoft.Patterns.StoreApps.Infrastructure.snk" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Commands\" />
-    <Folder Include="Flyouts\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>

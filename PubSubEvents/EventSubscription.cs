@@ -106,7 +106,7 @@ namespace Microsoft.Practices.PubSubEvents
         }
 
         /// <summary>
-        /// Invokes the specified <see cref="System.Action{TPayload}"/> synchronously when not overriden.
+        /// Invokes the specified <see cref="System.Action{TPayload}"/> synchronously when not overridden.
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <param name="argument">The payload to pass <paramref name="action"/> while invoking it.</param>

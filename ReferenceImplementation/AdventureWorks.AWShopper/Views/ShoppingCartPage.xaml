@@ -65,7 +65,7 @@
                        Grid.Column="0"
                        Margin="0,0,0,10"
                        Style="{StaticResource SubheaderTextStyle}"
-                       Foreground="{StaticResource AWShopperAccentBrush}" />
+                       Foreground="{StaticResource AWShopperAccentTextBrush}" />
             <StackPanel x:Name="OverviewPanel"
                         Grid.Row="2"
                         Margin="0,0,50,0">
@@ -87,7 +87,7 @@
                                Grid.Column="0"
                                Text="Total items:"
                                FontSize="17.5"
-                               Foreground="#A9B0B4"
+                               Foreground="{StaticResource AWShopperItemForegroundLightestBrush}"
                                Margin="10"
                                VerticalAlignment="Bottom"
                                TextTrimming="WordEllipsis"></TextBlock>
@@ -106,7 +106,7 @@
                                Grid.Column="0"
                                Text="Discount codes:"
                                FontSize="17.5"
-                               Foreground="#A9B0B4"
+                               Foreground="{StaticResource AWShopperItemForegroundLightestBrush}"
                                Margin="10"
                                VerticalAlignment="Bottom"
                                TextTrimming="WordEllipsis" />
@@ -125,7 +125,7 @@
                                Grid.Column="0"
                                Text="Total:"
                                FontSize="24"
-                               Foreground="#A9B0B4"
+                               Foreground="{StaticResource AWShopperItemForegroundLightestBrush}"
                                Margin="10"
                                VerticalAlignment="Bottom"
                                TextTrimming="WordEllipsis"></TextBlock>
@@ -135,7 +135,7 @@
                                Text="{Binding TotalPrice, Mode=TwoWay}"
                                HorizontalAlignment="Right"
                                FontSize="24"
-                               Foreground="{StaticResource AWShopperAccentBrush}"
+                               Foreground="{StaticResource AWShopperAccentTextBrush}"
                                Margin="10"
                                TextTrimming="WordEllipsis"></TextBlock>
                 </Grid>
@@ -157,9 +157,9 @@
                        Text="Items"
                        Grid.Row="0"
                        Grid.Column="1"
-                       Margin="0,0,0,10"
+                       Margin="0,2,0,8"
                        Style="{StaticResource SubheaderTextStyle}"
-                       Foreground="{StaticResource AWShopperAccentBrush}" />
+                       Foreground="{StaticResource AWShopperAccentTextBrush}" />
             <!-- <snippet304> -->
             <GridView x:Name="ShoppingCartItemsGridView"
                       x:Uid="ShoppingCartItemsGridView"
@@ -596,14 +596,18 @@
                             Style="{StaticResource EditAppBarButtonStyle}"
                             Visibility="{Binding SelectedItem, Converter={StaticResource NotNullToVisibleConverter}}"
                             Command="{Binding EditAmountCommand}"
-                            Margin="0,1,0,-1"></Button>
+                            Margin="0,1,0,-1"
+                            Loaded="StartLayoutUpdates"
+                            Unloaded="StopLayoutUpdates"/>
                     <Button x:Name="RemoveAppBarButton"
                             x:Uid="RemoveAppBarButton"
                             AutomationProperties.AutomationId="RemoveAppBarButton"
                             Style="{StaticResource DeleteAppBarButtonStyle}"
                             Visibility="{Binding SelectedItem, Converter={StaticResource NotNullToVisibleConverter}}"
                             Command="{Binding RemoveCommand}"
-                            CommandParameter="{Binding SelectedItem}" />
+                            CommandParameter="{Binding SelectedItem}"
+                            Loaded="StartLayoutUpdates"
+                            Unloaded="StopLayoutUpdates" />
                 </StackPanel>
             </Grid>
         </AppBar>

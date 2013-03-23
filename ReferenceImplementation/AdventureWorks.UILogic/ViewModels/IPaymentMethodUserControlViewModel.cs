@@ -24,5 +24,6 @@ namespace AdventureWorks.UILogic.ViewModels
         Task ProcessFormAsync();
         bool ValidateForm();
         event PropertyChangedEventHandler PropertyChanged;
+        void SetLoadDefault(bool loadDefault);
     }
 }

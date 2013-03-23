@@ -27,6 +27,8 @@ namespace AdventureWorks.UILogic.ViewModels
         private readonly IResourceLoader _resourceLoader;
         private Action _successAction;
         private readonly UserInfo _lastSignedInUser;
+        private Action _closeFlyout;
+        private Action _goBack;
 
         public SignInFlyoutViewModel(IAccountService accountService, IAlertMessageService alertMessageService, IResourceLoader resourceLoader)
         {
@@ -88,17 +90,21 @@ namespace AdventureWorks.UILogic.ViewModels
         public bool IsSignInInvalid
         {
             get { return _isSignInInvalid; }
-            set { SetProperty(ref _isSignInInvalid, value); }
+            private set { SetProperty(ref _isSignInInvalid, value); }
         }
 
-        public bool ExcludeFromSettingsPane
+        public Action CloseFlyout
         {
-            get { return _lastSignedInUser != null; }
+            get { return _closeFlyout; }
+            set { SetProperty(ref _closeFlyout, value); }
         }
-        public Action CloseFlyout { get; set; }
 
 
-        public Action GoBack { get; set; }
+        public Action GoBack
+        {
+            get { return _goBack; }
+            set { SetProperty(ref _goBack, value); }
+        }
 
         public DelegateCommand GoBackCommand { get; private set; }
 

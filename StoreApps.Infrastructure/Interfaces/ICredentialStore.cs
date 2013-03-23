@@ -10,7 +10,6 @@ using Windows.Security.Credentials;
 
 namespace Microsoft.Practices.StoreApps.Infrastructure.Interfaces
 {
-    // <snippet504>
     /// <summary>
     /// The ICredentialStore interface abstracts the Windows.Security.Credentials.PasswordVault object for managing the users credentials of your application.
     /// A PasswordVault represents a Credential Locker of credentials. The default implementation of ICredentialStore
@@ -39,5 +38,4 @@ namespace Microsoft.Practices.StoreApps.Infrastructure.Interfaces
         /// <param name="resource">The name of the resource that will have its credential removed.</param>
         void RemoveSavedCredentials(string resource);
     }
-    // </snippet504>
 }

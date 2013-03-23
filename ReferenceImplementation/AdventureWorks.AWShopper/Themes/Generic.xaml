@@ -1,39 +1,83 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:controls="using:AdventureWorks.AWShopper.Controls">
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Default">
+            <!-- Default theme resources -->
+            <SolidColorBrush x:Key="AWShopperAccentBrush"
+                             Color="#B8CB11" />
+            <SolidColorBrush x:Key="AWShopperAccentTextBrush"
+                             Color="#B8CB11" />
+            <SolidColorBrush x:Key="AWShopperButtonForegroundBrush"
+                             Color="White" />
+            <SolidColorBrush x:Key="AWShopperFlyoutHeaderBackground"
+                             Color="#353C41" />
+            <SolidColorBrush x:Key="AWShopperFlyoutBorderBrush"
+                             Color="#353C41" />
+            <SolidColorBrush x:Key="AWShopperItemForegroundBrush"
+                             Color="#909093" />
+            <SolidColorBrush x:Key="AWShopperItemForegroundLighterBrush"
+                             Color="#BCBEC0" />
+            <SolidColorBrush x:Key="AWShopperItemForegroundLightestBrush"
+                             Color="#A9B0B4" />
+            
+            <!-- ListView Selection Color -->
+            <Color x:Key="ItemSelectionColor">#FFE2742F</Color>
+            <SolidColorBrush x:Key="ListViewItemSelectedBackgroundThemeBrush"
+                             Color="{StaticResource ItemSelectionColor}" />
+            <SolidColorBrush x:Key="ListViewItemSelectedPointerOverBackgroundThemeBrush"
+                             Color="{StaticResource ItemSelectionColor}" />
+            <SolidColorBrush x:Key="ListViewItemSelectedPointerOverBorderThemeBrush"
+                             Color="{StaticResource ItemSelectionColor}" />
+        </ResourceDictionary>
+
+        <ResourceDictionary x:Key="HighContrast">
+            <!-- High Contrast theme resources -->
+            <SolidColorBrush x:Key="AWShopperAccentBrush"
+                             Color="{StaticResource SystemColorButtonFaceColor}" />
+            <SolidColorBrush x:Key="AWShopperAccentTextBrush"
+                             Color="{StaticResource SystemColorWindowTextColor}" />
+            <SolidColorBrush x:Key="AWShopperButtonForegroundBrush"
+                             Color="{StaticResource SystemColorButtonTextColor}" />
+            <SolidColorBrush x:Key="AWShopperFlyoutHeaderBackground"
+                             Color="Black" />
+            <SolidColorBrush x:Key="AWShopperFlyoutBorderBrush"
+                             Color="{StaticResource SystemColorWindowTextColor}" />
+            <SolidColorBrush x:Key="AWShopperItemForegroundBrush"
+                             Color="{StaticResource SystemColorWindowTextColor}" />
+            <SolidColorBrush x:Key="AWShopperItemForegroundLighterBrush"
+                             Color="{StaticResource SystemColorWindowTextColor}" />
+            <SolidColorBrush x:Key="AWShopperItemForegroundLightestBrush"
+                             Color="{StaticResource SystemColorWindowTextColor}" />
+
+
+            <SolidColorBrush x:Key="ListViewItemSelectedBackgroundThemeBrush"
+                             Color="{StaticResource SystemColorHighlightColor}" />
+            <SolidColorBrush x:Key="ListViewItemSelectedPointerOverBackgroundThemeBrush"
+                             Color="{StaticResource SystemColorHighlightColor}" />
+            <SolidColorBrush x:Key="ListViewItemSelectedPointerOverBorderThemeBrush"
+                             Color="{StaticResource SystemColorHighlightColor}" />
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
 
     <!-- AW Shopper Brushes -->
-    <SolidColorBrush x:Name="AWShopperAccentBrush"
-                     Color="#B8CB11" />
     <SolidColorBrush x:Name="AWShopperItemBackgroundBrush"
                      Color="#41484E" />
     <SolidColorBrush x:Name="AWShopperItemDarkerBackgroundBrush"
                      Color="#FF353C41" />
-    <SolidColorBrush x:Name="AWShopperItemForegroundBrush"
-                     Color="#909093" />
-    <SolidColorBrush x:Name="AWShopperItemForegroundLighterBrush"
-                     Color="#BCBEC0" />
-    <SolidColorBrush x:Name="AWShopperFlyoutHeaderBackground"
-                     Color="#353C41" />
     <SolidColorBrush x:Name="AWShopperFlyoutContentBackground"
                      Color="Black" />
     <SolidColorBrush x:Name="AWShopperSemanticZoomOverlayBackground"
                      Color="#FF25A1DB" />
 
-    <!-- Application Background -->
-    <SolidColorBrush x:Name="ApplicationPageBackgroundThemeBrush"
-                     Color="#FF2C3339" />
-
     <!-- ListView Selection Color -->
     <Color x:Key="ItemSelectionColor">#FFE2742F</Color>
     <SolidColorBrush x:Name="AWShopperItemSelectionColor"
                      Color="{StaticResource ItemSelectionColor}" />
-    <SolidColorBrush x:Key="ListViewItemSelectedBackgroundThemeBrush"
-                     Color="{StaticResource ItemSelectionColor}" />
-    <SolidColorBrush x:Key="ListViewItemSelectedPointerOverBackgroundThemeBrush"
-                     Color="{StaticResource ItemSelectionColor}" />
-    <SolidColorBrush x:Key="ListViewItemSelectedPointerOverBorderThemeBrush"
-                     Color="{StaticResource ItemSelectionColor}" />
+
+    <!-- Application Background -->
+    <SolidColorBrush x:Name="ApplicationPageBackgroundThemeBrush"
+                     Color="#FF2C3339" />
 
     <!-- Styles -->
     <SolidColorBrush x:Name="FormFieldTextBoxBoderThemeBrush"
@@ -49,7 +93,7 @@
         <Setter Property="Background"
                 Value="{StaticResource TextBoxBackgroundThemeBrush}" />
         <Setter Property="BorderBrush"
-                Value="{StaticResource FormFieldTextBoxBoderThemeBrush}" />
+                Value="{StaticResource TextBoxBorderThemeBrush}" />
         <Setter Property="BorderThickness"
                 Value="{StaticResource TextControlBorderThemeThickness}" />
         <Setter Property="FontFamily"
@@ -396,8 +440,6 @@
     </Style>
 
     <!-- Form custom styles -->
-    <SolidColorBrush x:Key="ComboBoxPointerOverBorderThemeBrush"
-                     Color="#70000000" />
     <Style x:Key="FormTitleStyle"
            TargetType="TextBlock">
         <Setter Property="Foreground"
@@ -424,7 +466,7 @@
     <Style x:Key="FormComboStyle"
            TargetType="ComboBox">
         <Setter Property="BorderBrush"
-                Value="{StaticResource FormFieldTextBoxBoderThemeBrush}" />
+                Value="{StaticResource TextBoxBorderThemeBrush}" />
         <Setter Property="Margin"
                 Value="0,0,20,0"></Setter>
         <Setter Property="Height"

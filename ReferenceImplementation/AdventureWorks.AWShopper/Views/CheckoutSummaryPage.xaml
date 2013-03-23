@@ -93,7 +93,7 @@
                            Text="Overview"
                            Grid.Row="0"
                            Grid.Column="0"
-                           Foreground="{StaticResource AWShopperAccentBrush}"
+                           Foreground="{StaticResource AWShopperAccentTextBrush}"
                            Style="{StaticResource GroupHeaderTextStyle}" />
                 <StackPanel x:Name="OverviewPanel"
                             Grid.Row="7"
@@ -199,7 +199,7 @@
                                    TextAlignment="Right"
                                    VerticalAlignment="Center"
                                    FontSize="24"
-                                   Foreground="{StaticResource AWShopperAccentBrush}"
+                                   Foreground="{StaticResource AWShopperAccentTextBrush}"
                                    Margin="0,0,10,0" />
                     </Grid>
                     <Button x:Name="SubmitButton"
@@ -220,7 +220,7 @@
                            Grid.Column="1"
                            MaxWidth="360"
                            TextTrimming="WordEllipsis"
-                           Foreground="{StaticResource AWShopperAccentBrush}"
+                           Foreground="{StaticResource AWShopperAccentTextBrush}"
                            Style="{StaticResource SummarySubheaderTextStyle}" />
                 <ListView x:Name="AddressAndPaymentList"
                           SelectionMode="Single"
@@ -237,7 +237,7 @@
                            Grid.Column="2"
                            TextTrimming="WordEllipsis"
                            MaxWidth="380"
-                           Foreground="{StaticResource AWShopperAccentBrush}"
+                           Foreground="{StaticResource AWShopperAccentTextBrush}"
                            Style="{StaticResource SummarySubheaderTextStyle}" />
                 <ListView x:Name="SelectShippingPlanList"
                           SelectionMode="Single"
@@ -252,7 +252,7 @@
                 <TextBlock x:Name="CartItemsLabel"
                            x:Uid="CartItemsLabel"
                            Text="Cart Items"
-                           Foreground="{StaticResource AWShopperAccentBrush}"
+                           Foreground="{StaticResource AWShopperAccentTextBrush}"
                            Grid.Row="0"
                            Grid.Column="3"
                            TextTrimming="WordEllipsis"
@@ -684,16 +684,18 @@
                             AutomationProperties.Name="Select"
                             Style="{StaticResource ListAppBarButtonStyle}"
                             Visibility="{Binding SelectedCheckoutData, Converter={StaticResource NotNullToVisibleConverter}}"
-                            Command="{Binding SelectCheckoutDataCommand}">
-                    </Button>
+                            Command="{Binding SelectCheckoutDataCommand}"
+                            Loaded="StartLayoutUpdates"
+                            Unloaded="StopLayoutUpdates" />
                     <Button x:Name="EditCheckoutDataAppBarButton"
                             x:Uid="EditCheckoutDataAppBarButton"
                             AutomationProperties.AutomationId="EditCheckoutDataAppBarButton"
                             AutomationProperties.Name="Edit"
                             Style="{StaticResource EditAppBarButtonStyle}"
                             Visibility="{Binding SelectedCheckoutData, Converter={StaticResource NotNullToVisibleConverter}}"
-                            Command="{Binding EditCheckoutDataCommand}">
-                    </Button>
+                            Command="{Binding EditCheckoutDataCommand}"
+                            Loaded="StartLayoutUpdates"
+                            Unloaded="StopLayoutUpdates" />
                 </StackPanel>
             </Grid>
         </AppBar>

@@ -11,27 +11,37 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
 using Microsoft.Practices.StoreApps.Infrastructure;
 using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
+using AdventureWorks.UILogic.Services;
 
 namespace AdventureWorks.UILogic.ViewModels
 {
-    public class ChangeDefaultsFlyoutViewModel : ViewModel, IFlyoutViewModel
+    public class ChangeDefaultsFlyoutViewModel : BindableBase, IFlyoutViewModel
     {
         private readonly ICheckoutDataRepository _checkoutDataRepository;
         private readonly IResourceLoader _resourceLoader;
+        private readonly IAlertMessageService _alertMessageService;
+        private readonly IAccountService _accountService;
         private CheckoutDataViewModel _selectedShippingAddress;
         private CheckoutDataViewModel _selectedBillingAddress;
         private CheckoutDataViewModel _selectedPaymentMethod;
+        private Action _closeFlyout;
+        private Action _goBack;
 
-        public ChangeDefaultsFlyoutViewModel(ICheckoutDataRepository checkoutDataRepository, IResourceLoader resourceLoader)
+        public ChangeDefaultsFlyoutViewModel(ICheckoutDataRepository checkoutDataRepository, IResourceLoader resourceLoader, IAlertMessageService alertMessageService, IAccountService accountService)
         {
             _checkoutDataRepository = checkoutDataRepository;
             _resourceLoader = resourceLoader;
+            _alertMessageService = alertMessageService;
+            _accountService = accountService;
 
+            SaveCommand = DelegateCommand.FromAsyncHandler(SaveAsync);
             GoBackCommand = new DelegateCommand(() => GoBack());
         }
 
@@ -41,89 +51,62 @@ namespace AdventureWorks.UILogic.ViewModels
 
         public IReadOnlyCollection<CheckoutDataViewModel> BillingAddresses { get; private set; }
 
-        public Action CloseFlyout { get; set; }
+        public Action CloseFlyout
+        {
+            get { return _closeFlyout; }
+            set { SetProperty(ref _closeFlyout, value); }
+        }
 
-        public Action GoBack { get; set; }
+        public Action GoBack
+        {
+            get { return _goBack; }
+            set { SetProperty(ref _goBack, value); }
+        }
+
+        public ICommand SaveCommand { get; private set; }
 
         public ICommand GoBackCommand { get; private set; }
 
         public CheckoutDataViewModel SelectedShippingAddress
         {
             get { return _selectedShippingAddress; }
-            set
-            {
-                if (SetProperty(ref _selectedShippingAddress, value))
-                {
-                    if (_selectedShippingAddress != null)
-                    {
-                        _checkoutDataRepository.SetDefaultShippingAddress(_selectedShippingAddress.EntityId);
-                    }
-                    else
-                    {
-                        _checkoutDataRepository.RemoveDefaultShippingAddress();
-                    }
-                }
-            }
+            set { SetProperty(ref _selectedShippingAddress, value); }
         }
 
         public CheckoutDataViewModel SelectedBillingAddress
         {
             get { return _selectedBillingAddress; }
-            set
-            {
-                if (SetProperty(ref _selectedBillingAddress, value))
-                {
-                    if (_selectedBillingAddress != null)
-                    {
-                        _checkoutDataRepository.SetDefaultBillingAddress(_selectedBillingAddress.EntityId);
-                    }
-                    else
-                    {
-                        _checkoutDataRepository.RemoveDefaultBillingAddress();
-                    }
-                }
-            }
+            set { SetProperty(ref _selectedBillingAddress, value); }
         }
 
         public CheckoutDataViewModel SelectedPaymentMethod
         {
             get { return _selectedPaymentMethod; }
-            set
-            {
-                if (SetProperty(ref _selectedPaymentMethod, value))
-                {
-                    if (_selectedPaymentMethod != null)
-                    {
-                        _checkoutDataRepository.SetDefaultPaymentMethod(_selectedPaymentMethod.EntityId);
-                    }
-                    else
-                    {
-                        _checkoutDataRepository.RemoveDefaultPaymentMethod();
-                    }
-                }
-            }
+            set { SetProperty(ref _selectedPaymentMethod, value); }
         }
 
         public async void Open(object parameter, Action successAction)
         {
+            if (await _accountService.VerifyUserAuthenticationAsync() == null) return;
+
             // Populate ShippingAddress collection
-            var shippingAddresses = _checkoutDataRepository.GetAllShippingAddresses().Select(address => CreateCheckoutData(address, Constants.ShippingAddress));
+            var shippingAddresses = (await _checkoutDataRepository.GetAllShippingAddressesAsync()).Select(address => CreateCheckoutData(address, Constants.ShippingAddress));
             ShippingAddresses = new ReadOnlyCollection<CheckoutDataViewModel>(shippingAddresses.ToList());
 
             if (ShippingAddresses != null)
             {
-                var defaultShippingAddress = _checkoutDataRepository.GetDefaultShippingAddress();
+                var defaultShippingAddress = await _checkoutDataRepository.GetDefaultShippingAddressAsync();
                 var selectedShippingAddress = defaultShippingAddress != null ? ShippingAddresses.FirstOrDefault(s => s.EntityId == defaultShippingAddress.Id) : null;
                 SetProperty(ref _selectedShippingAddress, selectedShippingAddress, "SelectedShippingAddress");
             }
 
             // Populate BillingAddress collection
-            var billingAddresses = _checkoutDataRepository.GetAllBillingAddresses().Select(address => CreateCheckoutData(address, Constants.BillingAddress));
+            var billingAddresses = (await _checkoutDataRepository.GetAllBillingAddressesAsync()).Select(address => CreateCheckoutData(address, Constants.BillingAddress));
             BillingAddresses = new ReadOnlyCollection<CheckoutDataViewModel>(billingAddresses.ToList());
 
             if (BillingAddresses != null)
             {
-                var defaultBillingAddress = _checkoutDataRepository.GetDefaultBillingAddress();
+                var defaultBillingAddress = await _checkoutDataRepository.GetDefaultBillingAddressAsync();
                 var selectedBillingAddress = defaultBillingAddress != null ? BillingAddresses.FirstOrDefault(s => s.EntityId == defaultBillingAddress.Id) : null;
                 SetProperty(ref _selectedBillingAddress, selectedBillingAddress, "SelectedBillingAddress");
             }
@@ -140,33 +123,80 @@ namespace AdventureWorks.UILogic.ViewModels
             }
         }
 
+        private async Task SaveAsync()
+        {
+            string errorMessage = string.Empty;
+
+            try
+            {
+                if (_selectedShippingAddress != null)
+                {
+                    await _checkoutDataRepository.SetDefaultShippingAddressAsync(_selectedShippingAddress.EntityId);
+                }
+                else
+                {
+                    await _checkoutDataRepository.RemoveDefaultShippingAddressAsync();
+                }
+
+                if (_selectedBillingAddress != null)
+                {
+                    await _checkoutDataRepository.SetDefaultBillingAddressAsync(_selectedBillingAddress.EntityId);
+                }
+                else
+                {
+                    await _checkoutDataRepository.RemoveDefaultBillingAddressAsync();
+                }
+
+                if (_selectedPaymentMethod != null)
+                {
+                    await _checkoutDataRepository.SetDefaultPaymentMethodAsync(_selectedPaymentMethod.EntityId);
+                }
+                else
+                {
+                    await _checkoutDataRepository.RemoveDefaultPaymentMethodAsync();
+                }
+
+                CloseFlyout();
+            }
+
+            catch (HttpRequestException ex)
+            {
+                errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, ex.Message);
+            }
+
+            if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
+                await _alertMessageService.ShowAsync(errorMessage, _resourceLoader.GetString("ErrorServiceUnreachable"));
+            }
+        }
+
         private CheckoutDataViewModel CreateCheckoutData(Address address, string dataType)
         {
             return new CheckoutDataViewModel()
-                {
-                    EntityId = address.Id,
-                    DataType = dataType,
-                    Title = dataType == Constants.ShippingAddress ? _resourceLoader.GetString("ShippingAddress") : _resourceLoader.GetString("BillingAddress"),
-                    FirstLine = address.StreetAddress,
-                    SecondLine =  string.Format(CultureInfo.CurrentUICulture, "{0}, {1} {2}", address.City, address.State, address.ZipCode),
-                    BottomLine = string.Format(CultureInfo.CurrentUICulture, "{0} {1}", address.FirstName, address.LastName),
-                    LogoUri = dataType == Constants.ShippingAddress ? new Uri(Constants.ShippingAddressLogo, UriKind.Absolute) : new Uri(Constants.BillingAddressLogo, UriKind.Absolute)
-                };
+            {
+                EntityId = address.Id,
+                DataType = dataType,
+                Title = dataType == Constants.ShippingAddress ? _resourceLoader.GetString("ShippingAddress") : _resourceLoader.GetString("BillingAddress"),
+                FirstLine = address.StreetAddress,
+                SecondLine = string.Format(CultureInfo.CurrentUICulture, "{0}, {1} {2}", address.City, address.State, address.ZipCode),
+                BottomLine = string.Format(CultureInfo.CurrentUICulture, "{0} {1}", address.FirstName, address.LastName),
+                LogoUri = dataType == Constants.ShippingAddress ? new Uri(Constants.ShippingAddressLogo, UriKind.Absolute) : new Uri(Constants.BillingAddressLogo, UriKind.Absolute)
+            };
         }
 
         private CheckoutDataViewModel CreateCheckoutData(PaymentMethod paymentMethod)
         {
             return new CheckoutDataViewModel()
-                {
-                    EntityId = paymentMethod.Id,
-                    DataType = Constants.PaymentMethod,
-                    Title = _resourceLoader.GetString("PaymentMethod"),
-                    FirstLine = string.Format(CultureInfo.CurrentUICulture, _resourceLoader.GetString("CardEndingIn"), paymentMethod.CardNumber.Substring(paymentMethod.CardNumber.Length - 4)),
-                    SecondLine = string.Format(CultureInfo.CurrentUICulture, _resourceLoader.GetString("CardExpiringOn"),
-                                                string.Format(CultureInfo.CurrentCulture, "{0}/{1}", paymentMethod.ExpirationMonth, paymentMethod.ExpirationYear)),
-                    BottomLine = paymentMethod.CardholderName,
-                    LogoUri = new Uri(Constants.PaymentMethodLogo, UriKind.Absolute)
-                };
+            {
+                EntityId = paymentMethod.Id,
+                DataType = Constants.PaymentMethod,
+                Title = _resourceLoader.GetString("PaymentMethod"),
+                FirstLine = string.Format(CultureInfo.CurrentUICulture, _resourceLoader.GetString("CardEndingIn"), paymentMethod.CardNumber.Substring(paymentMethod.CardNumber.Length - 4)),
+                SecondLine = string.Format(CultureInfo.CurrentUICulture, _resourceLoader.GetString("CardExpiringOn"),
+                                            string.Format(CultureInfo.CurrentCulture, "{0}/{1}", paymentMethod.ExpirationMonth, paymentMethod.ExpirationYear)),
+                BottomLine = paymentMethod.CardholderName,
+                LogoUri = new Uri(Constants.PaymentMethodLogo, UriKind.Absolute)
+            };
         }
     }
 }

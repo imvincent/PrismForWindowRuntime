@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
 
-  <Identity Name="151bf450-f747-4f73-a5ab-54782e1437fb"
-            Publisher="CN=v-brnoye"
+  <Identity Name="Microsoft.SDKSamples.EventAggregatorQS.CSharp"
+            Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
             Version="1.0.0.0" />
 
   <Properties>
-    <DisplayName>EventAggregatorQuickstart</DisplayName>
-    <PublisherDisplayName>v-brnoye</PublisherDisplayName>
+    <DisplayName>Event Aggregator Quickstart C# sample</DisplayName>
+    <PublisherDisplayName>Microsoft Corporation</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -25,14 +25,14 @@
         Executable="$targetnametoken$.exe"
         EntryPoint="EventAggregatorQuickstart.App">
         <VisualElements
-            DisplayName="EventAggregatorQuickstart"
+            DisplayName="Event Aggregator Quickstart C# sample"
             Logo="Assets\Logo.png"
             SmallLogo="Assets\SmallLogo.png"
-            Description="EventAggregatorQuickstart"
+            Description="Event Aggregator Quickstart C# sample"
             ForegroundText="light"
-            BackgroundColor="#464646">
-            <DefaultTile ShowName="allLogos" />
-            <SplashScreen Image="Assets\SplashScreen.png" />
+            BackgroundColor="#00b2f0">
+            <DefaultTile ShowName="allLogos" ShortName="Event Aggregator Quickstart C# sample" />
+            <SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#00b2f0" />
         </VisualElements>
     </Application>
   </Applications>

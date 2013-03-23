@@ -149,7 +149,7 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 // We always fire the PropertyChanged event because the 
                 // AppBar.IsOpen property doesn't notify when the property is set.
-                // See http://msdn.microsoft.com/en-us/library/windows/apps/windows.ui.xaml.controls.appbar.isopen.aspx
+                // See http://go.microsoft.com/fwlink/?LinkID=288840
                 _isBottomAppBarOpened = value;
                 OnPropertyChanged("IsBottomAppBarOpened");
             }
@@ -179,7 +179,7 @@ namespace AdventureWorks.UILogic.ViewModels
                     ShoppingCartItemViewModels = new ObservableCollection<ShoppingCartItemViewModel>();
                     foreach (var item in _shoppingCart.ShoppingCartItems)
                     {
-                        var shoppingCartItemViewModel = new ShoppingCartItemViewModel(item);
+                        var shoppingCartItemViewModel = new ShoppingCartItemViewModel(item, _resourceLoader);
                         shoppingCartItemViewModel.PropertyChanged += shoppingCartItemViewModel_PropertyChanged;
                         ShoppingCartItemViewModels.Add(shoppingCartItemViewModel);
                     }

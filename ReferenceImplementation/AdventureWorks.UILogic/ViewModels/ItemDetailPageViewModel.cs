@@ -87,19 +87,19 @@ namespace AdventureWorks.UILogic.ViewModels
         public bool IsSelectedProductPinned
         {
             get { return _isSelectedProductPinned; }
-            set { SetProperty(ref _isSelectedProductPinned, value); }
+            private set { SetProperty(ref _isSelectedProductPinned, value); }
         }
 
         public IReadOnlyCollection<ProductViewModel> Items
         {
             get { return _items; }
-            set { SetProperty(ref _items, value); }
+            private set { SetProperty(ref _items, value); }
         }
 
         public string Title
         {
             get { return _title; }
-            set { SetProperty(ref _title, value); }
+            private set { SetProperty(ref _title, value); }
         }
 
         public bool IsBottomAppBarSticky
@@ -115,7 +115,7 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 // We always fire the PropertyChanged event because the 
                 // AppBar.IsOpen property doesn't notify when the property is set.
-                // See http://msdn.microsoft.com/en-us/library/windows/apps/windows.ui.xaml.controls.appbar.isopen.aspx
+                // See http://go.microsoft.com/fwlink/?LinkID=288840
                 _isBottomAppBarOpened = value;
                 OnPropertyChanged("IsBottomAppBarOpened");
             }

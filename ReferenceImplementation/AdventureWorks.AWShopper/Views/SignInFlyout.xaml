@@ -10,8 +10,8 @@
                     d:DesignWidth="364"
                     Infrastructure:ViewModelLocator.AutoWireViewModel="true">
 
-    <Border BorderBrush="{StaticResource AWShopperFlyoutHeaderBackground}"
-            Background="{StaticResource LightBackground}"
+    <Border BorderBrush="{StaticResource AWShopperFlyoutBorderBrush}"
+            Background="{StaticResource FlyoutBackground}"
             BorderThickness="1,0,0,0">
         <Grid VerticalAlignment="Stretch">
 
@@ -42,8 +42,7 @@
                                FontWeight="SemiLight"
                                FontSize="24"
                                Text="Login"
-                               Width="225"
-                               Foreground="White" />
+                               Width="225" />
                     <Image Source="ms-appx:///Assets/SmallLogo.png" />
                 </StackPanel>
             </Grid>
@@ -94,7 +93,6 @@
                                   Margin="0,20,0,0"
                                   IsChecked="{Binding SaveCredentials,Mode=TwoWay}"
                                   AutomationProperties.AutomationId="SaveCredentialsCheckBox"
-                                  AutomationProperties.LabeledBy="{Binding ElementName=SaveCredentialsLabel}"
                                   Style="{StaticResource LightCheckBoxStyle}"
                                   Content="Save Credentials?" />
                         <!-- <snippet310> -->
@@ -102,7 +100,7 @@
                                 Background="{StaticResource AWShopperAccentBrush}"
                                 Content="Submit"
                                 Width="280"
-                                Foreground="White"
+                                Foreground="{StaticResource AWShopperButtonForegroundBrush}"
                                 Margin="0,25,0,0"
                                 Command="{Binding SignInCommand}"
                                 AutomationProperties.AutomationId="SignInSubmitButton"

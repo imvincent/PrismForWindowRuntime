@@ -24,7 +24,6 @@ namespace AdventureWorks.UILogic.Services
         {
             using (var client = new HttpClient())
             {
-                client.AddCurrentCultureHeader();
                 var response = await client.GetAsync(_clientBaseUrl);
                 response.EnsureSuccessStatusCode();
                 var result = await response.Content.ReadAsAsync<ReadOnlyCollection<string>>();

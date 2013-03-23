@@ -30,7 +30,6 @@ namespace AdventureWorks.UILogic.Services
             {
                 using (var client = new HttpClient(handler))
                 {
-                    client.AddCurrentCultureHeader();
 
                     // Ask the server for a password challenge string
                     var requestId = CryptographicBuffer.EncodeToHexString(CryptographicBuffer.GenerateRandom(4));
@@ -67,7 +66,6 @@ namespace AdventureWorks.UILogic.Services
             {
                 using (var client = new HttpClient(handler))
                 {
-                    client.AddCurrentCultureHeader();
                     var serverUri = new Uri(Constants.ServerAddress);
                     handler.CookieContainer.SetCookies(serverUri, serverCookieHeader);
                     var response = await client.GetAsync(_clientBaseUrl + "GetIsValidSession");

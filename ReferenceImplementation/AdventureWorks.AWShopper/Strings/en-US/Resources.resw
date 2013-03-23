@@ -627,4 +627,36 @@
   <data name="LogoutText" xml:space="preserve">
     <value>Logout</value>
   </data>
+  <data name="ExpandBillingAddressButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Billing address</value>
+    <comment>Label for the Billing address button in the Change Defaults flyout</comment>
+  </data>
+  <data name="ExpandPaymentMethodButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Payment method</value>
+    <comment>Label for the Payment method button in the Change Defaults flyout</comment>
+  </data>
+  <data name="ExpandShippingAddressButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Shipping address</value>
+    <comment>Label for the Shipping address button in the Change Defaults flyout</comment>
+  </data>
+  <data name="ContinueShoppingButton.Content" xml:space="preserve">
+    <value>Continue Shopping</value>
+    <comment>Text for the Continue Shopping button for on the Order Confirmation page</comment>
+  </data>
+  <data name="ItemsPurchasedLabel.Text" xml:space="preserve">
+    <value>Items Purchased</value>
+    <comment>Label for the Items Purchased column on the Orders Confirmation page</comment>
+  </data>
+  <data name="OrderConfirmationTitle.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Order Confirmation</value>
+    <comment>Label for the Order Confirmation page</comment>
+  </data>
+  <data name="ShippingPlanLabel.Text" xml:space="preserve">
+    <value>Shipping Plan</value>
+    <comment>Label for shipping plan on the Order Confirmation page</comment>
+  </data>
+  <data name="OrderConfirmationContent" xml:space="preserve">
+    <value>Your order confirmation number is: {0}.</value>
+    <comment>Text for order confirmation message including confirmation number</comment>
+  </data>
 </root>

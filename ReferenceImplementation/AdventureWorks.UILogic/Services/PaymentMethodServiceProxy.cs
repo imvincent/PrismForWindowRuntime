@@ -35,7 +35,6 @@ namespace AdventureWorks.UILogic.Services
             {
                 using (var client = new HttpClient(handler))
                 {
-                    client.AddCurrentCultureHeader();
                     var serverUri = new Uri(Constants.ServerAddress);
                     handler.CookieContainer.SetCookies(serverUri, _accountService.ServerCookieHeader);
                     var response = await client.GetAsync(_clientBaseUrl);
@@ -51,7 +50,6 @@ namespace AdventureWorks.UILogic.Services
             {
                 using (var client = new HttpClient(handler))
                 {
-                    client.AddCurrentCultureHeader();
                     var serverUri = new Uri(Constants.ServerAddress);
                     handler.CookieContainer.SetCookies(serverUri, _accountService.ServerCookieHeader);
                     var response = await client.PostAsync(_clientBaseUrl, paymentMethod, new JsonMediaTypeFormatter());
@@ -66,7 +64,6 @@ namespace AdventureWorks.UILogic.Services
             {
                 using (var client = new HttpClient(handler))
                 {
-                    client.AddCurrentCultureHeader();
                     var serverUri = new Uri(Constants.ServerAddress);
                     handler.CookieContainer.SetCookies(serverUri, _accountService.ServerCookieHeader);
                     var response = await client.PutAsync(_clientBaseUrl + "?defaultPaymentMethodId=" + defaultPaymentMethodId, null);

@@ -18,6 +18,7 @@ namespace AdventureWorks.UILogic.ViewModels
 {
     public class PaymentMethodUserControlViewModel : ViewModel, IPaymentMethodUserControlViewModel
     {
+        private bool _loadDefault;
         private readonly ICheckoutDataRepository _checkoutDataRepository;
         private PaymentMethod _paymentMethod;
 
@@ -54,18 +55,21 @@ namespace AdventureWorks.UILogic.ViewModels
 
             if (navigationMode == NavigationMode.New)
             {
-                var defaultPaymentMethod = await _checkoutDataRepository.GetDefaultPaymentMethodAsync();
-                if (defaultPaymentMethod != null)
+                if (_loadDefault)
                 {
-                    // Update the information and validate the values
-                    PaymentMethod.CardNumber = defaultPaymentMethod.CardNumber;
-                    PaymentMethod.CardVerificationCode = defaultPaymentMethod.CardVerificationCode;
-                    PaymentMethod.CardholderName = defaultPaymentMethod.CardholderName;
-                    PaymentMethod.ExpirationMonth = defaultPaymentMethod.ExpirationMonth;
-                    PaymentMethod.ExpirationYear = defaultPaymentMethod.ExpirationYear;
-                    PaymentMethod.Phone = defaultPaymentMethod.Phone;
+                    var defaultPaymentMethod = await _checkoutDataRepository.GetDefaultPaymentMethodAsync();
+                    if (defaultPaymentMethod != null)
+                    {
+                        // Update the information and validate the values
+                        PaymentMethod.CardNumber = defaultPaymentMethod.CardNumber;
+                        PaymentMethod.CardVerificationCode = defaultPaymentMethod.CardVerificationCode;
+                        PaymentMethod.CardholderName = defaultPaymentMethod.CardholderName;
+                        PaymentMethod.ExpirationMonth = defaultPaymentMethod.ExpirationMonth;
+                        PaymentMethod.ExpirationYear = defaultPaymentMethod.ExpirationYear;
+                        PaymentMethod.Phone = defaultPaymentMethod.Phone;
 
-                    ValidateForm();
+                        ValidateForm();
+                    }
                 }
             }
         }
@@ -89,6 +93,11 @@ namespace AdventureWorks.UILogic.ViewModels
         public bool ValidateForm()
         {
             return _paymentMethod.ValidateProperties();
+        }
+
+        public void SetLoadDefault(bool loadDefault)
+        {
+            _loadDefault = loadDefault;
         }
     }
 }

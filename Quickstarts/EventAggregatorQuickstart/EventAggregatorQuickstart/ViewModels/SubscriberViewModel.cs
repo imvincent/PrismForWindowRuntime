@@ -30,7 +30,7 @@ namespace EventAggregatorQuickstart.ViewModels
             // Subscribe indicating this handler should always be called on the UI Thread
             _eventAggregator.GetEvent<ShoppingCartChangedEvent>().Subscribe(HandleShoppingCartUpdate, ThreadOption.UIThread);
             // Subscribe indicating that this handler should always be called on UI thread, but only if more than 10 items in cart
-            _eventAggregator.GetEvent<ShoppingCartChangedEvent>().Subscribe(HandleShoppingCartUpdateFiltered, ThreadOption.UIThread, false, sc => sc.Count > 10);
+            _eventAggregator.GetEvent<ShoppingCartChangedEvent>().Subscribe(HandleShoppingCartUpdateFiltered, ThreadOption.UIThread, false, IsCartCountPossiblyTooHigh);
             // </snippet3103>
         }
 
@@ -67,13 +67,20 @@ namespace EventAggregatorQuickstart.ViewModels
             // Subscribe with defaults, pointing to subscriber method that pops a message box when the event fires
             _eventAggregator.GetEvent<ShoppingCartChangedEvent>().Subscribe(_subscriber.HandleShoppingCartChanged);
         }
+        // </snippet3104>
 
+        // <snippet3107>
         private void GCBackgroundSubscriber()
         {
             // Release and GC, showing that we don't have to unsubscribe to keep the subscriber from being garbage collected
             _subscriber = null;
             GC.Collect();
         }
-        // </snippet3104>
+        // </snippet3107>
+
+        private bool IsCartCountPossiblyTooHigh(ShoppingCart shoppingCart)
+        {
+            return (shoppingCart.Count > 10);
+        }
     }
 }

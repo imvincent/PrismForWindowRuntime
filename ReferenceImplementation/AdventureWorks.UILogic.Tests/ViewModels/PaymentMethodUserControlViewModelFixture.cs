@@ -17,27 +17,30 @@ using Windows.UI.Xaml.Navigation;
 namespace AdventureWorks.UILogic.Tests.ViewModels
 {
     [TestClass]
-    public class BillingAddressUserControlViewModelFixture
+    public class PaymentMethodUserControlViewModelFixture
     {
         [TestMethod]
         public void OnNavigateTo_LoadsDefault_IfTryLoadDefaultTrue()
         {
-            var defaultAddress = new Address
+            var defaultPaymentMethod = new PaymentMethod
             {
-                FirstName = "FirstName"
+                CardholderName = "CardHolderName",
+                CardNumber = "32323232",
+                CardVerificationCode = "222",
+                Phone = "22224232",
+                ExpirationMonth = "12",
+                ExpirationYear = "2016"
             };
             var checkoutDataRepository = new MockCheckoutDataRepository();
-            checkoutDataRepository.GetDefaultBillingAddressAsyncDelegate = () => Task.FromResult(defaultAddress);
-            var locationService = new MockLocationService();
-            var resourceLoader = new MockResourceLoader();
-            var target = new BillingAddressUserControlViewModel(checkoutDataRepository, locationService, resourceLoader, null);
+            checkoutDataRepository.GetDefaultPaymentMethodAsyncDelegate = () => Task.FromResult(defaultPaymentMethod);
+            var target = new PaymentMethodUserControlViewModel(checkoutDataRepository);
 
             target.OnNavigatedTo(null, NavigationMode.New, new Dictionary<string, object>());
-            Assert.IsNull(target.Address.FirstName);
+            Assert.IsNull(target.PaymentMethod.CardholderName);
 
             target.SetLoadDefault(true);
             target.OnNavigatedTo(null, NavigationMode.New, new Dictionary<string, object>());
-            Assert.AreEqual("FirstName", target.Address.FirstName);
+            Assert.AreEqual("CardHolderName", target.PaymentMethod.CardholderName);
         }
     }
 }

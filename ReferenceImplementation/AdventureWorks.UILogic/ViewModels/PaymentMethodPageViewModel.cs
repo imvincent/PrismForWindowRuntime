@@ -46,10 +46,10 @@ namespace AdventureWorks.UILogic.ViewModels
         public string HeaderLabel
         {
             get { return _headerLabel; }
-            set { SetProperty(ref _headerLabel, value); }
+            private set { SetProperty(ref _headerLabel, value); }
         }
 
-        public ICommand SaveCommand { get; set; }
+        public ICommand SaveCommand { get; private set; }
 
         public ICommand GoBackCommand { get; private set; }
 

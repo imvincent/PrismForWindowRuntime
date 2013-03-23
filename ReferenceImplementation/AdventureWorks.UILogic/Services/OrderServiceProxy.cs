@@ -26,7 +26,6 @@ namespace AdventureWorks.UILogic.Services
             {
                 using (var orderClient = new HttpClient(handler))
                 {
-                    orderClient.AddCurrentCultureHeader();
                     Uri serverUri = new Uri(Constants.ServerAddress);
                     handler.CookieContainer.SetCookies(serverUri, serverCookieHeader);
                     orderClient.DefaultRequestHeaders.Add("Accept", "application/json");
@@ -34,8 +33,8 @@ namespace AdventureWorks.UILogic.Services
                     // In order to meet the Windows 8 app certification requirements, 
                     // you cannot send Credit Card information to a Service in the clear.                    
                     // The payment processing must meet the current PCI Data Security Standard (PCI DSS).
-                    // See http://msdn.microsoft.com/en-us/library/windows/apps/hh694083.aspx
-                    // and https://www.pcisecuritystandards.org/security_standards/documents.php?agreements=pcidss&association=pcidss
+                    // See http://go.microsoft.com/fwlink/?LinkID=288837
+                    // and http://go.microsoft.com/fwlink/?LinkID=288839
                     // for more information.
 
                     // Replace sensitive information with dummy values
@@ -72,7 +71,6 @@ namespace AdventureWorks.UILogic.Services
             {
                 using (var orderClient = new HttpClient(handler))
                 {
-                    orderClient.AddCurrentCultureHeader();
                     Uri serverUri = new Uri(Constants.ServerAddress);
                     handler.CookieContainer.SetCookies(serverUri, serverCookieHeader);
                     orderClient.DefaultRequestHeaders.Add("Accept", "application/json");
@@ -80,8 +78,8 @@ namespace AdventureWorks.UILogic.Services
                     // In order to meet the Windows 8 app certification requirements, 
                     // you cannot send Credit Card information to a Service in the clear.                    
                     // The payment processing must meet the current PCI Data Security Standard (PCI DSS).
-                    // See http://msdn.microsoft.com/en-us/library/windows/apps/hh694083.aspx
-                    // and https://www.pcisecuritystandards.org/security_standards/documents.php?agreements=pcidss&association=pcidss
+                    // See http://go.microsoft.com/fwlink/?LinkID=288837
+                    // and http://go.microsoft.com/fwlink/?LinkID=288839
                     // for more information.
 
                     // Replace sensitive information with dummy values

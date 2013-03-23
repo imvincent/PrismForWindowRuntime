@@ -83,9 +83,9 @@
                 </views:ShoppingCartTabUserControl.RenderTransform>
             </views:ShoppingCartTabUserControl>
         </Grid>
-
+        <ProgressRing Grid.Row="1" IsActive="{Binding LoadingData}" Height="100" Width="100"></ProgressRing>
         <SemanticZoom Grid.Row="1"
-                      x:Name="semanticZoom">
+                      x:Name="semanticZoom" Visibility="{Binding LoadingData, Converter={StaticResource BooleanNegationToVisibilityConverter}}">
             <!-- <snippet604> -->
             <SemanticZoom.ZoomedOutView>
                 <GridView Padding="120,0,0,0"
@@ -170,8 +170,8 @@
                         <GroupStyle>
                             <GroupStyle.HeaderTemplate>
                                 <DataTemplate>
-                                    <Button AutomationProperties.Name="Group Title"
-                                            Foreground="{StaticResource AWShopperAccentBrush}"
+                                    <Button AutomationProperties.Name="{Binding Title}"
+                                            Foreground="{StaticResource AWShopperAccentTextBrush}"
                                             Style="{StaticResource TextPrimaryButtonStyle}"
                                             Command="{Binding CategoryNavigationCommand}"
                                             Margin="5,0,0,10">
@@ -219,7 +219,7 @@
                     <GroupStyle.HeaderTemplate>
                         <DataTemplate>
                             <Button AutomationProperties.Name="Group Title"
-                                    Foreground="{StaticResource AWShopperAccentBrush}"
+                                    Foreground="{StaticResource AWShopperAccentTextBrush}"
                                     Style="{StaticResource TextPrimaryButtonStyle}"
                                     Command="{Binding CategoryNavigationCommand}"
                                     Margin="10,10,0,10">
@@ -250,7 +250,7 @@
                 <!-- <snippet405> -->
                 <VisualState x:Name="FullScreenPortrait">
                     <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemGridView"
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemsGridView"
                                                        Storyboard.TargetProperty="Padding">
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="96,0,10,56" />

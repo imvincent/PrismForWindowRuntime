@@ -83,8 +83,14 @@ namespace AdventureWorks.WebServices.Controllers
             {
                 // This is where you would add custom business logic validation (check stock, approve transaction, etc)
                 // for instance, validate the transaction before performing the purchase
-                var result = order.PaymentMethod.CardNumber != "22222" ? "APPROVED" : string.Format(CultureInfo.CurrentCulture, "Invalid Payment Method. Reason: {0}", "DECLINED_CONTACT_YOUR_BANK");
 
+                if (order.ShoppingCart.ShoppingCartItems.Count < 1)
+                {
+                    ModelState.AddModelError("order.ShoppingCart", Resources.InvalidShoppingCart);
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
+
+                var result = order.PaymentMethod.CardNumber != "22222" ? "APPROVED" : string.Format(CultureInfo.CurrentCulture, "Invalid Payment Method. Reason: {0}", "DECLINED_CONTACT_YOUR_BANK");
                 if (result == "APPROVED")
                 {
                     // This is where you would process the order. It is omitted for simplicity of the back end service.

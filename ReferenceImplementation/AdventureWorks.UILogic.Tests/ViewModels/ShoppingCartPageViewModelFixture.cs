@@ -195,11 +195,11 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             eventAggregator.GetEventDelegate = type => new MockShoppingCartUpdatedEvent();
             var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, null, null, null, null, null, null, eventAggregator);
 
-            target.SelectedItem = new ShoppingCartItemViewModel(new ShoppingCartItem(){ Quantity = 2, Currency = "USD", Product = new Product(), });
+            target.SelectedItem = new ShoppingCartItemViewModel(new ShoppingCartItem(){ Quantity = 2, Currency = "USD", Product = new Product() }, null);
 
             Assert.IsTrue(target.DecrementCountCommand.CanExecute());
 
-            target.SelectedItem = new ShoppingCartItemViewModel(new ShoppingCartItem() { Quantity = 1, Currency = "USD", Product = new Product() });
+            target.SelectedItem = new ShoppingCartItemViewModel(new ShoppingCartItem() { Quantity = 1, Currency = "USD", Product = new Product() }, null);
 
             Assert.IsFalse(target.DecrementCountCommand.CanExecute());
         }

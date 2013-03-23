@@ -94,10 +94,10 @@ namespace AdventureWorks.UILogic.ViewModels
         public int ItemCount
         {
             get { return _itemCount; }
-            set { SetProperty(ref _itemCount, value); }
+            private set { SetProperty(ref _itemCount, value); }
         }
 
-        public DelegateCommand ShoppingCartTabCommand { get; set; }
+        public DelegateCommand ShoppingCartTabCommand { get; private set; }
 
         private void NavigateToShoppingCartPage()
         {

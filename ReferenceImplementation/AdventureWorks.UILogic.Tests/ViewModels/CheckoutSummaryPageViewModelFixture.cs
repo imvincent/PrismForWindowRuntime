@@ -24,11 +24,22 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
     {
 
         [TestMethod]
-        public async Task SubmitValidOrder_CallsSuccessDialog()
+        public async Task SubmitValidOrder_NavigatesToOrderConfirmation()
         {
-            bool successDialogCalled = false;
-            bool errorDialogCalled = false;
+            bool navigateCalled = false;
+            bool clearHistoryCalled = false;
+            bool clearCartCalled = false;
             var navigationService = new MockNavigationService();
+            navigationService.NavigateDelegate = (s, o) =>
+                                                     {
+                                                         Assert.AreEqual("OrderConfirmation", s);
+                                                         navigateCalled = true;
+                                                         return true;
+                                                     };
+            navigationService.ClearHistoryDelegate = () =>
+                                                         {
+                                                             clearHistoryCalled = true;
+                                                         };
             var accountService = new MockAccountService()
                 {
                     VerifyUserAuthenticationAsyncDelegate = () => Task.FromResult<UserInfo>(new UserInfo())
@@ -42,21 +53,18 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                 {
                     GetStringDelegate = (key) => key
                 };
-            var alertService = new MockAlertMessageService()
-                {
-                    ShowAsyncWithCommandsDelegate = (dialogTitle, dialogMessage, dialogCommands) =>
-                        {
-                            successDialogCalled = dialogTitle.ToLower().Contains("purchased");
-                            errorDialogCalled = !successDialogCalled;
-                            return Task.FromResult(successDialogCalled);
-        }
-                };
-
-            var target = new CheckoutSummaryPageViewModel(navigationService, orderService, null, null, null, null, accountService, null, resourcesService, alertService);
+            var shoppingCartRepository = new MockShoppingCartRepository();
+            shoppingCartRepository.ClearCartAsyncDelegate = () =>
+                                                                {
+                                                                    clearCartCalled = true;
+                                                                    return Task.Delay(0);
+                                                                };
+            var target = new CheckoutSummaryPageViewModel(navigationService, orderService, null, null, null, shoppingCartRepository, accountService, null, resourcesService, null);
             await target.SubmitCommand.Execute();
 
-            Assert.IsTrue(successDialogCalled);
-            Assert.IsFalse(errorDialogCalled);
+            Assert.IsTrue(navigateCalled);
+            Assert.IsTrue(clearHistoryCalled);
+            Assert.IsTrue(clearCartCalled);
         }
 
         [TestMethod]
@@ -182,9 +190,12 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             var orderRepository = new MockOrderRepository() { CurrentOrder = order};
             var shoppingCartRepository = new MockShoppingCartRepository();
             shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult(order.ShoppingCart);
-
+            var checkoutDataRepository = new MockCheckoutDataRepository();
+            checkoutDataRepository.GetShippingAddressAsyncDelegate = s => Task.FromResult(new Address());
+            checkoutDataRepository.GetBillingAddressAsyncDelegate = s => Task.FromResult(new Address());
+            checkoutDataRepository.GetPaymentMethodDelegate = s => Task.FromResult(new PaymentMethod { CardNumber = "1234" });
             var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), new MockOrderService(), orderRepository, shippingMethodService,
-                                                          null, shoppingCartRepository,
+                                                          checkoutDataRepository, shoppingCartRepository,
                                                           new MockAccountService(), new MockFlyoutService(), new MockResourceLoader(), null);
 
             target.OnNavigatedTo(null, NavigationMode.New, null);
@@ -195,98 +206,57 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
         }
 
         [TestMethod]
-        public void EditCheckoutData_Calls_Proper_Flyout()
+        public void EditCheckoutData_NavigatesToProperPage()
         {
-            string requestedFlyoutName = string.Empty;
-            var flyoutService = new MockFlyoutService() 
+            string requestedPageName = string.Empty;
+            var navigationService = new MockNavigationService() 
                 { 
-                    ShowFlyoutDelegate = (flyoutName, a, b) => Assert.IsTrue(flyoutName == requestedFlyoutName) 
+                    NavigateDelegate = (pageName, navParameter) =>
+                                           {
+                                               Assert.IsTrue(pageName == requestedPageName);
+                                               return true;
+                                           }
                 };
 
-            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), null, null, null, null, null, null, flyoutService, null, null);
+            var target = new CheckoutSummaryPageViewModel(navigationService, null, null, null, null, null, null, null, null, null);
 
-            requestedFlyoutName = "ShippingAddress";
+            requestedPageName = "ShippingAddress";
             target.SelectedCheckoutData = new CheckoutDataViewModel() { DataType = Constants.ShippingAddress };
             target.EditCheckoutDataCommand.Execute().Wait();
 
-            requestedFlyoutName = "BillingAddress";
+            requestedPageName = "BillingAddress";
             target.SelectedCheckoutData = new CheckoutDataViewModel { DataType = Constants.BillingAddress };
             target.EditCheckoutDataCommand.Execute().Wait();
 
-            requestedFlyoutName = "PaymentMethod";
+            requestedPageName = "PaymentMethod";
             target.SelectedCheckoutData = new CheckoutDataViewModel { DataType = Constants.PaymentMethod };
             target.EditCheckoutDataCommand.Execute().Wait();
         }
 
         [TestMethod]
-        public void EditCheckoutData_Updates_Order()
+        public void AddCheckoutData_NavigatesToProperPage()
         {
-            var shippingMethods = new List<ShippingMethod>() { new ShippingMethod() { Id = 1, Cost = 0 } };
-            var shoppingCartItems = new List<ShoppingCartItem>() { new ShoppingCartItem() { Quantity = 1, Currency = "USD", Product = new Product() } };
-            var order = new Order()
-                {
-                    ShoppingCart = new ShoppingCart(shoppingCartItems) { Currency = "USD", FullPrice = 100 },
-                    ShippingAddress = new Address(),
-                    BillingAddress = new Address(),
-                    PaymentMethod = new PaymentMethod() { Id = "1", CardNumber = "1234" },
-                    ShippingMethod = shippingMethods.First()
-                };
-            var shippingMethodService = new MockShippingMethodService()
-                {
-                    GetShippingMethodsAsyncDelegate = () => Task.FromResult<IEnumerable<ShippingMethod>>(shippingMethods)
-                };
-            var flyoutService = new MockFlyoutService()
-                {
-                    ShowFlyoutDelegate = (flyoutName, param, success) =>
-                        { 
-                            // Call success
-                            success.Invoke();
-                        }
-                };
-            var orderRepository = new MockOrderRepository() { CurrentOrder = order };
-            var shoppingCartRepository = new MockShoppingCartRepository()
-                {
-                    GetShoppingCartAsyncDelegate = () => Task.FromResult(order.ShoppingCart)
-                };
-            var checkoutDataRepository = new MockCheckoutDataRepository
-                {
-                    GetPaymentMethodDelegate = (id) => Task.FromResult(new PaymentMethod() { Id = id, CardNumber = "5678" })
-                };
-
-            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), new MockOrderService(), orderRepository, shippingMethodService,
-                                                          checkoutDataRepository, shoppingCartRepository, new MockAccountService(), flyoutService, new MockResourceLoader(), null);
-
-            target.OnNavigatedTo(null, NavigationMode.New, null);
-            target.SelectedCheckoutData = target.CheckoutDataViewModels[2]; // payment method
-            target.EditCheckoutDataCommand.Execute().Wait();
-
-            // Check if order information has changed
-            Assert.IsTrue(order.PaymentMethod.CardNumber == "5678");
-        }
-
-        [TestMethod]
-        public void AddCheckoutData_Calls_Proper_Flyout()
-        {
-            string requestedFlyoutName = string.Empty;
-            var MockFlyoutService = new MockFlyoutService()
+            string requestedPageName = string.Empty;
+            var navigationService= new MockNavigationService()
             {
-                ShowFlyoutDelegate = (flyoutName, action, b) =>
+                NavigateDelegate = (pageName, navParam) =>
                 {
-                    Assert.IsTrue(flyoutName == requestedFlyoutName);
+                    Assert.IsTrue(pageName == requestedPageName);
+                    return true;
                 }
             };
 
-            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), null, null, null, null, null, null, MockFlyoutService, null, null);
+            var target = new CheckoutSummaryPageViewModel(navigationService, null, null, null, null, null, null, null, null, null);
 
-            requestedFlyoutName = "ShippingAddress";
+            requestedPageName = "ShippingAddress";
             target.SelectedCheckoutData = new CheckoutDataViewModel() { DataType = Constants.ShippingAddress };
             target.AddCheckoutDataCommand.Execute().Wait();
 
-            requestedFlyoutName = "BillingAddress";
+            requestedPageName = "BillingAddress";
             target.SelectedCheckoutData = new CheckoutDataViewModel() { DataType = Constants.BillingAddress };
             target.AddCheckoutDataCommand.Execute().Wait();
 
-            requestedFlyoutName = "PaymentMethod";
+            requestedPageName = "PaymentMethod";
             target.SelectedCheckoutData = new CheckoutDataViewModel() { DataType = Constants.PaymentMethod };
             target.AddCheckoutDataCommand.Execute().Wait();
         }

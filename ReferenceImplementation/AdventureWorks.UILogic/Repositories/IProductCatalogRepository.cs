@@ -25,5 +25,7 @@ namespace AdventureWorks.UILogic.Repositories
         Task<Category> GetCategoryAsync(int categoryId);
 
         Task<Product> GetProductAsync(string productNumber);
+
+        string GetCategoryName(int parentId);
     }
 }

@@ -58,6 +58,11 @@ namespace AdventureWorks.UILogic.Tests.Mocks
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+        
+        public void SetLoadDefault(bool loadDefault)
+        {
+            throw new NotImplementedException();
+        }
 
         public Task PopulateStatesAsync()
         {

@@ -17,20 +17,20 @@ using Windows.UI.Xaml.Navigation;
 namespace AdventureWorks.UILogic.Tests.ViewModels
 {
     [TestClass]
-    public class BillingAddressUserControlViewModelFixture
+    public class ShippingAddressUserControlViewModelFixture
     {
         [TestMethod]
         public void OnNavigateTo_LoadsDefault_IfTryLoadDefaultTrue()
         {
             var defaultAddress = new Address
-            {
-                FirstName = "FirstName"
-            };
+                                     {
+                                         FirstName = "FirstName"
+                                     };
             var checkoutDataRepository = new MockCheckoutDataRepository();
-            checkoutDataRepository.GetDefaultBillingAddressAsyncDelegate = () => Task.FromResult(defaultAddress);
+            checkoutDataRepository.GetDefaultShippingAddressAsyncDelegate = () => Task.FromResult(defaultAddress);
             var locationService = new MockLocationService();
             var resourceLoader = new MockResourceLoader();
-            var target = new BillingAddressUserControlViewModel(checkoutDataRepository, locationService, resourceLoader, null);
+            var target = new ShippingAddressUserControlViewModel(checkoutDataRepository, locationService, resourceLoader, null);
 
             target.OnNavigatedTo(null, NavigationMode.New, new Dictionary<string, object>());
             Assert.IsNull(target.Address.FirstName);

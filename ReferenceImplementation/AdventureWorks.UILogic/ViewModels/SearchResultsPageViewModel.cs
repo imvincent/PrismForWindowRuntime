@@ -47,7 +47,7 @@ namespace AdventureWorks.UILogic.ViewModels
         }
 
         [RestorableState]
-        public static string PreviousSearchTerm { get; set; }
+        public static string PreviousSearchTerm { get; private set; }
 
         [RestorableState]
         public static ReadOnlyCollection<Product> PreviousResults { get; private set; }
@@ -55,13 +55,13 @@ namespace AdventureWorks.UILogic.ViewModels
         public string QueryText
         {
             get { return _queryString; }
-            set { SetProperty(ref this._queryString, value); }
+            private set { SetProperty(ref this._queryString, value); }
         }
 
         public string SearchTerm
         {
             get { return _searchTerm; }
-            set { SetProperty(ref this._searchTerm, value); }
+            private set { SetProperty(ref this._searchTerm, value); }
         }
 
         public ReadOnlyCollection<ProductViewModel> Results
@@ -74,13 +74,13 @@ namespace AdventureWorks.UILogic.ViewModels
         public int TotalCount
         {
             get { return _totalCount; }
-            set { SetProperty(ref _totalCount, value); }
+            private set { SetProperty(ref _totalCount, value); }
         }
 
         public bool NoResults
         {
             get { return _noResults; }
-            set { SetProperty(ref _noResults, value); }
+            private set { SetProperty(ref _noResults, value); }
         }
 
         public Action<object> ProductNavigationAction { get; private set; }

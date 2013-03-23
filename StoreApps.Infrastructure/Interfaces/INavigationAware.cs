@@ -11,7 +11,6 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Microsoft.Practices.StoreApps.Infrastructure.Interfaces
 {
-    // <snippet400>
     /// <summary>
     /// The INavigationAware interface should be used for viewmodels that required persisting and loading state due to suspend/resume events.
     /// The Microsoft.Practices.StoreApps.Infrastructure.ViewModel base class implements this interface, thereofore every viewModel that inherits from it
@@ -34,5 +33,4 @@ namespace Microsoft.Practices.StoreApps.Infrastructure.Interfaces
         /// <param name="suspending">if set to <c>true</c> you are navigating away of this viewmodel due to a suspension event.</param>
         void OnNavigatedFrom(Dictionary<string, object> viewModelState, bool suspending);
     }
-    // </snippet400>
 }

@@ -25,6 +25,7 @@ namespace AdventureWorks.UILogic.ViewModels
     public class ShippingAddressUserControlViewModel : ViewModel, IShippingAddressUserControlViewModel
     {
         private Address _address;
+        private bool _loadDefault;
         private IReadOnlyCollection<ComboBoxItemValue> _states;
         private readonly ICheckoutDataRepository _checkoutDataRepository;
         private readonly ILocationService _locationService;
@@ -51,7 +52,7 @@ namespace AdventureWorks.UILogic.ViewModels
         public IReadOnlyCollection<ComboBoxItemValue> States
         {
             get { return _states; }
-            set { SetProperty(ref _states, value); }
+            private set { SetProperty(ref _states, value); }
         }
 
         public override async void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState)
@@ -77,21 +78,29 @@ namespace AdventureWorks.UILogic.ViewModels
 
             if (navigationMode == NavigationMode.New)
             {
-                var defaultAddress = await _checkoutDataRepository.GetDefaultShippingAddressAsync();
-                if (defaultAddress != null)
+                var addressId = navigationParameter as string;
+                if (addressId != null)
                 {
-                    // Update the information and validate the values
-                    Address.FirstName = defaultAddress.FirstName;
-                    Address.MiddleInitial = defaultAddress.MiddleInitial;
-                    Address.LastName = defaultAddress.LastName;
-                    Address.StreetAddress = defaultAddress.StreetAddress;
-                    Address.OptionalAddress = defaultAddress.OptionalAddress;
-                    Address.City = defaultAddress.City;
-                    Address.State = defaultAddress.State;
-                    Address.ZipCode = defaultAddress.ZipCode;
-                    Address.Phone = defaultAddress.Phone;
+                    Address = await _checkoutDataRepository.GetShippingAddressAsync(addressId);
+                    return;
+                }
 
-                    ValidateForm();
+                if (_loadDefault)
+                {
+                    var defaultAddress = await _checkoutDataRepository.GetDefaultShippingAddressAsync();
+                    if (defaultAddress != null)
+                    {
+                        // Update the information and validate the values
+                        Address.FirstName = defaultAddress.FirstName;
+                        Address.MiddleInitial = defaultAddress.MiddleInitial;
+                        Address.LastName = defaultAddress.LastName;
+                        Address.StreetAddress = defaultAddress.StreetAddress;
+                        Address.OptionalAddress = defaultAddress.OptionalAddress;
+                        Address.City = defaultAddress.City;
+                        Address.State = defaultAddress.State;
+                        Address.ZipCode = defaultAddress.ZipCode;
+                        Address.Phone = defaultAddress.Phone;
+                    }
                 }
             }
         }
@@ -134,6 +143,11 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 await _alertMessageService.ShowAsync(errorMessage, _resourceLoader.GetString("ErrorServiceUnreachable"));
             }
+        }
+
+        public void SetLoadDefault(bool loadDefault)
+        {
+            _loadDefault = loadDefault;
         }
 
         public bool ValidateForm()
