@@ -35,12 +35,20 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                 ShoppingCart shoppingCart = new ShoppingCart(new ObservableCollection<ShoppingCartItem>(shoppingCartItems)) { Currency = "USD" };
                 return Task.FromResult(shoppingCart);
             };
+
+            bool signInUserControlOnNavigatedToCalled = false;
+            var signInUserControlViewModel = new MockSignInUserControlViewModel()
+                {
+                    OnNavigatedToDelegate = (a, b, c) => signInUserControlOnNavigatedToCalled = true
+                };
+
             var eventAggregator = new MockEventAggregator();
             eventAggregator.GetEventDelegate = type => new MockShoppingCartUpdatedEvent();
 
-            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, new MockAccountService(), null, null, null, null, null, eventAggregator);
+            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, new MockAccountService(), signInUserControlViewModel, null, null, null, null, eventAggregator);
             target.OnNavigatedTo(null, NavigationMode.New, null);
 
+            Assert.IsTrue(signInUserControlOnNavigatedToCalled);
             Assert.AreEqual("$200.00", target.FullPrice);
             Assert.AreEqual("$100.00", target.TotalDiscount);
             Assert.AreEqual(1, target.ShoppingCartItemViewModels.Count);
@@ -63,11 +71,19 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
 
                 return Task.FromResult(shoppingCart);
             };
+
+            bool signInUserControlOnNavigatedToCalled = false;
+            var signInUserControlViewModel = new MockSignInUserControlViewModel()
+                {
+                    OnNavigatedToDelegate = (a, b, c) => signInUserControlOnNavigatedToCalled = true
+                };
+
             var eventAggregator = new MockEventAggregator();
             eventAggregator.GetEventDelegate = type => new MockShoppingCartUpdatedEvent();
-            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, new MockAccountService(), null, null, null, null, null, eventAggregator);
+            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, new MockAccountService(), signInUserControlViewModel, null, null, null, null, eventAggregator);
             target.OnNavigatedTo(null, NavigationMode.New, null);
 
+            Assert.IsTrue(signInUserControlOnNavigatedToCalled);
             Assert.AreEqual("$200.00", target.FullPrice);
             Assert.AreEqual("$100.00", target.TotalDiscount);
             Assert.AreEqual(2, target.ShoppingCartItemViewModels.Count);
@@ -84,10 +100,15 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                 ShoppingCart shoppingCart = new ShoppingCart(new ObservableCollection<ShoppingCartItem>()) { Currency = "USD"};
                 return Task.FromResult(shoppingCart);
             };
+            bool signInUserControlOnNavigatedToCalled = false;
+            var signInUserControlViewModel = new MockSignInUserControlViewModel()
+            {
+                OnNavigatedToDelegate = (a, b, c) => signInUserControlOnNavigatedToCalled = true
+            };
             var eventAggregator = new MockEventAggregator();
             var shoppingCartUpdatedEvent = new ShoppingCartUpdatedEvent();
             eventAggregator.GetEventDelegate = type => shoppingCartUpdatedEvent;
-            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, accountService, null, null, null, null, null, eventAggregator);
+            var target = new ShoppingCartPageViewModel(shoppingCartRepository, navigationService, accountService, signInUserControlViewModel, null, null, null, null, eventAggregator);
             target.OnNavigatedTo(null, NavigationMode.New, null);  
 
             Assert.AreEqual("$0.00", target.FullPrice);
@@ -104,8 +125,8 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
 
             shoppingCartUpdatedEvent.Publish(null);
 
+            Assert.IsTrue(signInUserControlOnNavigatedToCalled);
             Assert.AreEqual("$200.00", target.FullPrice);
-
         }
 
         [TestMethod]
@@ -114,9 +135,11 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             var shoppingCartRepository = new MockShoppingCartRepository();
             shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult<ShoppingCart>(null);
             var eventAggregator = new MockEventAggregator();
+            bool signInUserControlOnNavigatedToCalled = false;
+            var signInUserControlViewModel = new MockSignInUserControlViewModel() { OnNavigatedToDelegate = (a, b, c) => Task.Delay(0) };
             eventAggregator.GetEventDelegate = type => new MockShoppingCartUpdatedEvent();
             var target = new ShoppingCartPageViewModel(shoppingCartRepository, new MockNavigationService(),
-                                                       new MockAccountService(), new MockFlyoutService(), null, null, null, null, eventAggregator);
+                                                       new MockAccountService(), signInUserControlViewModel, null, null, null, null, eventAggregator);
 
             target.OnNavigatedTo(null, NavigationMode.New, null);
 
@@ -128,17 +151,17 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
         [TestMethod]
         public async Task Checkout_WhenAnonymous_ShowsSignInFlyout()
         {
-            var showFlyoutCalled = false;
+            var modalCalled = false;
             var accountService = new MockAccountService
                 {
                     VerifyUserAuthenticationAsyncDelegate = () => Task.FromResult<UserInfo>(null)
                 };
-            var flyoutService = new MockFlyoutService
+            var signInUserControlViewModel = new MockSignInUserControlViewModel
                 {
-                    ShowFlyoutDelegate = (s, o, arg3) =>
+                    OpenDelegate = (s) =>
                         {
-                            showFlyoutCalled = true;
-                            Assert.AreEqual("SignIn", s);
+                            modalCalled = true;
+                            Assert.IsNotNull(s);
                         }
                 };
             var checkoutDataRepository = new MockCheckoutDataRepository()
@@ -151,11 +174,11 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                 {
                     GetEventDelegate = type => new MockShoppingCartUpdatedEvent()
                 };
-            var target = new ShoppingCartPageViewModel(null, new MockNavigationService(), accountService, flyoutService, null, null, checkoutDataRepository, null, eventAggregator);
+            var target = new ShoppingCartPageViewModel(null, new MockNavigationService(), accountService, signInUserControlViewModel, null, null, checkoutDataRepository, null, eventAggregator);
 
             await target.CheckoutCommand.Execute();
 
-            Assert.IsTrue(showFlyoutCalled);
+            Assert.IsTrue(modalCalled);
         }
 
         [TestMethod]

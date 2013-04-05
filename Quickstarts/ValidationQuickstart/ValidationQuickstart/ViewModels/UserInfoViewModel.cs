@@ -15,6 +15,8 @@ using ValidationQuickStart.Models;
 
 namespace ValidationQuickStart.ViewModels
 {
+    //This QuickStart is documented at http://go.microsoft.com/fwlink/?LinkID=288827&clcid=0x409
+
     public class UserInfoViewModel : ViewModel
     {
         private UserInfo _userInfo;

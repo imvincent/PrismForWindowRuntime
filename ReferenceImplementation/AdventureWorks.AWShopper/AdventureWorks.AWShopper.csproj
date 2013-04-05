@@ -173,6 +173,9 @@
     <Compile Include="Views\ShoppingCartTabUserControl.xaml.cs">
       <DependentUpon>ShoppingCartTabUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SignInUserControl.xaml.cs">
+      <DependentUpon>SignInUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SignOutFlyout.xaml.cs">
       <DependentUpon>SignOutFlyout.xaml</DependentUpon>
     </Compile>
@@ -295,6 +298,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ShoppingCartTabUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SignInUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

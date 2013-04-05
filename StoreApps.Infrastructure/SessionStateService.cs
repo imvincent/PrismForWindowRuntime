@@ -28,6 +28,8 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
     /// carry across sessions, but that should be discarded when an application crashes or is
     /// upgraded.
     /// </summary>
+    
+    // Documentation on handling suspend, resume, and activation is at http://go.microsoft.com/fwlink/?LinkID=288819&clcid=0x409
     public class SessionStateService : ISessionStateService
     {
         private Dictionary<string, object> _sessionState = new Dictionary<string, object>();
@@ -291,7 +293,7 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
         /// <summary>
         /// Initializes a new instance of the <see cref="SessionStateServiceException"/> class.
         /// </summary>
-        public SessionStateServiceException() : base("Session state service failed")
+        public SessionStateServiceException() : base((new ResourceLoader(Constants.StoreAppsInfrastructureResourceMapId)).GetString("SessionStateServiceFailed"))
         {
         }
 
@@ -308,7 +310,7 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
         /// </summary>
         /// <param name="exception">The exception.</param>
         public SessionStateServiceException(Exception exception)
-            : base("Session state service failed", exception)
+            : base((new ResourceLoader(Constants.StoreAppsInfrastructureResourceMapId)).GetString("SessionStateServiceFailed"), exception)
         {
         }
 

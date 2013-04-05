@@ -24,7 +24,7 @@ namespace AdventureWorks.UILogic.Tests.Repositories
         [TestMethod]
         public async Task GetEntity_Returns_Entity()
         {
-            var target = new CheckoutDataRepository(SetupAddressService(), SetupPaymentMethodService());
+            var target = new CheckoutDataRepository(SetupAddressService(), SetupPaymentMethodService(), null);
 
             var shippingAddress = await target.GetShippingAddressAsync("3");
             var bilingAddress = await target.GetBillingAddressAsync("2");
@@ -38,7 +38,7 @@ namespace AdventureWorks.UILogic.Tests.Repositories
         [TestMethod]
         public async Task GetDefaultValues_Returns_DefaultValues()
         {
-            var target = new CheckoutDataRepository(SetupAddressService(), SetupPaymentMethodService());
+            var target = new CheckoutDataRepository(SetupAddressService(), SetupPaymentMethodService(), null);
 
             var defaultShippingAddress = await target.GetDefaultShippingAddressAsync();
             var defaultBilingAddress = await target.GetDefaultBillingAddressAsync();
@@ -54,7 +54,7 @@ namespace AdventureWorks.UILogic.Tests.Repositories
         [TestMethod]
         public async Task GetAllEntities_Returns_AllEntities()
         {
-            var target = new CheckoutDataRepository(SetupAddressService(), SetupPaymentMethodService());
+            var target = new CheckoutDataRepository(SetupAddressService(), SetupPaymentMethodService(), null);
 
             var shippingAddresses = await target.GetAllShippingAddressesAsync();
             var bilingAddresses = await target.GetAllBillingAddressesAsync();
@@ -68,7 +68,7 @@ namespace AdventureWorks.UILogic.Tests.Repositories
         [TestMethod]
         public async Task SaveEntity_SavesEntity()
         {
-            var target = new CheckoutDataRepository(SetupAddressService(), SetupPaymentMethodService());
+            var target = new CheckoutDataRepository(SetupAddressService(), SetupPaymentMethodService(), null);
 
             await target.SaveShippingAddressAsync(new Address() { Id="test", FirstName = "TestFirstName", LastName = "TestLastName", AddressType = AddressType.Shipping});
             await target.SaveBillingAddressAsync(new Address() { Id = "test", FirstName = "TestFirstName", LastName = "TestLastName", AddressType = AddressType.Billing });
@@ -94,7 +94,7 @@ namespace AdventureWorks.UILogic.Tests.Repositories
         [TestMethod]
         public async Task SetDefaultEntity_SetsDefaultEntity()
         {
-            var target = new CheckoutDataRepository(SetupAddressService(), SetupPaymentMethodService());
+            var target = new CheckoutDataRepository(SetupAddressService(), SetupPaymentMethodService(), null);
 
             var defaultShippingAddress = await target.GetDefaultShippingAddressAsync();
             var defaultBillingAddress = await target.GetDefaultBillingAddressAsync();
@@ -125,7 +125,7 @@ namespace AdventureWorks.UILogic.Tests.Repositories
         [TestMethod]
         public async Task RemoveDefaultEntity_RemovesDefaultEntity()
         {
-            var target = new CheckoutDataRepository(SetupAddressService(), SetupPaymentMethodService());
+            var target = new CheckoutDataRepository(SetupAddressService(), SetupPaymentMethodService(), null);
             await target.SetDefaultPaymentMethodAsync("1");
 
             var defaultShippingAddress = await target.GetDefaultShippingAddressAsync();
@@ -155,12 +155,27 @@ namespace AdventureWorks.UILogic.Tests.Repositories
             var paymentMethodService = new MockPaymentMethodService();
             paymentMethodService.PaymentMethods = null;
 
-            var target = new CheckoutDataRepository(null, paymentMethodService);
+            var target = new CheckoutDataRepository(null, paymentMethodService, null);
 
             var paymentMethods = await target.GetAllPaymentMethodsAsync();
 
             Assert.IsNotNull(paymentMethods);
             Assert.AreEqual(0, paymentMethods.Count);
+        }
+
+        [TestMethod]
+        public async Task CachedAddressesAndPaymentMethodsExpire_WhenUserChanged()
+        {
+            var accountService = new MockAccountService();
+            var target = new CheckoutDataRepository(SetupAddressService(), SetupPaymentMethodService(), accountService);
+
+            var paymentMethods = await target.GetAllPaymentMethodsAsync();
+
+            Assert.AreSame(await target.GetAllPaymentMethodsAsync(), paymentMethods, "Cached data should be same.");
+
+            accountService.RaiseUserChanged(null, null);
+
+            Assert.AreNotSame(await target.GetAllPaymentMethodsAsync(), paymentMethods);
         }
 
         private static MockAddressService SetupAddressService()

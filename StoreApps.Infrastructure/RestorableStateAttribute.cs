@@ -13,6 +13,8 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
     /// <summary>
     /// This attribute indicates that the marked property will have its state saved on suspension.
     /// </summary>
+    // Documentation on handling suspend, resume, and activation is at http://go.microsoft.com/fwlink/?LinkID=288819&clcid=0x409
+
     [AttributeUsage(System.AttributeTargets.Property,
                     AllowMultiple = false)]
     public sealed class RestorableStateAttribute : Attribute

@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Resources;
 using Windows.ApplicationModel.Search;
 using Windows.UI.ApplicationSettings;
 using Windows.UI.Xaml;
@@ -24,6 +25,9 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
     /// <summary>
     /// Provides MvvmAppBase-specific behavior to supplement the default Application class.
     /// </summary>
+    
+    // Documentation on using the MVVM pattern is at http://go.microsoft.com/fwlink/?LinkID=288814&clcid=0x409
+
     public abstract class MvvmAppBase : Application
     {
         /// <summary>
@@ -125,7 +129,8 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
             var flyoutType = Type.GetType(flyoutFullName);
             if (flyoutType == null)
             {
-                throw new InvalidOperationException("Could not find associated Flyout in the Views folder.");
+                var resourceLoader = new ResourceLoader(Constants.StoreAppsInfrastructureResourceMapId);
+                throw new InvalidOperationException(resourceLoader.GetString("CouldNotFindAssociatedFlyoutInTheViewsFolder"));
             }
 
             var flyoutInstance = Resolve(flyoutType);
@@ -193,6 +198,8 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
         /// Invoked when the application is activated through a search association.
         /// </summary>
         /// <param name="args">Event data for the event.</param>
+        
+        // Documentation on using search is at http://go.microsoft.com/fwlink/?LinkID=288822&clcid=0x409
         // <snippet1001>
         protected async override void OnSearchActivated(SearchActivatedEventArgs args)
         {

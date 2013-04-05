@@ -18,6 +18,9 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
     /// The FrameNavigationService interface is used for navigating across the pages of your Windows Store application.
     /// The FrameNavigationService class, uses a class that implements the IFrameFacade interface to provide page navigation.
     /// </summary>
+
+    // Documentation on navigation between pages is at http://go.microsoft.com/fwlink/?LinkID=288815&clcid=0x409
+
     public class FrameNavigationService : INavigationService
     {
         private const string LastNavigationParameterKey = "LastNavigationParameter";

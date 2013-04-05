@@ -11,6 +11,8 @@ using Microsoft.Practices.StoreApps.Infrastructure;
 
 namespace ValidationQuickStart.Models
 {
+    //This QuickStart is documented at http://go.microsoft.com/fwlink/?LinkID=288827&clcid=0x409
+
     public class UserInfo : ValidatableBindableBase
     {
         private string _firstName;

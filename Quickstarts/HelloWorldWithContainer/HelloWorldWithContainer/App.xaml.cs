@@ -14,6 +14,8 @@ using Windows.ApplicationModel.Activation;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
 
+// This QuickStart is documented at http://go.microsoft.com/fwlink/?LinkID=288830&clcid=0x409
+
 namespace HelloWorldWithContainer
 {
     // <snippet3300>

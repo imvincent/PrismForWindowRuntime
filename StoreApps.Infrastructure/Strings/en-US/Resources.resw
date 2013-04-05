@@ -126,4 +126,10 @@
   <data name="InvalidPropertyNameException" xml:space="preserve">
     <value>The entity does not contain a property with that name</value>
   </data>
+    <data name="SessionStateServiceFailed">
+        <value xml:space="preserve">Session state service failed</value>
+    </data>
+    <data name="CouldNotFindAssociatedFlyoutInTheViewsFolder">
+        <value xml:space="preserve">Could not find associated Flyout in the Views folder.</value>
+    </data>
 </root>

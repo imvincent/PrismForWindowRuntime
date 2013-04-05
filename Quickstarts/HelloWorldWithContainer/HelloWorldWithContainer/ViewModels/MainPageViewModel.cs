@@ -13,6 +13,8 @@ using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
 
 namespace HelloWorldWithContainer.ViewModels
 {
+    // This QuickStart is documented at http://go.microsoft.com/fwlink/?LinkID=288830&clcid=0x409
+
     public class MainPageViewModel : ViewModel
     {
         IDataRepository _dataRepository;

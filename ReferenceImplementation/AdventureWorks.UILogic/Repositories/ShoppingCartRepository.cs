@@ -25,18 +25,16 @@ namespace AdventureWorks.UILogic.Repositories
         private readonly IAccountService _accountService;
         private readonly IEventAggregator _eventAggregator;
         private readonly ISessionStateService _sessionStateService;
-        private readonly IAlertMessageService _alertMessageService;
 
         private string _shoppingCartId;
         private ShoppingCart _cachedShoppingCart = null;
         
-        public ShoppingCartRepository(IShoppingCartService shoppingCartService, IAccountService accountService, IEventAggregator eventAggregator, ISessionStateService sessionStateService, IAlertMessageService alertMessageService)
+        public ShoppingCartRepository(IShoppingCartService shoppingCartService, IAccountService accountService, IEventAggregator eventAggregator, ISessionStateService sessionStateService)
         {
             _shoppingCartService = shoppingCartService;
             _accountService = accountService;
             _eventAggregator = eventAggregator;
             _sessionStateService = sessionStateService;
-            _alertMessageService = alertMessageService;
             
             if (accountService != null)
             {
@@ -85,8 +83,10 @@ namespace AdventureWorks.UILogic.Repositories
             
             if (shoppingCartMerged)
             {
-                var resourceLoader = new ResourceLoader(Constants.AdventureWorksUILogicResourceMapId);
-                await _alertMessageService.ShowAsync(resourceLoader.GetString("MergedShoppingCartMessage"), string.Empty);
+                // At this point, the user should be informed that their shopping cart was merged
+                // with their online shopping cart.
+                // Please follow the following guidelines to show this message
+                // http://msdn.microsoft.com/en-us/library/windows/apps/hh465304.aspx#flyouts
             }
         }
 
@@ -123,12 +123,14 @@ namespace AdventureWorks.UILogic.Repositories
         // <snippet1501>
         private void RaiseShoppingCartUpdated()
         {
+            // Documentation on loosely coupled communication is at http://go.microsoft.com/fwlink/?LinkID=288820&clcid=0x409
             _eventAggregator.GetEvent<ShoppingCartUpdatedEvent>().Publish(null);
         }
         // </snippet1501>
 
         private void RaiseShoppingCartItemUpdated()
         {
+            // Documentation on loosely coupled communication is at http://go.microsoft.com/fwlink/?LinkID=288820&clcid=0x409
             _eventAggregator.GetEvent<ShoppingCartItemUpdatedEvent>().Publish(null);
         }
     }

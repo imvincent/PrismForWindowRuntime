@@ -135,6 +135,8 @@
     <Compile Include="Services\IAddressService.cs" />
     <Compile Include="Services\AddressServiceProxy.cs" />
     <Compile Include="ViewModels\CategoryPageViewModel.cs" />
+    <Compile Include="ViewModels\ISignInUserControlViewModel.cs" />
+    <Compile Include="ViewModels\SignInUserControlViewModel.cs" />
     <Compile Include="ViewModels\OrderConfirmationPageViewModel.cs" />
     <Compile Include="ViewModels\SearchUserControlViewModel.cs" />
     <Compile Include="Services\AccountService.cs" />

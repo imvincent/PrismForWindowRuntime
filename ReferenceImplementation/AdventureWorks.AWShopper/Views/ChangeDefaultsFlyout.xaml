@@ -42,6 +42,7 @@
                                FontWeight="SemiLight"
                                FontSize="24"
                                Width="225"
+                               TextTrimming="WordEllipsis"
                                Text="Change Defaults" />
                     <Image Source="ms-appx:///Assets/SmallLogo.png" />
                 </StackPanel>
@@ -63,6 +64,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock x:Uid="ShippingAddressLabel"
                                            Text="Shipping Address"
+                                           TextTrimming="WordEllipsis"
                                            Style="{StaticResource GroupHeaderTextStyle}" />
                                 <TextBlock x:Name="ShippingAddressChevronGlyph"
                                            Text="{StaticResource OpenedChevronGlyph}"
@@ -102,6 +104,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock x:Uid="BillingAddressLabel"
                                            Text="Billing Address"
+                                           TextTrimming="WordEllipsis"
                                            Style="{StaticResource GroupHeaderTextStyle}" />
                                 <TextBlock x:Name="BillingAddressChevronGlyph"
                                            Text="{StaticResource OpenedChevronGlyph}"
@@ -141,6 +144,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock x:Uid="PaymentMethodLabel"
                                            Text="Payment Method"
+                                           TextTrimming="WordEllipsis"
                                            Style="{StaticResource GroupHeaderTextStyle}" />
                                 <TextBlock x:Name="PaymentMethodChevronGlyph"
                                            Text="{StaticResource OpenedChevronGlyph}"

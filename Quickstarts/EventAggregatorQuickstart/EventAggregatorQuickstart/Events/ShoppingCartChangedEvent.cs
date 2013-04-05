@@ -10,6 +10,8 @@ using Microsoft.Practices.PubSubEvents;
 
 namespace EventAggregatorQuickstart
 {
+    // This QuickStart is documented at http://go.microsoft.com/fwlink/?LinkID=288828&clcid=0x409
+
     // <snippet3100>
     public class ShoppingCartChangedEvent : PubSubEvent<ShoppingCart> { }
     // </snippet3100>

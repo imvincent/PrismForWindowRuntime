@@ -179,6 +179,7 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 IsBottomAppBarSticky = true;
 
+                // Documentation on working with tiles can be found at http://go.microsoft.com/fwlink/?LinkID=288821&clcid=0x409
                 // <snippet804>
                 isPinned = await _secondaryTileService.PinWideSecondaryTile(tileId, SelectedProduct.Title, SelectedProduct.Description, SelectedProduct.ProductNumber);
                 // </snippet804>

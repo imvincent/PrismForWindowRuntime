@@ -17,6 +17,9 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
     /// <summary>
     /// This is the view model base class that includes INotifyPropertyChange support and it is aware of navigation events.
     /// </summary>
+
+    // Documentation on using the MVVM pattern is at http://go.microsoft.com/fwlink/?LinkID=288814&clcid=0x409
+
     public class ViewModel : BindableBase, INavigationAware
     {
         /// <summary>

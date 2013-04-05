@@ -31,6 +31,8 @@ using Windows.UI.Xaml.Navigation;
 // required for Windows Store Apps such as Suspend/Terminate/Resume.
 // Please see the HelloWorld QuickStarts for examples of using the MvvmAppBase.
 
+//This QuickStart is documented at http://go.microsoft.com/fwlink/?LinkID=288827&clcid=0x409
+
 namespace ValidationQuickStart
 {
     /// <summary>

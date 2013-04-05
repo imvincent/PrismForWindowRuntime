@@ -20,51 +20,47 @@
         * Row 0 contains the back button and page title
         * Row 1 contains the rest of the page layout
     -->
-    <Grid Style="{StaticResource LayoutRootStyle}">
+    <Grid x:Name="MainGrid" Style="{StaticResource LayoutRootStyle}">
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
+            <RowDefinition Height="140" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
         <TextBlock x:Uid="OrderConfirmationTitle"
-                       x:Name="pageTitle"
-                       Text="Order Confirmation"
-                       HorizontalAlignment="Center"
-                       Style="{StaticResource PageHeaderTextStyle}" />
-            
-        <TextBlock x:Name="OrderConfirmationContent"
-                   x:Uid="OrderConfirmationContent"
-                       Grid.Row="1"
-                       HorizontalAlignment="Center"
+                   x:Name="pageTitle"
+                   Text="Order Confirmation"
+                   Grid.Column="1"
+                   Style="{StaticResource PageHeaderTextStyle}" />
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <TextBlock x:Name="OrderConfirmationContent"
+                       x:Uid="OrderConfirmationContent"
                        VerticalAlignment="Bottom"
                        Text="{Binding OrderConfirmationContent}"
-                       Style="{StaticResource SubheaderTextStyle}" />
+                       Style="{StaticResource BasicTextStyle}" />
+            <Button x:Name="ContinueShoppingButton"
+                    x:Uid="ContinueShoppingButton"
+                    Content="Continue Shopping"
+                    Grid.Row="1"
+                    Command="{Binding ContinueShoppingCommand}"
+                    Width="300"
+                    Margin="0,50,0,0"
+                    VerticalAlignment="Top"
+                    Background="{StaticResource AWShopperAccentBrush}" />
 
-        <TextBlock x:Name="OrderPurchasedMessage"
-                   x:Uid="OrderPurchasedMessage"
-                   Grid.Row="2"
-                   HorizontalAlignment="Center"
-                   Text="Your order has been submitted. Thank you for your purchase."
-                   Style="{StaticResource SubheaderTextStyle}" />
-
-        <Button x:Name="ContinueShoppingButton"
-                x:Uid="ContinueShoppingButton"
-                Content="Continue Shopping"
-                Grid.Row="3"
-                Command="{Binding ContinueShoppingCommand}"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Top"
-                Background="{StaticResource AWShopperAccentBrush}"/>
-
+        </Grid>
         <VisualStateManager.VisualStateGroups>
-
             <!-- Visual states reflect the application's view state -->
             <VisualStateGroup x:Name="ApplicationViewStates">
                 <VisualState x:Name="FullScreenLandscape" />
                 <VisualState x:Name="Filled" />
-                <VisualState x:Name="FullScreenPortrait"/>
+                <VisualState x:Name="FullScreenPortrait" />
 
                 <!-- The title has different style when snapped -->
                 <VisualState x:Name="Snapped">
@@ -73,6 +69,12 @@
                                                        Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="{StaticResource SnappedPageHeaderTextStyle}" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.ColumnDefinitions[0].Width"
+                                                       Storyboard.TargetName="MainGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>10</DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>

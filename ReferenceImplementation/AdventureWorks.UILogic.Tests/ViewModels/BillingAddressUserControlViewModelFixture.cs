@@ -7,6 +7,7 @@
 
 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Tests.Mocks;
@@ -24,7 +25,8 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
         {
             var defaultAddress = new Address
             {
-                FirstName = "FirstName"
+                FirstName = "FirstName",
+                State = "WA"
             };
             var checkoutDataRepository = new MockCheckoutDataRepository();
             checkoutDataRepository.GetDefaultBillingAddressAsyncDelegate = () => Task.FromResult(defaultAddress);
@@ -38,6 +40,67 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             target.SetLoadDefault(true);
             target.OnNavigatedTo(null, NavigationMode.New, new Dictionary<string, object>());
             Assert.AreEqual("FirstName", target.Address.FirstName);
+        }
+
+        [TestMethod]
+        public async Task ProcessFormAsync_UsesExistingAddressIfMatchingFound()
+        {
+            var newAddress = new Address
+            {
+                FirstName = "testfirst",
+                StreetAddress = "teststreetaddress"
+            };
+
+            var existingAddresses = new List<Address>
+                                        {
+                                            new Address
+                                                {
+                                                    Id = "testId",
+                                                    FirstName = "testfirst",
+                                                    StreetAddress = "teststreetaddress"
+                                                }
+                                        };
+
+            var checkoutDataRepository = new MockCheckoutDataRepository();
+            checkoutDataRepository.GetAllBillingAddressesAsyncDelegate =
+                () => Task.FromResult<IReadOnlyCollection<Address>>(new ReadOnlyCollection<Address>(existingAddresses));
+
+            var target = new BillingAddressUserControlViewModel(checkoutDataRepository, null, null, null);
+            target.Address = newAddress;
+
+            await target.ProcessFormAsync();
+
+            Assert.AreEqual("testId", target.Address.Id);
+        }
+
+        [TestMethod]
+        public async Task ProcessFormAsync_SavesAddressIfNoMatchingFound()
+        {
+            var saveAddressCalled = false;
+            var newAddress = new Address
+            {
+                FirstName = "testfirst",
+                StreetAddress = "teststreetaddress"
+            };
+
+            var existingAddresses = new List<Address>();
+            var checkoutDataRepository = new MockCheckoutDataRepository();
+            checkoutDataRepository.GetAllBillingAddressesAsyncDelegate =
+                () => Task.FromResult<IReadOnlyCollection<Address>>(new ReadOnlyCollection<Address>(existingAddresses));
+
+            checkoutDataRepository.SaveBillingAddressAsyncDelegate = address =>
+            {
+                saveAddressCalled = true;
+                Assert.AreEqual("teststreetaddress",
+                                address.StreetAddress);
+                return Task.Delay(0);
+            };
+            var target = new BillingAddressUserControlViewModel(checkoutDataRepository, null, null, null);
+            target.Address = newAddress;
+
+            await target.ProcessFormAsync();
+
+            Assert.IsTrue(saveAddressCalled);
         }
     }
 }

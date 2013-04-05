@@ -67,9 +67,9 @@ namespace AdventureWorks.AWShopper.DesignViewModels
             var resourceLoader = new ResourceLoader();
             CheckoutDataViewModels = new List<CheckoutDataViewModel>()
                 {
-                    new CheckoutDataViewModel() { EntityId = "1", DataType = resourceLoader.GetString("ShippingAddress")},
-                    new CheckoutDataViewModel() { EntityId = "1", DataType = resourceLoader.GetString("BillingAddress")},
-                    new CheckoutDataViewModel() { EntityId = "1", DataType = resourceLoader.GetString("PaymentMethod")}
+                    new CheckoutDataViewModel() { EntityId = "1", Title = resourceLoader.GetString("ShippingAddress"), FirstLine = "12345 Main St NE",  SecondLine= "Seattle, WA 54321", BottomLine = "Name Lastname", LogoUri = new Uri("ms-appx:///Assets/shippingAddressLogo.png", UriKind.Absolute), DataType = resourceLoader.GetString("ShippingAddress")},
+                    new CheckoutDataViewModel() { EntityId = "1", Title = resourceLoader.GetString("BillingAddress"), FirstLine = "12345 Main St NE",  SecondLine= "Seattle, WA 54321", BottomLine = "Name Lastname", LogoUri = new Uri("ms-appx:///Assets/billingAddressLogo.png", UriKind.Absolute), DataType = resourceLoader.GetString("BillingAddress")},
+                    new CheckoutDataViewModel() { EntityId = "1", Title = resourceLoader.GetString("PaymentMethod"), FirstLine = "Card ending in 1234",  SecondLine= "Card expiring in 10/2014", BottomLine = "Name Lastname", LogoUri = new Uri("ms-appx:///Assets/paymentMethodLogo.png", UriKind.Absolute), DataType = resourceLoader.GetString("PaymentMethod")}
                 };
             SelectedCheckoutData = CheckoutDataViewModels.First();
 

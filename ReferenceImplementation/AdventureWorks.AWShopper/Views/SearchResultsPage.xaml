@@ -105,14 +105,16 @@
         </Grid.RowDefinitions>
 
         <!-- Back button, page title and subtitles-->
-        <Grid>
+        <Grid x:Name="headerGrid">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="0" />
+            </Grid.RowDefinitions>
             <Button x:Name="backButton"
                     Style="{StaticResource BackButtonStyle}"
                     Command="{Binding GoBackCommand}" />
@@ -122,25 +124,25 @@
                        Text="Search"
                        IsHitTestVisible="false"
                        Style="{StaticResource PageHeaderTextStyle}" />
-            <TextBlock x:Name="resultNumber"
-                       x:Uid="ResultsNumberLabel"
-                       Grid.Column="2"
-                       Text="{Binding TotalCount}"
-                       IsHitTestVisible="false"
-                       Margin="0,0,10,40"
-                       Style="{StaticResource PageSubheaderTextStyle}" />
-            <TextBlock x:Name="resultText"
-                       x:Uid="ResultsForLabel"
-                       Grid.Column="3"
-                       Text="Results for"
-                       IsHitTestVisible="false"
-                       Margin="0,0,10,40"
-                       Style="{StaticResource PageSubheaderTextStyle}" />
-            <TextBlock x:Name="queryText"
-                       Grid.Column="4"
-                       Text="{Binding QueryText}"
-                       IsHitTestVisible="false"
-                       Style="{StaticResource PageSubheaderTextStyle}" />
+            <StackPanel x:Name="searchHeader" Orientation="Horizontal"
+                        Grid.Column="2">
+                <TextBlock x:Name="resultNumber"
+                           x:Uid="ResultsNumberLabel"
+                           Text="{Binding TotalCount}"
+                           IsHitTestVisible="false"
+                           Margin="0,0,10,40"
+                           Style="{StaticResource PageSubheaderTextStyle}" />
+                <TextBlock x:Name="resultText"
+                           x:Uid="ResultsForLabel"
+                           Text="Results for"
+                           IsHitTestVisible="false"
+                           Margin="0,0,10,40"
+                           Style="{StaticResource PageSubheaderTextStyle}" />
+                <TextBlock x:Name="queryText"
+                           Text="{Binding QueryText}"
+                           IsHitTestVisible="false"
+                           Style="{StaticResource PageSubheaderTextStyle}" />
+            </StackPanel>
         </Grid>
 
         <Grid x:Name="resultsPanel"
@@ -267,23 +269,52 @@
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="{StaticResource SnappedBackButtonStyle}" />
                         </ObjectAnimationUsingKeyFrames>
-
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="queryText"
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle"
                                                        Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="{StaticResource SnappedPageHeaderTextStyle}" />
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle"
-                                                       Storyboard.TargetProperty="Visibility">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.RowDefinitions[0].Height"
+                                                       Storyboard.TargetName="headerGrid">
                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="Collapsed" />
+                                                    Value="80" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.RowDefinitions[1].Height"
+                                                       Storyboard.TargetName="headerGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0" 
+                                                    Value="60"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="resultNumber"
+                                                       Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="{StaticResource BasicTextStyle}" />
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="resultText"
-                                                       Storyboard.TargetProperty="Visibility">
+                                                       Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="Collapsed" />
+                                                    Value="{StaticResource BasicTextStyle}" />
                         </ObjectAnimationUsingKeyFrames>
-
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="queryText"
+                                                       Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="{StaticResource BasicTextStyle}" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)"
+                                                       Storyboard.TargetName="searchHeader">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>1</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)"
+                                                       Storyboard.TargetName="searchHeader">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>1</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="typicalPanel"
                                                        Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0"

@@ -6,13 +6,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using Microsoft.Practices.StoreApps.Infrastructure;
+using Windows.UI.Xaml.Controls;
 
 namespace AdventureWorks.AWShopper.Views
 {
-    public sealed partial class OrderConfirmationPage : VisualStateAwarePage
+    public sealed partial class SignInUserControl : UserControl
     {
-        public OrderConfirmationPage()
+        public SignInUserControl()
         {
             this.InitializeComponent();
         }

@@ -9,10 +9,11 @@
 using System.ComponentModel.DataAnnotations;
 using AdventureWorks.UILogic.Services;
 using Microsoft.Practices.StoreApps.Infrastructure;
-using Windows.Storage.Streams;
 
 namespace AdventureWorks.UILogic.Models
 {
+    // Documentation on validating user input is at http://go.microsoft.com/fwlink/?LinkID=288817&clcid=0x409
+
     public class PaymentMethod : ValidatableBindableBase
     {
         private string _id;

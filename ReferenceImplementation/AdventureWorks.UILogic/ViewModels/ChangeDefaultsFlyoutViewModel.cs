@@ -178,8 +178,8 @@ namespace AdventureWorks.UILogic.ViewModels
                 DataType = dataType,
                 Title = dataType == Constants.ShippingAddress ? _resourceLoader.GetString("ShippingAddress") : _resourceLoader.GetString("BillingAddress"),
                 FirstLine = address.StreetAddress,
-                SecondLine = string.Format(CultureInfo.CurrentUICulture, "{0}, {1} {2}", address.City, address.State, address.ZipCode),
-                BottomLine = string.Format(CultureInfo.CurrentUICulture, "{0} {1}", address.FirstName, address.LastName),
+                SecondLine = string.Format(CultureInfo.CurrentCulture, "{0}, {1} {2}", address.City, address.State, address.ZipCode),
+                BottomLine = string.Format(CultureInfo.CurrentCulture, "{0} {1}", address.FirstName, address.LastName),
                 LogoUri = dataType == Constants.ShippingAddress ? new Uri(Constants.ShippingAddressLogo, UriKind.Absolute) : new Uri(Constants.BillingAddressLogo, UriKind.Absolute)
             };
         }
@@ -191,8 +191,8 @@ namespace AdventureWorks.UILogic.ViewModels
                 EntityId = paymentMethod.Id,
                 DataType = Constants.PaymentMethod,
                 Title = _resourceLoader.GetString("PaymentMethod"),
-                FirstLine = string.Format(CultureInfo.CurrentUICulture, _resourceLoader.GetString("CardEndingIn"), paymentMethod.CardNumber.Substring(paymentMethod.CardNumber.Length - 4)),
-                SecondLine = string.Format(CultureInfo.CurrentUICulture, _resourceLoader.GetString("CardExpiringOn"),
+                FirstLine = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("CardEndingIn"), paymentMethod.CardNumber.Substring(paymentMethod.CardNumber.Length - 4)),
+                SecondLine = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("CardExpiringOn"),
                                             string.Format(CultureInfo.CurrentCulture, "{0}/{1}", paymentMethod.ExpirationMonth, paymentMethod.ExpirationYear)),
                 BottomLine = paymentMethod.CardholderName,
                 LogoUri = new Uri(Constants.PaymentMethodLogo, UriKind.Absolute)

@@ -12,6 +12,8 @@ using Microsoft.Practices.StoreApps.Infrastructure;
 
 namespace AdventureWorks.UILogic.Models
 {
+    // Documentation on validating user input is at http://go.microsoft.com/fwlink/?LinkID=288817&clcid=0x409
+
     public class Address : ValidatableBindableBase
     {
         private string _id;
@@ -100,7 +102,7 @@ namespace AdventureWorks.UILogic.Models
         }
 
         [Required(ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "RequiredErrorMessage")]
-        [RegularExpression(NUMBERS_REGEX_PATTERN, ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "RegexErrorMessage")]
+        [RegularExpression(NUMBERS_REGEX_PATTERN, ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "ZipCodeRegexErrorMessage")]
         [StringLength(6, MinimumLength=3, ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "ZipCodeLengthInvalidErrorMessage")]
         public string ZipCode
         {

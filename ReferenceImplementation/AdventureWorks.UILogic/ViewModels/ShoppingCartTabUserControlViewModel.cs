@@ -40,6 +40,7 @@ namespace AdventureWorks.UILogic.ViewModels
 
             if (eventAggregator != null)
             {
+                // Documentation on loosely coupled communication is at http://go.microsoft.com/fwlink/?LinkID=288820&clcid=0x409
                 eventAggregator.GetEvent<ShoppingCartUpdatedEvent>().Subscribe(UpdateItemCountAsync);
                 eventAggregator.GetEvent<ShoppingCartItemUpdatedEvent>().Subscribe(UpdateItemCountAsync);
             }

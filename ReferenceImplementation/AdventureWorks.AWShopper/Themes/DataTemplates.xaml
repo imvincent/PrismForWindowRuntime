@@ -35,6 +35,36 @@
         </Grid>
     </DataTemplate>
 
+    <DataTemplate x:Key="AWShopperItemTemplateSemanticZoom">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="100" />
+            </Grid.RowDefinitions>
+            <Image Stretch="UniformToFill"
+                   Source="{Binding Group.Image}" />
+            <StackPanel Background="{StaticResource ListViewItemOverlayBackgroundThemeBrush}"
+                        Grid.Row="1"
+                        Height="100">
+                <TextBlock Text="{Binding Group.Title}"
+                           TextTrimming="WordEllipsis"
+                           FontSize="26"
+                           FontWeight="ExtraBold"
+                           Margin="10" />
+                <StackPanel Orientation="Horizontal"
+                            Margin="10,0,10,0"
+                            HorizontalAlignment="Left">
+                    <TextBlock Text="{Binding Group.TotalNumberOfItems}"
+                               FontSize="20" />
+                    <TextBlock Text="Products"
+                               Margin="10,0,10,0"
+                               FontSize="20"
+                               HorizontalAlignment="Center" />
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+
     <DataTemplate x:Key="ShoppingCartItemTemplate">
         <Grid Margin="0"
               Width="357"
@@ -62,11 +92,13 @@
                 <TextBlock Text="{Binding Title}"
                            Grid.Row="0"
                            TextWrapping="Wrap"
+                           Grid.ColumnSpan="2"
                            Margin="3"></TextBlock>
                 <TextBlock Text="{Binding Description}"
                            Grid.Row="1"
-                           Foreground="{StaticResource AWShopperItemForegroundLighterBrush}"
+                           Foreground="White"
                            Margin="3"
+                           Grid.ColumnSpan="2"
                            TextWrapping="Wrap"
                            TextTrimming="WordEllipsis"></TextBlock>
                 <Grid Grid.Row="2"
@@ -93,8 +125,9 @@
                         <TextBlock Text="{Binding FullPrice}"
                                    Margin="3"
                                    VerticalAlignment="Bottom"
+                                   HorizontalAlignment="Center"
                                    FontSize="14"
-                                   Foreground="{StaticResource AWShopperItemForegroundLighterBrush}"></TextBlock>
+                                   Foreground="White"></TextBlock>
                     </Grid>
                 </Grid>
                 <Border Grid.Row="2"
@@ -117,7 +150,7 @@
                         <TextBlock Grid.Row="1"
                                    Text="{Binding Quantity}"
                                    Margin="0,-5,0,0"
-                                   FontSize="24"
+                                   FontSize="22"
                                    HorizontalAlignment="Center"
                                    Foreground="{StaticResource AWShopperItemSelectionColor}"></TextBlock>
                     </Grid>
@@ -152,12 +185,14 @@
                 <TextBlock Text="{Binding Title}"
                            Grid.Row="0"
                            TextWrapping="Wrap"
+                           Grid.ColumnSpan="2"
                            Margin="3"></TextBlock>
                 <TextBlock Text="{Binding Description}"
                            Grid.Row="1"
                            FontSize="14"
-                           Foreground="{StaticResource AWShopperItemForegroundLighterBrush}"
+                           Foreground="White"
                            Margin="3"
+                           Grid.ColumnSpan="2"
                            TextWrapping="Wrap"
                            TextTrimming="WordEllipsis"></TextBlock>
                 <Grid Grid.Row="2"
@@ -183,8 +218,9 @@
                         <TextBlock Text="{Binding FullPrice}"
                                    Margin="3"
                                    VerticalAlignment="Bottom"
+                                   HorizontalAlignment="Center"
                                    FontSize="12"
-                                   Foreground="{StaticResource AWShopperItemForegroundLighterBrush}"></TextBlock>
+                                   Foreground="White"></TextBlock>
                     </Grid>
                 </Grid>
                 <Border Grid.Row="2"
@@ -201,13 +237,13 @@
                         <TextBlock x:Uid="Quantity"
                                    Grid.Row="0"
                                    HorizontalAlignment="Center"
-                                   FontSize="13"
+                                   FontSize="12"
                                    Foreground="White"
                                    Text="QTY" />
                         <TextBlock Grid.Row="1"
                                    Text="{Binding Quantity}"
                                    Margin="0,-5,0,0"
-                                   FontSize="18"
+                                   FontSize="16"
                                    HorizontalAlignment="Center"
                                    Foreground="{StaticResource AWShopperItemSelectionColor}"></TextBlock>
                     </Grid>
@@ -236,7 +272,7 @@
                        Margin="5,0"></TextBlock>
             <TextBlock Text="{Binding EstimatedTime}"
                        Grid.Row="1"
-                       Foreground="{StaticResource AWShopperItemForegroundBrush}"
+                       Foreground="White"
                        TextWrapping="Wrap"
                        Margin="5,15,5,5"></TextBlock>
             <TextBlock Text="{Binding Cost}"
@@ -244,7 +280,7 @@
                        Grid.Column="1"
                        Grid.RowSpan="2"
                        FontSize="26"
-                       Foreground="{StaticResource AWShopperItemForegroundBrush}"
+                       Foreground="White"
                        TextWrapping="Wrap"
                        Margin="3"></TextBlock>
         </Grid>
@@ -272,16 +308,16 @@
                            FontSize="26"></TextBlock>
                 <TextBlock Text="{Binding FirstLine, Mode=TwoWay}"
                            Grid.Row="1"
-                           Foreground="{StaticResource AWShopperItemForegroundBrush}"
+                           Foreground="White"
                            Margin="5,0"></TextBlock>
                 <TextBlock Text="{Binding SecondLine, Mode=TwoWay}"
                            Grid.Row="2"
-                           Foreground="{StaticResource AWShopperItemForegroundBrush}"
+                           Foreground="White"
                            Margin="5,0"></TextBlock>
                 <TextBlock Text="{Binding BottomLine, Mode=TwoWay}"
                            Grid.Row="3"
                            Margin="5,20,0,0"
-                           Foreground="{StaticResource AWShopperItemForegroundLighterBrush}"
+                           Foreground="White"
                            VerticalAlignment="Center"></TextBlock>
                 <Image Source="{Binding LogoUri}"
                        Grid.Row="3"
@@ -300,14 +336,14 @@
                 <RowDefinition Height="25" />
                 <RowDefinition Height="25" />
             </Grid.RowDefinitions>
-            <TextBlock Text="{Binding FirstLine, Mode=TwoWay}"
+            <TextBlock Text="{Binding FirstLine}"
                        Grid.Row="0"
                        Margin="10,5,0,0"
-                       Foreground="{StaticResource AWShopperItemForegroundLighterBrush}" />
-            <TextBlock Text="{Binding SecondLine, Mode=TwoWay}"
+                       Foreground="White" />
+            <TextBlock Text="{Binding SecondLine}"
                        Grid.Row="1"
                        Margin="10,0,0,0"
-                       Foreground="{StaticResource AWShopperItemForegroundLighterBrush}" />
+                       Foreground="White" />
         </Grid>
     </DataTemplate>
 

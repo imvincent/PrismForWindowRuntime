@@ -228,7 +228,8 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                 };
             var accountService = new MockAccountService()
                 {
-                    VerifyUserAuthenticationAsyncDelegate = () => Task.FromResult(new UserInfo())
+                    VerifyUserAuthenticationAsyncDelegate = () => Task.FromResult(new UserInfo()),
+                    SignedInUser = new UserInfo()
                 };
             var orderRepository = new MockOrderRepository()
                 {
@@ -238,10 +239,6 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                             Assert.IsTrue(compareAddressesFunc(shippingAddress, billingAddress));
                             return Task.FromResult<Order>(new Order());
                         }
-                };
-            var shippingMethodService = new MockShippingMethodService()
-                {
-                    GetBasicShippingMethodAsyncDelegate = () => Task.FromResult(new ShippingMethod())
                 };
             var shoppingCartRepository = new MockShoppingCartRepository()
                 {

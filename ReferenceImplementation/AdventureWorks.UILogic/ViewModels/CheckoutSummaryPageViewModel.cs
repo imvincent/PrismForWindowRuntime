@@ -100,7 +100,7 @@ namespace AdventureWorks.UILogic.ViewModels
         public bool IsSelectCheckoutDataPopupOpened
         {
             get { return _isSelectCheckoutDataPopupOpened; }
-            private set { SetProperty(ref _isSelectCheckoutDataPopupOpened, value); }
+            set { SetProperty(ref _isSelectCheckoutDataPopupOpened, value); }
         }
 
         public bool IsBottomAppBarOpened
@@ -155,9 +155,9 @@ namespace AdventureWorks.UILogic.ViewModels
                 {
                     _order.ShippingMethod = _selectedShippingMethod;
                     SubmitCommand.RaiseCanExecuteChanged();
-                    var shippingCost = _selectedShippingMethod != null ? _selectedShippingMethod.Cost : 0;
-                    UpdatePrices(shippingCost);
                 }
+                var shippingCost = _selectedShippingMethod != null ? _selectedShippingMethod.Cost : 0;
+                UpdatePrices(shippingCost);
             }
         }
 
@@ -348,17 +348,17 @@ namespace AdventureWorks.UILogic.ViewModels
                 case Constants.ShippingAddress:
                     checkoutData = (await _checkoutDataRepository.GetAllShippingAddressesAsync()).Select(address => CreateCheckoutData(address, Constants.ShippingAddress));
                     AllCheckoutDataViewModels = new ReadOnlyCollection<CheckoutDataViewModel>(checkoutData.ToList());
-                    SelectCheckoutDataLabel = string.Format(CultureInfo.CurrentUICulture, _resourceLoader.GetString("SelectCheckoutData"), _resourceLoader.GetString("ShippingAddress"));
+                    SelectCheckoutDataLabel = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("SelectCheckoutData"), _resourceLoader.GetString("ShippingAddress"));
                     break;
                 case Constants.BillingAddress:
                     checkoutData = (await _checkoutDataRepository.GetAllBillingAddressesAsync()).Select(address => CreateCheckoutData(address, Constants.BillingAddress));
                     AllCheckoutDataViewModels = new ReadOnlyCollection<CheckoutDataViewModel>(checkoutData.ToList());
-                    SelectCheckoutDataLabel = string.Format(CultureInfo.CurrentUICulture, _resourceLoader.GetString("SelectCheckoutData"), _resourceLoader.GetString("BillingAddress"));
+                    SelectCheckoutDataLabel = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("SelectCheckoutData"), _resourceLoader.GetString("BillingAddress"));
                     break;
                 case Constants.PaymentMethod:
                     checkoutData = (await _checkoutDataRepository.GetAllPaymentMethodsAsync()).Select(CreateCheckoutData);
                     AllCheckoutDataViewModels = new ReadOnlyCollection<CheckoutDataViewModel>(checkoutData.ToList());
-                    SelectCheckoutDataLabel = string.Format(CultureInfo.CurrentUICulture, _resourceLoader.GetString("SelectCheckoutData"), _resourceLoader.GetString("PaymentMethod"));
+                    SelectCheckoutDataLabel = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("SelectCheckoutData"), _resourceLoader.GetString("PaymentMethod"));
                     break;
             }
 
@@ -416,8 +416,8 @@ namespace AdventureWorks.UILogic.ViewModels
                     DataType = dataType,
                     Title = dataType == Constants.ShippingAddress ? _resourceLoader.GetString("ShippingAddress") : _resourceLoader.GetString("BillingAddress"),
                     FirstLine = address.StreetAddress,
-                    SecondLine = string.Format(CultureInfo.CurrentUICulture, "{0}, {1} {2}", address.City, address.State, address.ZipCode),
-                    BottomLine = string.Format(CultureInfo.CurrentUICulture, "{0} {1}", address.FirstName, address.LastName),
+                    SecondLine = string.Format(CultureInfo.CurrentCulture, "{0}, {1} {2}", address.City, address.State, address.ZipCode),
+                    BottomLine = string.Format(CultureInfo.CurrentCulture, "{0} {1}", address.FirstName, address.LastName),
                     LogoUri = dataType == Constants.ShippingAddress ? new Uri(Constants.ShippingAddressLogo, UriKind.Absolute) : new Uri(Constants.BillingAddressLogo, UriKind.Absolute)
                 };
         }
@@ -429,8 +429,8 @@ namespace AdventureWorks.UILogic.ViewModels
                     EntityId = paymentMethod.Id,
                     DataType = Constants.PaymentMethod,
                     Title = _resourceLoader.GetString("PaymentMethod"),
-                    FirstLine = string.Format(CultureInfo.CurrentUICulture, _resourceLoader.GetString("CardEndingIn"), paymentMethod.CardNumber.Substring(paymentMethod.CardNumber.Length - 4)),
-                    SecondLine = string.Format(CultureInfo.CurrentUICulture, _resourceLoader.GetString("CardExpiringOn"),
+                    FirstLine = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("CardEndingIn"), paymentMethod.CardNumber.Substring(paymentMethod.CardNumber.Length - 4)),
+                    SecondLine = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("CardExpiringOn"),
                                                 string.Format(CultureInfo.CurrentCulture, "{0}/{1}", paymentMethod.ExpirationMonth, paymentMethod.ExpirationYear)),
                     BottomLine = paymentMethod.CardholderName,
                     LogoUri = new Uri(Constants.PaymentMethodLogo, UriKind.Absolute)

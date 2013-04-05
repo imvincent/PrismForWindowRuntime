@@ -59,7 +59,7 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
             : base((o) => executeMethod((T)o), (o) => canExecuteMethod((T)o))
         {
             if (executeMethod == null || canExecuteMethod == null)
-                throw new ArgumentNullException("executeMethod", "DelegateCommand delegates cannot be null");
+                throw new ArgumentNullException("executeMethod");
         }
         // </snippet307>
 
@@ -115,7 +115,7 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
             : base((o) => executeMethod((T)o), (o) => canExecuteMethod((T)o))
         {
             if (executeMethod == null || canExecuteMethod == null)
-                throw new ArgumentNullException("executeMethod", "DelegateCommand delegates cannot be null");
+                throw new ArgumentNullException("executeMethod");
         }
 
     }
@@ -146,7 +146,7 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
             : base((o) => executeMethod(), (o) => canExecuteMethod())
         {
             if (executeMethod == null || canExecuteMethod == null)
-                throw new ArgumentNullException("executeMethod", "DelegateCommand delegates cannot be null");
+                throw new ArgumentNullException("executeMethod");
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
             : base((o) => executeMethod(), (o) => canExecuteMethod())
         {
             if (executeMethod == null || canExecuteMethod == null)
-                throw new ArgumentNullException("executeMethod", "DelegateCommand delegates cannot be null");
+                throw new ArgumentNullException("executeMethod");
         }
     }
 

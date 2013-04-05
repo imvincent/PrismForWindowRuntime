@@ -35,6 +35,11 @@ namespace AdventureWorks.UILogic.Services
             get { return ResourceLoader.GetString("ZipCodeLengthInvalidErrorMessage"); }
         }
 
+        public static string ZipCodeRegexErrorMessage
+        {
+            get { return ResourceLoader.GetString("ZipCodeRegexErrorMessage"); }
+        }
+
         public static string CardNumberInvalidLengthErrorMessage
         {
             get { return ResourceLoader.GetString("ErrorCardNumberInvalidLength"); }

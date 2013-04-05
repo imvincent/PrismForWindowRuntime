@@ -90,15 +90,10 @@ namespace AdventureWorks.AWShopper.Views
         /// <seealso cref="StartLayoutUpdates"/>
         public void StopLayoutUpdates(object sender, RoutedEventArgs eventArgs)
         {
-            var control = sender as Control;
-            if (control == null || this._visualStateAwareControls == null) return;
-            this._visualStateAwareControls.Remove(control);
-            if (this._visualStateAwareControls.Count == 0)
-            {
-                // Stop listening to view state changes when no controls are interested in updates
-                this._visualStateAwareControls = null;
-                Window.Current.SizeChanged -= this.WindowSizeChanged;
-            }
+            this._visualStateAwareControls.Clear();
+            // Stop listening to view state changes when no controls are interested in updates
+            this._visualStateAwareControls = null;
+            Window.Current.SizeChanged -= this.WindowSizeChanged;
         }
 
         /// <summary>

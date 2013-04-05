@@ -6,6 +6,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
@@ -22,7 +23,6 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
     [TestClass]
     public class CheckoutSummaryPageViewModelFixture
     {
-
         [TestMethod]
         public async Task SubmitValidOrder_NavigatesToOrderConfirmation()
         {
@@ -144,6 +144,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                 PaymentMethod = new PaymentMethod() { CardNumber = "1234" },
                 ShippingMethod = shippingMethods.First()
             };
+
             var shippingMethodService = new MockShippingMethodService() 
             {
                 GetShippingMethodsAsyncDelegate = () => Task.FromResult<IEnumerable<ShippingMethod>>(shippingMethods) 
@@ -151,9 +152,13 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             var orderRepository = new MockOrderRepository() { CurrentOrder =  order };
             var shoppingCartRepository = new MockShoppingCartRepository();
             shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult(order.ShoppingCart);
+            var checkoutDataRepository = new MockCheckoutDataRepository();
+            checkoutDataRepository.GetShippingAddressAsyncDelegate = s => Task.FromResult(new Address());
+            checkoutDataRepository.GetBillingAddressAsyncDelegate = s => Task.FromResult(new Address());
+            checkoutDataRepository.GetPaymentMethodDelegate = s => Task.FromResult(new PaymentMethod{CardNumber = "1234"});
 
             var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), new MockOrderService(), orderRepository, shippingMethodService,
-                                                          null, shoppingCartRepository,
+                                                          checkoutDataRepository, shoppingCartRepository,
                                                           new MockAccountService(), new MockFlyoutService(), new MockResourceLoader(), null);
 
             target.OnNavigatedTo(null, NavigationMode.New, null);
@@ -259,6 +264,43 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             requestedPageName = "PaymentMethod";
             target.SelectedCheckoutData = new CheckoutDataViewModel() { DataType = Constants.PaymentMethod };
             target.AddCheckoutDataCommand.Execute().Wait();
+        }
+
+        [TestMethod]
+        public void NavigatingToWhenNoShippingMethodSelected_RecalculatesOrder()
+        {
+            var shippingMethods = new List<ShippingMethod> { new ShippingMethod { Id = 1, Cost = 0 } };
+            var shoppingCartItems = new List<ShoppingCartItem> { new ShoppingCartItem { Quantity = 1, Currency = "USD", Product = new Product() } };
+            var order = new Order
+                {
+                ShoppingCart = new ShoppingCart(shoppingCartItems) { Currency = "USD", TotalPrice = 100 },
+                ShippingAddress = new Address { Id = "1"},
+                BillingAddress = new Address { Id = "1" },
+                PaymentMethod = new PaymentMethod() { CardNumber = "1234" },
+                ShippingMethod = null
+            };
+            var shippingMethodService = new MockShippingMethodService
+            {
+                GetShippingMethodsAsyncDelegate = () => Task.FromResult<IEnumerable<ShippingMethod>>(shippingMethods)
+            };
+            var orderRepository = new MockOrderRepository { CurrentOrder = order };
+            var shoppingCartRepository = new MockShoppingCartRepository
+                {
+                    GetShoppingCartAsyncDelegate = () => Task.FromResult(order.ShoppingCart)
+                };
+            var checkoutDataRepository = new MockCheckoutDataRepository();
+            checkoutDataRepository.GetShippingAddressAsyncDelegate = s => Task.FromResult(new Address());
+            checkoutDataRepository.GetBillingAddressAsyncDelegate = s => Task.FromResult(new Address());
+            checkoutDataRepository.GetPaymentMethodDelegate = s => Task.FromResult(new PaymentMethod { CardNumber = "1234" });
+            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), new MockOrderService(), orderRepository, shippingMethodService,
+                                                          checkoutDataRepository, shoppingCartRepository,
+                                                          new MockAccountService(), new MockFlyoutService(), new MockResourceLoader(), null);
+
+            target.OnNavigatedTo(null, NavigationMode.New, null);
+
+            Assert.AreEqual("$0.00", target.ShippingCost);
+            Assert.AreEqual("$100.00", target.OrderSubtotal);
+            Assert.AreEqual("$100.00", target.GrandTotal);
         }
     }
 }

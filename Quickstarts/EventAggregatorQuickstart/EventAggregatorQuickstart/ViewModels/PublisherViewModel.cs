@@ -14,6 +14,8 @@ using Microsoft.Practices.StoreApps.Infrastructure;
 
 namespace EventAggregatorQuickstart
 {
+    // This QuickStart is documented at http://go.microsoft.com/fwlink/?LinkID=288828&clcid=0x409
+
     public class PublisherViewModel : ViewModel
     {
         IEventAggregator _eventAggregator;

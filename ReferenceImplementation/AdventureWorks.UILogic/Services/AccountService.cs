@@ -137,6 +137,8 @@ namespace AdventureWorks.UILogic.Services
                 {
                     // Save credentials in the CredentialStore
                     _credentialStore.SaveCredentials(PasswordVaultResourceName, userName, password);
+
+                    // Documentation on managing application data is at http://go.microsoft.com/fwlink/?LinkID=288818&clcid=0x409
                 }
 
                 RaiseUserChanged(_signedInUser, previousUser);

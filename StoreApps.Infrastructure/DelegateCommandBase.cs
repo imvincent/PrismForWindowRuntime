@@ -28,7 +28,7 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
         protected DelegateCommandBase(Action<object> executeMethod, Func<object, bool> canExecuteMethod)
         {
             if (executeMethod == null || canExecuteMethod == null)
-                throw new ArgumentNullException("executeMethod", "DelegateCommand delegates cannot be null");
+                throw new ArgumentNullException("executeMethod");
 
             _executeMethod = (arg) => { executeMethod(arg); return Task.Delay(0); };
             _canExecuteMethod = canExecuteMethod;
@@ -42,7 +42,7 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
         protected DelegateCommandBase(Func<object,Task> executeMethod, Func<object, bool> canExecuteMethod)
         {
             if (executeMethod == null || canExecuteMethod == null)
-                throw new ArgumentNullException("executeMethod", "DelegateCommand delegates cannot be null");
+                throw new ArgumentNullException("executeMethod");
 
             _executeMethod = executeMethod;
             _canExecuteMethod = canExecuteMethod;

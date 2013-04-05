@@ -28,7 +28,7 @@ namespace AdventureWorks.UILogic.Tests.Mocks
         public Task<IReadOnlyCollection<PaymentMethod>> GetPaymentMethodsAsync()
         {
             if (PaymentMethods == null) return Task.FromResult<IReadOnlyCollection<PaymentMethod>>(null);
-            return Task.FromResult<IReadOnlyCollection<PaymentMethod>>(PaymentMethods);
+            return Task.FromResult<IReadOnlyCollection<PaymentMethod>>(new ReadOnlyCollection<PaymentMethod>(PaymentMethods));
         }
 
         public Task SavePaymentMethodAsync(PaymentMethod paymentMethod)

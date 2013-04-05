@@ -20,6 +20,8 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
     /// The default implementation of IValidatableBindableBase is the ValidatableBindableBase class, which contains the logic to run the validation rules of the
     /// instance of a model class and return the results of this validation as a list of properties' errors.
     /// </summary>
+
+    // Documentation on validating user input is at http://go.microsoft.com/fwlink/?LinkID=288817&clcid=0x409
     public class ValidatableBindableBase : BindableBase, IValidatableBindableBase
     {
         private readonly BindableValidator _bindableValidator;

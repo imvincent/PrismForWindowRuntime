@@ -142,7 +142,16 @@ namespace AdventureWorks.UILogic.ViewModels
 
         public async Task ProcessFormAsync()
         {
-            await _checkoutDataRepository.SaveBillingAddressAsync(_address);
+            var existingAddresses = await _checkoutDataRepository.GetAllBillingAddressesAsync();
+            var matchingExistingAddress = FindMatchingAddress(Address, existingAddresses);
+            if (matchingExistingAddress != null)
+            {
+                Address = matchingExistingAddress;
+            }
+            else
+            {
+                await _checkoutDataRepository.SaveBillingAddressAsync(Address);
+            }
         }
 
         public async Task PopulateStatesAsync()
@@ -177,6 +186,19 @@ namespace AdventureWorks.UILogic.ViewModels
         public void SetLoadDefault(bool loadDefault)
         {
             _loadDefault = loadDefault;
+        }
+
+        private static Address FindMatchingAddress(Address searchAddress, IEnumerable<Address> addresses)
+        {
+            return addresses.FirstOrDefault(address =>
+                searchAddress.FirstName == address.FirstName &&
+                searchAddress.MiddleInitial == address.MiddleInitial &&
+                searchAddress.LastName == address.LastName &&
+                searchAddress.StreetAddress == address.StreetAddress &&
+                searchAddress.OptionalAddress == address.OptionalAddress &&
+                searchAddress.City == address.City &&
+                searchAddress.State == address.State &&
+                searchAddress.ZipCode == address.ZipCode);
         }
     }
 }

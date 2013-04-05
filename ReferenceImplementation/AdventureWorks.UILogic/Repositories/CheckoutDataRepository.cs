@@ -23,10 +23,18 @@ namespace AdventureWorks.UILogic.Repositories
         private IReadOnlyCollection<Address> _cachedAddresses;
         private IReadOnlyCollection<PaymentMethod> _cachedPaymentMethods;
 
-        public CheckoutDataRepository(IAddressService addressService, IPaymentMethodService paymentMethodService)
+        public CheckoutDataRepository(IAddressService addressService, IPaymentMethodService paymentMethodService, IAccountService accountService)
         {
             _addressService = addressService;
             _paymentMethodService = paymentMethodService;
+            if (accountService != null)
+            {
+                accountService.UserChanged += (sender, args) =>
+                                                  {
+                                                      ExpireCachedAddresses();
+                                                      ExpireCachedPaymentMethods();
+                                                  };
+            }
         }
 
         public async Task<Address> GetShippingAddressAsync(string id)

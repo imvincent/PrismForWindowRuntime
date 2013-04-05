@@ -22,6 +22,8 @@ using System.Net.Http;
 
 namespace AdventureWorks.UILogic.ViewModels
 {
+    // Documentation on using search can be found at http://go.microsoft.com/fwlink/?LinkID=288822&clcid=0x409
+
     public class SearchResultsPageViewModel : ViewModel
     {
         private readonly IProductCatalogRepository _productCatalogRepository;

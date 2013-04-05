@@ -21,6 +21,9 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
     /// This class also provide methods for registering the viewmodel factories,
     /// and also to override the default viewmodel factory and the default view type to VM type resolver.
     /// </summary>
+    
+    // Documentation on using the MVVM pattern is at http://go.microsoft.com/fwlink/?LinkID=288814&clcid=0x409
+
     public static class ViewModelLocator
     {
         /// <summary>

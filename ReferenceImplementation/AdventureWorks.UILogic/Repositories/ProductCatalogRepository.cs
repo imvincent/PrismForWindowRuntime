@@ -16,6 +16,8 @@ using AdventureWorks.UILogic.Services;
 
 namespace AdventureWorks.UILogic.Repositories
 {
+    // Documentation on managing application data is at http://go.microsoft.com/fwlink/?LinkID=288818&clcid=0x409
+
     public class ProductCatalogRepository : IProductCatalogRepository
     {
         private readonly IProductCatalogService _productCatalogService;

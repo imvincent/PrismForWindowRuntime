@@ -14,6 +14,7 @@ using Windows.UI.StartScreen;
 
 namespace AdventureWorks.AWShopper.Services
 {
+    // Documentation on working with tiles can be found at http://go.microsoft.com/fwlink/?LinkID=288821&clcid=0x409
     public class SecondaryTileService : ISecondaryTileService
     {
         private Uri _squareLogoUri = new Uri("ms-appx:///Assets/Logo.png");

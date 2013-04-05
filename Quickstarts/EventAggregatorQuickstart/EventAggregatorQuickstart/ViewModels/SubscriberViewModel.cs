@@ -13,6 +13,8 @@ using Windows.UI.Xaml;
 
 namespace EventAggregatorQuickstart.ViewModels
 {
+    // This QuickStart is documented at http://go.microsoft.com/fwlink/?LinkID=288828&clcid=0x409
+
     public class SubscriberViewModel : ViewModel
     {
         private bool _showWarning;

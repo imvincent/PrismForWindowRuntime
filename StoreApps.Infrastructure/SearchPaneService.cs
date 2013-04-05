@@ -15,6 +15,8 @@ namespace Microsoft.Practices.StoreApps.Infrastructure
     /// The SearchPaneService class abstracts Windows.ApplicationModel.Search.SearchPane object for use by apps that derive from the MvvmAppBase class.
     /// The SearchPane class represents and manages the search pane that opens when a user activates the Search charm.
     /// </summary>
+    
+    // Documentation on using search can be found at http://go.microsoft.com/fwlink/?LinkID=288822&clcid=0x409 
     public class SearchPaneService : ISearchPaneService
     {
         /// <summary>

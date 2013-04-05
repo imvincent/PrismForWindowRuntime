@@ -115,6 +115,7 @@
     <Compile Include="Mocks\MockPaymentMethodService.cs" />
     <Compile Include="Mocks\MockSearchPaneService.cs" />
     <Compile Include="Mocks\MockSessionStateService.cs" />
+    <Compile Include="Mocks\MockSignInUserControlViewModel.cs" />
     <Compile Include="Services\AccountServiceFixture.cs" />
     <Compile Include="Mocks\CustomDelegates.cs" />
     <Compile Include="Mocks\MockAccountService.cs" />
@@ -137,7 +138,7 @@
     <Compile Include="Mocks\MockShippingAddressPageViewModel.cs" />
     <Compile Include="Mocks\MockShoppingCartRepository.cs" />
     <Compile Include="Mocks\MockShoppingCartService.cs" />
-    <Compile Include="Mocks\MockTileService.cs" />
+    <Compile Include="Mocks\MockSecondaryTileService.cs" />
     <Compile Include="Repositories\CheckoutDataRepositoryFixture.cs" />
     <Compile Include="Repositories\ProductCatalogRepositoryFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

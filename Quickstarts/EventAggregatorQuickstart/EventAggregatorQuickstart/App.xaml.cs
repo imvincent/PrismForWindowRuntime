@@ -16,6 +16,8 @@ using Windows.UI.Xaml.Controls;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
 
+// This QuickStart is documented at http://go.microsoft.com/fwlink/?LinkID=288828&clcid=0x409
+
 namespace EventAggregatorQuickstart
 {
     /// <summary>

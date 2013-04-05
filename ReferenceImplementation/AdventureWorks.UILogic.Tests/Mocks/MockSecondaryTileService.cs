@@ -16,7 +16,7 @@ using Windows.UI.Notifications;
 
 namespace AdventureWorks.UILogic.Tests.Mocks
 {
-    public class MockTileService : ISecondaryTileService
+    public class MockSecondaryTileService : ISecondaryTileService
     {
         public Func<string, bool> SecondaryTileExistsDelegate { get; set; }
         public Func<string, string, string, string, Task<bool>> PinSquareSecondaryTileDelegate { get; set; }

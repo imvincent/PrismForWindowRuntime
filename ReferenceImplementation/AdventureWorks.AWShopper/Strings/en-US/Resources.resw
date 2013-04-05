@@ -457,10 +457,6 @@
     <value>OK</value>
     <comment>Caption for the OK button of the Dialog messages</comment>
   </data>
-  <data name="OrderPurchasedMessage" xml:space="preserve">
-    <value>Your order has been submitted. Thank you for your purchase.</value>
-    <comment>Message for when the order is completed and successful</comment>
-  </data>
   <data name="OrderPurchasedTitle" xml:space="preserve">
     <value>Order purchased</value>
     <comment>Title for the Order Purchased confirmation dialog</comment>
@@ -594,7 +590,7 @@
     <comment>AutomationProperties.Name for Search</comment>
   </data>
   <data name="ZipCodeLengthInvalidErrorMessage" xml:space="preserve">
-    <value>Invalid Zip Code length</value>
+    <value>Invalid Zip Code length. Try Washington (State) and 98052 (Zip Code).</value>
     <comment>Error message for when the zip code has an invalid length</comment>
   </data>
   <data name="EditQuantityLabel.Text" xml:space="preserve">
@@ -602,7 +598,7 @@
     <comment>Title for the Edit Quantity Popup</comment>
   </data>
   <data name="ProductInformationTitle.Text" xml:space="preserve">
-    <value>Product Information</value>
+    <value>Product Details</value>
     <comment>Title for the Item Details Page</comment>
   </data>
   <data name="BottomAppBar.FlowDirection" xml:space="preserve">
@@ -647,7 +643,7 @@
     <value>Items Purchased</value>
     <comment>Label for the Items Purchased column on the Orders Confirmation page</comment>
   </data>
-  <data name="OrderConfirmationTitle.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+  <data name="OrderConfirmationTitle.Text" xml:space="preserve">
     <value>Order Confirmation</value>
     <comment>Label for the Order Confirmation page</comment>
   </data>
@@ -658,5 +654,12 @@
   <data name="OrderConfirmationContent" xml:space="preserve">
     <value>Your order confirmation number is: {0}.</value>
     <comment>Text for order confirmation message including confirmation number</comment>
+  </data>
+  <data name="ZipCodeRegexErrorMessage" xml:space="preserve">
+    <value>This field contains invalid characters. Try Washington (State) and 98052 (Zip Code).</value>
+  </data>
+  <data name="SignInCancelButton.Content" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>Text for the Cancel button of the Login modal dialog</comment>
   </data>
 </root>

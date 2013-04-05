@@ -35,7 +35,7 @@ namespace AdventureWorks.UILogic.Tests.Repositories
                                                    });
             var eventAggregator = new MockEventAggregator();
             eventAggregator.GetEventDelegate = type => shoppingCartItemUpdatedEvent;
-            var target = new ShoppingCartRepository(shoppingCartService, new MockAccountService(), eventAggregator, new MockSessionStateService(), new MockAlertMessageService());
+            var target = new ShoppingCartRepository(shoppingCartService, new MockAccountService(), eventAggregator, new MockSessionStateService());
 
             target.AddProductToShoppingCartAsync("TestProductId");
 
@@ -56,7 +56,7 @@ namespace AdventureWorks.UILogic.Tests.Repositories
             });
             var eventAggregator = new MockEventAggregator();
             eventAggregator.GetEventDelegate = type => shoppingCartItemUpdatedEvent;
-            var target = new ShoppingCartRepository(shoppingCartService, new MockAccountService(), eventAggregator, new MockSessionStateService(), new MockAlertMessageService());
+            var target = new ShoppingCartRepository(shoppingCartService, new MockAccountService(), eventAggregator, new MockSessionStateService());
 
             target.RemoveProductFromShoppingCartAsync("TestProductId");
 
@@ -83,7 +83,7 @@ namespace AdventureWorks.UILogic.Tests.Repositories
                     GetEventDelegate = (a) => shoppingCartItemUpdatedEvent
                 };
 
-            var target = new ShoppingCartRepository(shoppingCartService, new MockAccountService(), eventAggregator, new MockSessionStateService(), new MockAlertMessageService());
+            var target = new ShoppingCartRepository(shoppingCartService, new MockAccountService(), eventAggregator, new MockSessionStateService());
             await target.RemoveShoppingCartItemAsync("TestShoppingCartItemId");
 
             Assert.IsTrue(shoppingCartItemUpdatedRaised);
@@ -107,7 +107,7 @@ namespace AdventureWorks.UILogic.Tests.Repositories
                     MergeShoppingCartsAsyncDelegate = (s, s1) => Task.FromResult(false)
                 };
 
-            var target = new ShoppingCartRepository(shoppingCartService, accountService, eventAggregator, new MockSessionStateService(), new MockAlertMessageService());
+            var target = new ShoppingCartRepository(shoppingCartService, accountService, eventAggregator, new MockSessionStateService());
             accountService.RaiseUserChanged(new UserInfo { UserName = "TestUserName" }, null);
 
             Assert.IsTrue(shoppingCartUpdatedRaised);
@@ -149,14 +149,6 @@ namespace AdventureWorks.UILogic.Tests.Repositories
                             return Task.FromResult(true);
                         }
                 };
-            var alertMessageService = new MockAlertMessageService();
-            alertMessageService.ShowAsyncDelegate = (message, title) =>
-                                                        {
-                                                            Assert.IsTrue(
-                                                                message.StartsWith("Your shopping cart has been merged"));
-                                                            alertMessageServiceCalled = true;
-                                                            return Task.FromResult(string.Empty);
-                                                        };
             var accountService = new MockAccountService();
             var shoppingCartUpdatedEvent = new MockShoppingCartUpdatedEvent
                 {
@@ -170,11 +162,10 @@ namespace AdventureWorks.UILogic.Tests.Repositories
             var sessionStateService = new MockSessionStateService();
             sessionStateService.SessionState[ShoppingCartRepository.ShoppingCartIdKey] = "AnonymousId";
 
-            var target = new ShoppingCartRepository(shoppingCartService, accountService, eventAggregator, sessionStateService, alertMessageService);
+            var target = new ShoppingCartRepository(shoppingCartService, accountService, eventAggregator, sessionStateService);
             accountService.RaiseUserChanged(new UserInfo { UserName = "TestUserName" }, null);
 
             Assert.IsTrue(mergeShoppingCartsCalled);
-            Assert.IsTrue(alertMessageServiceCalled);
         }
 
         [TestMethod]
@@ -187,7 +178,7 @@ namespace AdventureWorks.UILogic.Tests.Repositories
                     GetShoppingCartAsyncDelegate = s => Task.FromResult(shoppingCart)
                 };
 
-            var target = new ShoppingCartRepository(shoppingCartService, null, null, new MockSessionStateService(), new MockAlertMessageService());
+            var target = new ShoppingCartRepository(shoppingCartService, null, null, new MockSessionStateService());
             var firstCartReturned = await target.GetShoppingCartAsync();
             shoppingCartService.GetShoppingCartAsyncDelegate = s =>
             {
@@ -213,7 +204,7 @@ namespace AdventureWorks.UILogic.Tests.Repositories
                     GetEventDelegate = type => new ShoppingCartItemUpdatedEvent()
                 };
 
-            var target = new ShoppingCartRepository(shoppingCartService, null, eventAggregator, new MockSessionStateService(), new MockAlertMessageService());
+            var target = new ShoppingCartRepository(shoppingCartService, null, eventAggregator, new MockSessionStateService());
             var firstCartReturned = await target.GetShoppingCartAsync();
 
             await target.AddProductToShoppingCartAsync("TestProductId");
@@ -238,7 +229,7 @@ namespace AdventureWorks.UILogic.Tests.Repositories
                 {
                     GetEventDelegate = type => new ShoppingCartItemUpdatedEvent()
                 };
-            var target = new ShoppingCartRepository(shoppingCartService, null, eventAggregator, new MockSessionStateService(), new MockAlertMessageService());
+            var target = new ShoppingCartRepository(shoppingCartService, null, eventAggregator, new MockSessionStateService());
             var firstCartReturned = await target.GetShoppingCartAsync();
 
             await target.RemoveShoppingCartItemAsync("TestShoppingCartItemId");

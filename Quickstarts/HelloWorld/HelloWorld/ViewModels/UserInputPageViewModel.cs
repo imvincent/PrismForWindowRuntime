@@ -12,6 +12,8 @@ using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
 
 namespace HelloWorld.ViewModels
 {
+    // This QuickStart is documented at http://go.microsoft.com/fwlink/?LinkID=288829&clcid=0x409
+
     public class UserInputPageViewModel : ViewModel
     {
         private readonly IDataRepository _dataRepository;

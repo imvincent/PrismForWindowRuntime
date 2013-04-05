@@ -8,6 +8,7 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
 using Microsoft.Practices.StoreApps.Infrastructure;
@@ -87,7 +88,16 @@ namespace AdventureWorks.UILogic.ViewModels
 
         public async Task ProcessFormAsync()
         {
-            await _checkoutDataRepository.SavePaymentMethodAsync(PaymentMethod);
+            var existingPaymentMethods = await _checkoutDataRepository.GetAllPaymentMethodsAsync();
+            var matchingExistingPaymentMethod = FindMatchingPaymentMethod(PaymentMethod, existingPaymentMethods);
+            if (matchingExistingPaymentMethod != null)
+            {
+                PaymentMethod = matchingExistingPaymentMethod;
+            }
+            else
+            {
+                await _checkoutDataRepository.SavePaymentMethodAsync(PaymentMethod);
+            }
         }
 
         public bool ValidateForm()
@@ -98,6 +108,19 @@ namespace AdventureWorks.UILogic.ViewModels
         public void SetLoadDefault(bool loadDefault)
         {
             _loadDefault = loadDefault;
+        }
+
+        private static PaymentMethod FindMatchingPaymentMethod(PaymentMethod searchPaymentMethod, IEnumerable<PaymentMethod> paymentMethods)
+        {
+            //This method is not comparing the Card Number since the Card Number value is being replaced with asterisks
+            //when persisted to the service. In a real production app using SSL, you would send/receive the actual card number
+            //securely.
+            return paymentMethods.FirstOrDefault(paymentMethod =>
+                searchPaymentMethod.CardVerificationCode == paymentMethod.CardVerificationCode &&
+                searchPaymentMethod.CardholderName == paymentMethod.CardholderName &&
+                searchPaymentMethod.ExpirationMonth == paymentMethod.ExpirationMonth &&
+                searchPaymentMethod.ExpirationYear == paymentMethod.ExpirationYear &&
+                searchPaymentMethod.Phone == paymentMethod.Phone);
         }
     }
 }

@@ -42,7 +42,7 @@ namespace AdventureWorks.WebServices.Controllers
         public Product GetProduct(string id)
         {
             var item = _productRepository.GetProduct(id);
-            
+
             if (item == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -69,6 +69,11 @@ namespace AdventureWorks.WebServices.Controllers
         // GET /api/Product?categoryId={categoryId}
         public IEnumerable<Product> GetProducts(int categoryId)
         {
+            if (categoryId == 0)
+            {
+                return _productRepository.GetTodaysDealsProducts();
+            }
+
             return _productRepository.GetProductsForCategory(categoryId);
         }
     }

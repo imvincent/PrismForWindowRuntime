@@ -28,6 +28,10 @@ using AdventureWorks.AWShopper.Services;
 
 namespace AdventureWorks.AWShopper
 {
+    /// <summary>
+    /// This class uses the MvvmAppBase to bootstrap this Windows Store App with Mvvm support
+    /// http://go.microsoft.com/fwlink/?LinkID=288809&clcid=0x409
+    /// </summary>
     sealed partial class App : MvvmAppBase
     {
         // Create the singleton container that will be used for type resolution in the app
@@ -45,6 +49,7 @@ namespace AdventureWorks.AWShopper
             this.RequestedTheme = ApplicationTheme.Dark;
         }
 
+        // Documentation on navigation between pages is at http://go.microsoft.com/fwlink/?LinkID=288815&clcid=0x409
         // <snippet320>
         // <snippet812>
         // <snippet404>
@@ -66,6 +71,7 @@ namespace AdventureWorks.AWShopper
         // </snippet812>
         // </snippet320>
 
+        // Documentation on using search can be found at http://go.microsoft.com/fwlink/?LinkID=288822&clcid=0x409
         // <snippet1002>
         protected override void OnSearchApplication(SearchQueryArguments args)
         {
@@ -134,6 +140,7 @@ namespace AdventureWorks.AWShopper
             _container.RegisterType<IShippingAddressUserControlViewModel, ShippingAddressUserControlViewModel>();
             _container.RegisterType<IBillingAddressUserControlViewModel, BillingAddressUserControlViewModel>();
             _container.RegisterType<IPaymentMethodUserControlViewModel, PaymentMethodUserControlViewModel>();
+            _container.RegisterType<ISignInUserControlViewModel, SignInUserControlViewModel>();
 
             // <snippet301>
             ViewModelLocator.SetDefaultViewTypeToViewModelTypeResolver((viewType) =>
@@ -144,6 +151,7 @@ namespace AdventureWorks.AWShopper
                 });
             //</snippet301>
 
+            // Documentation on working with tiles can be found at http://go.microsoft.com/fwlink/?LinkID=288821&clcid=0x409
             // <snippet800>
             _tileUpdater = TileUpdateManager.CreateTileUpdaterForApplication();
             _tileUpdater.StartPeriodicUpdate(new Uri(Constants.ServerAddress + "/api/TileNotification"), PeriodicUpdateRecurrence.HalfHour);

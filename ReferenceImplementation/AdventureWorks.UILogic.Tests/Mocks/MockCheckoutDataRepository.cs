@@ -16,12 +16,18 @@ namespace AdventureWorks.UILogic.Tests.Mocks
 {
     public class MockCheckoutDataRepository : ICheckoutDataRepository
     {
+        public Func<Task<IReadOnlyCollection<Address>>> GetAllShippingAddressesAsyncDelegate { get; set; }
+        public Func<Task<IReadOnlyCollection<Address>>> GetAllBillingAddressesAsyncDelegate { get; set; }
+        public Func<Task<IReadOnlyCollection<PaymentMethod>>> GetAllPaymentMethodsAsyncDelegate { get; set; }
         public Func<string, Task<Address>> GetShippingAddressAsyncDelegate { get; set; }
         public Func<string, Task<Address>> GetBillingAddressAsyncDelegate { get; set; }
         public Func<string, Task<PaymentMethod>> GetPaymentMethodDelegate { get; set; }
         public Func<Task<Address>> GetDefaultShippingAddressAsyncDelegate { get; set; }
         public Func<Task<Address>> GetDefaultBillingAddressAsyncDelegate { get; set; }
-        public Func<Task<PaymentMethod>> GetDefaultPaymentMethodAsyncDelegate { get; set; } 
+        public Func<Task<PaymentMethod>> GetDefaultPaymentMethodAsyncDelegate { get; set; }
+        public Func<Address, Task> SaveShippingAddressAsyncDelegate { get; set; }
+        public Func<Address, Task> SaveBillingAddressAsyncDelegate { get; set; }
+        public Func<PaymentMethod, Task> SavePaymentMethodAsyncDelegate { get; set; }
 
         public Task<Address> GetShippingAddressAsync(string id)
         {
@@ -55,32 +61,32 @@ namespace AdventureWorks.UILogic.Tests.Mocks
 
         public Task<IReadOnlyCollection<Address>> GetAllShippingAddressesAsync()
         {
-            throw new NotImplementedException();
+            return GetAllShippingAddressesAsyncDelegate();
         }
 
         public Task<IReadOnlyCollection<Address>> GetAllBillingAddressesAsync()
         {
-            throw new NotImplementedException();
+            return GetAllBillingAddressesAsyncDelegate();
         }
 
         public Task<IReadOnlyCollection<PaymentMethod>> GetAllPaymentMethodsAsync()
         {
-            throw new NotImplementedException();
+            return GetAllPaymentMethodsAsyncDelegate();
         }
 
         public Task SaveShippingAddressAsync(Address address)
         {
-            throw new NotImplementedException();
+            return SaveShippingAddressAsyncDelegate(address);
         }
 
         public Task SaveBillingAddressAsync(Address address)
         {
-            throw new NotImplementedException();
+            return SaveBillingAddressAsyncDelegate(address);
         }
 
         public Task SavePaymentMethodAsync(PaymentMethod paymentMethod)
         {
-            throw new NotImplementedException();
+            return SavePaymentMethodAsyncDelegate(paymentMethod);
         }
 
         public Task SetDefaultShippingAddressAsync(string addressId)

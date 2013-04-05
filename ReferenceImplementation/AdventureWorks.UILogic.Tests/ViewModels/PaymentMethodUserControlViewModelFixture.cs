@@ -7,6 +7,7 @@
 
 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Tests.Mocks;
@@ -41,6 +42,67 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             target.SetLoadDefault(true);
             target.OnNavigatedTo(null, NavigationMode.New, new Dictionary<string, object>());
             Assert.AreEqual("CardHolderName", target.PaymentMethod.CardholderName);
+        }
+
+        [TestMethod]
+        public async Task ProcessFormAsync_UsesExistingIfMatchingFound()
+        {
+            var newPaymentMethod = new PaymentMethod
+            {
+                CardNumber = "1234",
+                CardholderName = "testcardholdername"
+            };
+
+            var existingPaymentMethods = new List<PaymentMethod>
+                                        {
+                                            new PaymentMethod
+                                                {
+                                                    Id = "testId",
+                                                    CardNumber = "1234",
+                                                    CardholderName = "testcardholdername"
+                                                }
+                                        };
+
+            var checkoutDataRepository = new MockCheckoutDataRepository();
+            checkoutDataRepository.GetAllPaymentMethodsAsyncDelegate =
+                () => Task.FromResult<IReadOnlyCollection<PaymentMethod>>(new ReadOnlyCollection<PaymentMethod>(existingPaymentMethods));
+
+            var target = new PaymentMethodUserControlViewModel(checkoutDataRepository);
+            target.PaymentMethod = newPaymentMethod;
+
+            await target.ProcessFormAsync();
+
+            Assert.AreEqual("testId", target.PaymentMethod.Id);
+        }
+
+        [TestMethod]
+        public async Task ProcessFormAsync_SavesPaymentMethodIfNoMatchingFound()
+        {
+            var savePaymentMethodCalled = false;
+            var newPaymentMethod = new PaymentMethod
+            {
+                CardNumber = "1234",
+                CardholderName = "testcardholdername"
+            };
+
+            var existingPaymentMethods = new List<PaymentMethod>();
+            var checkoutDataRepository = new MockCheckoutDataRepository();
+            checkoutDataRepository.GetAllPaymentMethodsAsyncDelegate =
+                () => Task.FromResult<IReadOnlyCollection<PaymentMethod>>(new ReadOnlyCollection<PaymentMethod>(existingPaymentMethods));
+
+            checkoutDataRepository.SavePaymentMethodAsyncDelegate = paymentMethod =>
+            {
+                savePaymentMethodCalled = true;
+                Assert.AreEqual("testcardholdername",
+                                paymentMethod.CardholderName);
+                return Task.Delay(0);
+            };
+            var target = new PaymentMethodUserControlViewModel(checkoutDataRepository);
+            target.PaymentMethod = newPaymentMethod;
+
+            await target.ProcessFormAsync();
+
+            Assert.IsTrue(savePaymentMethodCalled);
         }
     }
 }

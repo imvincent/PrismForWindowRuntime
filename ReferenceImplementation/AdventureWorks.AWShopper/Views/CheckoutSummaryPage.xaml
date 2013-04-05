@@ -45,9 +45,10 @@
         </Grid>
         <ScrollViewer x:Name="content"
                       Grid.Row="1"
+                      Grid.RowSpan="2"
                       HorizontalScrollBarVisibility="Auto"
-                      VerticalScrollBarVisibility="Hidden"
-                      Grid.RowSpan="2">
+                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                      Style="{StaticResource HorizontalScrollViewerStyle}">
             <Grid x:Name="ContentGrid"
                   Margin="120,0,0,0">
                 <Grid.Resources>
@@ -104,8 +105,7 @@
                           Grid.Row="1"
                           Grid.Column="0"
                           Margin="0,0,0,15"
-                          Height="170"
-                          Background="{StaticResource AWShopperItemBackgroundBrush}">
+                          Height="170">
                         <Grid.RowDefinitions>
                             <RowDefinition />
                             <RowDefinition />
@@ -120,87 +120,60 @@
                                    Grid.Row="0"
                                    Grid.Column="0"
                                    Text="Order Subtotal:"
-                                   Width="140"
                                    TextTrimming="WordEllipsis"
-                                   TextAlignment="Right"
                                    VerticalAlignment="Center"
-                                   FontSize="18"
-                                   Foreground="{StaticResource AWShopperItemForegroundBrush}"
-                                   Margin="0,0,10,0" />
+                                   FontSize="18" />
                         <TextBlock Grid.Row="0"
                                    Grid.Column="1"
                                    Text="{Binding OrderSubtotal}"
-                                   Width="150"
                                    TextTrimming="WordEllipsis"
                                    TextAlignment="Right"
                                    VerticalAlignment="Center"
-                                   FontSize="24"
-                                   Foreground="{StaticResource AWShopperItemForegroundBrush}"
-                                   Margin="0,0,10,0" />
+                                   FontSize="18" />
                         <TextBlock x:Uid="ShippingLabel"
                                    Grid.Row="1"
                                    Grid.Column="0"
                                    Text="Shipping:"
-                                   Width="140"
                                    TextTrimming="WordEllipsis"
-                                   TextAlignment="Right"
                                    VerticalAlignment="Center"
-                                   FontSize="18"
-                                   Foreground="{StaticResource AWShopperItemForegroundBrush}"
-                                   Margin="0,0,10,0" />
+                                   FontSize="18" />
                         <TextBlock Grid.Row="1"
                                    Grid.Column="1"
                                    Text="{Binding ShippingCost}"
-                                   Width="150"
                                    TextTrimming="WordEllipsis"
                                    TextAlignment="Right"
                                    VerticalAlignment="Center"
-                                   FontSize="24"
-                                   Foreground="{StaticResource AWShopperItemForegroundBrush}"
-                                   Margin="0,0,10,0" />
+                                   FontSize="18" />
                         <TextBlock x:Uid="TaxLabel"
                                    Grid.Row="2"
                                    Grid.Column="0"
                                    Text="Tax:"
-                                   Width="140"
                                    TextTrimming="WordEllipsis"
-                                   TextAlignment="Right"
                                    VerticalAlignment="Center"
-                                   FontSize="18"
-                                   Foreground="{StaticResource AWShopperItemForegroundBrush}"
-                                   Margin="0,0,10,0" />
+                                   FontSize="18" />
                         <TextBlock Grid.Row="2"
                                    Grid.Column="1"
                                    Text="{Binding TaxCost}"
-                                   Width="150"
                                    TextTrimming="WordEllipsis"
                                    TextAlignment="Right"
                                    VerticalAlignment="Center"
-                                   FontSize="24"
-                                   Foreground="{StaticResource AWShopperItemForegroundBrush}"
-                                   Margin="0,0,10,0" />
+                                   FontSize="18" />
                         <TextBlock x:Uid="GrandTotalLabel"
                                    x:Name="GrandTotalLabel"
                                    Grid.Row="3"
                                    Grid.Column="0"
                                    Text="Grand Total:"
-                                   Width="140"
                                    TextTrimming="WordEllipsis"
-                                   TextAlignment="Right"
                                    VerticalAlignment="Center"
-                                   FontSize="24"
-                                   Foreground="{StaticResource AWShopperItemForegroundBrush}"
-                                   Margin="0,0,10,0" />
+                                   FontSize="24" />
                         <TextBlock Grid.Row="3"
                                    Grid.Column="1"
                                    Text="{Binding GrandTotal}"
-                                   Width="150"
                                    TextTrimming="WordEllipsis"
                                    TextAlignment="Right"
                                    VerticalAlignment="Center"
                                    FontSize="24"
-                                   Foreground="{StaticResource AWShopperAccentTextBrush}"
-                                   Margin="0,0,10,0" />
+                                   Foreground="{StaticResource AWShopperAccentTextBrush}" />
                     </Grid>
                     <Button x:Name="SubmitButton"
                             x:Uid="SubmitButton"
@@ -208,8 +181,7 @@
                             Command="{Binding SubmitCommand}"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Top"
-                            Background="{StaticResource AWShopperAccentBrush}"
-                            Foreground="White" />
+                            Background="{StaticResource AWShopperAccentBrush}" />
                 </StackPanel>
 
                 <!-- Address & Payment -->
@@ -259,7 +231,6 @@
                            Style="{StaticResource SummarySubheaderTextStyle}" />
                 <GridView x:Name="ItemsGridView"
                           SelectionMode="None"
-                          Height="520"
                           VerticalAlignment="Top"
                           Grid.Row="7"
                           Grid.Column="3"
@@ -286,7 +257,6 @@
                VerticalOffset="150">
             <Grid x:Name="PopupPanel"
                   Background="Black"
-                  Opacity=".8"
                   Height="250"
                   Width="410">
                 <Grid.RowDefinitions>
@@ -316,7 +286,6 @@
                         Width="370"
                         Margin="10,5"
                         Background="{StaticResource AWShopperAccentBrush}"
-                        Foreground="White"
                         Command="{Binding AddCheckoutDataCommand}" />
             </Grid>
         </Popup>

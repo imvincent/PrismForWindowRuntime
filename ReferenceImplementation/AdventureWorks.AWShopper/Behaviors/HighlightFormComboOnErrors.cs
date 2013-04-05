@@ -12,6 +12,8 @@ using Windows.UI.Xaml;
 
 namespace AdventureWorks.AWShopper.Behaviors
 {
+    // Documentation on validating user input is at http://go.microsoft.com/fwlink/?LinkID=288817&clcid=0x409
+
     public static class HighlightFormComboOnErrors
     {
         public static DependencyProperty PropertyErrorsProperty =

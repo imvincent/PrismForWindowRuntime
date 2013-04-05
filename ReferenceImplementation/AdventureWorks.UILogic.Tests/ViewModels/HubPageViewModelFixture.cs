@@ -25,7 +25,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
     {
         // <snippet1201>
         [TestMethod]
-        public async void OnNavigatedTo_Fill_RootCategories()
+        public void OnNavigatedTo_Fill_RootCategories()
         {
             var repository = new MockProductCatalogRepository();
             var navigationService = new MockNavigationService();

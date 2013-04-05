@@ -27,11 +27,11 @@ namespace AdventureWorks.UILogic.ViewModels
     {
         private ShoppingCart _shoppingCart;
         private ShoppingCartItemViewModel _selectedItem;
+        private readonly ISignInUserControlViewModel _signInUserControlViewModel;
         private ObservableCollection<ShoppingCartItemViewModel> _shoppingCartItemViewModels;
         private readonly IShoppingCartRepository _shoppingCartRepository;
         private readonly INavigationService _navigationService;
         private readonly IAccountService _accountService;
-        private readonly IFlyoutService _flyoutService;
         private readonly IResourceLoader _resourceLoader;
         private readonly IAlertMessageService _alertMessageService;
         private readonly ICheckoutDataRepository _checkoutDataRepository;
@@ -40,13 +40,13 @@ namespace AdventureWorks.UILogic.ViewModels
         private bool _isBottomAppBarOpened;
 
         public ShoppingCartPageViewModel(IShoppingCartRepository shoppingCartRepository, INavigationService navigationService, IAccountService accountService,
-                                         IFlyoutService flyoutService, IResourceLoader resourceLoader, IAlertMessageService alertMessageService,
+                                         ISignInUserControlViewModel signInUserControlViewModel, IResourceLoader resourceLoader, IAlertMessageService alertMessageService,
                                          ICheckoutDataRepository checkoutDataRepository, IOrderRepository orderRepository, IEventAggregator eventAggregator)
         {
             _shoppingCartRepository = shoppingCartRepository;
             _navigationService = navigationService;
             _accountService = accountService;
-            _flyoutService = flyoutService;
+            _signInUserControlViewModel = signInUserControlViewModel;
             _resourceLoader = resourceLoader;
             _alertMessageService = alertMessageService;
             _checkoutDataRepository = checkoutDataRepository;
@@ -155,10 +155,22 @@ namespace AdventureWorks.UILogic.ViewModels
             }
         }
 
+        public ISignInUserControlViewModel SignInUserControlViewModel
+        {
+            get { return _signInUserControlViewModel; }
+        }
+
         public override async void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewModelState)
         {
             base.OnNavigatedTo(navigationParameter, navigationMode, viewModelState);
+            _signInUserControlViewModel.OnNavigatedTo(navigationParameter, navigationMode, viewModelState);
             await UpdateShoppingCartInfoAsync();
+        }
+
+        public override void OnNavigatedFrom(Dictionary<string, object> viewModelState, bool suspending)
+        {
+            base.OnNavigatedFrom(viewModelState, suspending);
+            _signInUserControlViewModel.OnNavigatedFrom(viewModelState, suspending);
         }
 
         public async void UpdateShoppingCartAsync(object notUsed)
@@ -222,7 +234,7 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 if (await _accountService.VerifyUserAuthenticationAsync() == null)
                 {
-                    _flyoutService.ShowFlyout("SignIn", null, async () => await ResolveNavigationActionAsync());
+                    _signInUserControlViewModel.Open(async () => await ResolveNavigationActionAsync());
                 }
                 else
                 {
