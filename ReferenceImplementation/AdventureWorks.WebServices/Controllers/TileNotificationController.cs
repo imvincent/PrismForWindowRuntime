@@ -31,7 +31,6 @@ namespace AdventureWorks.WebServices.Controllers
 
         // GET /api/TileNotification
 
-        // <snippet801>
         public HttpResponseMessage GetTileNotification()
         {
             var tileXml = GetDefaultTileXml("http://localhost:2112/Images/hotrodbike_red_large.jpg",
@@ -50,7 +49,6 @@ namespace AdventureWorks.WebServices.Controllers
                 new System.Net.Http.Headers.MediaTypeHeaderValue("text/xml");
             return response;
         } 
-        // </snippet801>
 
 
         // GET /api/TileNotification?categoryId={categoryId}/id

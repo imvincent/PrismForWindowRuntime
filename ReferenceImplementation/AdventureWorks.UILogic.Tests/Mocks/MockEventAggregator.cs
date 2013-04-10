@@ -7,7 +7,7 @@
 
 
 using System;
-using Microsoft.Practices.PubSubEvents;
+using Microsoft.Practices.Prism.PubSubEvents;
 
 namespace AdventureWorks.UILogic.Tests.Mocks
 {

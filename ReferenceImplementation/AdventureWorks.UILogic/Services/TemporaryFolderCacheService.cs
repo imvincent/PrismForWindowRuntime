@@ -13,7 +13,7 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
-using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Windows.Storage;
 
 namespace AdventureWorks.UILogic.Services
@@ -35,7 +35,6 @@ namespace AdventureWorks.UILogic.Services
         // http://go.microsoft.com/fwlink/?LinkID=288843
         private Dictionary<string,Task> _cacheKeyPreviousTask = new Dictionary<string, Task>();
 
-        // <snippet515>
         public async Task<T> GetDataAsync<T>(string cacheKey)
         {
             await CacheKeyPreviousTask(cacheKey);
@@ -60,9 +59,7 @@ namespace AdventureWorks.UILogic.Services
 
             return toReturn;
         }
-        // </snippet515>
 
-        // <snippet516>
         public async Task SaveDataAsync<T>(string cacheKey, T content)
         {
             await CacheKeyPreviousTask(cacheKey);
@@ -78,7 +75,6 @@ namespace AdventureWorks.UILogic.Services
             var textContent = Serialize<T>(content);
             await FileIO.WriteTextAsync(file, textContent);
         }
-        // </snippet516>
         
         // Note: This method assumes that we are controlling the interleaving of async methods on a single thread.
         private async Task CacheKeyPreviousTask(string cacheKey)

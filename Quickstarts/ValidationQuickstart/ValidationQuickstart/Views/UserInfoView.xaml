@@ -1,11 +1,11 @@
-﻿<Infrastructure:VisualStateAwarePage x:Class="ValidationQuickStart.Views.UserInfoView"
+<Infrastructure:VisualStateAwarePage x:Class="ValidationQuickStart.Views.UserInfoView"
                                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                                      xmlns:vm="using:ValidationQuickStart.ViewModels"
                                      xmlns:behaviors="using:ValidationQuickStart.Behaviors"
-                                     xmlns:Infrastructure="using:Microsoft.Practices.StoreApps.Infrastructure"
+                                     xmlns:Infrastructure="using:Microsoft.Practices.Prism.StoreApps"
                                      mc:Ignorable="d">
 
     <Page.DataContext>
@@ -42,12 +42,10 @@
                        Grid.Row="1"
                        Style="{StaticResource BasicTextStyle}"
                        Text="First Name" />
-            <!-- <snippet1303> -->
             <TextBox x:Name="FirstNameValue"
                      Grid.Row="2"
                      Text="{Binding UserInfo.FirstName, Mode=TwoWay}"
                      behaviors:HighlightOnErrors.PropertyErrors="{Binding UserInfo.Errors[FirstName]}" />
-            <!-- </snippet1303> -->
 
             <!-- Middle Name -->
             <TextBlock x:Name="MiddleNameTitle"

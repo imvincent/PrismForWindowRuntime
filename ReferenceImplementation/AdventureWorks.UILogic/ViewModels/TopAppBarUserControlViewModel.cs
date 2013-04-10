@@ -6,14 +6,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using Microsoft.Practices.StoreApps.Infrastructure;
-using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
+using Microsoft.Practices.Prism.StoreApps;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
 
 namespace AdventureWorks.UILogic.ViewModels
 {
     public class TopAppBarUserControlViewModel : BindableBase
     {
-        // <snippet402>
         public TopAppBarUserControlViewModel(INavigationService navigationService)
         {
             HomeNavigationCommand = new DelegateCommand(() => navigationService.Navigate("Hub", null));
@@ -22,6 +21,5 @@ namespace AdventureWorks.UILogic.ViewModels
 
         public DelegateCommand HomeNavigationCommand { get; private set; }
         public DelegateCommand ShoppingCartNavigationCommand { get; private set; }
-        // </snippet402>
     }
 }

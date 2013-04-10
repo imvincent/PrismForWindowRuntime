@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorldWithContainer", "HelloWorldWithContainer\HelloWorldWithContainer.csproj", "{BF5A2C13-71DB-420C-AE65-34C33E80739F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Practices.StoreApps.Infrastructure", "..\..\StoreApps.Infrastructure\Microsoft.Practices.StoreApps.Infrastructure.csproj", "{A2303152-0F67-4CA5-8639-0A16E64A8B6D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Practices.Prism.StoreApps", "..\..\Prism.StoreApps\Microsoft.Practices.Prism.StoreApps.csproj", "{A2303152-0F67-4CA5-8639-0A16E64A8B6D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{1B1DDC20-11AA-4BFA-B7B8-4D87C09C7123}"
 	ProjectSection(SolutionItems) = preProject

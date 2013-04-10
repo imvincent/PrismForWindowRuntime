@@ -11,7 +11,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
-using Microsoft.Practices.StoreApps.Infrastructure;
+using Microsoft.Practices.Prism.StoreApps;
 using System.Globalization;
 
 namespace AdventureWorks.UILogic.Services

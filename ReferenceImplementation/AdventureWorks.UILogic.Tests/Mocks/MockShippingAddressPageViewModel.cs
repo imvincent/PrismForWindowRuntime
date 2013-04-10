@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.ViewModels;
-using Microsoft.Practices.StoreApps.Infrastructure;
+using Microsoft.Practices.Prism.StoreApps;
 using Windows.UI.Xaml.Navigation;
 
 namespace AdventureWorks.UILogic.Tests.Mocks

@@ -15,8 +15,8 @@ using System.Collections.Generic;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
 using AdventureWorks.UILogic.Services;
-using Microsoft.Practices.StoreApps.Infrastructure;
-using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
+using Microsoft.Practices.Prism.StoreApps;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Windows.UI.Xaml.Navigation;
 using System.Collections.ObjectModel;
 
@@ -158,7 +158,7 @@ namespace AdventureWorks.UILogic.ViewModels
         public async Task ProcessFormAsync()
         {
             var existingAddresses = await _checkoutDataRepository.GetAllShippingAddressesAsync();
-            var matchingExistingAddress = FindMatchingAddress(Address, existingAddresses);
+            var matchingExistingAddress = Address.FindMatchingAddress(Address, existingAddresses);
             if (matchingExistingAddress != null)
             {
                 Address = matchingExistingAddress;
@@ -167,19 +167,6 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 await _checkoutDataRepository.SaveShippingAddressAsync(Address);
             }
-        }
-
-        private static Address FindMatchingAddress(Address searchAddress, IEnumerable<Address> addresses)
-        {
-            return addresses.FirstOrDefault(address => 
-                searchAddress.FirstName == address.FirstName && 
-                searchAddress.MiddleInitial == address.MiddleInitial && 
-                searchAddress.LastName == address.LastName && 
-                searchAddress.StreetAddress == address.StreetAddress && 
-                searchAddress.OptionalAddress == address.OptionalAddress && 
-                searchAddress.City == address.City && 
-                searchAddress.State == address.State && 
-                searchAddress.ZipCode == address.ZipCode);
         }
     }
 }

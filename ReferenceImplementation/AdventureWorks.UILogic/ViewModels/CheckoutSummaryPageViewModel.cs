@@ -15,8 +15,8 @@ using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
 using AdventureWorks.UILogic.Services;
-using Microsoft.Practices.StoreApps.Infrastructure;
-using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
+using Microsoft.Practices.Prism.StoreApps;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Windows.Globalization.NumberFormatting;
 using Windows.UI.Xaml.Navigation;
 using System.Net.Http;
@@ -301,14 +301,12 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, mvex.Message);
             }
-            // <snippet406>
             if (!string.IsNullOrWhiteSpace(errorMessage))
             {
                 await _alertMessageService.ShowAsync(errorMessage, _resourceLoader.GetString("ErrorProcessingOrder"));
             }
 
             return false;
-            // </snippet406>
         }
 
         private void AddCheckoutData()

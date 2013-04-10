@@ -6,9 +6,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using Microsoft.Practices.PubSubEvents;
+using Microsoft.Practices.Prism.PubSubEvents;
 using System;
-using Microsoft.Practices.StoreApps.Infrastructure;
+using Microsoft.Practices.Prism.StoreApps;
 using Windows.UI.Xaml;
 
 namespace EventAggregatorQuickstart.ViewModels
@@ -28,12 +28,10 @@ namespace EventAggregatorQuickstart.ViewModels
             AddBackgroundSubscriberCommand = new DelegateCommand(AddBackgroundSubscriber);
             GCBackgroundSubscriberCommand = new DelegateCommand(GCBackgroundSubscriber);
 
-            // <snippet3103>
             // Subscribe indicating this handler should always be called on the UI Thread
             _eventAggregator.GetEvent<ShoppingCartChangedEvent>().Subscribe(HandleShoppingCartUpdate, ThreadOption.UIThread);
             // Subscribe indicating that this handler should always be called on UI thread, but only if more than 10 items in cart
             _eventAggregator.GetEvent<ShoppingCartChangedEvent>().Subscribe(HandleShoppingCartUpdateFiltered, ThreadOption.UIThread, false, IsCartCountPossiblyTooHigh);
-            // </snippet3103>
         }
 
         public DelegateCommand AddBackgroundSubscriberCommand { get; private set; }
@@ -61,7 +59,6 @@ namespace EventAggregatorQuickstart.ViewModels
             ShowWarning = true;
         }
 
-        // <snippet3104>
         private void AddBackgroundSubscriber()
         {
             // Create subscriber and hold on to it so it does not get garbage collected
@@ -69,16 +66,13 @@ namespace EventAggregatorQuickstart.ViewModels
             // Subscribe with defaults, pointing to subscriber method that pops a message box when the event fires
             _eventAggregator.GetEvent<ShoppingCartChangedEvent>().Subscribe(_subscriber.HandleShoppingCartChanged);
         }
-        // </snippet3104>
 
-        // <snippet3107>
         private void GCBackgroundSubscriber()
         {
             // Release and GC, showing that we don't have to unsubscribe to keep the subscriber from being garbage collected
             _subscriber = null;
             GC.Collect();
         }
-        // </snippet3107>
 
         private bool IsCartCountPossiblyTooHigh(ShoppingCart shoppingCart)
         {

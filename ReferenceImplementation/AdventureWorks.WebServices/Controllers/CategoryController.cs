@@ -33,7 +33,6 @@ namespace AdventureWorks.WebServices.Controllers
         }
 
         // GET /api/Category?parentId={parentId}&maxAmmountOfProducts={maxAmountOfProducts}
-        // <snippet514>
         public IEnumerable<Category> GetCategories(int parentId, int maxAmountOfProducts)
         {
             var categories = _categoryRepository.GetAll().Where(c => c.ParentId == parentId);
@@ -54,7 +53,6 @@ namespace AdventureWorks.WebServices.Controllers
             return trimmedCategories;
         }
 
-        // </snippet514>
 
         // GET /api/Category/id
         public Category GetCategory(int id)

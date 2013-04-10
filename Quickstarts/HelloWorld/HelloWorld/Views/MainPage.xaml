@@ -7,7 +7,7 @@
                            xmlns:common="using:HelloWorld.Common"
                            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                           xmlns:Infrastructure="using:Microsoft.Practices.StoreApps.Infrastructure"
+                           xmlns:Infrastructure="using:Microsoft.Practices.Prism.StoreApps"
                            mc:Ignorable="d"
                            Infrastructure:ViewModelLocator.AutoWireViewModel="true">
     <!--

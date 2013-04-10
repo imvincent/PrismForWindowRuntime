@@ -59,7 +59,6 @@ namespace AdventureWorks.WebServices.Controllers
         }
 
         // GET /api/Identity/id?requestId={requestId}&passwordHash={passwordHash}
-        // <snippet509>
         public UserInfo GetIsValid(string id, string requestId, string passwordHash)
         {
             byte[] challenge = null;
@@ -97,7 +96,6 @@ namespace AdventureWorks.WebServices.Controllers
                 }
             }
         }
-        // </snippet509>
 
         // GET /api/Identity/GetIsValidSession
         [Authorize]

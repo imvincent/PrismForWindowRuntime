@@ -6,7 +6,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using Microsoft.Practices.PubSubEvents;
+using Microsoft.Practices.Prism.PubSubEvents;
 
 namespace AdventureWorks.UILogic.Models
 {

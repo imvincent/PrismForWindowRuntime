@@ -55,12 +55,10 @@ namespace AdventureWorks.WebServices.Models
         [RegularExpression(ADDRESS_REGEX_PATTERN, ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRegex")]
         public string State { get; set; }
 
-        // <snippet905>
         [Required(ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRequired")]
         [RegularExpression(NUMBERS_REGEX_PATTERN, ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRegex")]
         [CustomValidation(typeof(Address), "ValidateZipCodeState")]
         public string ZipCode { get; set; }
-        // </snippet905>
 
         [Required(ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRequired")]
         [RegularExpression(NUMBERS_REGEX_PATTERN, ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRegex")]
@@ -72,7 +70,6 @@ namespace AdventureWorks.WebServices.Models
 
         public bool IsDefault { get; set; }
 
-        // <snippet906>
         public static ValidationResult ValidateZipCodeState(object value, ValidationContext validationContext)
         {
             bool isValid = false;
@@ -124,6 +121,5 @@ namespace AdventureWorks.WebServices.Models
                 return new ValidationResult(Resources.ErrorInvalidZipCodeInState);
             }
         }
-        // </snippet906>
     }
 }

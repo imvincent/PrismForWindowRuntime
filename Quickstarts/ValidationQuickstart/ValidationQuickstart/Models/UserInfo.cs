@@ -7,7 +7,7 @@
 
 
 using System.ComponentModel.DataAnnotations;
-using Microsoft.Practices.StoreApps.Infrastructure;
+using Microsoft.Practices.Prism.StoreApps;
 
 namespace ValidationQuickStart.Models
 {
@@ -20,7 +20,6 @@ namespace ValidationQuickStart.Models
         private string _lastName;
 
         // We allow all Unicode letter characters as well as internal spaces and hypens, as long as these do not occur in sequences
-        // <snippet1300>
         private const string RegexPattern = @"\A\p{L}+([\p{Zs}\-][\p{L}]+)*\z";
 
         [Required(ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "FirstNameRequired")]
@@ -30,7 +29,6 @@ namespace ValidationQuickStart.Models
             get { return _firstName; }
             set { SetProperty(ref _firstName, value); }
         }
-        // </snippet1300>
 
         [Required(ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "MiddleNameRequired")]
         [RegularExpression(RegexPattern, ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "MiddleNameRegex")]

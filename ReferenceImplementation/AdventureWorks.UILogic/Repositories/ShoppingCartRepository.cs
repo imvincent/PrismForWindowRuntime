@@ -6,15 +6,12 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System.Collections.ObjectModel;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Services;
-using Microsoft.Practices.PubSubEvents;
+using Microsoft.Practices.Prism.PubSubEvents;
 using System;
 using System.Threading.Tasks;
-using Microsoft.Practices.StoreApps.Infrastructure;
-using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
-using Windows.ApplicationModel.Resources;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
 
 namespace AdventureWorks.UILogic.Repositories
 {
@@ -83,9 +80,8 @@ namespace AdventureWorks.UILogic.Repositories
             
             if (shoppingCartMerged)
             {
-                // At this point, the user should be informed that their shopping cart was merged
-                // with their online shopping cart.
-                // Please follow the following guidelines to show this message
+                // At this point, you could notify the user that their shopping cart was merged
+                // with their online shopping cart. If you do this, follow these guidelines:
                 // http://msdn.microsoft.com/en-us/library/windows/apps/hh465304.aspx#flyouts
             }
         }
@@ -120,13 +116,11 @@ namespace AdventureWorks.UILogic.Repositories
             RaiseShoppingCartItemUpdated();
         }
 
-        // <snippet1501>
         private void RaiseShoppingCartUpdated()
         {
             // Documentation on loosely coupled communication is at http://go.microsoft.com/fwlink/?LinkID=288820&clcid=0x409
             _eventAggregator.GetEvent<ShoppingCartUpdatedEvent>().Publish(null);
         }
-        // </snippet1501>
 
         private void RaiseShoppingCartItemUpdated()
         {

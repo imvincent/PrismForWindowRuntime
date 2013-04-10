@@ -11,8 +11,8 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using AdventureWorks.UILogic.Repositories;
-using Microsoft.Practices.StoreApps.Infrastructure;
-using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
+using Microsoft.Practices.Prism.StoreApps;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Windows.UI.Xaml.Navigation;
 using AdventureWorks.UILogic.Services;
 using System.Net.Http;
@@ -50,12 +50,8 @@ namespace AdventureWorks.UILogic.ViewModels
 
             GoBackCommand = new DelegateCommand(navigationService.GoBack, navigationService.CanGoBack);
 
-            // <snippet802>
             PinProductCommand = DelegateCommand.FromAsyncHandler(PinProduct, () => SelectedProduct != null);
-            // </snippet802>
-            // <snippet805>
             UnpinProductCommand = DelegateCommand.FromAsyncHandler(UnpinProduct, () => SelectedProduct != null);
-            // </snippet805>
         }
 
         public DelegateCommand GoBackCommand { get; private set; }
@@ -171,18 +167,14 @@ namespace AdventureWorks.UILogic.ViewModels
 
             var tileId = SelectedProduct.ProductNumber;
 
-            // <snippet803>
             bool isPinned = _secondaryTileService.SecondaryTileExists(tileId);
-            // </snippet803>
 
             if (!isPinned)
             {
                 IsBottomAppBarSticky = true;
 
                 // Documentation on working with tiles can be found at http://go.microsoft.com/fwlink/?LinkID=288821&clcid=0x409
-                // <snippet804>
                 isPinned = await _secondaryTileService.PinWideSecondaryTile(tileId, SelectedProduct.Title, SelectedProduct.Description, SelectedProduct.ProductNumber);
-                // </snippet804>
                 IsSelectedProductPinned = isPinned;
 
                 IsBottomAppBarSticky = false;
@@ -208,17 +200,13 @@ namespace AdventureWorks.UILogic.ViewModels
 
             var tileId = SelectedProduct.ProductNumber;
 
-            // <snippet806>
             bool isPinned = _secondaryTileService.SecondaryTileExists(tileId);
-            // </snippet806>
 
             if (isPinned)
             {
                 IsBottomAppBarSticky = true;
 
-                // <snippet807>
                 isPinned = (await _secondaryTileService.UnpinTile(tileId)) == false;
-                // </snippet807>
                 IsSelectedProductPinned = isPinned;
 
                 IsBottomAppBarSticky = false;

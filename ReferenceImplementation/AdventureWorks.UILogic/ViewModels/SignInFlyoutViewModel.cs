@@ -11,8 +11,8 @@ using System.Net;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Services;
-using Microsoft.Practices.StoreApps.Infrastructure;
-using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
+using Microsoft.Practices.Prism.StoreApps;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
 
 namespace AdventureWorks.UILogic.ViewModels
 {
@@ -39,9 +39,7 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 _lastSignedInUser = _accountService.SignedInUser;
             }
-            // <snippet308>
             SignInCommand = DelegateCommand.FromAsyncHandler(SignInAsync, CanSignIn);
-            // </snippet308>
             GoBackCommand = new DelegateCommand(() => GoBack());
         }
 
@@ -108,9 +106,7 @@ namespace AdventureWorks.UILogic.ViewModels
 
         public DelegateCommand GoBackCommand { get; private set; }
 
-        // <snippet309>
         public DelegateCommand SignInCommand { get; private set; }
-        // </snippet309>
 
         public void Open(object parameter, Action successAction)
         {

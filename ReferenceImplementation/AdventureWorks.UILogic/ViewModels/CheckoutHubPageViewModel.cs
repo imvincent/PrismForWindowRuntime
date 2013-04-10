@@ -15,8 +15,8 @@ using AdventureWorks.UILogic.Repositories;
 using AdventureWorks.UILogic.Services;
 using System.Net.Http;
 using System.Globalization;
-using Microsoft.Practices.StoreApps.Infrastructure;
-using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
+using Microsoft.Practices.Prism.StoreApps;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Windows.UI.Xaml.Navigation;
 
 namespace AdventureWorks.UILogic.ViewModels
@@ -132,7 +132,7 @@ namespace AdventureWorks.UILogic.ViewModels
 
         public override void OnNavigatedFrom(Dictionary<string, object> viewModelState, bool suspending)
         {
-            if (viewModelState == null) return;
+            if (viewModelState == null || viewModelState.Count == 0) return;
 
             ShippingAddressViewModel.OnNavigatedFrom(viewModelState["ShippingViewModel"] as Dictionary<string, object>, suspending);
             BillingAddressViewModel.OnNavigatedFrom(viewModelState["BillingViewModel"] as Dictionary<string, object>, suspending);
@@ -206,7 +206,6 @@ namespace AdventureWorks.UILogic.ViewModels
             var user = _accountService.SignedInUser;
             var shoppingCart = await _shoppingCartRepository.GetShoppingCartAsync();
 
-            // <snippet912>
             try
             {
                 // Create an order with the values entered in the form
@@ -219,8 +218,10 @@ namespace AdventureWorks.UILogic.ViewModels
             catch (ModelValidationException mvex)
             {
                 DisplayOrderErrorMessages(mvex.ValidationResult);
+                if (_shippingAddressViewModel.Address.Errors.Errors.Count > 0) IsShippingAddressInvalid = true;
+                if (_billingAddressViewModel.Address.Errors.Errors.Count > 0 && !UseSameAddressAsShipping) IsBillingAddressInvalid = true;
+                if (_paymentMethodViewModel.PaymentMethod.Errors.Errors.Count > 0) IsPaymentMethodInvalid = true;
             }
-            // </snippet912>
         }
 
         private void DisplayOrderErrorMessages(ModelValidationResult validationResult)

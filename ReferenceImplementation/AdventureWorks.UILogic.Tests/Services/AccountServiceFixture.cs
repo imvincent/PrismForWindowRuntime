@@ -26,13 +26,13 @@ namespace AdventureWorks.UILogic.Tests.Services
             bool userChangedFired = false;
 
             var identityService = new MockIdentityService();
-            var suspensionManagerState = new MockSessionStateService();
+            var sessionStateService = new MockSessionStateService();
             identityService.LogOnAsyncDelegate = (userId, password) =>
                 {
                     return Task.FromResult(new LogOnResult { ServerCookieHeader = string.Empty, UserInfo = new UserInfo{UserName = userId} });
                 };
 
-            var target = new AccountService(identityService, suspensionManagerState, null);
+            var target = new AccountService(identityService, sessionStateService, null);
             target.UserChanged += (sender, userInfo) => { userChangedFired = true; }; 
 
             var retVal = await target.SignInUserAsync("TestUserName", "TestPassword", false);
@@ -44,16 +44,16 @@ namespace AdventureWorks.UILogic.Tests.Services
         public async Task SuccessfullSignIn_SavesServerCookieHeader()
         {
             var identityService = new MockIdentityService();
-            var suspensionManagerState = new MockSessionStateService();
+            var sessionStateService = new MockSessionStateService();
             identityService.LogOnAsyncDelegate = (userId, password) =>
                 {
                     return Task.FromResult(new LogOnResult { ServerCookieHeader = "TestServerCookieHeader", UserInfo = new UserInfo { UserName = userId } });
                 };
 
-            var target = new AccountService(identityService, suspensionManagerState, null);
+            var target = new AccountService(identityService, sessionStateService, null);
 
             var retVal = await target.SignInUserAsync("TestUserName", "TestPassword", false);
-            Assert.AreEqual("TestServerCookieHeader", suspensionManagerState.SessionState[AccountService.ServerCookieHeaderKey]);
+            Assert.AreEqual("TestServerCookieHeader", sessionStateService.SessionState[AccountService.ServerCookieHeaderKey]);
         }
 
         [TestMethod]

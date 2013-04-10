@@ -16,8 +16,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Windows.Input;
-using Microsoft.Practices.StoreApps.Infrastructure;
-using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
+using Microsoft.Practices.Prism.StoreApps;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Windows.UI.Xaml.Navigation;
 
 namespace AdventureWorks.UILogic.ViewModels
@@ -49,19 +49,16 @@ namespace AdventureWorks.UILogic.ViewModels
             private set { SetProperty(ref _loadingData, value); }
         }
 
-        // <snippet305>
         public IReadOnlyCollection<CategoryViewModel> RootCategories
         {
             get { return _rootCategories; }
             private set { SetProperty(ref _rootCategories, value); }
         }
-        // </snippet305>
 
         public ICommand GoBackCommand { get; private set; }
 
         public Action<object> ProductNavigationAction { get; private set; }
 
-        // <snippet412>
         private void NavigateToItem(object parameter)
         {
             var product = parameter as ProductViewModel;
@@ -70,7 +67,6 @@ namespace AdventureWorks.UILogic.ViewModels
                 _navigationService.Navigate("ItemDetail", product.ProductNumber);
             }
         }
-        // </snippet412>
 
         public async override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewModelState)
         {
@@ -79,11 +75,7 @@ namespace AdventureWorks.UILogic.ViewModels
             try
             {
                 LoadingData = true;
-                // <snippet511>
-                // <snippet1100>
                 rootCategories = await _productCatalogRepository.GetRootCategoriesAsync(5);
-                // </snippet1100>
-                // </snippet511>
             }
             catch (HttpRequestException ex)
             {
@@ -108,13 +100,9 @@ namespace AdventureWorks.UILogic.ViewModels
                 rootCategoryViewModels.Add(new CategoryViewModel(rootCategory, _navigationService));
             }
             RootCategories = new ReadOnlyCollection<CategoryViewModel>(rootCategoryViewModels);
-            // <snippet1005>
             _searchPaneService.ShowOnKeyboardInput(true);
-            // </snippet1005>
         }
 
-        // <snippet1006>
-        // <snippet709>
         public override void OnNavigatedFrom(Dictionary<string, object> viewModelState, bool suspending)
         {
             base.OnNavigatedFrom(viewModelState, suspending);
@@ -123,7 +111,5 @@ namespace AdventureWorks.UILogic.ViewModels
                 _searchPaneService.ShowOnKeyboardInput(false);
             }
         }
-        // </snippet709>
-        // </snippet1006>
     }
 }

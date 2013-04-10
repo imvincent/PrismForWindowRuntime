@@ -8,7 +8,7 @@
 
 using System.Collections.ObjectModel;
 using System.Linq;
-using Microsoft.Practices.StoreApps.Infrastructure;
+using Microsoft.Practices.Prism.StoreApps;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -16,11 +16,9 @@ namespace ValidationQuickStart.Behaviors
 {
     public static class HighlightOnErrors
     {
-        // <snippet1304> 
         public static DependencyProperty PropertyErrorsProperty =
             DependencyProperty.RegisterAttached("PropertyErrors", typeof(ReadOnlyCollection<string>), typeof(HighlightOnErrors),
                                                                    new PropertyMetadata(BindableValidator.EmptyErrorsCollection, OnPropertyErrorsChanged));
-        // </snippet1304> 
 
         public static ReadOnlyCollection<string> GetPropertyErrors(DependencyObject obj)
         {
@@ -42,7 +40,6 @@ namespace ValidationQuickStart.Behaviors
             obj.SetValue(PropertyErrorsProperty, value);
         }
 
-        // <snippet1305>
         private static void OnPropertyErrorsChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
             if (args == null || args.NewValue == null)
@@ -57,6 +54,5 @@ namespace ValidationQuickStart.Behaviors
 
             textBox.Style = textBoxStyle;
         }
-        // </snippet1305>
     }
 }

@@ -44,7 +44,6 @@ namespace AdventureWorks.UILogic.Repositories
             return rootCategories;
         }
 
-        // <snippet512>
         public async Task<ReadOnlyCollection<Category>> GetSubcategoriesAsync(int parentId, int maxAmountOfProducts)
         {
             string cacheFileName = String.Format("Categories-{0}-{1}", parentId, maxAmountOfProducts);
@@ -65,7 +64,6 @@ namespace AdventureWorks.UILogic.Repositories
 
             return categories;
         }
-        // </snippet512>
 
         public async Task<SearchResult> GetFilteredProductsAsync(string productsQueryString)
         {

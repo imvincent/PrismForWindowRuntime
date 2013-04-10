@@ -179,13 +179,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\PubSubEvents\Microsoft.Practices.PubSubEvents.csproj">
+    <ProjectReference Include="..\..\Prism.PubSubEvents\Microsoft.Practices.Prism.PubSubEvents.csproj">
       <Project>{d5d2645c-03eb-48b0-9873-0904fcdb2ced}</Project>
-      <Name>Microsoft.Practices.PubSubEvents</Name>
+      <Name>Microsoft.Practices.Prism.PubSubEvents</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\StoreApps.Infrastructure\Microsoft.Practices.StoreApps.Infrastructure.csproj">
+    <ProjectReference Include="..\..\Prism.StoreApps\Microsoft.Practices.Prism.StoreApps.csproj">
       <Project>{a2303152-0f67-4ca5-8639-0a16e64a8b6d}</Project>
-      <Name>Microsoft.Practices.StoreApps.Infrastructure</Name>
+      <Name>Microsoft.Practices.Prism.StoreApps</Name>
     </ProjectReference>
     <ProjectReference Include="..\AdventureWorks.UILogic\AdventureWorks.UILogic.csproj">
       <Project>{5B10DC48-600B-4F27-84D8-F041FEE71A34}</Project>

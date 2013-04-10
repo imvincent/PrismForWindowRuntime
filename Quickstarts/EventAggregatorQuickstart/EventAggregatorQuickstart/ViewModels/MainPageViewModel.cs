@@ -7,9 +7,9 @@
 
 
 using EventAggregatorQuickstart.ViewModels;
-using Microsoft.Practices.PubSubEvents;
+using Microsoft.Practices.Prism.PubSubEvents;
 using System;
-using Microsoft.Practices.StoreApps.Infrastructure;
+using Microsoft.Practices.Prism.StoreApps;
 
 namespace EventAggregatorQuickstart
 {
@@ -17,14 +17,12 @@ namespace EventAggregatorQuickstart
 
     public class MainPageViewModel : ViewModel
     {
-        // <snippet3106>
         public MainPageViewModel(IEventAggregator eventAggregator)
         {
             // Pass the injected event aggregator singleton down to children since there is no container to do the dependency injection
             SubscriberViewModel = new SubscriberViewModel(eventAggregator);
             PublisherViewModel = new PublisherViewModel(eventAggregator);
         }
-        // </snippet3106>
 
         public SubscriberViewModel SubscriberViewModel { get; set; }
         public PublisherViewModel PublisherViewModel { get; set; }

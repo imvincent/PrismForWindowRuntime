@@ -10,7 +10,7 @@ using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
-using Microsoft.Practices.StoreApps.Infrastructure;
+using Microsoft.Practices.Prism.StoreApps;
 
 namespace AdventureWorks.UILogic.Services
 {

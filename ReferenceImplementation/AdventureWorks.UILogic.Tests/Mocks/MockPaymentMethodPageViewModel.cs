@@ -12,7 +12,7 @@ using System.ComponentModel;
 using System.Windows.Input;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.ViewModels;
-using Microsoft.Practices.StoreApps.Infrastructure;
+using Microsoft.Practices.Prism.StoreApps;
 using Windows.UI.Xaml.Navigation;
 using System.Threading.Tasks;
 

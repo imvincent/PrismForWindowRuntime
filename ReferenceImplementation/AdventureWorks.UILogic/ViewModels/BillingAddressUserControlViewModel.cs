@@ -16,8 +16,8 @@ using System.Collections.Generic;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
 using AdventureWorks.UILogic.Services;
-using Microsoft.Practices.StoreApps.Infrastructure;
-using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
+using Microsoft.Practices.Prism.StoreApps;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Windows.UI.Xaml.Navigation;
 
 namespace AdventureWorks.UILogic.ViewModels
@@ -70,7 +70,6 @@ namespace AdventureWorks.UILogic.ViewModels
             }
         }
 
-        // <snippet911>
         public override async void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewState)
         {
             // The States collection needs to be populated before setting the State property
@@ -120,9 +119,7 @@ namespace AdventureWorks.UILogic.ViewModels
                 }
             }
         }
-        // </snippet911>
 
-        // <snippet910>
         public override void OnNavigatedFrom(Dictionary<string, object> viewState, bool suspending)
         {
             base.OnNavigatedFrom(viewState, suspending);
@@ -133,7 +130,6 @@ namespace AdventureWorks.UILogic.ViewModels
                 AddEntityStateValue("errorsCollection", _address.GetAllErrors(), viewState);
             }
         }
-        // </snippet910>
 
         public bool ValidateForm()
         {
@@ -143,7 +139,7 @@ namespace AdventureWorks.UILogic.ViewModels
         public async Task ProcessFormAsync()
         {
             var existingAddresses = await _checkoutDataRepository.GetAllBillingAddressesAsync();
-            var matchingExistingAddress = FindMatchingAddress(Address, existingAddresses);
+            var matchingExistingAddress = Address.FindMatchingAddress(Address, existingAddresses);
             if (matchingExistingAddress != null)
             {
                 Address = matchingExistingAddress;
@@ -186,19 +182,6 @@ namespace AdventureWorks.UILogic.ViewModels
         public void SetLoadDefault(bool loadDefault)
         {
             _loadDefault = loadDefault;
-        }
-
-        private static Address FindMatchingAddress(Address searchAddress, IEnumerable<Address> addresses)
-        {
-            return addresses.FirstOrDefault(address =>
-                searchAddress.FirstName == address.FirstName &&
-                searchAddress.MiddleInitial == address.MiddleInitial &&
-                searchAddress.LastName == address.LastName &&
-                searchAddress.StreetAddress == address.StreetAddress &&
-                searchAddress.OptionalAddress == address.OptionalAddress &&
-                searchAddress.City == address.City &&
-                searchAddress.State == address.State &&
-                searchAddress.ZipCode == address.ZipCode);
         }
     }
 }

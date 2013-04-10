@@ -23,7 +23,6 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
     [TestClass]
     public class HubPageViewModelFixture
     {
-        // <snippet1201>
         [TestMethod]
         public void OnNavigatedTo_Fill_RootCategories()
         {
@@ -48,7 +47,6 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             Assert.IsNotNull(viewModel.RootCategories);
             Assert.AreEqual(((ICollection<CategoryViewModel>)viewModel.RootCategories).Count, 3);
         }
-        // </snippet1201>
 
         [TestMethod]
         public void ProductNav_With_Valid_Parameter()

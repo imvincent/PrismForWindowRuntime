@@ -7,8 +7,8 @@
 
 
 using HelloWorldWithContainer.Services;
-using Microsoft.Practices.StoreApps.Infrastructure;
-using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
+using Microsoft.Practices.Prism.StoreApps;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Microsoft.Practices.Unity;
 using Windows.ApplicationModel.Activation;
 
@@ -18,14 +18,10 @@ using Windows.ApplicationModel.Activation;
 
 namespace HelloWorldWithContainer
 {
-    // <snippet3300>
     sealed partial class App : MvvmAppBase
-    // </snippet3300>
     {
         // New up the singleton container that will be used for type resolution in the app
-        // <snippet3301>
         IUnityContainer _container = new UnityContainer();
-        // </snippet3301>
 
         public App()
         {
@@ -51,7 +47,6 @@ namespace HelloWorldWithContainer
         /// This is the place you initialize your services and set default factory or default resolver for the view model locator
         /// </summary>
         /// <param name="args">The same launch arguments passed when the app starts.</param>
-        // <snippet3302>
         protected override void OnInitialize(IActivatedEventArgs args)
         {
             // Register MvvmAppBase services with the container so that view models can take dependencies on them
@@ -64,6 +59,5 @@ namespace HelloWorldWithContainer
             // dependencies get injected by the container
             ViewModelLocator.SetDefaultViewModelFactory((viewModelType) => _container.Resolve(viewModelType));
         }
-        // </snippet3302>
     }
 }

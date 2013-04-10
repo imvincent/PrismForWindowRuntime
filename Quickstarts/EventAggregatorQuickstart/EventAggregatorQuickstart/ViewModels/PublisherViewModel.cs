@@ -6,11 +6,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using Microsoft.Practices.PubSubEvents;
+using Microsoft.Practices.Prism.PubSubEvents;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Microsoft.Practices.StoreApps.Infrastructure;
+using Microsoft.Practices.Prism.StoreApps;
 
 namespace EventAggregatorQuickstart
 {
@@ -33,7 +33,6 @@ namespace EventAggregatorQuickstart
         public DelegateCommand AddItemToCartUIThreadCommand { get; private set; }
         public DelegateCommand AddItemToCartBackgroundThreadCommand { get; private set; }
 
-        // <snippet3102>
         private void PublishOnUIThread()
         {
             AddItemToCart();
@@ -57,6 +56,5 @@ namespace EventAggregatorQuickstart
             var item = new ShoppingCartItem("Widget", 19.99m);
             _cart.AddItem(item);
         }
-        // </snippet3102>
     }
 }

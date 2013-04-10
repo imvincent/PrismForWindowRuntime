@@ -160,9 +160,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\StoreApps.Infrastructure\Microsoft.Practices.StoreApps.Infrastructure.csproj">
+    <ProjectReference Include="..\..\..\Prism.StoreApps\Microsoft.Practices.Prism.StoreApps.csproj">
       <Project>{a2303152-0f67-4ca5-8639-0a16e64a8b6d}</Project>
-      <Name>Microsoft.Practices.StoreApps.Infrastructure</Name>
+      <Name>Microsoft.Practices.Prism.StoreApps</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">

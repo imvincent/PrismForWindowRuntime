@@ -8,7 +8,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using AdventureWorks.UILogic.Services;
-using Microsoft.Practices.StoreApps.Infrastructure;
+using Microsoft.Practices.Prism.StoreApps;
 
 namespace AdventureWorks.UILogic.Models
 {

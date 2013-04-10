@@ -12,11 +12,11 @@ using System.Collections.ObjectModel;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
 using AdventureWorks.UILogic.Services;
-using Microsoft.Practices.StoreApps.Infrastructure;
-using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
+using Microsoft.Practices.Prism.StoreApps;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Windows.Globalization.NumberFormatting;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.Practices.PubSubEvents;
+using Microsoft.Practices.Prism.PubSubEvents;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Globalization;
@@ -96,7 +96,6 @@ namespace AdventureWorks.UILogic.ViewModels
             }
         }
 
-        // <snippet610>
         public ShoppingCartItemViewModel SelectedItem
         {
             get { return _selectedItem; }
@@ -116,7 +115,6 @@ namespace AdventureWorks.UILogic.ViewModels
                 }
             }
         }
-        // </snippet610>
 
         public ObservableCollection<ShoppingCartItemViewModel> ShoppingCartItemViewModels
         {
@@ -234,15 +232,11 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 if (await _accountService.VerifyUserAuthenticationAsync() == null)
                 {
-                    _signInUserControlViewModel.Open(async () => await ResolveNavigationActionAsync());
+                    _signInUserControlViewModel.Open(async () => await GoToNextPageAsync());
                 }
                 else
                 {
-                    // Set up navigate action depending on the application's state
-                    var navigateAction = await ResolveNavigationActionAsync();
-
-                    // Execute the navigate action
-                    navigateAction();
+                    await GoToNextPageAsync();
                 }
             }
             catch (HttpRequestException ex)
@@ -254,6 +248,15 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 await _alertMessageService.ShowAsync(errorMessage, _resourceLoader.GetString("ErrorServiceUnreachable"));
             }
+        }
+
+        private async Task GoToNextPageAsync()
+        {
+            // Set up navigate action depending on the application's state
+            var navigateAction = await ResolveNavigationActionAsync();
+
+            // Execute the navigate action
+            navigateAction();
         }
 
         private async Task<Action> ResolveNavigationActionAsync()

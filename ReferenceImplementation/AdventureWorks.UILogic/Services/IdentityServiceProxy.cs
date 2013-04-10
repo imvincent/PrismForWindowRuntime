@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using System.Net;
 using System;
-using Microsoft.Practices.StoreApps.Infrastructure;
+using Microsoft.Practices.Prism.StoreApps;
 using Windows.Security.Cryptography;
 using Windows.Security.Cryptography.Core;
 
@@ -23,7 +23,6 @@ namespace AdventureWorks.UILogic.Services
     {
         private readonly string _clientBaseUrl = string.Format(CultureInfo.InvariantCulture, "{0}/api/Identity/", Constants.ServerAddress);
 
-        // <snippet508>
         public async Task<LogOnResult> LogOnAsync(string userId, string password)
         {
             using (var handler = new HttpClientHandler { CookieContainer = new CookieContainer() })
@@ -58,7 +57,6 @@ namespace AdventureWorks.UILogic.Services
                 }
             }
         }
-        // </snippet508>
 
         public async Task<bool> VerifyActiveSessionAsync(string userId, string serverCookieHeader)
         {

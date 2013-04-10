@@ -100,7 +100,6 @@ namespace AdventureWorks.UILogic.Repositories
             return new ReadOnlyCollection<Address>(shippingAddresses.ToList());
         }
 
-        // <snippet503>
         public async Task<IReadOnlyCollection<Address>> GetAllBillingAddressesAsync()
         {
             var addresses = await GetAllAddressesViaCacheAsync();
@@ -110,7 +109,6 @@ namespace AdventureWorks.UILogic.Repositories
 
             return new ReadOnlyCollection<Address>(billingAddresses.ToList());
         }
-        // </snippet503>
 
         public async Task<IReadOnlyCollection<PaymentMethod>> GetAllPaymentMethodsAsync()
         {
@@ -139,7 +137,6 @@ namespace AdventureWorks.UILogic.Repositories
             ExpireCachedAddresses();
         }
 
-        // <snippet502>
         public async Task SaveBillingAddressAsync(Address address)
         {
             if (address == null) throw new ArgumentNullException("address");
@@ -158,7 +155,6 @@ namespace AdventureWorks.UILogic.Repositories
 
             ExpireCachedAddresses();
         }
-        // </snippet502>
 
         public async Task SavePaymentMethodAsync(PaymentMethod paymentMethod)
         {

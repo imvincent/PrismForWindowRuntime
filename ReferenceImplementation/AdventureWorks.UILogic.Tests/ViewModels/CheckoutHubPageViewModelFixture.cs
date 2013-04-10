@@ -7,6 +7,7 @@
 
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
@@ -254,6 +255,55 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             target.UseSameAddressAsShipping = true;
 
             await target.GoNextCommand.Execute();
+        }
+
+        [TestMethod]
+        public void ProcessFormAsync_WithServerValidationError_ShowsMessage()
+        {
+            var shippingAddressPageViewModel = new MockShippingAddressPageViewModel()
+                {
+                    ValidateFormDelegate = () => true,
+                    ProcessFormAsyncDelegate = () => Task.Delay(0),
+                    Address = new Address()
+                };
+            var billingAddressPageViewModel = new MockBillingAddressPageViewModel()
+                {
+                    ValidateFormDelegate = () => true,
+                    ProcessFormAsyncDelegate = () => Task.Delay(0),
+                    Address = new Address()
+                };
+            var paymentMethodPageViewModel = new MockPaymentMethodPageViewModel()
+                {
+                    ValidateFormDelegate = () => true,
+                    ProcessFormAsyncDelegate = async () => await Task.Delay(0),
+                    PaymentMethod = new PaymentMethod()
+                };
+            var accountService = new MockAccountService()
+                {
+                    VerifyUserAuthenticationAsyncDelegate = () => Task.FromResult(new UserInfo()),
+                    SignedInUser = new UserInfo()
+                };
+            var shoppingCartRepository = new MockShoppingCartRepository()
+                {
+                    GetShoppingCartAsyncDelegate =
+                        () => Task.FromResult(new ShoppingCart(null))
+                };
+            var orderRepository = new MockOrderRepository()
+                {
+                    CreateBasicOrderAsyncDelegate = (s, cart, arg3, arg4, arg5) =>
+                         {
+                             var result = new ModelValidationResult();
+                             result.ModelState.Add("order.ShippingAddress.ZipCode", new List<string>{"Validation Message"});
+                             throw new ModelValidationException(result);
+                         }
+                };
+            var target = new CheckoutHubPageViewModel(new MockNavigationService(), accountService, orderRepository, shoppingCartRepository, shippingAddressPageViewModel,
+                                                      billingAddressPageViewModel, paymentMethodPageViewModel, null,
+                                                      null, null);
+
+            target.GoNextCommand.Execute();
+
+            Assert.IsTrue(target.IsShippingAddressInvalid);
         }
     }
 }

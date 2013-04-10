@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using System.Security;
 using System.Net.Http;
-using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
 
 namespace AdventureWorks.UILogic.Services
 {
@@ -19,7 +19,7 @@ namespace AdventureWorks.UILogic.Services
     {
         public const string ServerCookieHeaderKey = "AccountService_ServerCookieHeader";
         public const string SignedInUserKey = "AccountService_SignedInUser";
-        public const string PasswordVaultResourceName = "AWShopper";
+        public const string PasswordVaultResourceName = "AdventureWorksShopper";
         private const string UserNameKey = "AccountService_UserName";
         private const string PasswordKey = "AccountService_Password";
         
@@ -113,9 +113,7 @@ namespace AdventureWorks.UILogic.Services
         {
             try
             {
-                // <snippet507>
                 var result = await _identityService.LogOnAsync(userName, password);
-                // </snippet507>
 
                 UserInfo previousUser = _signedInUser;
                 _signedInUser = result.UserInfo;
@@ -128,10 +126,8 @@ namespace AdventureWorks.UILogic.Services
                 // Save username and password in state service
                 _userName = userName;
                 _password = password;
-                // <snippet707>
                 _sessionStateService.SessionState[UserNameKey] = userName;
                 _sessionStateService.SessionState[PasswordKey] = password;
-                // </snippet707>
 
                 if (useCredentialStore)
                 {

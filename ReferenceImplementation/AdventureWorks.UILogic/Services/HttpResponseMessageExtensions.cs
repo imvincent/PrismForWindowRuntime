@@ -20,7 +20,6 @@ namespace AdventureWorks.UILogic.Services
 {
     public static class HttpResponseMessageExtensions
     {
-        // <snippet913>
         public static async Task EnsureSuccessWithValidationSupportAsync(this HttpResponseMessage response)
         {
             // If BadRequest, see if it contains a validation payload
@@ -40,6 +39,5 @@ namespace AdventureWorks.UILogic.Services
 
             response.EnsureSuccessStatusCode(); // Will throw for any other service call errors
         }
-        // </snippet913>
     }
 }

@@ -6,8 +6,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using Microsoft.Practices.StoreApps.Infrastructure;
-using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
+using Microsoft.Practices.Prism.StoreApps;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Windows.ApplicationModel.Resources;
 
 namespace AdventureWorks.UILogic.Services
@@ -60,11 +60,9 @@ namespace AdventureWorks.UILogic.Services
             get { return ResourceLoader.GetString("GeneralServiceErrorMessage"); }
         }
 
-        // <snippet407>
         public static string ErrorProcessingOrder
         {
             get { return ResourceLoader.GetString("ErrorProcessingOrder"); }
         }
-        // </snippet407>
     }
 }

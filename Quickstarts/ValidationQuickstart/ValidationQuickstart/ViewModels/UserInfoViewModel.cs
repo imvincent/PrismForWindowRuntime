@@ -10,7 +10,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
-using Microsoft.Practices.StoreApps.Infrastructure;
+using Microsoft.Practices.Prism.StoreApps;
 using ValidationQuickStart.Models;
 
 namespace ValidationQuickStart.ViewModels
@@ -57,11 +57,9 @@ namespace ValidationQuickStart.ViewModels
             _userInfo.ValidateProperties();
         }
 
-        // <snippet1306>
         private void OnErrorsChanged(object sender, DataErrorsChangedEventArgs e)
         {
             AllErrors = new ReadOnlyCollection<string>(_userInfo.GetAllErrors().Values.SelectMany(c => c).ToList());
         }
-        // </snippet1306>
     }
 }

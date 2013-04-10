@@ -10,7 +10,6 @@ using System.Collections.Generic;
 
 namespace EventAggregatorQuickstart
 {
-    // <snippet3101>
     // Thread-safe shopping cart
     public class ShoppingCart
     {
@@ -35,5 +34,4 @@ namespace EventAggregatorQuickstart
             }
         }
     }
-    // </snippet3101>
 }

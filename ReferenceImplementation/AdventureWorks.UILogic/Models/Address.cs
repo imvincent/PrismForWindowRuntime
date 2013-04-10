@@ -6,9 +6,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using AdventureWorks.UILogic.Services;
-using Microsoft.Practices.StoreApps.Infrastructure;
+using Microsoft.Practices.Prism.StoreApps;
 
 namespace AdventureWorks.UILogic.Models
 {
@@ -45,7 +47,6 @@ namespace AdventureWorks.UILogic.Models
             set { SetProperty(ref _id, value); }
         }
 
-        // <snippet904>
         [Required(ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "RequiredErrorMessage")]
         [RegularExpression(NAMES_REGEX_PATTERN, ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "RegexErrorMessage")]
         public string FirstName
@@ -53,7 +54,6 @@ namespace AdventureWorks.UILogic.Models
             get { return _firstName; }
             set { SetProperty(ref _firstName, value); }
         }
-        // </snippet904>
 
         [RegularExpression(NAMES_REGEX_PATTERN, ErrorMessageResourceType = typeof(ErrorMessagesHelper), ErrorMessageResourceName = "RegexErrorMessage")]
         public string MiddleInitial
@@ -121,5 +121,18 @@ namespace AdventureWorks.UILogic.Models
         public AddressType AddressType { get; set; }
 
         public bool IsDefault { get; set; }
+
+        public static Address FindMatchingAddress(Address searchAddress, IEnumerable<Address> addresses)
+        {
+            return addresses.FirstOrDefault(address =>
+                searchAddress.FirstName == address.FirstName &&
+                searchAddress.MiddleInitial == address.MiddleInitial &&
+                searchAddress.LastName == address.LastName &&
+                searchAddress.StreetAddress == address.StreetAddress &&
+                searchAddress.OptionalAddress == address.OptionalAddress &&
+                searchAddress.City == address.City &&
+                searchAddress.State == address.State &&
+                searchAddress.ZipCode == address.ZipCode);
+        }
     }
 }

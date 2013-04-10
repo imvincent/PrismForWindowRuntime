@@ -74,7 +74,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AdventureWorks.WebServices\AdventureWorks.WebServices.csproj">
       <Project>{6fa921c7-05eb-4881-8cda-f4279b6eb23d}</Project>
-      <Name>Kona.WebServices</Name>
+      <Name>AdventureWorks.WebServices</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

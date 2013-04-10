@@ -11,7 +11,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
-using Microsoft.Practices.StoreApps.Infrastructure;
+using Microsoft.Practices.Prism.StoreApps;
 using Windows.UI.Xaml.Navigation;
 using System.Threading.Tasks;
 

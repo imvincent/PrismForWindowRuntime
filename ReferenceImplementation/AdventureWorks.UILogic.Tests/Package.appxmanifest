@@ -2,12 +2,12 @@
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
   
   <Identity Name="b3b69d44-9974-4d80-a75f-498d074fc616"
-            Publisher="CN=Mariano"
+            Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
             Version="1.0.0.0" />
   
   <Properties>
     <DisplayName>AdventureWorks.UILogic.Tests</DisplayName>
-    <PublisherDisplayName>Mariano</PublisherDisplayName>
+    <PublisherDisplayName>Microsoft Corporation</PublisherDisplayName>
     <Logo>Images\UnitTestStoreLogo.png</Logo>
     <Description>AdventureWorks.UILogic.Tests</Description>
   </Properties>

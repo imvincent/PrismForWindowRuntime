@@ -16,8 +16,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
-using Microsoft.Practices.StoreApps.Infrastructure;
-using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
+using Microsoft.Practices.Prism.StoreApps;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using AdventureWorks.UILogic.Services;
 
 namespace AdventureWorks.UILogic.ViewModels

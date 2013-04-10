@@ -11,7 +11,7 @@ using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
-using Microsoft.Practices.StoreApps.Infrastructure;
+using Microsoft.Practices.Prism.StoreApps;
 
 namespace AdventureWorks.UILogic.Services
 {
@@ -20,7 +20,6 @@ namespace AdventureWorks.UILogic.Services
         private string _productsBaseUrl = string.Format(CultureInfo.InvariantCulture, "{0}/api/Product/", Constants.ServerAddress);
         private string _categoriesBaseUrl = string.Format(CultureInfo.InvariantCulture, "{0}/api/Category/", Constants.ServerAddress);
 
-        // <snippet513>
         public async Task<ReadOnlyCollection<Category>> GetCategoriesAsync(int parentId, int maxAmountOfProducts)
         {
             using (var httpClient = new HttpClient())
@@ -32,7 +31,6 @@ namespace AdventureWorks.UILogic.Services
                 return result;
             }
         }
-        // </snippet513>
 
         public async Task<SearchResult> GetFilteredProductsAsync(string productsQueryString)
         {

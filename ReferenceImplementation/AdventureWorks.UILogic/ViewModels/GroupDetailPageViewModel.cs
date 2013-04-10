@@ -10,8 +10,8 @@ using System.Linq;
 using AdventureWorks.UILogic.Repositories;
 using System;
 using System.Collections.Generic;
-using Microsoft.Practices.StoreApps.Infrastructure;
-using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
+using Microsoft.Practices.Prism.StoreApps;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Windows.UI.Xaml.Navigation;
 using AdventureWorks.UILogic.Services;
 using System.Net.Http;
@@ -93,7 +93,6 @@ namespace AdventureWorks.UILogic.ViewModels
             }
         }
 
-        // <snippet607>
         private void NavigateToProduct(object parameter)
         {
             var product = parameter as ProductViewModel;
@@ -102,6 +101,5 @@ namespace AdventureWorks.UILogic.ViewModels
                 _navigationService.Navigate("ItemDetail", product.ProductNumber);
             }
         }
-        // </snippet607>
     }
 }

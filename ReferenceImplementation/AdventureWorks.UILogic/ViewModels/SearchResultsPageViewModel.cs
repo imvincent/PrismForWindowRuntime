@@ -15,8 +15,8 @@ using System.Windows.Input;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
 using AdventureWorks.UILogic.Services;
-using Microsoft.Practices.StoreApps.Infrastructure;
-using Microsoft.Practices.StoreApps.Infrastructure.Interfaces;
+using Microsoft.Practices.Prism.StoreApps;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Windows.UI.Xaml.Navigation;
 using System.Net.Http;
 
@@ -89,7 +89,6 @@ namespace AdventureWorks.UILogic.ViewModels
 
         public ICommand GoBackCommand { get; private set; }
 
-        // <snippet1003>
         public async override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewModelState)
         {
             base.OnNavigatedTo(navigationParameter, navigationMode, viewModelState);
@@ -139,7 +138,6 @@ namespace AdventureWorks.UILogic.ViewModels
             }
 
         }
-        // </snippet1003>
 
         public override void OnNavigatedFrom(Dictionary<string, object> viewModelState, bool suspending)
         {
@@ -150,7 +148,6 @@ namespace AdventureWorks.UILogic.ViewModels
             }
         }
 
-        // <snippet1004>
         private void NavigateToItem(object parameter)
         {
             var product = parameter as ProductViewModel;
@@ -159,6 +156,5 @@ namespace AdventureWorks.UILogic.ViewModels
                 _navigationService.Navigate("ItemDetail", product.ProductNumber);
             }
         }
-        // </snippet1004>
     }
 }
