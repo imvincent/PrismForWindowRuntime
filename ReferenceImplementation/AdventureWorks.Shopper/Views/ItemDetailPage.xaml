@@ -105,7 +105,7 @@
                                 </Grid.ColumnDefinitions>
                                 <Grid x:Name="grid1"
                                       Column="0"
-                                      Width="320">
+                                      HorizontalAlignment="Stretch">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
@@ -135,7 +135,7 @@
                                 <Grid x:Name="grid2"
                                       Column="1"
                                       Width="320"
-                                      HorizontalAlignment="Left"
+                                      HorizontalAlignment="Stretch"
                                       Margin="25,0,0,0">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
@@ -193,7 +193,6 @@
                                 <Grid x:Name="grid3"
                                       Column="2"
                                       Width="450"
-                                      HorizontalAlignment="Left"
                                       Margin="25,0,0,0">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
@@ -402,6 +401,14 @@
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)"
+                                                                           Storyboard.TargetName="grid3">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <x:Double>500</x:Double>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)"
                                                                            Storyboard.TargetName="grid2">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
@@ -591,18 +598,10 @@
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"
-                                                                           Storyboard.TargetName="DetailsLabel">
-                                                <DiscreteObjectKeyFrame KeyTime="0">
-                                                    <DiscreteObjectKeyFrame.Value>
-                                                        <Thickness>5,0</Thickness>
-                                                    </DiscreteObjectKeyFrame.Value>
-                                                </DiscreteObjectKeyFrame>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"
                                                                            Storyboard.TargetName="DetailsGrid">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
-                                                        <Thickness>5,20,0,10</Thickness>
+                                                        <Thickness>0,20,0,10</Thickness>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>

@@ -187,7 +187,7 @@
                IsOpen="{Binding IsEditPopupOpened, Mode=TwoWay}">
             <Grid x:Name="PopupPanel"
                   Background="Black"
-                  Opacity=".8"
+                  Opacity=".9"
                   Height="200">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="65" />

@@ -9,7 +9,7 @@
 namespace Microsoft.Practices.Prism.StoreApps
 {
     /// <summary>
-    /// Internal class that contains the constants used by the Microsoft.Practices.StoreApp.Infrastructre library.
+    /// Internal class that contains the constants used by the Microsoft.Practices.Prism.StoreApps library.
     /// </summary>
     internal sealed class Constants
     {

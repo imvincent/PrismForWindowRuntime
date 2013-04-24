@@ -12,7 +12,7 @@ namespace Microsoft.Practices.Prism.StoreApps
 {
     /// <summary>
     /// The SettingsCharmActionItem is used by the SettingsCharmService class to populate the SettingsPane.
-    /// This item type has an associated Action that will be executed when selecting it in the Settings Pane.
+    /// This item type has an associated Action that will be executed when selecting it in the Settings pane.
     /// </summary>
     public class SettingsCharmActionItem
     {
@@ -20,7 +20,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// Initializes a new instance of the <see cref="SettingsCharmActionItem"/> class.
         /// </summary>
         /// <param name="title">The title.</param>
-        /// <param name="action">The action to be performed when the settings charm is selected.</param>
+        /// <param name="action">The action to be performed when the Settings charm is selected.</param>
         public SettingsCharmActionItem(string title, Action action) 
         {
             Title = title;
@@ -29,7 +29,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         }
 
         /// <summary>
-        /// Gets the id of the settings charm flyout item.
+        /// Gets the id of the Settings charm Flyout item.
         /// </summary>
         /// <value>
         /// The id.
@@ -37,7 +37,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         public string Id { get; private set; }
 
         /// <summary>
-        /// Gets the title of the settings charm flyout item.
+        /// Gets the title of the Settings charm Flyout item.
         /// </summary>
         /// <value>
         /// The title.
@@ -45,7 +45,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         public string Title { get; private set; }
 
         /// <summary>
-        /// Gets the Action that will be executed when this item is clicked in the Settings Charm.
+        /// Gets the Action that will be executed when this item is clicked in the Settings charm.
         /// </summary>
         /// <value>
         /// The Action delegate to be executed.

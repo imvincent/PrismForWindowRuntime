@@ -25,13 +25,11 @@ namespace Microsoft.Practices.Prism.StoreApps
     /// <summary>
     /// Provides MvvmAppBase-specific behavior to supplement the default Application class.
     /// </summary>
-    
     // Documentation on using the MVVM pattern is at http://go.microsoft.com/fwlink/?LinkID=288814&clcid=0x409
-
     public abstract class MvvmAppBase : Application
     {
         /// <summary>
-        /// Initializes the singleton application object.  This is the first line of authored code
+        /// Initializes the singleton application object. This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         protected MvvmAppBase()
@@ -56,10 +54,10 @@ namespace Microsoft.Practices.Prism.StoreApps
         protected INavigationService NavigationService { get; set; }
 
         /// <summary>
-        /// Gets or sets the flyout service.
+        /// Gets or sets the Flyout service.
         /// </summary>
         /// <value>
-        /// The flyout service.
+        /// The Flyout service.
         /// </value>
         protected IFlyoutService FlyoutService { get; set; }
 
@@ -78,7 +76,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         protected abstract void OnLaunchApplication(LaunchActivatedEventArgs args);
         
         /// <summary>
-        /// Called when any of the search entry points are triggered. You do not need to override this method if your application does not implement the search contract.
+        /// Called when any of the search entry points are triggered. You do not need to override this method if your application does not implement the Search contract.
         /// </summary>
         /// <param name="args">The search query arguments.</param>
         protected virtual void OnSearchApplication(SearchQueryArguments args) { }
@@ -97,6 +95,14 @@ namespace Microsoft.Practices.Prism.StoreApps
             var viewFullName = string.Format(CultureInfo.InvariantCulture, pageNameWithParameter, pageToken);
             var viewType = Type.GetType(viewFullName);
 
+            if (viewType == null)
+            {
+                var resourceLoader = new ResourceLoader(Constants.StoreAppsInfrastructureResourceMapId);
+                throw new ArgumentException(
+                    string.Format(CultureInfo.InvariantCulture, resourceLoader.GetString("DefaultPageTypeLookupErrorMessage"), pageToken, this.GetType().Namespace + ".Views"),
+                    "pageToken");
+            }
+
             return viewType;
         }
 
@@ -106,16 +112,16 @@ namespace Microsoft.Practices.Prism.StoreApps
         protected virtual void OnRegisterKnownTypesForSerialization() { }
 
         /// <summary>
-        /// Override this method with the initialization logic of yor application. Here you can initialize services, repositories, and so on.
+        /// Override this method with the initialization logic of your application. Here you can initialize services, repositories, and so on.
         /// </summary>
         /// <param name="args">The <see cref="IActivatedEventArgs"/> instance containing the event data.</param>
         protected virtual void OnInitialize(IActivatedEventArgs args) { }
 
         /// <summary>
-        /// Creates the flyout view.
+        /// Creates the Flyout view.
         /// </summary>
-        /// <param name="flyoutName">Name of the flyout.</param>
-        /// <returns>The specified flyout view</returns>
+        /// <param name="flyoutName">Name of the Flyout.</param>
+        /// <returns>The specified Flyout view</returns>
         /// <exception cref="System.InvalidOperationException">Could not find associated Flyout in the Views folder.</exception>
         protected virtual FlyoutView CreateFlyoutView(string flyoutName)
         {
@@ -136,9 +142,9 @@ namespace Microsoft.Practices.Prism.StoreApps
         }
 
         /// <summary>
-        /// Gets the settings charm action items.
+        /// Gets the Settings charm action items.
         /// </summary>
-        /// <returns>The list of seetting charm action items that will populate the settings pane.</returns>
+        /// <returns>The list of Setting charm action items that will populate the Settings pane.</returns>
         protected virtual IList<SettingsCharmActionItem> GetSettingsCharmActionItems()
         {
             return null;
@@ -155,7 +161,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         }
 
         /// <summary>
-        /// Invoked when the application is launched normally by the end user.  Other entry points
+        /// Invoked when the application is launched normally by the end user. Other entry points
         /// will be used when the application is launched to open a specific file, to display
         /// search results, and so forth.
         /// </summary>
@@ -196,7 +202,6 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// Invoked when the application is activated through a search association.
         /// </summary>
         /// <param name="args">Event data for the event.</param>
-        
         // Documentation on using search is at http://go.microsoft.com/fwlink/?LinkID=288822&clcid=0x409
         protected async override void OnSearchActivated(SearchActivatedEventArgs args)
         {
@@ -214,7 +219,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         }
 
         /// <summary>
-        /// Initializes the frame and its content.
+        /// Initializes the Frame and its content.
         /// </summary>
         /// <param name="args">The <see cref="IActivatedEventArgs"/> instance containing the event data.</param>
         /// <returns>A task of a Frame that holds the app content.</returns>
@@ -289,7 +294,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         }
 
         /// <summary>
-        /// Invoked when application execution is being suspended.  Application state is saved
+        /// Invoked when application execution is being suspended. Application state is saved
         /// without knowing whether the application will be terminated or resumed with the contents
         /// of memory still intact.
         /// </summary>
@@ -328,7 +333,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         }
 
         /// <summary>
-        /// Called when the Settings Charm is invoked, this handler populate the Settings Charm with the charm items returned by the getSettingCharm Items func.
+        /// Called when the Settings charm is invoked, this handler populates the Settings charm with the charm items returned by the GetSettingsCharmActionItems function.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="args">The <see cref="SettingsPaneCommandsRequestedEventArgs"/> instance containing the event data.</param>

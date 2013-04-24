@@ -8,19 +8,19 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
+using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml;
 
 namespace Microsoft.Practices.Prism.StoreApps
 {
     /// <summary>
-    /// The FrameNavigationService interface is used for navigating across the pages of your Windows Store application.
+    /// The FrameNavigationService interface is used for navigating across the pages of your Windows Store app.
     /// The FrameNavigationService class, uses a class that implements the IFrameFacade interface to provide page navigation.
     /// </summary>
-
     // Documentation on navigation between pages is at http://go.microsoft.com/fwlink/?LinkID=288815&clcid=0x409
-
     public class FrameNavigationService : INavigationService
     {
         private const string LastNavigationParameterKey = "LastNavigationParameter";
@@ -53,10 +53,17 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// </summary>
         /// <param name="pageToken">The page token.</param>
         /// <param name="parameter">The parameter.</param>
-        /// <returns>Returns <c>true</c> if the navigation succeds: otherwise, <c>false</c>.</returns>
+        /// <returns>Returns <c>true</c> if the navigation succeeds: otherwise, <c>false</c>.</returns>
         public bool Navigate(string pageToken, object parameter)
         {
             Type pageType = _navigationResolver(pageToken);
+
+            if (pageType == null)
+            {
+                var resourceLoader = new ResourceLoader(Constants.StoreAppsInfrastructureResourceMapId);
+                var error = string.Format(CultureInfo.CurrentCulture, resourceLoader.GetString("FrameNavigationServiceUnableResolveMessage"), pageToken);
+                throw new ArgumentException(error, "pageToken");
+            }
 
             // Get the page type and parameter of the last navigation to check if we
             // are trying to navigate to the exact same page that we are currently on
@@ -181,7 +188,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         }
 
         /// <summary>
-        /// Handles the Navigating event of the frame control.
+        /// Handles the Navigating event of the Frame control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -191,7 +198,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         }
 
         /// <summary>
-        /// Handles the Navigated event of the frame control.
+        /// Handles the Navigated event of the Frame control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="MvvmNavigatedEventArgs"/> instance containing the event data.</param>

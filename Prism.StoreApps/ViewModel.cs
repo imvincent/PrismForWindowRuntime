@@ -15,11 +15,9 @@ using Windows.UI.Xaml.Navigation;
 namespace Microsoft.Practices.Prism.StoreApps
 {
     /// <summary>
-    /// This is the view model base class that includes INotifyPropertyChange support and it is aware of navigation events.
+    /// This is the view model base class that includes INotifyPropertyChange support and is aware of navigation events.
     /// </summary>
-
     // Documentation on using the MVVM pattern is at http://go.microsoft.com/fwlink/?LinkID=288814&clcid=0x409
-
     public class ViewModel : BindableBase, INavigationAware
     {
         /// <summary>
@@ -40,7 +38,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// This method will be called when navigating away from a page. You can use this method to save your view model data in case of a suspension event.
         /// </summary>
         /// <param name="viewModelState">The state of the view model.</param>
-        /// <param name="suspending">if set to <c>true</c> you are navigating away of this viewmodel due to a suspension event.</param>
+        /// <param name="suspending">if set to <c>true</c> you are navigating away from this viewmodel due to a suspension event.</param>
         public virtual void OnNavigatedFrom(Dictionary<string, object> viewModelState, bool suspending)
         {
             if (viewModelState != null)

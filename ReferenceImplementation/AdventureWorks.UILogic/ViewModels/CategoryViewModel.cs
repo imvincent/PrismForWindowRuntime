@@ -7,6 +7,7 @@
 
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Windows.Input;
 using AdventureWorks.UILogic.Models;
 using Microsoft.Practices.Prism.StoreApps;
@@ -52,6 +53,11 @@ namespace AdventureWorks.UILogic.ViewModels
         public ICommand CategoryNavigationCommand { get; private set; }
 
         public Uri Image { get { return _category.ImageUri;} }
+
+        public override string ToString()
+        {
+            return Title;
+        }
 
         private void NavigateToCategory()
         {

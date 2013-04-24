@@ -137,7 +137,7 @@
         <Setter Property="LineHeight" Value="30"/>
         <Setter Property="RenderTransform">
             <Setter.Value>
-                <TranslateTransform X="-1" Y="6"/>
+                <TranslateTransform X="-2" Y="6"/>
             </Setter.Value>
         </Setter>
     </Style>

@@ -9,16 +9,16 @@
 namespace Microsoft.Practices.Prism.StoreApps
 {
     /// <summary>
-    /// Static class that contains the standard widths of flyouts
+    /// Static class that contains the standard widths of Flyouts
     /// </summary>
     public static class StandardFlyoutSize 
     {
         /// <summary>
-        /// Width of the Narrow Flyout views
+        /// Width of the narrow Flyout views.
         /// </summary>
         public static readonly int Narrow = 364;
         /// <summary>
-        /// Width of the Wide Flyout views
+        /// Width of the wide Flyout views.
         /// </summary>
         public static readonly int Wide = 646;
     }

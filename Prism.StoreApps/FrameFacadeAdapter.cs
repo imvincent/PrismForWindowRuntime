@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Navigation;
 namespace Microsoft.Practices.Prism.StoreApps
 {
     /// <summary>
-    /// Abstracts the Windows.UI.Xaml.Controls.Frame object for use by apps that derive from the MvvmBaseApp class.
+    /// Abstracts the Windows.UI.Xaml.Controls.Frame object for use by apps that derive from the MvvmAppBase class.
     /// </summary>
     public class FrameFacadeAdapter : IFrameFacade
     {
@@ -26,7 +26,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// <summary>
         /// Initializes a new instance of the <see cref="FrameFacadeAdapter"/> class.
         /// </summary>
-        /// <param name="frame">The frame that will be wrapped.</param>
+        /// <param name="frame">The Frame that will be wrapped.</param>
         public FrameFacadeAdapter(Windows.UI.Xaml.Controls.Frame frame)
         {
             _frame = frame;

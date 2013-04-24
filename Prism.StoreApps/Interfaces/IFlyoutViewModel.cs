@@ -11,8 +11,8 @@ using System;
 namespace Microsoft.Practices.Prism.StoreApps.Interfaces
 {
     /// <summary>
-    /// The IFlyoutViewModel interface should be implemented by the Flyout viewmodel classes, to provide actions used for opening the flyout, closing it,
-    /// and handling the back button cliks. 
+    /// The IFlyoutViewModel interface should be implemented by the Flyout view model classes, to provide actions used for opening the Flyout, closing it,
+    /// and handling the back button clicks. 
     /// </summary>
     public interface IFlyoutViewModel
     {
@@ -25,15 +25,15 @@ namespace Microsoft.Practices.Prism.StoreApps.Interfaces
         Action GoBack { get; set; }
 
         /// <summary>
-        /// Gets or sets the action used to close the flyout.
+        /// Gets or sets the action used to close the Flyout.
         /// </summary>
         /// <value>
-        /// The action that will be executed to close the flyout.
+        /// The action that will be executed to close the Flyout.
         /// </value>
         Action CloseFlyout { get; set; }
 
         /// <summary>
-        /// Opens the flyout using the specified parameter, and executing the success Action after the flyout is opened.
+        /// Opens the Flyout using the specified parameter, and executes the success Action after the Flyout is opened.
         /// </summary>
         /// <param name="parameter">The parameter.</param>
         /// <param name="successAction">The success action.</param>

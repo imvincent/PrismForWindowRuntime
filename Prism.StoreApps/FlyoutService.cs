@@ -14,8 +14,8 @@ using Windows.UI.Xaml;
 namespace Microsoft.Practices.Prism.StoreApps
 {
     /// <summary>
-    /// The FlyoutService class is used for displaying flyouts view in your Windows 8 applications. This works for flyout views that implement the FlyoutView base class.
-    /// The FlyoutService uses the FlyoutResolver Func to determine the flyout that will be shown when the ShowFlyout method is called.
+    /// The FlyoutService class is used for displaying Flyout views in your Windows Store app. This works for Flyout views that implement the FlyoutView base class.
+    /// The FlyoutService uses the FlyoutResolver Func to determine the Flyout that will be shown when the ShowFlyout method is called.
     /// </summary>
     public class FlyoutService : IFlyoutService
     {
@@ -33,26 +33,26 @@ namespace Microsoft.Practices.Prism.StoreApps
         }
 
         /// <summary>
-        /// Gets or sets the flyout resolver that is used for retrieving the flyouts based on a string id.
+        /// Gets or sets the Flyout resolver that is used for retrieving the Flyouts based on a string id.
         /// </summary>
         /// <value>
-        /// The flyout resolver.
+        /// The Flyout resolver.
         /// </value>
         public Func<string, FlyoutView> FlyoutResolver { get; set; }
 
         /// <summary>
-        /// Shows the flyout that has the passed flyout Id.
+        /// Shows the Flyout that has the passed Flyout Id.
         /// </summary>
-        /// <param name="flyoutId">The flyout id.</param>
+        /// <param name="flyoutId">The Flyout id.</param>
         public void ShowFlyout(string flyoutId)
         {
             ShowFlyout(flyoutId, null, null);
         }
 
         /// <summary>
-        /// Shows the flyout that has the passed flyout Id and also allows to pass a parameter and a success callback.
+        /// Shows the flyout that has the passed Flyout Id and also allows it to pass a parameter and a success callback.
         /// </summary>
-        /// <param name="flyoutId">The flyout id.</param>
+        /// <param name="flyoutId">The Flyout id.</param>
         /// <param name="parameter">The parameter.</param>
         /// <param name="successAction">The success action.</param>
         public void ShowFlyout(string flyoutId, object parameter, Action successAction)
@@ -81,7 +81,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         }
 
         /// <summary>
-        /// Handles the SizeChanged event of the current page, to show the flyout once the page is unsnapped.
+        /// Handles the SizeChanged event of the current page, to show the Flyout once the page is unsnapped.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="Windows.UI.Core.WindowSizeChangedEventArgs"/> instance containing the event data.</param>

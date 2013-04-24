@@ -662,4 +662,12 @@
     <value>Cancel</value>
     <comment>Text for the Cancel button of the Login modal dialog</comment>
   </data>
+  <data name="BottomAppBar.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Bottom App Bar</value>
+    <comment>Message to be read by Narrator tool</comment>
+  </data>
+  <data name="TopAppBar.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Top App Bar</value>
+    <comment>Message to be read by Narrator tool</comment>
+  </data>
 </root>

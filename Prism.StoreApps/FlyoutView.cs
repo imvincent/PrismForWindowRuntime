@@ -19,9 +19,9 @@ using Windows.UI.Xaml.Media.Animation;
 namespace Microsoft.Practices.Prism.StoreApps
 {
     /// <summary>
-    /// The FlyoutView base class can be used for views that are going to be displayed as flyouts.
+    /// The FlyoutView base class can be used for views that are going to be displayed as Flyouts.
     /// It contains methods to display the view inside a <see cref="Popup"/> control, and also to close the popup, and handle the go back navigation.
-    /// Additionally, this class disable the ShowOnKeyboardInput behavior of the SearchPane if it is enabled, and restores after the flyout is closed.
+    /// Additionally, this class disables the ShowOnKeyboardInput behavior of the SearchPane if it is enabled, and restores it after the Flyout is closed.
     /// </summary>
     public class FlyoutView : Page
     {
@@ -34,7 +34,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// <summary>
         /// Initializes a new instance of the <see cref="FlyoutView"/> class.
         /// </summary>
-        /// <param name="flyoutSize">The size of the flyout.</param>
+        /// <param name="flyoutSize">The size of the Flyout.</param>
         public FlyoutView(int flyoutSize)
         {
             FlyoutSize = flyoutSize;
@@ -44,7 +44,7 @@ namespace Microsoft.Practices.Prism.StoreApps
 
         #region Properties
         /// <summary>
-        /// The width of the flyout.
+        /// The width of the Flyout.
         /// </summary>
         public int FlyoutSize
         {
@@ -63,10 +63,10 @@ namespace Microsoft.Practices.Prism.StoreApps
 
         #region Public Methods
         /// <summary>
-        /// Called to present the flyout view.
+        /// Called to present the Flyout view.
         /// </summary>
         /// <param name="parameter">Optional parameter for the caller to pass into the view.</param>
-        /// <param name="successAction">Method to be invoked on successful completion of the user task in the flyout.</param>
+        /// <param name="successAction">Method to be invoked on successful completion of the user task in the Flyout.</param>
         public void Open(object parameter, Action successAction)
         {
             // Create a new Popup to display the Flyout
@@ -132,7 +132,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         }
 
         /// <summary>
-        /// Closes the flyout.
+        /// Closes the Flyout.
         /// </summary>
         public void Close()
         {
@@ -140,7 +140,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         }
 
         /// <summary>
-        /// Handler for the GoBack button in the flyout to go back to the settings flyout if that is how the user got to this flyout.
+        /// Handler for the GoBack button in the Flyout to go back to the settings Flyout if that is how the user arrived at this Flyout.
         /// </summary>
         public void GoBack()
         {

@@ -15,11 +15,11 @@ using Windows.UI.Xaml;
 namespace Microsoft.Practices.Prism.StoreApps
 {
     /// <summary>
-    /// The ViewModelLocator class locates the viemodel for the view that has the AutoWireViewModelChanged attached property set to true.
-    /// The viewmodel will be located and injected into the view's datacontext. To locate the view, two strategies are used: First the viewmodel locator
-    /// will look if there is any viewmodel factory registered for that view, if not it will try to infer the viewmodel using a convention based approach.
-    /// This class also provide methods for registering the viewmodel factories,
-    /// and also to override the default viewmodel factory and the default view type to VM type resolver.
+    /// The ViewModelLocator class locates the view model for the view that has the AutoWireViewModelChanged attached property set to true.
+    /// The view model will be located and injected into the view's DataContext. To locate the view, two strategies are used: First the ViewModelLocator
+    /// will look to see if there is a view model factory registered for that view, if not it will try to infer the view model using a convention based approach.
+    /// This class also provide methods for registering the view model factories,
+    /// and also to override the default view model factory and the default view type to view model type resolver.
     /// </summary>
     
     // Documentation on using the MVVM pattern is at http://go.microsoft.com/fwlink/?LinkID=288814&clcid=0x409
@@ -36,7 +36,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         private static Func<Type, object> defaultViewModelFactory = type => Activator.CreateInstance(type);
         
         /// <summary>
-        /// Default View Type to VM Type resolver, assumes VM is in same assembly and namespace as View Type.
+        /// Default view type to view model type resolver, assumes the view model is in same assembly as the view type, but in the "ViewModels" namespace.
         /// </summary>
         private static Func<Type, Type> defaultViewTypeToViewModelTypeResolver = 
             viewType =>
@@ -69,7 +69,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         #region Attached property with convention-or-mapping based approach
 
         /// <summary>
-        /// The auto wire view model attached property
+        /// The AutoWireViewModel attached property.
         /// </summary>
         public static DependencyProperty AutoWireViewModelProperty =
             DependencyProperty.RegisterAttached("AutoWireViewModel", typeof(bool), typeof(ViewModelLocator), 
@@ -78,8 +78,8 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// <summary>
         /// Gets the value of the AutoWireViewModel attached property.
         /// </summary>
-        /// <param name="obj">The dependency object which has this attached property.</param>
-        /// <returns><c>True</c> if ViewModel Autowiring is enabled; otherwise, false.</returns>
+        /// <param name="obj">The dependency object that has this attached property.</param>
+        /// <returns><c>True</c> if view model autowiring is enabled; otherwise, <c>false</c>.</returns>
         public static bool GetAutoWireViewModel(DependencyObject obj)
         {
             if (obj != null)
@@ -92,7 +92,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// <summary>
         /// Sets the value of the AutoWireViewModel attached property.
         /// </summary>
-        /// <param name="obj">The dependency object which has this attached property.</param>
+        /// <param name="obj">The dependency object that has this attached property.</param>
         /// <param name="value">if set to <c>true</c> the view model wiring will be performed.</param>
         public static void SetAutoWireViewModel(DependencyObject obj, bool value)
         {
@@ -105,8 +105,8 @@ namespace Microsoft.Practices.Prism.StoreApps
         #endregion
 
         /// <summary>
-        /// Automatically looks up the viewmodel that correspond to the current view, using two strategies:
-        /// the first one looks if there is a any mapping registered for that view, if not it will fallback to the convention based approach.
+        /// Automatically looks up the viewmodel that corresponds to the current view, using two strategies:
+        /// It first looks to see if there is a mapping registered for that view, if not it will fallback to the convention based approach.
         /// </summary>
         /// <param name="d">The dependency object, typically a view.</param>
         /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
@@ -132,8 +132,8 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// <summary>
         /// Gets the view model for the specified view.
         /// </summary>
-        /// <param name="view">The view which viewmodel want.</param>
-        /// <returns>The viewmodel that correspond to the view passed as a paramenter.</returns>
+        /// <param name="view">The view that the view model wants.</param>
+        /// <returns>The vie wmodel that corresponds to the view passed as a parameter.</returns>
         private static object GetViewModelForView(FrameworkElement view)
         {
             // Mapping of view models base on view type (or instance) goes here

@@ -21,7 +21,7 @@ namespace Microsoft.Practices.Prism.StoreApps
     /// <summary>
     /// The BindableValidator class run validation rules of an entity, and stores a collection of errors of the properties that did not pass validation.
     /// The validation is run on each property change or whenever the ValidateProperties method is called.
-    /// It also provides and indexer property, that uses the property names as keys and return the error list for the specified property.
+    /// It also provides an indexer property, that uses the property names as keys and return the error list for the specified property.
     /// </summary>
     public class BindableValidator : INotifyPropertyChanged
     {
@@ -38,7 +38,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// Initializes a new instance of the BindableValidator class with the entity to validate.
         /// </summary>
         /// <param name="entityToValidate">The entity to validate</param>
-        /// <exception cref="ArgumentNullException">When  <paramref name="entityToValidate"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException">When <paramref name="entityToValidate"/> is <see langword="null" />.</exception>
         public BindableValidator(INotifyPropertyChanged entityToValidate)
         {
             if (entityToValidate == null)
@@ -129,7 +129,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// </summary>
         /// <param name="propertyName">The name of the property to validate.</param>
         /// <returns>True if the property is valid. Otherwise, false.</returns>
-        /// <exception cref="ArgumentNullException">When  <paramref name="propertyName"/> is <see langword="null" /> or an empty string value.</exception>
+        /// <exception cref="ArgumentNullException">When <paramref name="propertyName"/> is <see langword="null" /> or an empty string value.</exception>
         /// <exception cref="ArgumentException">When the <paramref name="propertyName"/> parameter does not match any property name.</exception>
         public bool ValidateProperty(string propertyName)
         {
@@ -222,7 +222,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         }
 
         /// <summary>
-        /// Updates the erros collection of the property.
+        /// Updates the errors collection of the property.
         /// </summary>
         /// <param name="propertyName">The name of the property.</param>
         /// <param name="propertyNewErrors">The new collection of property errors.</param>

@@ -11,8 +11,8 @@ using System.Xml.Linq;
 namespace Microsoft.Practices.Prism.StoreApps
 {
     /// <summary>
-    /// This helper class loads the AppManifest in memory, letting you obtain properties that are not exposed it through the Windows Store API.
-    /// Currently, this class has methods for getting if the Search contract is enabled and to get the Applications Id.
+    /// This helper class loads the AppManifest in memory, letting you obtain properties that are not exposed through the Windows Store API.
+    /// Currently, this class has methods for discovering if the Search contract is enabled and to get the Applications Id.
     /// Nevertheless, you can extend it to get other values that you may need.
     /// </summary>
     public static class AppManifestHelper

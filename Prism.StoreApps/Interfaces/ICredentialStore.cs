@@ -12,8 +12,8 @@ namespace Microsoft.Practices.Prism.StoreApps.Interfaces
 {
     /// <summary>
     /// The ICredentialStore interface abstracts the Windows.Security.Credentials.PasswordVault object for managing the users credentials of your application.
-    /// A PasswordVault represents a Credential Locker of credentials. The default implementation of ICredentialStore
-    /// is the RoamingCredentialStore class, which uses the Windows.Security.Credentials.PasswordVault object to get, save and remove the application credentials.
+    /// A PasswordVault represents a Credential Locker. The default implementation of ICredentialStore
+    /// is the RoamingCredentialStore class, which uses the Windows.Security.Credentials.PasswordVault object to get, save, and remove the application credentials.
     /// </summary>
     public interface ICredentialStore
     {
@@ -28,7 +28,7 @@ namespace Microsoft.Practices.Prism.StoreApps.Interfaces
         /// <summary>
         /// Gets the saved credentials for the specified resource.
         /// </summary>
-        /// <param name="resource">The resource name of which the credentials will be stored.</param>
+        /// <param name="resource">The resource name of the credentials that will be stored.</param>
         /// <returns>The <see cref="PasswordCredential"/> instance containing all the saved credentials for the specified resource.</returns>
         PasswordCredential GetSavedCredentials(string resource);
 

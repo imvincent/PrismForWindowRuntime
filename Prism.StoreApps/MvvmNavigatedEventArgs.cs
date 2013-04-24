@@ -17,7 +17,7 @@ namespace Microsoft.Practices.Prism.StoreApps
     public class MvvmNavigatedEventArgs : EventArgs
     {
         /// <summary>
-        /// Gets a value that indicates the direction of movement during navigation
+        /// Gets a value that indicates the direction of movement during navigation.
         /// </summary>
         /// 
         /// <returns>

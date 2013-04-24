@@ -9,7 +9,7 @@
 namespace Microsoft.Practices.Prism.StoreApps.Interfaces
 {
     /// <summary>
-    /// The INavigationService interface is used for creating a navigation services for your Windows Store application.
+    /// The INavigationService interface is used for creating a navigation service for your Windows Store app.
     /// The default implementation of INavigationService is the FrameNavigationService class, that uses a class that implements the IFrameFacade interface
     /// to provide page navigation.
     /// </summary>
@@ -20,7 +20,7 @@ namespace Microsoft.Practices.Prism.StoreApps.Interfaces
         /// </summary>
         /// <param name="pageToken">The page token.</param>
         /// <param name="parameter">The parameter.</param>
-        /// <returns>Returns <c>true</c> if navigation succeds; otherwise, <c>false</c></returns>
+        /// <returns>Returns <c>true</c> if navigation succeeds; otherwise, <c>false</c></returns>
         bool Navigate(string pageToken, object parameter);
 
         /// <summary>

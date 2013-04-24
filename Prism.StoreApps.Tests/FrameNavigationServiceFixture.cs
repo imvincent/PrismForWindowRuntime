@@ -268,5 +268,25 @@ namespace Microsoft.Practices.Prism.StoreApps.Tests
                 Assert.AreEqual(3, frameSessionState.Count, "VM 1, 2, and 4");
             });
         }
+
+        [TestMethod]
+        public async Task PageTokenThatCannotBeResolved_ThrowsMeaningfulException()
+        {
+            await ExecuteOnUIThread(() =>
+            {
+                var frame = new FrameFacadeAdapter(new Frame());
+                var sessionStateService = new MockSessionStateService();
+                var frameSessionState = new Dictionary<string, object>();
+                sessionStateService.GetSessionStateForFrameDelegate = (currentFrame) => frameSessionState;
+
+                Func<string, Type> unresolvablePageTokenReturnsNull = pageToken => null;
+                var navigationService = new FrameNavigationService(frame, unresolvablePageTokenReturnsNull, sessionStateService);
+
+                Assert.ThrowsException<ArgumentException>(
+                    () =>   navigationService.Navigate("anything", 1)
+                    );
+
+            });
+        }
     }
 }

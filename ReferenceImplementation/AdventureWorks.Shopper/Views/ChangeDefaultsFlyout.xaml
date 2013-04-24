@@ -80,7 +80,7 @@
                                    x:Uid="NoDefaultShippingAddressLabel"
                                    Style="{StaticResource LightBasicTextStyle}"
                                    Visibility="{Binding SelectedShippingAddress, Converter={StaticResource NullToVisibleConverter}}" />
-                        <ContentControl DataContext="{Binding SelectedShippingAddress}">
+                        <ContentControl DataContext="{Binding SelectedShippingAddress}" IsTabStop="False">
                             <ContentControl.Content>
                                 <StackPanel Visibility="{Binding SelectedShippingAddress, Converter={StaticResource NotNullToVisibleConverter}}">
                                     <TextBlock Text="{Binding FirstLine}"
@@ -120,7 +120,7 @@
                                    x:Uid="NoDefaultBillingAddressLabel"
                                    Style="{StaticResource LightBasicTextStyle}"
                                    Visibility="{Binding SelectedBillingAddress, Converter={StaticResource NullToVisibleConverter}}" />
-                        <ContentControl DataContext="{Binding SelectedBillingAddress}">
+                        <ContentControl DataContext="{Binding SelectedBillingAddress}" IsTabStop="False">
                             <ContentControl.Content>
                                 <StackPanel Visibility="{Binding SelectedBillingAddress, Converter={StaticResource NotNullToVisibleConverter}}">
                                     <TextBlock Text="{Binding FirstLine}"
@@ -160,7 +160,7 @@
                                    x:Uid="NoDefaultPaymentMethodLabel"
                                    Style="{StaticResource LightBasicTextStyle}"
                                    Visibility="{Binding SelectedPaymentMethod, Converter={StaticResource NullToVisibleConverter}}" />
-                        <ContentControl DataContext="{Binding SelectedPaymentMethod}">
+                        <ContentControl DataContext="{Binding SelectedPaymentMethod}" IsTabStop="False">
                             <ContentControl.Content>
                                 <StackPanel Visibility="{Binding SelectedPaymentMethod, Converter={StaticResource NotNullToVisibleConverter}}">
                                     <TextBlock Text="{Binding FirstLine}"

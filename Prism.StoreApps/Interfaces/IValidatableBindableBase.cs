@@ -14,7 +14,7 @@ using System.ComponentModel;
 namespace Microsoft.Practices.Prism.StoreApps.Interfaces
 {
     /// <summary>
-    /// The IValidatableBindableBase interface was created to add validation support for model classes that contains validation rules.
+    /// The IValidatableBindableBase interface was created to add validation support for model classes that contain validation rules.
     /// The default implementation of IValidatableBindableBase is the ValidatableBindableBase class, which contains the logic to run the validation rules of the
     /// instance of a model class and return the results of this validation as a list of properties' errors.
     /// </summary>
@@ -29,7 +29,7 @@ namespace Microsoft.Practices.Prism.StoreApps.Interfaces
         bool IsValidationEnabled { get; set; }
 
         /// <summary>
-        /// Return the BindableValidator instance, which have an indexer property that returns.
+        /// Returns the BindableValidator instance that has an indexer property.
         /// </summary>
         /// <value>
         /// The Bindable Validator Indexer property.
@@ -37,14 +37,14 @@ namespace Microsoft.Practices.Prism.StoreApps.Interfaces
         BindableValidator Errors { get; }
 
         /// <summary>
-        /// Occurs when the Errors collection changed because of new errors were added or old errors were fixed.
+        /// Occurs when the Errors collection changed because new errors were added or old errors were fixed.
         /// </summary>
         event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
         /// <summary>
         /// Gets all errors.
         /// </summary>
-        /// <returns> A ReadOnlyDictionary which key is a property name and the value is a ReadOnlyCollection of the error strings.</returns>
+        /// <returns> A ReadOnlyDictionary that's key is a property name and the value is a ReadOnlyCollection of the error strings.</returns>
         ReadOnlyDictionary<string, ReadOnlyCollection<string>> GetAllErrors();
 
         /// <summary>

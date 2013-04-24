@@ -359,8 +359,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="ProductTemplate">
-        <Grid Width="420"
-              Margin="10,0">
+        <Grid Width="420">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />

@@ -13,7 +13,7 @@ namespace Microsoft.Practices.Prism.StoreApps
 {
     /// <summary>
     /// The ResourceLoader class abstracts the Windows.ApplicationModel.Resources.ResourceLoader object for use by apps that derive from the MvvmAppBase class.
-    /// A ResourceLoader represents a class that reads the assembly resouce file and looks for a named resource.
+    /// A ResourceLoader represents a class that reads the assembly resource file and looks for a named resource.
     /// This class simply passes method invocations to an underlying Windows.ApplicationModel.Resources.ResourceLoader object.
     /// </summary>
     public class ResourceLoaderAdapter : IResourceLoader

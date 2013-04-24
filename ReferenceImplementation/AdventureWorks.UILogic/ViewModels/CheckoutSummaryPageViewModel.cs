@@ -168,11 +168,8 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 if (SetProperty(ref _selectedCheckoutData, value))
                 {
-                    if (_selectedCheckoutData != null)
-                    {
-                        // Display the AppBar
-                        IsBottomAppBarOpened = true;
-                    }
+                    // Display the AppBar if there is a something selected
+                    IsBottomAppBarOpened = (_selectedCheckoutData != null);
                 }
             }
         }
@@ -301,6 +298,7 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, mvex.Message);
             }
+
             if (!string.IsNullOrWhiteSpace(errorMessage))
             {
                 await _alertMessageService.ShowAsync(errorMessage, _resourceLoader.GetString("ErrorProcessingOrder"));

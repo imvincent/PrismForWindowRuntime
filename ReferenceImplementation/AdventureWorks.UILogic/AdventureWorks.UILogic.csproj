@@ -112,7 +112,7 @@
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\ComboBoxItemValue.cs" />
-    <Compile Include="Models\LoginResult.cs" />
+    <Compile Include="Models\LogOnResult.cs" />
     <Compile Include="Models\ModelValidationResult.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\PaymentMethod.cs" />
@@ -213,9 +213,7 @@
       <Name>Microsoft.Practices.Prism.StoreApps</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Events\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>

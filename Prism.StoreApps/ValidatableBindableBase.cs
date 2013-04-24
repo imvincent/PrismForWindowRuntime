@@ -16,11 +16,10 @@ using Microsoft.Practices.Prism.StoreApps.Interfaces;
 namespace Microsoft.Practices.Prism.StoreApps
 {
     /// <summary>
-    /// The IValidatableBindableBase interface was created to add validation support for model classes that contains validation rules.
+    /// The IValidatableBindableBase interface was created to add validation support for model classes that contain validation rules.
     /// The default implementation of IValidatableBindableBase is the ValidatableBindableBase class, which contains the logic to run the validation rules of the
     /// instance of a model class and return the results of this validation as a list of properties' errors.
     /// </summary>
-
     // Documentation on validating user input is at http://go.microsoft.com/fwlink/?LinkID=288817&clcid=0x409
     public class ValidatableBindableBase : BindableBase, IValidatableBindableBase
     {
@@ -47,7 +46,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         }
 
         /// <summary>
-        /// Return the BindableValidator instance, which have an indexer property that returns.
+        /// Returns the BindableValidator instance that has an indexer property.
         /// </summary>
         /// <value>
         /// The Bindable Validator Indexer property.
@@ -61,7 +60,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         }
 
         /// <summary>
-        /// Occurs when the Errors collection changed because of new errors were added or old errors were fixed.
+        /// Occurs when the Errors collection changed because new errors were added or old errors were fixed.
         /// </summary>
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged
         {
@@ -73,7 +72,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// <summary>
         /// Gets all errors.
         /// </summary>
-        /// <returns> A ReadOnlyDictionary which key is a property name and the value is a ReadOnlyCollection of the error strings.</returns>
+        /// <returns> A ReadOnlyDictionary that's key is a property name and the value is a ReadOnlyCollection of the error strings.</returns>
         public ReadOnlyDictionary<string, ReadOnlyCollection<string>> GetAllErrors()
         {
             return _bindableValidator.GetAllErrors();
@@ -100,14 +99,14 @@ namespace Microsoft.Practices.Prism.StoreApps
         }
 
         /// <summary>
-        /// Checks if a property already matches a desired value.  Sets the property and
+        /// Checks if a property already matches a desired value. Sets the property and
         /// notifies listeners only when necessary. We are overriding this property to ensure that the SetProperty and the ValidateProperty methods are fired in a
         /// deterministic way.
         /// </summary>
         /// <typeparam name="T">Type of the property.</typeparam>
         /// <param name="storage">Reference to a property with both getter and setter.</param>
         /// <param name="value">Desired value for the property.</param>
-        /// <param name="propertyName">Name of the property used to notify listeners.  This
+        /// <param name="propertyName">Name of the property used to notify listeners. This
         /// value is optional and can be provided automatically when invoked from compilers that
         /// support CallerMemberName.</param>
         /// <returns>

@@ -256,6 +256,7 @@
                VerticalOffset="150">
             <Grid x:Name="PopupPanel"
                   Background="Black"
+                  Opacity=".9"
                   Height="250"
                   Width="410">
                 <Grid.RowDefinitions>

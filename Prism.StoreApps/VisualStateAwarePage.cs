@@ -19,15 +19,15 @@ using Windows.UI.Xaml.Navigation;
 namespace Microsoft.Practices.Prism.StoreApps
 {
     /// <summary>
-    /// This is the base class that can be used for pages that need to be aware of its layout changes and update its visual state accordingly.
+    /// This is the base class that can be used for pages that need to be aware of layout changes and update the visual state accordingly.
     /// </summary>
     public class VisualStateAwarePage : Page
     {
         /// <summary>
-        /// Gets or sets the get session state for frame.
+        /// Gets or sets the get session state for Frame.
         /// </summary>
         /// <value>
-        /// The session state for the frame.
+        /// The session state for the Frame.
         /// </value>
         public static Func<IFrameFacade, IDictionary<string, object>> GetSessionStateForFrame { get; set; }
  
@@ -115,7 +115,7 @@ namespace Microsoft.Practices.Prism.StoreApps
 
         /// <summary>
         /// Invoked on every keystroke, including system keys such as Alt key combinations, when
-        /// this page is active and occupies the entire window.  Used to detect keyboard navigation
+        /// this page is active and occupies the entire window. Used to detect keyboard navigation
         /// between pages even when the page itself doesn't have focus.
         /// </summary>
         /// <param name="sender">Instance that triggered the event.</param>
@@ -159,7 +159,7 @@ namespace Microsoft.Practices.Prism.StoreApps
 
         /// <summary>
         /// Invoked on every mouse click, touch screen tap, or equivalent interaction when this
-        /// page is active and occupies the entire window.  Used to detect browser-style next and
+        /// page is active and occupies the entire window. Used to detect browser-style next and
         /// previous mouse button clicks to navigate between pages.
         /// </summary>
         /// <param name="sender">Instance that triggered the event.</param>
@@ -198,9 +198,9 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// management corresponding to view states.</param>
         /// <param name="eventArgs">Event data that describes how the request was made.</param>
         /// <remarks>The current view state will immediately be used to set the corresponding
-        /// visual state when layout updates are requested.  A corresponding
+        /// visual state when layout updates are requested. A corresponding
         /// <see cref="FrameworkElement.Unloaded"/> event handler connected to
-        /// <see cref="StopLayoutUpdates"/> is strongly encouraged.  Instances of
+        /// <see cref="StopLayoutUpdates"/> is strongly encouraged. Instances of
         /// <see cref="VisualStateAwarePage"/> automatically invoke these handlers in their Loaded and
         /// Unloaded events.</remarks>
         /// <seealso cref="DetermineVisualState"/>
@@ -252,7 +252,7 @@ namespace Microsoft.Practices.Prism.StoreApps
 
         /// <summary>
         /// Translates <see cref="ApplicationViewState"/> values into strings for visual state
-        /// management within the page.  The default implementation uses the names of enum values.
+        /// management within the page. The default implementation uses the names of enum values.
         /// Subclasses may override this method to control the mapping scheme used.
         /// </summary>
         /// <param name="viewState">View state for which a visual state is desired.</param>
@@ -294,7 +294,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// <summary>
         /// Invoked when this page is about to be displayed in a Frame.
         /// </summary>
-        /// <param name="e">Event data that describes how this page was reached.  The Parameter
+        /// <param name="e">Event data that describes how this page was reached. The Parameter
         /// property provides the group to be displayed.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -334,7 +334,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// <summary>
         /// Invoked when this page will no longer be displayed in a Frame.
         /// </summary>
-        /// <param name="e">Event data that describes how this page was reached.  The Parameter
+        /// <param name="e">Event data that describes how this page was reached. The Parameter
         /// property provides the group to be displayed.</param>
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
@@ -346,21 +346,21 @@ namespace Microsoft.Practices.Prism.StoreApps
         }
 
         /// <summary>
-        /// Populates the page with content passed during navigation.  Any saved state is also
+        /// Populates the page with content passed during navigation. Any saved state is also
         /// provided when recreating a page from a prior session.
         /// </summary>
         /// <param name="navigationParameter">The parameter value passed to
         /// <see cref="Frame.Navigate(Type, Object)"/> when this page was initially requested.
         /// </param>
         /// <param name="pageState">A dictionary of state preserved by this page during an earlier
-        /// session.  This will be null the first time a page is visited.</param>
+        /// session. This will be null the first time a page is visited.</param>
         protected virtual void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
         }
 
         /// <summary>
         /// Preserves state associated with this page in case the application is suspended or the
-        /// page is discarded from the navigation cache.  Values must conform to the serialization
+        /// page is discarded from the navigation cache. Values must conform to the serialization
         /// requirements of <see cref="SessionStateService.SessionState"/>.
         /// </summary>
         /// <param name="pageState">An empty dictionary to be populated with serializable state.</param>

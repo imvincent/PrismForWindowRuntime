@@ -38,12 +38,9 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Microsoft.Patterns.Prism.PubSubEvents.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <ItemGroup>
-    <!-- A reference to the entire .NET Framework is automatically included -->
-    <None Include="Microsoft.Patterns.Prism.PubSubEvents.snk" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="BackgroundEventSubscription.cs" />
     <Compile Include="DataEventArgs.cs" />

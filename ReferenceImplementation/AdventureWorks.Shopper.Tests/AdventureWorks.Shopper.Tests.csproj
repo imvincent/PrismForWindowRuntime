@@ -145,9 +145,6 @@
       <Name>AdventureWorks.Shopper</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="AdventureWorks.AWShopper.Tests_TemporaryKey.pfx" />
-  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>

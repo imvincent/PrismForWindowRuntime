@@ -112,6 +112,10 @@ namespace AdventureWorks.UILogic.ViewModels
                         IncrementCountCommand.RaiseCanExecuteChanged();
                         DecrementCountCommand.RaiseCanExecuteChanged();
                     }
+                    else
+                    {
+                        IsBottomAppBarOpened = false;
+                    }
                 }
             }
         }

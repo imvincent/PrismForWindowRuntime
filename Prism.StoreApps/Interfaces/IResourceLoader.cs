@@ -10,7 +10,7 @@ namespace Microsoft.Practices.Prism.StoreApps.Interfaces
 {
     /// <summary>
     /// The IResourceLoader interface abstracts the Windows.ApplicationModel.Resources.ResourceLoader object for use by apps that derive from the MvvmAppBase class.
-    /// A ResourceLoader represents a class that reads the assembly resouce file and looks for a named resource. The default implementation of IResourceLoader
+    /// A ResourceLoader represents a class that reads the assembly resource file and looks for a named resource. The default implementation of IResourceLoader
     /// is the ResourceLoaderAdapter class, which simply passes method invocations to an underlying Windows.ApplicationModel.Resources.ResourceLoader object.
     /// </summary>
     public interface IResourceLoader

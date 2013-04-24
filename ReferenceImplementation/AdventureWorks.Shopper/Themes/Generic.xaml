@@ -20,7 +20,9 @@
                              Color="White" />
             <SolidColorBrush x:Key="AWShopperItemForegroundLightestBrush"
                              Color="White" />
-            
+            <SolidColorBrush x:Key="AWShopperHighlightButtonForegroundBrush"
+                             Color="Black" />
+
             <!-- ListView Selection Color -->
             <Color x:Key="ItemSelectionColor">#FFE2742F</Color>
             <SolidColorBrush x:Key="ListViewItemSelectedBackgroundThemeBrush"
@@ -49,7 +51,8 @@
                              Color="{StaticResource SystemColorWindowTextColor}" />
             <SolidColorBrush x:Key="AWShopperItemForegroundLightestBrush"
                              Color="{StaticResource SystemColorWindowTextColor}" />
-
+            <SolidColorBrush x:Key="AWShopperHighlightButtonForegroundBrush"
+                             Color="{StaticResource SystemColorWindowTextColor}" />
 
             <SolidColorBrush x:Key="ListViewItemSelectedBackgroundThemeBrush"
                              Color="{StaticResource SystemColorHighlightColor}" />
@@ -1117,8 +1120,8 @@
 
     <Style TargetType="Button">
         <Setter Property="Foreground"
-                Value="Black" />
-        <Setter Property="BorderThickness"
-                Value="0" />
+                Value="{StaticResource AWShopperHighlightButtonForegroundBrush}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource AWShopperHighlightButtonForegroundBrush}" />
     </Style>
 </ResourceDictionary>

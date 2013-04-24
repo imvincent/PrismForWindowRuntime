@@ -17,7 +17,7 @@ namespace Microsoft.Practices.Prism.StoreApps
     /// </summary>
     /// <typeparam name="T">Parameter type.</typeparam>
     /// <remarks>
-    /// The constructor deliberately prevent the use of value types.
+    /// The constructor deliberately prevents the use of value types.
     /// Because ICommand takes an object, having a value type for T would cause unexpected behavior when CanExecute(null) is called during XAML initialization for command bindings.
     /// Using default(T) was considered and rejected as a solution because the implementor would not be able to distinguish between a valid and defaulted values.
     /// <para/>
@@ -41,7 +41,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// <summary>
         /// Initializes a new instance of <see cref="DelegateCommand{T}"/>.
         /// </summary>
-        /// <param name="executeMethod">Delegate to execute when Execute is called on the command.  This can be null to just hook up a CanExecute delegate.</param>
+        /// <param name="executeMethod">Delegate to execute when Execute is called on the command. This can be null to just hook up a CanExecute delegate.</param>
         /// <remarks><seealso cref="CanExecute"/> will always return true.</remarks>
         public DelegateCommand(Action<T> executeMethod)
             : this(executeMethod, (o) => true)
@@ -51,8 +51,8 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// <summary>
         /// Initializes a new instance of <see cref="DelegateCommand{T}"/>.
         /// </summary>
-        /// <param name="executeMethod">Delegate to execute when Execute is called on the command.  This can be null to just hook up a CanExecute delegate.</param>
-        /// <param name="canExecuteMethod">Delegate to execute when CanExecute is called on the command.  This can be null.</param>
+        /// <param name="executeMethod">Delegate to execute when Execute is called on the command. This can be null to just hook up a CanExecute delegate.</param>
+        /// <param name="canExecuteMethod">Delegate to execute when CanExecute is called on the command. This can be null.</param>
         /// <exception cref="ArgumentNullException">When both <paramref name="executeMethod"/> and <paramref name="canExecuteMethod"/> ar <see langword="null" />.</exception>
         public DelegateCommand(Action<T> executeMethod, Func<T, bool> canExecuteMethod)
             : base((o) => executeMethod((T)o), (o) => canExecuteMethod((T)o))
@@ -74,8 +74,8 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// <summary>
         /// Factory method to create a new instance of <see cref="DelegateCommand{T}"/> from an awaitable handler method.
         /// </summary>
-        /// <param name="executeMethod">Delegate to execute when Execute is called on the command.  This can be null to just hook up a CanExecute delegate.</param>
-        /// <param name="canExecuteMethod">Delegate to execute when CanExecute is called on the command.  This can be null.</param>
+        /// <param name="executeMethod">Delegate to execute when Execute is called on the command. This can be null to just hook up a CanExecute delegate.</param>
+        /// <param name="canExecuteMethod">Delegate to execute when CanExecute is called on the command. This can be null.</param>
         /// <returns>Constructed instance of <see cref="DelegateCommand{T}"/></returns>
         public static DelegateCommand<T> FromAsyncHandler(Func<T, Task> executeMethod, Func<T, bool> canExecuteMethod)
         {
@@ -160,8 +160,8 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// <summary>
         /// Factory method to create a new instance of <see cref="DelegateCommand"/> from an awaitable handler method.
         /// </summary>
-        /// <param name="executeMethod">Delegate to execute when Execute is called on the command.  This can be null to just hook up a CanExecute delegate.</param>
-        /// <param name="canExecuteMethod">Delegate to execute when CanExecute is called on the command.  This can be null.</param>
+        /// <param name="executeMethod">Delegate to execute when Execute is called on the command. This can be null to just hook up a CanExecute delegate.</param>
+        /// <param name="canExecuteMethod">Delegate to execute when CanExecute is called on the command. This can be null.</param>
         /// <returns>Constructed instance of <see cref="DelegateCommand"/></returns>
         public static DelegateCommand FromAsyncHandler(Func<Task> executeMethod, Func<bool> canExecuteMethod)
         {
@@ -179,7 +179,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// <summary>
         /// Determines if the command can be executed.
         /// </summary>
-        /// <returns>Returns <see langword="true"/> if the command can execute,otherwise returns <see langword="false"/>.</returns>
+        /// <returns>Returns <see langword="true"/> if the command can execute, otherwise returns <see langword="false"/>.</returns>
         public bool CanExecute()
         {
             return CanExecute(null);
