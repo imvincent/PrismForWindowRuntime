@@ -24,6 +24,7 @@ namespace AdventureWorks.UILogic.ViewModels
 {
     public class BillingAddressUserControlViewModel : ViewModel, IBillingAddressUserControlViewModel
     {
+        private string _addressId;
         private Address _address;
         private bool _isEnabled;
         private bool _loadDefault;
@@ -32,7 +33,7 @@ namespace AdventureWorks.UILogic.ViewModels
         private readonly ILocationService _locationService;
         private readonly IResourceLoader _resourceLoader;
         private readonly IAlertMessageService _alertMessageService;
-        
+
         public BillingAddressUserControlViewModel(ICheckoutDataRepository checkoutDataRepository, ILocationService locationService, IResourceLoader resourceLoader,
                                                   IAlertMessageService alertMessageService)
         {
@@ -93,10 +94,10 @@ namespace AdventureWorks.UILogic.ViewModels
 
             if (navigationMode == NavigationMode.New)
             {
-                var addressId = navigationParameter as string;
-                if (addressId != null)
+                _addressId = navigationParameter as string;
+                if (_addressId != null)
                 {
-                    Address = await _checkoutDataRepository.GetBillingAddressAsync(addressId);
+                    Address = await _checkoutDataRepository.GetBillingAddressAsync(_addressId);
                     return;
                 }
 
@@ -138,14 +139,23 @@ namespace AdventureWorks.UILogic.ViewModels
 
         public async Task ProcessFormAsync()
         {
-            var existingAddresses = await _checkoutDataRepository.GetAllBillingAddressesAsync();
-            var matchingExistingAddress = Address.FindMatchingAddress(Address, existingAddresses);
-            if (matchingExistingAddress != null)
+            if (_addressId == null)
             {
-                Address = matchingExistingAddress;
+                //Add Address but check for duplicate
+                var existingAddresses = await _checkoutDataRepository.GetAllBillingAddressesAsync();
+                var matchingExistingAddress = Address.FindMatchingAddress(Address, existingAddresses);
+                if (matchingExistingAddress != null)
+                {
+                    Address = matchingExistingAddress;
+                }
+                else
+                {
+                    await _checkoutDataRepository.SaveBillingAddressAsync(Address);
+                }
             }
             else
             {
+                //Updated existing address
                 await _checkoutDataRepository.SaveBillingAddressAsync(Address);
             }
         }
@@ -158,7 +168,7 @@ namespace AdventureWorks.UILogic.ViewModels
                 var states = await _locationService.GetStatesAsync();
 
                 var items = new List<ComboBoxItemValue> { new ComboBoxItemValue() { Id = string.Empty, Value = _resourceLoader.GetString("State") } };
-                items.AddRange(states.Select(state => new ComboBoxItemValue() {Id = state, Value = state}));
+                items.AddRange(states.Select(state => new ComboBoxItemValue() { Id = state, Value = state }));
                 States = new ReadOnlyCollection<ComboBoxItemValue>(items);
 
                 // Select the first item on the list

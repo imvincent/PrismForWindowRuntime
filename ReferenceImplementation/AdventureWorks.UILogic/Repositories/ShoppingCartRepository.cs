@@ -51,8 +51,8 @@ namespace AdventureWorks.UILogic.Repositories
 
         public async Task ClearCartAsync()
         {
-            _cachedShoppingCart = null;
             await _shoppingCartService.DeleteShoppingCartAsync(_shoppingCartId);
+            _cachedShoppingCart = null;
             RaiseShoppingCartUpdated();
         }
 

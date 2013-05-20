@@ -39,7 +39,8 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <TextBlock Style="{StaticResource PageSubheaderTextStyle}"
+            <TextBlock x:Uid="SignInTextBlock" 
+                       Style="{StaticResource PageSubheaderTextStyle}"
                        Text="Sign in to the app"
                        Margin="0,10,0,10"
                        Grid.Row="0"
@@ -107,7 +108,7 @@
                        Grid.Column="1" />
             <StackPanel x:Name="ButtonsPanel"
                         Orientation="Horizontal"
-                        Margin="300,0,0,0"
+                        Margin="125,0,0,0"
                         Grid.Row="8"
                         Grid.Column="1">
                 <Button x:Uid="SubmitButton"
@@ -148,12 +149,6 @@
                                 <DiscreteObjectKeyFrame.Value>285</DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.Margin"
-                                                       Storyboard.TargetName="ButtonsPanel">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>125,0,0,0</DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
                 <VisualState x:Name="Snapped">
@@ -180,12 +175,6 @@
                                                        Storyboard.TargetName="PleaseSignInTextBlock">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>285</DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.Margin"
-                                                       Storyboard.TargetName="ButtonsPanel">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>125,0,0,0</DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>

@@ -11,7 +11,8 @@ using System;
 namespace Microsoft.Practices.Prism.StoreApps
 {
     /// <summary>
-    /// The SettingsCharmActionItem is used by the SettingsCharmService class to populate the SettingsPane.
+    /// The SettingsCharmActionItem is used by the MvvmAppBase class to populate the SettingsPane.
+    /// To include custom items in the Settings pane, override the MvvmAppBase.GetSettingsCharmActionItems method.
     /// This item type has an associated Action that will be executed when selecting it in the Settings pane.
     /// </summary>
     public class SettingsCharmActionItem

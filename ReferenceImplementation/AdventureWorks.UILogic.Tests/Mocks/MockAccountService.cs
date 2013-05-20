@@ -19,9 +19,15 @@ namespace AdventureWorks.UILogic.Tests.Mocks
 
         public Func<string, string, bool,  Task<bool>> SignInUserAsyncDelegate { get; set; }
 
-        public Func<Task<UserInfo>> VerifyUserAuthenticationAsyncDelegate { get; set; } 
+        public Func<Task<UserInfo>> VerifyUserAuthenticationAsyncDelegate { get; set; }
+        public Func<Task<UserInfo>> VerifySavedCredentialsAsyncDelegate { get; set; } 
 
         public Action SignOutDelegate { get; set; }
+
+        public async Task<UserInfo> VerifySavedCredentialsAsync()
+        {
+            return await VerifySavedCredentialsAsyncDelegate();
+        }
 
         public async Task<bool> SignInUserAsync(string userName, string password, bool useCredentialStore)
         {

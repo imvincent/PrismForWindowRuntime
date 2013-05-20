@@ -42,7 +42,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                                                          };
             var accountService = new MockAccountService()
                 {
-                    VerifyUserAuthenticationAsyncDelegate = () => Task.FromResult<UserInfo>(new UserInfo())
+                    VerifySavedCredentialsAsyncDelegate = () => Task.FromResult<UserInfo>(new UserInfo())
                 };
             var orderService = new MockOrderService()
                 {
@@ -59,7 +59,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                                                                     clearCartCalled = true;
                                                                     return Task.Delay(0);
                                                                 };
-            var target = new CheckoutSummaryPageViewModel(navigationService, orderService, null, null, null, shoppingCartRepository, accountService, null, resourcesService, null);
+            var target = new CheckoutSummaryPageViewModel(navigationService, orderService, null, null, null, shoppingCartRepository, accountService, resourcesService, null, null);
             await target.SubmitCommand.Execute();
 
             Assert.IsTrue(navigateCalled);
@@ -75,7 +75,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             var navigationService = new MockNavigationService();
             var accountService = new MockAccountService()
                 {
-                    VerifyUserAuthenticationAsyncDelegate = () => Task.FromResult<UserInfo>(new UserInfo())
+                    VerifySavedCredentialsAsyncDelegate = () => Task.FromResult<UserInfo>(new UserInfo())
                 };
             var orderService = new MockOrderService()
                 {
@@ -101,7 +101,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                     }
                 };
 
-            var target = new CheckoutSummaryPageViewModel(navigationService, orderService, null, null, null, null, accountService, null, resourcesService, alertService);
+            var target = new CheckoutSummaryPageViewModel(navigationService, orderService, null, null, null, null, accountService, resourcesService, alertService, null);
             await target.SubmitCommand.Execute();
 
             Assert.IsFalse(successDialogCalled);
@@ -109,26 +109,21 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
         }
 
         [TestMethod]
-        public async Task Submit_WhenAnonymous_ShowsSignInFlyout()
+        public async Task Submit_WhenAnonymous_ShowsSignInControl()
         {
-            bool showFlyoutCalled = false;
+            bool showSignInCalled = false;
             var accountService = new MockAccountService()
                 {
-                    VerifyUserAuthenticationAsyncDelegate = () => Task.FromResult<UserInfo>(null)
+                    VerifySavedCredentialsAsyncDelegate = () => Task.FromResult<UserInfo>(null)
                 };
-            var flyoutService = new MockFlyoutService()
-        {
-                    ShowFlyoutDelegate = (s, o, arg3) =>
-            {
-                showFlyoutCalled = true;
-                Assert.AreEqual("SignIn", s);
-                        }
-            };
-
-            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), null, null, null, null, null, accountService, flyoutService, null, null);
+            var signInUserControlViewModel = new MockSignInUserControlViewModel()
+                                                 {
+                                                     OpenDelegate = (a) => showSignInCalled = true
+                                                 };
+            var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), null, null, null, null, null, accountService, null, null, signInUserControlViewModel);
             await target.SubmitCommand.Execute();
 
-            Assert.IsTrue(showFlyoutCalled);
+            Assert.IsTrue(showSignInCalled);
         }
 
         [TestMethod]
@@ -159,7 +154,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
 
             var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), new MockOrderService(), orderRepository, shippingMethodService,
                                                           checkoutDataRepository, shoppingCartRepository,
-                                                          new MockAccountService(), new MockFlyoutService(), new MockResourceLoader(), null);
+                                                          new MockAccountService(), new MockResourceLoader(), null, null);
 
             target.OnNavigatedTo(null, NavigationMode.New, null);
 
@@ -201,7 +196,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             checkoutDataRepository.GetPaymentMethodDelegate = s => Task.FromResult(new PaymentMethod { CardNumber = "1234" });
             var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), new MockOrderService(), orderRepository, shippingMethodService,
                                                           checkoutDataRepository, shoppingCartRepository,
-                                                          new MockAccountService(), new MockFlyoutService(), new MockResourceLoader(), null);
+                                                          new MockAccountService(), new MockResourceLoader(), null, null);
 
             target.OnNavigatedTo(null, NavigationMode.New, null);
             Assert.IsFalse(target.IsBottomAppBarOpened);
@@ -294,7 +289,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             checkoutDataRepository.GetPaymentMethodDelegate = s => Task.FromResult(new PaymentMethod { CardNumber = "1234" });
             var target = new CheckoutSummaryPageViewModel(new MockNavigationService(), new MockOrderService(), orderRepository, shippingMethodService,
                                                           checkoutDataRepository, shoppingCartRepository,
-                                                          new MockAccountService(), new MockFlyoutService(), new MockResourceLoader(), null);
+                                                          new MockAccountService(), new MockResourceLoader(), null, null);
 
             target.OnNavigatedTo(null, NavigationMode.New, null);
 

@@ -36,6 +36,16 @@ namespace AdventureWorks.UILogic.ViewModels
             
             SignInCommand = DelegateCommand.FromAsyncHandler(SignInAsync, CanSignIn);
             GoBackCommand = new DelegateCommand(Close);
+
+            if (_accountService.SignedInUser != null)
+            {
+                _userName = _accountService.SignedInUser.UserName;
+                IsNewSignIn = false;
+            }
+            else
+            {
+                IsNewSignIn = true;
+            }
         }
 
         [RestorableState]
@@ -84,6 +94,8 @@ namespace AdventureWorks.UILogic.ViewModels
             get { return _isOpened; }
             private set { SetProperty(ref _isOpened, value); }
         }
+
+        public bool IsNewSignIn { get; set; }
 
         public DelegateCommand GoBackCommand { get; private set; }
 

@@ -37,7 +37,7 @@ namespace AdventureWorks.UILogic.ViewModels
         private string _title;
         private bool _isBottomAppBarSticky;
         private bool _isBottomAppBarOpened;
-        private int? _selectedIndex;
+        private int _selectedIndex;
 
         public ItemDetailPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService, IShoppingCartRepository shoppingCartRepository, IAlertMessageService alertMessageService, IResourceLoader resourceLoader, ISecondaryTileService secondaryTileService, ISearchPaneService searchPaneService)
         {
@@ -74,7 +74,7 @@ namespace AdventureWorks.UILogic.ViewModels
         //Use the ViewModel to store the SelectedIndex of the FlipView so that the value can be set
         //back into the FlipView control after the items are set.
         [RestorableState]
-        public int? SelectedIndex
+        public int SelectedIndex
         {
             get { return _selectedIndex; }
             set { SetProperty(ref _selectedIndex, value); }
@@ -127,9 +127,10 @@ namespace AdventureWorks.UILogic.ViewModels
                 var productViewModels = (await _productCatalogRepository.GetProductsAsync(selectedProduct.SubcategoryId))
                                                                         .Select(product => new ProductViewModel(product, _shoppingCartRepository, _alertService, _resourceLoader));
 
-                Items = new ReadOnlyCollection<ProductViewModel>(productViewModels.ToList());
-
+                var items = new ReadOnlyCollection<ProductViewModel>(productViewModels.ToList());
+                Items = items;
                 SelectedProduct = Items.First(p => p.ProductNumber == productNumber);
+                SelectedIndex = items.IndexOf(SelectedProduct);
                 Title = SelectedProduct.Title;
                 _searchPaneService.ShowOnKeyboardInput(true);
             }

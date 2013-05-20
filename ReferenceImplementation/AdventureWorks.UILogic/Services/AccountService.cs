@@ -94,6 +94,11 @@ namespace AdventureWorks.UILogic.Services
                 }
             }
 
+            return await VerifySavedCredentialsAsync();
+        }
+
+        public async Task<UserInfo> VerifySavedCredentialsAsync()
+        {
             // Attempt to sign in using credentials stored locally
             // If succeeds, ask for a new active session
             var savedCredentials = _credentialStore.GetSavedCredentials(PasswordVaultResourceName);
@@ -105,7 +110,6 @@ namespace AdventureWorks.UILogic.Services
                     return _signedInUser;
                 }
             }
-
             return null;
         }
 
@@ -137,7 +141,16 @@ namespace AdventureWorks.UILogic.Services
                     // Documentation on managing application data is at http://go.microsoft.com/fwlink/?LinkID=288818&clcid=0x409
                 }
 
-                RaiseUserChanged(_signedInUser, previousUser);
+                if (previousUser == null)
+                {
+                    //Raise use changed event if user logged in
+                    RaiseUserChanged(_signedInUser, previousUser);
+                }
+                else if (_signedInUser != null && _signedInUser.UserName != previousUser.UserName)
+                {   
+                    //Raise use changed event if user changed
+                    RaiseUserChanged(_signedInUser, previousUser);
+                }
                 return true;
             }
             catch (HttpRequestException ex)

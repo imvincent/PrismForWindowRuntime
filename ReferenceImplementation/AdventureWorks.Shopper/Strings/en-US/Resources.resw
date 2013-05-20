@@ -657,6 +657,7 @@
   </data>
   <data name="ZipCodeRegexErrorMessage" xml:space="preserve">
     <value>This field contains invalid characters. Try Washington (State) and 98052 (Zip Code).</value>
+    <comment>Error message for when the zip code does not match regex.</comment>
   </data>
   <data name="SignInCancelButton.Content" xml:space="preserve">
     <value>Cancel</value>
@@ -669,5 +670,9 @@
   <data name="TopAppBar.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Top App Bar</value>
     <comment>Message to be read by Narrator tool</comment>
+  </data>
+  <data name="SignInTextBlock.Text" xml:space="preserve">
+    <value>Sign in to the app</value>
+    <comment>Label for Sign In pop up textblock.</comment>
   </data>
 </root>

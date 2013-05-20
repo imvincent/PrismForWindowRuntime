@@ -19,6 +19,7 @@ namespace AdventureWorks.UILogic.Services
         UserInfo SignedInUser { get; }
 
         Task<UserInfo> VerifyUserAuthenticationAsync();
+        Task<UserInfo> VerifySavedCredentialsAsync();
 
         Task<bool> SignInUserAsync(string userName, string password, bool useCredentialStore);
         

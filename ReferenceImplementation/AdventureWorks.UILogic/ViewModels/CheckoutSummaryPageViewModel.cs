@@ -47,12 +47,12 @@ namespace AdventureWorks.UILogic.ViewModels
         private readonly IShippingMethodService _shippingMethodService;
         private readonly ICheckoutDataRepository _checkoutDataRepository;
         private readonly IAccountService _accountService;
-        private readonly IFlyoutService _flyoutService;
         private readonly IResourceLoader _resourceLoader;
         private readonly IAlertMessageService _alertMessageService;
+        private readonly ISignInUserControlViewModel _signInUserControlViewModel;
 
         public CheckoutSummaryPageViewModel(INavigationService navigationService, IOrderService orderService, IOrderRepository orderRepository, IShippingMethodService shippingMethodService, ICheckoutDataRepository checkoutDataRepository, IShoppingCartRepository shoppingCartRepository,
-                                            IAccountService accountService, IFlyoutService flyoutService, IResourceLoader resourceLoader, IAlertMessageService alertMessageService)
+                                            IAccountService accountService, IResourceLoader resourceLoader, IAlertMessageService alertMessageService, ISignInUserControlViewModel signInUserControlViewModel)
         {
             _navigationService = navigationService;
             _orderService = orderService;
@@ -60,10 +60,10 @@ namespace AdventureWorks.UILogic.ViewModels
             _shippingMethodService = shippingMethodService;
             _checkoutDataRepository = checkoutDataRepository;
             _shoppingCartRepository = shoppingCartRepository;
-            _flyoutService = flyoutService;
             _resourceLoader = resourceLoader;
             _accountService = accountService;
             _alertMessageService = alertMessageService;
+            _signInUserControlViewModel = signInUserControlViewModel;
 
             SubmitCommand = DelegateCommand.FromAsyncHandler(SubmitAsync, CanSubmit);
             GoBackCommand = new DelegateCommand(_navigationService.GoBack);
@@ -198,6 +198,11 @@ namespace AdventureWorks.UILogic.ViewModels
 
         public DelegateCommand AddCheckoutDataCommand { get; private set; }
 
+        public ISignInUserControlViewModel SignInUserControlViewModel
+        {
+            get { return _signInUserControlViewModel; }
+        }
+
         public override async void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewModelState)
         {
             // Get latest shopping cart
@@ -262,9 +267,9 @@ namespace AdventureWorks.UILogic.ViewModels
             string errorMessage = string.Empty;
             try
             {
-                if (await _accountService.VerifyUserAuthenticationAsync() == null)
+                if (await _accountService.VerifySavedCredentialsAsync() == null)
                 {
-                    _flyoutService.ShowFlyout("SignIn", null, async () => await SubmitOrderTransactionAsync());
+                    _signInUserControlViewModel.Open(async () => await SubmitOrderTransactionAsync());
                 }
                 else
                 {
@@ -288,10 +293,10 @@ namespace AdventureWorks.UILogic.ViewModels
             try
             {
                 await _orderService.ProcessOrderAsync(_order, _accountService.ServerCookieHeader);
+                await _shoppingCartRepository.ClearCartAsync();
 
                 _navigationService.ClearHistory();
                 _navigationService.Navigate("OrderConfirmation", Guid.NewGuid().ToString());
-                await _shoppingCartRepository.ClearCartAsync();
                 return true;
             }
             catch (ModelValidationException mvex)

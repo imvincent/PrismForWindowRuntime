@@ -106,8 +106,7 @@
                                                  Width="600"
                                                  Loaded="StartLayoutUpdates"
                                                  Unloaded="StopLayoutUpdates"
-                                                 DataContext="{Binding BillingAddressViewModel}"
-                                                 IsEnabled="{Binding UseSameAddressAsShipping}" />
+                                                 DataContext="{Binding BillingAddressViewModel}"/>
 
                 <!-- Payment Method & Submit -->
                 <TextBlock x:Name="PaymentMethodLabel"

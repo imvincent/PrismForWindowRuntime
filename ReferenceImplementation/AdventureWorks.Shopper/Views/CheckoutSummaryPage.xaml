@@ -234,7 +234,6 @@
                           Grid.Row="7"
                           Grid.Column="3"
                           ItemsSource="{Binding ShoppingCartItemViewModels}"
-                          SelectedItem="{Binding SelectedShoppingCartItem, Mode=TwoWay}"
                           ItemTemplate="{StaticResource ShoppingCartItemTemplate}" />
                 <ListView x:Name="ItemsListView"
                           SelectionMode="Single"
@@ -243,7 +242,6 @@
                           Grid.Column="0"
                           HorizontalAlignment="Left"
                           ItemsSource="{Binding ShoppingCartItemViewModels}"
-                          SelectedItem="{Binding SelectedShoppingCartItem, Mode=TwoWay}"
                           ItemTemplate="{StaticResource ShoppingCartItemTemplateSnapped}" />
             </Grid>
         </ScrollViewer>
@@ -290,6 +288,15 @@
             </Grid>
         </Popup>
 
+        <!--Sign In UserControl-->
+        <Views:SignInUserControl Grid.RowSpan="2"
+                                 Grid.ColumnSpan="2"
+                                 DataContext="{Binding SignInUserControlViewModel}"
+                                 Visibility="{Binding IsOpened, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                 IsEnabled="{Binding IsOpened}"
+                                 Loaded="StartLayoutUpdates"
+                                 Unloaded="StopLayoutUpdates" />
+        
         <VisualStateManager.VisualStateGroups>
 
             <!-- Visual states reflect the application's view state -->

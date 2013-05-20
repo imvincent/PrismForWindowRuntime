@@ -24,6 +24,7 @@ namespace AdventureWorks.UILogic.ViewModels
 {
     public class ShippingAddressUserControlViewModel : ViewModel, IShippingAddressUserControlViewModel
     {
+        private string _addressId;
         private Address _address;
         private bool _loadDefault;
         private IReadOnlyCollection<ComboBoxItemValue> _states;
@@ -78,10 +79,10 @@ namespace AdventureWorks.UILogic.ViewModels
 
             if (navigationMode == NavigationMode.New)
             {
-                var addressId = navigationParameter as string;
-                if (addressId != null)
+                _addressId = navigationParameter as string;
+                if (_addressId != null)
                 {
-                    Address = await _checkoutDataRepository.GetShippingAddressAsync(addressId);
+                    Address = await _checkoutDataRepository.GetShippingAddressAsync(_addressId);
                     return;
                 }
 
@@ -157,14 +158,23 @@ namespace AdventureWorks.UILogic.ViewModels
 
         public async Task ProcessFormAsync()
         {
-            var existingAddresses = await _checkoutDataRepository.GetAllShippingAddressesAsync();
-            var matchingExistingAddress = Address.FindMatchingAddress(Address, existingAddresses);
-            if (matchingExistingAddress != null)
+            if (_addressId == null)
             {
-                Address = matchingExistingAddress;
+                //Add Address but check for duplicate
+                var existingAddresses = await _checkoutDataRepository.GetAllShippingAddressesAsync();
+                var matchingExistingAddress = Address.FindMatchingAddress(Address, existingAddresses);
+                if (matchingExistingAddress != null)
+                {
+                    Address = matchingExistingAddress;
+                }
+                else
+                {
+                    await _checkoutDataRepository.SaveShippingAddressAsync(Address);
+                }
             }
             else
             {
+                //Updated existing address
                 await _checkoutDataRepository.SaveShippingAddressAsync(Address);
             }
         }

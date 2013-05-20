@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Services;
@@ -20,6 +21,7 @@ namespace AdventureWorks.UILogic.Repositories
     {
         private readonly IAddressService _addressService;
         private readonly IPaymentMethodService _paymentMethodService;
+        private readonly IAccountService _accountService;
         private IReadOnlyCollection<Address> _cachedAddresses;
         private IReadOnlyCollection<PaymentMethod> _cachedPaymentMethods;
 
@@ -27,6 +29,7 @@ namespace AdventureWorks.UILogic.Repositories
         {
             _addressService = addressService;
             _paymentMethodService = paymentMethodService;
+            _accountService = accountService;
             if (accountService != null)
             {
                 accountService.UserChanged += (sender, args) =>
@@ -245,7 +248,20 @@ namespace AdventureWorks.UILogic.Repositories
         {
             if (_cachedAddresses == null)
             {
-                _cachedAddresses = await _addressService.GetAddressesAsync();
+                bool retryWithRefreshedUser = false;
+                try
+                {
+                    _cachedAddresses = await _addressService.GetAddressesAsync();
+                }
+                catch (HttpRequestException)
+                {
+                    retryWithRefreshedUser = true;
+                }
+                if (retryWithRefreshedUser)
+                {
+                    await _accountService.VerifyUserAuthenticationAsync();
+                    _cachedAddresses = await _addressService.GetAddressesAsync();
+                }
             }
             return _cachedAddresses;
         }
@@ -259,7 +275,20 @@ namespace AdventureWorks.UILogic.Repositories
         {
             if (_cachedPaymentMethods == null)
             {
-                _cachedPaymentMethods = await _paymentMethodService.GetPaymentMethodsAsync();
+                bool retryWithRefreshedUser = false;
+                try
+                {
+                    _cachedPaymentMethods = await _paymentMethodService.GetPaymentMethodsAsync();
+                }
+                catch (HttpRequestException)
+                {
+                    retryWithRefreshedUser = true;
+                }
+                if (retryWithRefreshedUser)
+                {
+                    await _accountService.VerifyUserAuthenticationAsync();
+                    _cachedPaymentMethods = await _paymentMethodService.GetPaymentMethodsAsync();                    
+                }
             }
             return _cachedPaymentMethods;
         }

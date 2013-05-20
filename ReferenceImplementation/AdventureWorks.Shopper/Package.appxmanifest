@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="Microsoft.SDKSamples.AdventureWorks.Shopper.CSharp" Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" Version="1.0.0.0" />
+  <Identity Name="AdventureWorks.Shopper.CSharp" Publisher="C=US, S=Washington, L=Redmond, O=Microsoft Corporation, CN=Microsoft Corporation" Version="1.0.0.4" />
   <Properties>
     <PublisherDisplayName>Microsoft Corporation</PublisherDisplayName>
     <DisplayName>AdventureWorks Shopper C# Sample</DisplayName>
