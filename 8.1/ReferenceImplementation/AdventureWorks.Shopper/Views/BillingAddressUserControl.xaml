@@ -18,11 +18,9 @@
 
         <!-- Name -->
         <Grid x:Name="NameGrid"
+              Margin="0,20,0,0"
               Grid.Row="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -37,75 +35,58 @@
             </Grid.ColumnDefinitions>
 
             <!-- First Name -->
-            <TextBlock x:Name="TitleFirstName"
-                       x:Uid="TitleFirstName"
-                       Style="{StaticResource FormTitleStyle}"
-                       Grid.Row="0"
-                       Grid.Column="0"
-                       Text="First Name*" />
-            <controls:FormFieldTextBox x:Name="FirstName"
+            <TextBox x:Name="FirstName"
+                                       x:Uid="FirstName"
+                                       Header="First Name*"
                                        AutomationProperties.AutomationId="FirstNameTextBox"
                                        AutomationProperties.IsRequiredForForm="True"
-                                       AutomationProperties.LabeledBy="{Binding ElementName=TitleFirstName}"
-                                       Style="{StaticResource FormFieldStyle}"
-                                       Grid.Row="1"
+                                       Margin="5,0"
+                                       Grid.Row="0"
                                        Grid.Column="0"
                                        Text="{Binding Address.FirstName, Mode=TwoWay}"
                                        IsEnabled="{Binding IsEnabled}"
                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[FirstName]}" />
             <TextBlock x:Name="ErrorsFirstName"
                        Style="{StaticResource ErrorMessageStyle}"
-                       Grid.Row="2"
+                       Grid.Row="1"
                        Grid.Column="0"
                        Text="{Binding Address.Errors[FirstName], Converter={StaticResource FirstErrorConverter}}"
                        TextWrapping="Wrap" />
 
             <!-- Middle Initial -->
-            <TextBlock x:Name="TitleMiddleInitial"
-                       x:Uid="TitleMiddleInitial"
-                       Style="{StaticResource FormTitleStyle}"
-                       Grid.Row="0"
-                       Grid.Column="1"
-                       TextTrimming="WordEllipsis"
-                       Text="Middle Initial" />
-            <controls:FormFieldTextBox x:Name="MiddleInitial"
+            <TextBox x:Name="MiddleInitial"
+                                       x:Uid="MiddleInitial"
+                                       Header="Middle Initial"
                                        AutomationProperties.AutomationId="MiddleInitialTextBox"
-                                       AutomationProperties.LabeledBy="{Binding ElementName=TitleMiddleInitial}"
-                                       Style="{StaticResource FormFieldStyle}"
-                                       Grid.Row="1"
+                                       Margin="5,0"                  
+                                       Grid.Row="0"
                                        Grid.Column="1"
                                        Text="{Binding Address.MiddleInitial, Mode=TwoWay}"
                                        IsEnabled="{Binding IsEnabled}"
-                                       behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[MiddleInitial]}"
-                                       Height="32"
-                                       VerticalAlignment="Top" />
+                                       behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[MiddleInitial]}" />
             <TextBlock x:Name="ErrorsMiddleInitial"
                        Style="{StaticResource ErrorMessageStyle}"
-                       Grid.Row="2"
+                       Grid.Row="1"
                        Grid.Column="1"
                        Text="{Binding Address.Errors[MiddleInitial], Converter={StaticResource FirstErrorConverter}}"
                        TextWrapping="Wrap" />
 
             <!-- Last Name -->
-            <TextBlock x:Name="TitleLastName"
-                       x:Uid="TitleLastName"
-                       Style="{StaticResource FormTitleStyle}"
-                       Grid.Row="0"
-                       Grid.Column="2"
-                       Text="Last Name*" />
-            <controls:FormFieldTextBox x:Name="LastName"
+            <TextBox x:Name="LastName" 
+                                       x:Uid="LastName"
+                                       Header="Last Name*"
                                        AutomationProperties.AutomationId="LastNameTextBox"
                                        AutomationProperties.IsRequiredForForm="True"
                                        AutomationProperties.LabeledBy="{Binding ElementName=TitleLastName}"
-                                       Style="{StaticResource FormFieldStyle}"
-                                       Grid.Row="1"
+                                       Margin="5,0"
+                                       Grid.Row="0"
                                        Grid.Column="2"
                                        Text="{Binding Address.LastName, Mode=TwoWay}"
                                        IsEnabled="{Binding IsEnabled}"
                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[LastName]}" />
             <TextBlock x:Name="ErrorsLastName"
                        Style="{StaticResource ErrorMessageStyle}"
-                       Grid.Row="2"
+                       Grid.Row="1"
                        Grid.Column="2"
                        Text="{Binding Address.Errors[LastName], Converter={StaticResource FirstErrorConverter}}"
                        TextWrapping="Wrap" />
@@ -119,8 +100,6 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
@@ -128,19 +107,13 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <TextBlock x:Name="TitleAddress"
-                       x:Uid="TitleAddress"
-                       Style="{StaticResource FormTitleStyle}"
-                       Grid.Row="0"
-                       Grid.Column="0"
-                       Grid.ColumnSpan="4"
-                       Text="Address*" />
-            <controls:FormFieldTextBox x:Name="Address"
+            <TextBox x:Name="Address"
+                                       x:Uid="Address"
+                                       Header="Address*"
                                        AutomationProperties.AutomationId="AddressTextBox"
                                        AutomationProperties.IsRequiredForForm="True"
-                                       AutomationProperties.LabeledBy="{Binding ElementName=TitleAddress}"
-                                       Style="{StaticResource FormFieldStyle}"
-                                       Grid.Row="1"
+                                       Margin="5,0"                  
+                                       Grid.Row="0"
                                        Grid.Column="0"
                                        Grid.ColumnSpan="4"
                                        Text="{Binding Address.StreetAddress, Mode=TwoWay}"
@@ -148,33 +121,26 @@
                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[StreetAddress]}" />
             <TextBlock x:Name="ErrorsAddress"
                        Style="{StaticResource ErrorMessageStyle}"
-                       Grid.Row="2"
+                       Grid.Row="1"
                        Grid.Column="0"
                        Grid.ColumnSpan="3"
                        Text="{Binding Address.Errors[StreetAddress], Converter={StaticResource FirstErrorConverter}}"
                        TextWrapping="Wrap" />
 
-            <TextBlock x:Name="TitleOptionalAddress"
-                       x:Uid="TitleOptionalAddress"
-                       Style="{StaticResource FormTitleStyle}"
-                       Grid.Row="3"
-                       Grid.Column="0"
-                       Grid.ColumnSpan="4"
-                       Text="Optional Address" />
-            <controls:FormFieldTextBox x:Name="OptionalAddress"
+            <TextBox x:Name="OptionalAddress"
+                                       x:Uid="OptionalAddress"
+                                       Header="Optional Address"
                                        AutomationProperties.AutomationId="OptionalAddressTextBox"
-                                       AutomationProperties.LabeledBy="{Binding ElementName=TitleOptionalAddress}"
-                                       Style="{StaticResource FormFieldStyle}"
-                                       Grid.Row="4"
+                                       Grid.Row="2"
                                        Grid.Column="0"
                                        Grid.ColumnSpan="4"
                                        IsEnabled="{Binding IsEnabled}"
-                                       Margin="0,0,20,0"
+                                       Margin="5,0"
                                        Text="{Binding Address.OptionalAddress, Mode=TwoWay}"
                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[OptionalAddress]}" />
             <TextBlock x:Name="ErrorsOptionalAddress"
                        Style="{StaticResource ErrorMessageStyle}"
-                       Grid.Row="5"
+                       Grid.Row="3"
                        Grid.Column="0"
                        Grid.ColumnSpan="4"
                        Text="{Binding Address.Errors[OptionalAddress], Converter={StaticResource FirstErrorConverter}}"
@@ -203,19 +169,20 @@
             <TextBlock x:Name="TitleArea"
                        x:Uid="TitleArea"
                        Style="{StaticResource FormTitleStyle}"
+                       Margin="5,0"
                        Grid.Row="0"
                        Grid.Column="0"
                        Text="Area" />
-            <controls:FormFieldTextBox x:Name="City"
+            <TextBox x:Name="City"
                                        x:Uid="City"
                                        AutomationProperties.AutomationId="CityTextBox"
                                        AutomationProperties.IsRequiredForForm="True"
-                                       Style="{StaticResource FormFieldStyle}"
+                                       Margin="5,0"                  
                                        Grid.Row="1"
                                        Grid.Column="0"
                                        Text="{Binding Address.City, Mode=TwoWay}"
                                        IsEnabled="{Binding IsEnabled}"
-                                       Watermark="City"
+                                       PlaceholderText="City"
                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[City]}" />
             <TextBlock x:Name="ErrorsCity"
                        Style="{StaticResource ErrorMessageStyle}"
@@ -229,7 +196,7 @@
                       x:Uid="StateComboBox"
                       AutomationProperties.AutomationId="StateComboBox"
                       AutomationProperties.IsRequiredForForm="True"
-                      Style="{StaticResource FormComboStyle}"
+                      Margin="5,0"
                       Grid.Row="1"
                       Grid.Column="1"
                       ItemsSource="{Binding States}"
@@ -247,15 +214,15 @@
                        TextWrapping="Wrap" />
 
             <!-- ZipCode -->
-            <controls:FormFieldTextBox x:Name="ZipCode"
+            <TextBox x:Name="ZipCode"
                                        x:Uid="PostalCodeTextBox"
                                        AutomationProperties.AutomationId="PostalCodeTextBox"
-                                       Style="{StaticResource FormFieldStyle}"
+                                       Margin="5,0"
                                        Grid.Row="1"
                                        Grid.Column="2"
                                        Text="{Binding Address.ZipCode, Mode=TwoWay}"
                                        IsEnabled="{Binding IsEnabled}"
-                                       Watermark="Zip Code"
+                                       PlaceholderText="Zip Code"
                                        AutomationProperties.IsRequiredForForm="True"
                                        InputScope="Number"
                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[ZipCode]}" />
@@ -277,41 +244,32 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <TextBlock x:Name="TitlePhone"
-                       x:Uid="TitlePhone"
-                       Style="{StaticResource FormTitleStyle}"
-                       Grid.Row="0"
-                       Grid.Column="0"
-                       Text="Phone*" />
-            <controls:FormFieldTextBox x:Name="Phone"
+            <TextBox x:Name="Phone"
+                                       x:Uid="Phone"
+                                       Header="Phone*"
                                        AutomationProperties.AutomationId="PhoneTextBox"
                                        AutomationProperties.IsRequiredForForm="True"
-                                       AutomationProperties.LabeledBy="{Binding ElementName=TitlePhone}"
-                                       Style="{StaticResource FormFieldStyle}"
-                                       Grid.Row="1"
-                                       Grid.Column="0"
+                                       Margin="5,0"
+                                       Grid.Row="0"
                                        Text="{Binding Address.Phone, Mode=TwoWay}"
                                        IsEnabled="{Binding IsEnabled}"
                                        InputScope="TelephoneNumber"
                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding Address.Errors[Phone]}" />
             <TextBlock x:Name="ErrorPhone"
                        Style="{StaticResource ErrorMessageStyle}"
-                       Grid.Row="2"
+                       Grid.Row="1"
                        Grid.Column="0"
                        Text="{Binding Address.Errors[Phone], Converter={StaticResource FirstErrorConverter}}"
                        TextWrapping="Wrap" />
         </Grid>
-
         <VisualStateManager.VisualStateGroups>
 
             <!-- Visual states reflect the application's view state -->
             <VisualStateGroup x:Name="ApplicationViewStates">
-                <VisualState x:Name="FullScreenLandscape" />
-                <VisualState x:Name="Filled" />
-                <VisualState x:Name="FullScreenPortrait" />
-                <VisualState x:Name="Snapped">
+                <VisualState x:Name="DefaultLayout" />
+                <VisualState x:Name="PortraitLayout" />
+                <VisualState x:Name="MinimalLayout">
                     <Storyboard>
                         <!-- Content -->
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.Margin"
@@ -342,7 +300,23 @@
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)"
-                                                       Storyboard.TargetName="TitleMiddleInitial">
+                                                       Storyboard.TargetName="MiddleInitial">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>2</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)"
+                                                       Storyboard.TargetName="MiddleInitial">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>0</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)"
+                                                       Storyboard.TargetName="ErrorsMiddleInitial">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <x:Int32>3</x:Int32>
@@ -350,55 +324,7 @@
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)"
-                                                       Storyboard.TargetName="TitleMiddleInitial">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>0</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)"
-                                                       Storyboard.TargetName="MiddleInitial">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>4</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)"
-                                                       Storyboard.TargetName="MiddleInitial">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>0</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)"
                                                        Storyboard.TargetName="ErrorsMiddleInitial">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>5</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)"
-                                                       Storyboard.TargetName="ErrorsMiddleInitial">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>0</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)"
-                                                       Storyboard.TargetName="TitleLastName">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>6</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)"
-                                                       Storyboard.TargetName="TitleLastName">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <x:Int32>0</x:Int32>
@@ -409,7 +335,7 @@
                                                        Storyboard.TargetName="LastName">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>7</x:Int32>
+                                    <x:Int32>4</x:Int32>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
@@ -425,7 +351,7 @@
                                                        Storyboard.TargetName="ErrorsLastName">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>8</x:Int32>
+                                    <x:Int32>5</x:Int32>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
@@ -477,7 +403,7 @@
                                                        Storyboard.TargetName="State">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
-                                    <Thickness>0,20,20,0</Thickness>
+                                    <Thickness>5,20,5,0</Thickness>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
@@ -517,7 +443,7 @@
                                                        Storyboard.TargetName="ZipCode">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
-                                    <Thickness>0,20,20,0</Thickness>
+                                    <Thickness>5,20,5,0</Thickness>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>

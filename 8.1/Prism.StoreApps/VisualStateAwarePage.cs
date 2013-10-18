@@ -24,6 +24,26 @@ namespace Microsoft.Practices.Prism.StoreApps
     public class VisualStateAwarePage : Page
     {
         /// <summary>
+        /// Name of default visual state
+        /// </summary>
+        public static readonly string DefaultLayoutVisualState = "DefaultLayout";
+
+        /// <summary>
+        /// Name of portraite visual state
+        /// </summary>
+        public static readonly string PortraitLayoutVisualState = "PortraitLayout";
+
+        /// <summary>
+        /// Name of Minimal or narrow visual state
+        /// </summary>
+        public static readonly string MinimalLayoutVisualState = "MinimalLayout";
+
+        /// <summary>
+        /// Width of page that should trigger Minimal visual state
+        /// </summary>
+        public int MinimalLayoutWidth { get; set; }
+
+        /// <summary>
         /// Gets or sets the get session state for Frame.
         /// </summary>
         /// <value>
@@ -38,6 +58,9 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// </summary>
         public VisualStateAwarePage()
         {
+            //Default Minimal layout width value to 500
+            MinimalLayoutWidth = 500;
+
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled) return;
 
             // When this page is part of the visual tree make two changes:
@@ -69,6 +92,7 @@ namespace Microsoft.Practices.Prism.StoreApps
                     this.CoreWindow_PointerPressed;
             };
         }
+
 
         #region Navigation support
 
@@ -218,14 +242,15 @@ namespace Microsoft.Practices.Prism.StoreApps
             this._visualStateAwareControls.Add(control);
 
             // Set the initial visual state of the control
-            VisualStateManager.GoToState(control, DetermineVisualState(ApplicationView.Value), false);
+            VisualStateManager.GoToState(control, DetermineVisualState(this.ActualWidth, this.ActualHeight), false);
         }
 
         private void WindowSizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
-            this.InvalidateVisualState();
+            this.InvalidateVisualState(e.Size.Width, e.Size.Height);
         }
 
+      
         /// <summary>
         /// Invoked as an event handler, typically on the <see cref="FrameworkElement.Unloaded"/>
         /// event of a <see cref="Control"/>, to indicate that the sender should start receiving
@@ -255,13 +280,22 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// management within the page. The default implementation uses the names of enum values.
         /// Subclasses may override this method to control the mapping scheme used.
         /// </summary>
-        /// <param name="viewState">View state for which a visual state is desired.</param>
         /// <returns>Visual state name used to drive the
         /// <see cref="VisualStateManager"/></returns>
         /// <seealso cref="InvalidateVisualState"/>
-        protected virtual string DetermineVisualState(ApplicationViewState viewState)
+        protected virtual string DetermineVisualState(double width, double height)
         {
-            return viewState.ToString();
+            if (width <= MinimalLayoutWidth) 
+            { 
+                return MinimalLayoutVisualState; 
+            } 
+            
+            if (width < height) 
+            { 
+                return PortraitLayoutVisualState; 
+            } 
+            
+            return DefaultLayoutVisualState; 
         }
 
         /// <summary>
@@ -273,18 +307,17 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// signal that a different value may be returned even though the view state has not
         /// changed.
         /// </remarks>
-        public void InvalidateVisualState()
+        public void InvalidateVisualState(double width, double height)
         {
             if (this._visualStateAwareControls != null)
             {
-                string visualState = DetermineVisualState(ApplicationView.Value);
+                string visualState = DetermineVisualState(width, height);
                 foreach (var layoutAwareControl in this._visualStateAwareControls)
                 {
                     VisualStateManager.GoToState(layoutAwareControl, visualState, false);
                 }
             }
         }
-
         #endregion
 
         #region Process lifetime management

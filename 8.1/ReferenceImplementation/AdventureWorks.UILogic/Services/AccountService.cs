@@ -10,14 +10,12 @@ using System;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using System.Security;
-using System.Net.Http;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
 
 namespace AdventureWorks.UILogic.Services
 {
     public class AccountService : IAccountService
     {
-        public const string ServerCookieHeaderKey = "AccountService_ServerCookieHeader";
         public const string SignedInUserKey = "AccountService_SignedInUser";
         public const string PasswordVaultResourceName = "AdventureWorksShopper";
         private const string UserNameKey = "AccountService_UserName";
@@ -27,7 +25,6 @@ namespace AdventureWorks.UILogic.Services
         private readonly IIdentityService _identityService;
         private readonly ISessionStateService _sessionStateService;
         private readonly ICredentialStore _credentialStore;
-        private string _serverCookieHeader;
         private UserInfo _signedInUser;
         private string _userName;
         private string _password;
@@ -39,10 +36,6 @@ namespace AdventureWorks.UILogic.Services
             _credentialStore = credentialStore;
             if (_sessionStateService != null)
             {
-                if (_sessionStateService.SessionState.ContainsKey(ServerCookieHeaderKey))
-                {
-                    _serverCookieHeader = _sessionStateService.SessionState[ServerCookieHeaderKey] as string;
-                }
                 if (_sessionStateService.SessionState.ContainsKey(SignedInUserKey))
                 {
                     _signedInUser = _sessionStateService.SessionState[SignedInUserKey] as UserInfo;
@@ -58,11 +51,6 @@ namespace AdventureWorks.UILogic.Services
             }
         }
 
-        public string ServerCookieHeader
-        {
-            get { return _serverCookieHeader; }
-        }
-
         public UserInfo SignedInUser { get { return _signedInUser; } }
 
         /// <summary>
@@ -74,7 +62,7 @@ namespace AdventureWorks.UILogic.Services
             try
             {
                 // If user is logged in, verify that the session in the service is still active
-                if (_signedInUser != null && _serverCookieHeader != null && await _identityService.VerifyActiveSessionAsync(_signedInUser.UserName, _serverCookieHeader))
+                if (_signedInUser != null && await _identityService.VerifyActiveSessionAsync(_signedInUser.UserName))
                 {
                     return _signedInUser;
                 }
@@ -115,55 +103,39 @@ namespace AdventureWorks.UILogic.Services
 
         public async Task<bool> SignInUserAsync(string userName, string password, bool useCredentialStore)
         {
-            try
+            var result = await _identityService.LogOnAsync(userName, password);
+
+            UserInfo previousUser = _signedInUser;
+            _signedInUser = result.UserInfo;
+
+            // Save SignedInUser in the StateService
+            _sessionStateService.SessionState[SignedInUserKey] = _signedInUser;
+
+            // Save username and password in state service
+            _userName = userName;
+            _password = password;
+            _sessionStateService.SessionState[UserNameKey] = userName;
+            _sessionStateService.SessionState[PasswordKey] = password;
+
+            if (useCredentialStore)
             {
-                var result = await _identityService.LogOnAsync(userName, password);
+                // Save credentials in the CredentialStore
+                _credentialStore.SaveCredentials(PasswordVaultResourceName, userName, password);
 
-                UserInfo previousUser = _signedInUser;
-                _signedInUser = result.UserInfo;
-
-                // Save Server cookie & SignedInUser in the StateService
-                _serverCookieHeader = result.ServerCookieHeader;
-                _sessionStateService.SessionState[ServerCookieHeaderKey] = _serverCookieHeader;
-                _sessionStateService.SessionState[SignedInUserKey] = _signedInUser;
-
-                // Save username and password in state service
-                _userName = userName;
-                _password = password;
-                _sessionStateService.SessionState[UserNameKey] = userName;
-                _sessionStateService.SessionState[PasswordKey] = password;
-
-                if (useCredentialStore)
-                {
-                    // Save credentials in the CredentialStore
-                    _credentialStore.SaveCredentials(PasswordVaultResourceName, userName, password);
-
-                    // Documentation on managing application data is at http://go.microsoft.com/fwlink/?LinkID=288818&clcid=0x409
-                }
-
-                if (previousUser == null)
-                {
-                    //Raise use changed event if user logged in
-                    RaiseUserChanged(_signedInUser, previousUser);
-                }
-                else if (_signedInUser != null && _signedInUser.UserName != previousUser.UserName)
-                {   
-                    //Raise use changed event if user changed
-                    RaiseUserChanged(_signedInUser, previousUser);
-                }
-                return true;
-            }
-            catch (HttpRequestException ex)
-            {
-                if (ex.InnerException is System.Net.WebException)
-                {
-                    throw ex.InnerException;
-                }
-                _serverCookieHeader = string.Empty;
-                _sessionStateService.SessionState[ServerCookieHeaderKey] = _serverCookieHeader;
+                // Documentation on managing application data is at http://go.microsoft.com/fwlink/?LinkID=288818&clcid=0x409
             }
 
-            return false;
+            if (previousUser == null)
+            {
+                //Raise use changed event if user logged in
+                RaiseUserChanged(_signedInUser, previousUser);
+            }
+            else if (_signedInUser != null && _signedInUser.UserName != previousUser.UserName)
+            {   
+                //Raise use changed event if user changed
+                RaiseUserChanged(_signedInUser, previousUser);
+            }
+            return true;
         }
 
         public event EventHandler<UserChangedEventArgs> UserChanged;
@@ -181,17 +153,17 @@ namespace AdventureWorks.UILogic.Services
         {
             var previousUser = _signedInUser;
             _signedInUser = null;
-            _serverCookieHeader = null;
             _userName = null;
             _password = null;
 
-            _sessionStateService.SessionState.Remove(ServerCookieHeaderKey);
             _sessionStateService.SessionState.Remove(SignedInUserKey);
             _sessionStateService.SessionState.Remove(UserNameKey);
             _sessionStateService.SessionState.Remove(PasswordKey);
 
             // remove user from the CredentialStore, if any
             _credentialStore.RemoveSavedCredentials(PasswordVaultResourceName);
+
+            //TODO: remove cookie?
 
             RaiseUserChanged(_signedInUser, previousUser);
         }

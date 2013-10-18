@@ -9,7 +9,6 @@
 using System;
 using System.Globalization;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using AdventureWorks.UILogic.Models;
@@ -134,7 +133,7 @@ namespace AdventureWorks.UILogic.ViewModels
                 _address.State = States.First().Id;
                 _address.IsValidationEnabled = true;
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
                 errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"),
                                              Environment.NewLine, ex.Message);

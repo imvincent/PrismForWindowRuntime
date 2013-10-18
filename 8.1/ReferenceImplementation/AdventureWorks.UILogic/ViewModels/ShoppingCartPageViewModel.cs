@@ -18,7 +18,6 @@ using Windows.Globalization.NumberFormatting;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Practices.Prism.PubSubEvents;
 using System.Threading.Tasks;
-using System.Net.Http;
 using System.Globalization;
 
 namespace AdventureWorks.UILogic.ViewModels
@@ -36,7 +35,6 @@ namespace AdventureWorks.UILogic.ViewModels
         private readonly IAlertMessageService _alertMessageService;
         private readonly ICheckoutDataRepository _checkoutDataRepository;
         private readonly IOrderRepository _orderRepository;
-        private bool _isEditPopupOpened;
         private bool _isBottomAppBarOpened;
 
         public ShoppingCartPageViewModel(IShoppingCartRepository shoppingCartRepository, INavigationService navigationService, IAccountService accountService,
@@ -53,7 +51,6 @@ namespace AdventureWorks.UILogic.ViewModels
             _orderRepository = orderRepository;
 
             CheckoutCommand = DelegateCommand.FromAsyncHandler(CheckoutAsync, CanCheckout);
-            EditAmountCommand = new DelegateCommand(OpenEditAmountFlyout);
             RemoveCommand = DelegateCommand<ShoppingCartItemViewModel>.FromAsyncHandler(Remove);
             GoBackCommand = new DelegateCommand(navigationService.GoBack);
             IncrementCountCommand = DelegateCommand.FromAsyncHandler(IncrementCount);
@@ -128,8 +125,6 @@ namespace AdventureWorks.UILogic.ViewModels
 
         public DelegateCommand CheckoutCommand { get; private set; }
 
-        public DelegateCommand EditAmountCommand { get; private set; }
-
         public DelegateCommand GoBackCommand { get; private set; }
 
         public DelegateCommand<ShoppingCartItemViewModel> RemoveCommand { get; private set; }
@@ -137,12 +132,6 @@ namespace AdventureWorks.UILogic.ViewModels
         public DelegateCommand IncrementCountCommand { get; private set; }
 
         public DelegateCommand DecrementCountCommand { get; private set; }
-
-        public bool IsEditPopupOpened
-        {
-            get { return _isEditPopupOpened; }
-            set { SetProperty(ref _isEditPopupOpened, value); }
-        }
 
         public bool IsBottomAppBarOpened
         {
@@ -203,7 +192,7 @@ namespace AdventureWorks.UILogic.ViewModels
                     OnPropertyChanged("TotalPrice");
                 }
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
                 errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, ex.Message);
             }
@@ -243,7 +232,7 @@ namespace AdventureWorks.UILogic.ViewModels
                     await GoToNextPageAsync();
                 }
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
                 errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, ex.Message);
             }
@@ -317,7 +306,7 @@ namespace AdventureWorks.UILogic.ViewModels
                 OnPropertyChanged("TotalDiscount");
                 OnPropertyChanged("TotalPrice");
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
                 errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, ex.Message);
             }
@@ -326,11 +315,6 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 await _alertMessageService.ShowAsync(errorMessage, _resourceLoader.GetString("ErrorServiceUnreachable"));
             }
-        }
-
-        private void OpenEditAmountFlyout()
-        {
-            IsEditPopupOpened = true;
         }
 
         private double CalculateFullPrice()
@@ -372,7 +356,7 @@ namespace AdventureWorks.UILogic.ViewModels
                 SelectedItem.Quantity -= 1;
                 DecrementCountCommand.RaiseCanExecuteChanged();
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
                 errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, ex.Message);
             }
@@ -393,7 +377,7 @@ namespace AdventureWorks.UILogic.ViewModels
                 SelectedItem.Quantity += 1;
                 DecrementCountCommand.RaiseCanExecuteChanged();
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
                 errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, ex.Message);
             }

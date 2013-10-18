@@ -187,7 +187,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         {
             if (frame == null) throw new ArgumentNullException("frame");
 
-            var resourceLoader = new ResourceLoader(Constants.StoreAppsInfrastructureResourceMapId);
+            var resourceLoader = ResourceLoader.GetForCurrentView(Constants.StoreAppsInfrastructureResourceMapId);
 
             if (frame.GetValue(FrameSessionStateKeyProperty) != null)
             {
@@ -293,7 +293,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// <summary>
         /// Initializes a new instance of the <see cref="SessionStateServiceException"/> class.
         /// </summary>
-        public SessionStateServiceException() : base((new ResourceLoader(Constants.StoreAppsInfrastructureResourceMapId)).GetString("SessionStateServiceFailed"))
+        public SessionStateServiceException() : base((ResourceLoader.GetForCurrentView(Constants.StoreAppsInfrastructureResourceMapId)).GetString("SessionStateServiceFailed"))
         {
         }
 
@@ -310,7 +310,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// </summary>
         /// <param name="exception">The exception.</param>
         public SessionStateServiceException(Exception exception)
-            : base((new ResourceLoader(Constants.StoreAppsInfrastructureResourceMapId)).GetString("SessionStateServiceFailed"), exception)
+            : base((ResourceLoader.GetForCurrentView(Constants.StoreAppsInfrastructureResourceMapId)).GetString("SessionStateServiceFailed"), exception)
         {
         }
 

@@ -38,6 +38,18 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// Initializes a new instance of the BindableValidator class with the entity to validate.
         /// </summary>
         /// <param name="entityToValidate">The entity to validate</param>
+        /// <param name="getResourceDelegate">A delegate that returns a string resource given a resource map Id and resource Id</param>
+        /// <exception cref="ArgumentNullException">When <paramref name="entityToValidate"/> is <see langword="null" />.</exception>
+        public BindableValidator(INotifyPropertyChanged entityToValidate, Func<string, string, string> getResourceDelegate)
+            : this(entityToValidate)
+        {
+            GetResource = getResourceDelegate;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the BindableValidator class with the entity to validate.
+        /// </summary>
+        /// <param name="entityToValidate">The entity to validate</param>
         /// <exception cref="ArgumentNullException">When <paramref name="entityToValidate"/> is <see langword="null" />.</exception>
         public BindableValidator(INotifyPropertyChanged entityToValidate)
         {
@@ -48,6 +60,11 @@ namespace Microsoft.Practices.Prism.StoreApps
 
             _entityToValidate = entityToValidate;
             IsValidationEnabled = true;
+            GetResource = (mapId, key) =>
+            {
+                var resourceLoader = ResourceLoader.GetForCurrentView(mapId);
+                return resourceLoader.GetString(key);
+            };
         }
 
         /// <summary>
@@ -88,6 +105,11 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// Returns true if the Validation functionality is enabled. Otherwise, false.
         /// </summary>
         public bool IsValidationEnabled { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private Func<string, string, string> GetResource { get; set; }
 
         /// <summary>
         /// Returns a new ReadOnlyDictionary containing all the errors of the Entity, separated by property.
@@ -142,8 +164,7 @@ namespace Microsoft.Practices.Prism.StoreApps
 
             if (propertyInfo == null)
             {
-                var resourceLoader = new ResourceLoader(Constants.StoreAppsInfrastructureResourceMapId);
-                var errorString = resourceLoader.GetString("InvalidPropertyNameException");
+                var errorString = GetResource(Constants.StoreAppsInfrastructureResourceMapId, "InvalidPropertyNameException");
 
                 throw new ArgumentException(errorString, propertyName);
             }

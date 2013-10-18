@@ -17,7 +17,6 @@ using AdventureWorks.UILogic.ViewModels;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using Windows.UI.Xaml.Navigation;
 using System.Collections.Generic;
-using System.Net.Http;
 
 namespace AdventureWorks.UILogic.Tests.ViewModels
 {
@@ -80,12 +79,12 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             bool alertCalled = false;
             repository.GetProductAsyncDelegate = (productNumber) =>
                 {
-                    throw new HttpRequestException();
+                    throw new Exception();
                 };
 
             repository.GetProductsAsyncDelegate = (subCategoryId) =>
                 {
-                    throw new HttpRequestException();
+                    throw new Exception();
                 };
 
             alertService.ShowAsyncDelegate = (msg, title) =>
@@ -148,12 +147,12 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
 
             // Case 1: Item not selected --> should not be fired
             secondaryTileService.SecondaryTileExistsDelegate = (a) => false;
-            secondaryTileService.PinSquareSecondaryTileDelegate = (a, b, c, d) =>
+            secondaryTileService.PinSquareSecondaryTileDelegate = (a, b, c) =>
                 {
                     fired = true;
                     return Task.FromResult(true);
                 };
-            secondaryTileService.PinWideSecondaryTileDelegate = (a, b, c, d) =>
+            secondaryTileService.PinWideSecondaryTileDelegate = (a, b, c) =>
                 {
                     fired = true;
                     return Task.FromResult(true);
@@ -188,12 +187,12 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             target.SelectedProduct = new ProductViewModel(new Product() { ImageUri = new Uri("http://dummy-image-uri.com") });
 
             // The AppBar should be sticky when the item is being pinned
-            secondaryTileService.PinSquareSecondaryTileDelegate = (a, b, c, d) =>
+            secondaryTileService.PinSquareSecondaryTileDelegate = (a, b, c) =>
                 {
                     Assert.IsTrue(target.IsBottomAppBarSticky);
                     return Task.FromResult(true);
                 };
-            secondaryTileService.PinWideSecondaryTileDelegate = (a, b, c, d) =>
+            secondaryTileService.PinWideSecondaryTileDelegate = (a, b, c) =>
                 {
                     Assert.IsTrue(target.IsBottomAppBarSticky);
                     return Task.FromResult(true);
@@ -214,8 +213,8 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             var tileService = new MockSecondaryTileService()
             {
                 SecondaryTileExistsDelegate = (a) => false,
-                PinSquareSecondaryTileDelegate = (a, b, c, d) => Task.FromResult(true),
-                PinWideSecondaryTileDelegate = (a, b, c, d) => Task.FromResult(true),
+                PinSquareSecondaryTileDelegate = (a, b, c) => Task.FromResult(true),
+                PinWideSecondaryTileDelegate = (a, b, c) => Task.FromResult(true),
                 ActivateTileNotificationsDelegate = (tileId, tileContentUri, recurrence) =>
                     {
                         Assert.IsTrue(tileId == "MyProduct");

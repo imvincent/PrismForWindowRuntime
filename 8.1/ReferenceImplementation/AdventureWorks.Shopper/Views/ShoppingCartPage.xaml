@@ -11,7 +11,6 @@
                                      x:Uid="Page"
                                      Infrastructure:ViewModelLocator.AutoWireViewModel="true"
                                      d:DataContext="{d:DesignInstance designViewModels:ShoppingCartPageDesignViewModel, IsDesignTimeCreatable=True}">
-
     <Page.TopAppBar>
         <AppBar Style="{StaticResource AppBarStyle}"
                 x:Uid="TopAppBar">
@@ -49,19 +48,19 @@
               Margin="120,0,20,0"
               Width="Auto"
               Height="Auto">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <!-- Overview -->
-            <TextBlock x:Uid="OverviewLabel"
+                <!-- Overview -->
+                <TextBlock x:Uid="OverviewLabel"
                        x:Name="OverviewLabel"
                        Text="Overview"
                        Grid.Row="0"
@@ -69,22 +68,22 @@
                        Margin="0,0,0,10"
                        Style="{StaticResource SubheaderTextStyle}"
                        Foreground="{StaticResource AWShopperAccentTextBrush}" />
-            <StackPanel x:Name="OverviewPanel"
+                <StackPanel x:Name="OverviewPanel"
                         Grid.Row="2"
                         Margin="0,0,50,0">
-                <Grid x:Name="grid"
+                    <Grid x:Name="grid"
                       Width="300"
                       Height="110">
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock x:Uid="TotalItemsLabel"
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Uid="TotalItemsLabel"
                                x:Name="textBlock2"
                                Grid.Row="0"
                                Grid.Column="0"
@@ -92,7 +91,7 @@
                                FontSize="18"
                                VerticalAlignment="Center"
                                TextTrimming="WordEllipsis"></TextBlock>
-                    <TextBlock x:Name="textBlock5"
+                        <TextBlock x:Name="textBlock5"
                                Grid.Row="0"
                                Grid.Column="1"
                                Text="{Binding FullPrice, Mode=TwoWay}"
@@ -100,7 +99,7 @@
                                FontSize="18"
                                VerticalAlignment="Center"
                                TextTrimming="WordEllipsis"></TextBlock>
-                    <TextBlock x:Uid="DiscountCodesLabel"
+                        <TextBlock x:Uid="DiscountCodesLabel"
                                x:Name="textBlock3"
                                Grid.Row="1"
                                Grid.Column="0"
@@ -108,7 +107,7 @@
                                FontSize="18"
                                VerticalAlignment="Center"
                                TextTrimming="WordEllipsis" />
-                    <TextBlock x:Name="textBlock6"
+                        <TextBlock x:Name="textBlock6"
                                Grid.Row="1"
                                Grid.Column="1"
                                Text="{Binding TotalDiscount, Mode=TwoWay}"
@@ -116,7 +115,7 @@
                                FontSize="18"
                                VerticalAlignment="Center"
                                TextTrimming="WordEllipsis" />
-                    <TextBlock x:Uid="TotalLabel"
+                        <TextBlock x:Uid="TotalLabel"
                                x:Name="textBlock4"
                                Grid.Row="2"
                                Grid.Column="0"
@@ -124,7 +123,7 @@
                                FontSize="24"
                                VerticalAlignment="Center"
                                TextTrimming="WordEllipsis" />
-                    <TextBlock x:Name="textBlock7"
+                        <TextBlock x:Name="textBlock7"
                                Grid.Row="2"
                                Grid.Column="1"
                                Text="{Binding TotalPrice, Mode=TwoWay}"
@@ -133,8 +132,8 @@
                                VerticalAlignment="Center"
                                TextTrimming="WordEllipsis"
                                Foreground="{StaticResource AWShopperAccentTextBrush}" />
-                </Grid>
-                <Button x:Name="CheckoutButton"
+                    </Grid>
+                    <Button x:Name="CheckoutButton"
                         x:Uid="CheckoutButton"
                         AutomationProperties.AutomationId="CheckoutButton"
                         Content="Checkout"
@@ -142,11 +141,11 @@
                         Margin="0,20,0,0"
                         HorizontalAlignment="Stretch"
                         Background="{StaticResource AWShopperAccentBrush}" />
-            </StackPanel>
+                </StackPanel>
 
 
-            <!-- Items -->
-            <TextBlock x:Uid="ItemsLabel"
+                <!-- Items -->
+                <TextBlock x:Uid="ItemsLabel"
                        x:Name="ItemsLabel"
                        Text="Items"
                        Grid.Row="0"
@@ -154,7 +153,7 @@
                        Margin="5,2,0,8"
                        Style="{StaticResource SubheaderTextStyle}"
                        Foreground="{StaticResource AWShopperAccentTextBrush}" />
-            <GridView x:Name="ShoppingCartItemsGridView"
+                <GridView x:Name="ShoppingCartItemsGridView"
                       x:Uid="ShoppingCartItemsGridView"
                       AutomationProperties.AutomationId="ShoppingCartItemsGridView"
                       SelectionMode="Single"
@@ -167,89 +166,19 @@
                       SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                       ItemTemplate="{StaticResource ShoppingCartItemTemplate}"
                       Margin="0,0,0,0" />
-            <ScrollViewer x:Name="scrollViewer"
+                <ScrollViewer x:Name="scrollViewer"
                           Grid.Row="4"
                           Margin="10,0"
                           Visibility="Collapsed"
                           VerticalScrollBarVisibility="Auto">
-                <ListView x:Name="listView"
+                    <ListView x:Name="listView"
                           Width="260"
                           ItemsSource="{Binding ShoppingCartItemViewModels}"
                           SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                           ItemTemplate="{StaticResource ShoppingCartItemTemplateSnapped}" />
-            </ScrollViewer>
-        </Grid>
-        </ScrollViewer>
-        <Popup x:Name="EditQuantityPopup"
-               x:Uid="EditQuantityPopup"
-               AutomationProperties.AutomationId="EditQuantityPopup"
-               IsLightDismissEnabled="True"
-               IsOpen="{Binding IsEditPopupOpened, Mode=TwoWay}">
-            <Grid x:Name="PopupPanel"
-                  Background="Black"
-                  Opacity=".9"
-                  Height="200">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="65" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0"
-                           x:Uid="EditQuantityLabel"
-                           Margin="15,10,10,0"
-                           Text="Edit Quantity"
-                           TextTrimming="WordEllipsis"
-                           FontSize="34"
-                           Foreground="White"></TextBlock>
-                <Grid x:Name="ContentPopupGrid"
-                      Grid.Row="1"
-                      Margin="20,0,10,15">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Image x:Uid="SelectedProductImage"
-                           Source="{Binding SelectedItem.Image}" />
-                    <Button x:Name="DecrementQuantityButton"
-                            x:Uid="DecrementQuantityButton"
-                            Grid.Column="1"
-                            Style="{StaticResource RemoveAppBarButtonStyle}"
-                            Command="{Binding DecrementCountCommand}"
-                            AutomationProperties.AutomationId="DecrementQuantityButton"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Margin="0,15,0,0"
-                            Padding="16,4,12,4"
-                            RenderTransformOrigin="0.5,0.5">
-                        <Button.RenderTransform>
-                            <CompositeTransform />
-                        </Button.RenderTransform>
-                    </Button>
-                    <TextBlock x:Name="EditQuantity"
-                               Grid.Column="2"
-                               Text="{Binding SelectedItem.Quantity}"
-                               FontSize="55"
-                               Foreground="#FFE2742F"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center" />
-                    <Button x:Name="IncrementQuantityButton"
-                            x:Uid="IncrementQuantityButton"
-                            Grid.Column="3"
-                            Style="{StaticResource AddAppBarButtonStyle}"
-                            Command="{Binding IncrementCountCommand}"
-                            AutomationProperties.AutomationId="IncrementQuantityButton"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Margin="0,15,0,0"
-                            RenderTransformOrigin="0.5,0.5">
-                        <Button.RenderTransform>
-                            <CompositeTransform />
-                        </Button.RenderTransform>
-                    </Button>
-                </Grid>
+                </ScrollViewer>
             </Grid>
-        </Popup>
+        </ScrollViewer>
 
         <!--Sign In UserControl-->
         <Views:SignInUserControl Grid.RowSpan="2"
@@ -264,10 +193,9 @@
         <VisualStateManager.VisualStateGroups>
             <!-- Visual states reflect the application's view state -->
             <VisualStateGroup x:Name="ApplicationViewStates">
-                <VisualState x:Name="FullScreenLandscape" />
-                <VisualState x:Name="Filled" />
-                <VisualState x:Name="FullScreenPortrait" />
-                <VisualState x:Name="Snapped">
+                <VisualState x:Name="DefaultLayout" />
+                <VisualState x:Name="PortraitLayout" />
+                <VisualState x:Name="MinimalLayout">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton"
                                                        Storyboard.TargetProperty="Style">
@@ -586,34 +514,100 @@
     </Grid>
     <!-- AppBar -->
     <Page.BottomAppBar>
-        <AppBar Style="{StaticResource AppBarStyle}"
+        <CommandBar Style="{StaticResource AppBarStyle}"
                 IsOpen="{Binding IsBottomAppBarOpened, Mode=TwoWay}"
                 IsSticky="True"
                 AutomationProperties.AutomationId="BottomAppBar"
                 x:Uid="BottomAppBar">
-            <Grid>
-                <StackPanel Orientation="Horizontal"
-                            HorizontalAlignment="Left">
-                    <Button x:Name="EditAmountAppBarButton"
+            <CommandBar.SecondaryCommands>
+                <AppBarButton x:Name="EditAmountAppBarButton"
                             x:Uid="EditAmountAppBarButton"
                             AutomationProperties.AutomationId="EditAmountAppBarButton"
-                            Style="{StaticResource EditAppBarButtonStyle}"
+                            Label="Edit"
+                            Icon="Edit"
                             Visibility="{Binding SelectedItem, Converter={StaticResource NotNullToVisibleConverter}}"
                             Command="{Binding EditAmountCommand}"
-                            Margin="0,1,0,-1"
-                            Loaded="StartLayoutUpdates"
-                            Unloaded="StopLayoutUpdates" />
-                    <Button x:Name="RemoveAppBarButton"
+                            Margin="0,1,0,-1">
+                    <AppBarButton.Flyout>
+                        <Flyout FlyoutPresenterStyle="{StaticResource AWShopperFlyoutStyle}">
+                            <Grid x:Name="PopupPanel"
+                  Background="Black"
+                  Opacity=".9"
+                  Height="200">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="65" />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0"
+                           x:Uid="EditQuantityLabel"
+                           Margin="15,10,10,0"
+                           Text="Edit Quantity"
+                           TextTrimming="WordEllipsis"
+                           FontSize="34"
+                           Foreground="White"></TextBlock>
+                                <Grid x:Name="ContentPopupGrid"
+                      Grid.Row="1"
+                      Margin="20,0,10,15">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Image x:Uid="SelectedProductImage"
+                           Source="{Binding SelectedItem.Image}" />
+                            <AppBarButton x:Name="DecrementQuantityButton"
+                            x:Uid="DecrementQuantityButton"
+                            Grid.Column="1"
+                            Label="Remove"
+                            Icon="Remove"
+                            Command="{Binding DecrementCountCommand}"
+                            AutomationProperties.AutomationId="DecrementQuantityButton"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Margin="0,15,0,0"
+                            Padding="16,4,12,4"
+                            RenderTransformOrigin="0.5,0.5">
+                                        <Button.RenderTransform>
+                                            <CompositeTransform />
+                                        </Button.RenderTransform>
+                                    </AppBarButton>
+                                    <TextBlock x:Name="EditQuantity"
+                               Grid.Column="2"
+                               Text="{Binding SelectedItem.Quantity}"
+                               FontSize="55"
+                               Foreground="#FFE2742F"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                                    <AppBarButton x:Name="IncrementQuantityButton"
+                            x:Uid="IncrementQuantityButton"
+                            Grid.Column="3"
+                            Icon="Add"
+                            Label="Add"
+                            Command="{Binding IncrementCountCommand}"
+                            AutomationProperties.AutomationId="IncrementQuantityButton"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Margin="0,15,0,0"
+                            RenderTransformOrigin="0.5,0.5">
+                                        <Button.RenderTransform>
+                                            <CompositeTransform />
+                                        </Button.RenderTransform>
+                                    </AppBarButton>
+                                </Grid>
+                            </Grid>
+                        </Flyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+                <AppBarButton x:Name="RemoveAppBarButton"
                             x:Uid="RemoveAppBarButton"
                             AutomationProperties.AutomationId="RemoveAppBarButton"
-                            Style="{StaticResource DeleteAppBarButtonStyle}"
+                            Label="Remove"
+                            Icon="Remove"
                             Visibility="{Binding SelectedItem, Converter={StaticResource NotNullToVisibleConverter}}"
                             Command="{Binding RemoveCommand}"
-                            CommandParameter="{Binding SelectedItem}"
-                            Loaded="StartLayoutUpdates"
-                            Unloaded="StopLayoutUpdates" />
-                </StackPanel>
-            </Grid>
-        </AppBar>
+                            CommandParameter="{Binding SelectedItem}"/>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
     </Page.BottomAppBar>
 </Infrastructure:VisualStateAwarePage>

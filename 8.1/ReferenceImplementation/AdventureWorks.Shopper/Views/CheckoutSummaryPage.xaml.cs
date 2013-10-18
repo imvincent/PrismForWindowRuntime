@@ -16,15 +16,6 @@ namespace AdventureWorks.Shopper.Views
         public CheckoutSummaryPage()
         {
             this.InitializeComponent();
-            Popup.Opened += Popup_Opened;
-        }
-
-        private void Popup_Opened(object sender, object e)
-        {
-            int margin = 10;
-            int appbarHeight = 90;
-            Popup.HorizontalOffset = margin;
-            Popup.VerticalOffset = Window.Current.CoreWindow.Bounds.Bottom - appbarHeight - PopupPanel.Height - margin;
         }
     }
 }

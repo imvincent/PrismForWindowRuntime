@@ -42,7 +42,7 @@ namespace AdventureWorks.Shopper.Views
                 if (scrollViewer.ComputedHorizontalScrollBarVisibility == Visibility.Visible)
                 {
                     wrapGrid.SetHorizontalOffset(_wrapPanelHorizontalOffset);
-                    scrollViewer.ScrollToHorizontalOffset(_scrollViewerHorizontalOffset);
+                    scrollViewer.ChangeView(_scrollViewerHorizontalOffset, null, null);
                 }
                 else
                 {
@@ -63,7 +63,7 @@ namespace AdventureWorks.Shopper.Views
             {
                 // Update the Horizontal offset
                 wrapGrid.SetHorizontalOffset(_wrapPanelHorizontalOffset);
-                scrollViewer.ScrollToHorizontalOffset(_scrollViewerHorizontalOffset);
+                scrollViewer.ChangeView(_scrollViewerHorizontalOffset, null, null);
                 helper.PropertyChanged -= ScrollBarHorizontalVisibilityChanged;
             };
         }

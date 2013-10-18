@@ -68,7 +68,7 @@ namespace AdventureWorks.Shopper.Views
             // Set the initial visual state of the control
             foreach (var layoutAwareControl in this._visualStateAwareControls)
             {
-                VisualStateManager.GoToState(layoutAwareControl, DetermineVisualState(ApplicationView.Value), false);
+                VisualStateManager.GoToState(layoutAwareControl, DetermineVisualState(), false);
             }
         }
 
@@ -101,13 +101,12 @@ namespace AdventureWorks.Shopper.Views
         /// management within the page.  The default implementation uses the names of enum values.
         /// Subclasses may override this method to control the mapping scheme used.
         /// </summary>
-        /// <param name="viewState">View state for which a visual state is desired.</param>
         /// <returns>Visual state name used to drive the
         /// <see cref="VisualStateManager"/></returns>
         /// <seealso cref="InvalidateVisualState"/>
-        private static string DetermineVisualState(ApplicationViewState viewState)
+        private static string DetermineVisualState()
         {
-            return viewState.ToString();
+            return "Landscape";
         }
 
         /// <summary>
@@ -123,7 +122,7 @@ namespace AdventureWorks.Shopper.Views
         {
             if (this._visualStateAwareControls != null)
             {
-                string visualState = DetermineVisualState(ApplicationView.Value);
+                string visualState = DetermineVisualState();
                 foreach (var layoutAwareControl in this._visualStateAwareControls)
                 {
                     VisualStateManager.GoToState(layoutAwareControl, visualState, false);

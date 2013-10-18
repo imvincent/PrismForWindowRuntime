@@ -7,7 +7,6 @@
 
 
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Services;
@@ -15,6 +14,7 @@ using AdventureWorks.UILogic.Tests.Mocks;
 using AdventureWorks.UILogic.ViewModels;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using Windows.UI.Xaml.Navigation;
+using System;
 
 namespace AdventureWorks.UILogic.Tests.ViewModels
 {
@@ -141,7 +141,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             var shoppingCartRepository = new MockShoppingCartRepository();
             shoppingCartRepository.GetShoppingCartAsyncDelegate = () =>
                                                                       {
-                                                                          throw new HttpRequestException();
+                                                                          throw new Exception();
                                                                       };
             var alertMessageService = new MockAlertMessageService();
             alertMessageService.ShowAsyncDelegate = (s, s1) =>

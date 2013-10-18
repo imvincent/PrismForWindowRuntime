@@ -71,24 +71,6 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
         }
 
         [TestMethod]
-        public async Task SuccessfulSignIn_CallsSuccessAction()
-        {
-            var successActionCalled = false;
-            var accountService = new MockAccountService()
-                {
-                    SignInUserAsyncDelegate = (username, password, useCredentialStore) => Task.FromResult(true)
-                };
-
-            var target = new SignInFlyoutViewModel(accountService, null, null) {CloseFlyout = () => Task.Delay(0)};
-
-            target.Open(null, () => { successActionCalled = true; });
-            
-            await target.SignInCommand.Execute();
-
-            Assert.IsTrue(successActionCalled);
-        }
-
-        [TestMethod]
         public void UserName_ReturnsLastSignedInUser_IfAvailable()
         {
             var accountService = new MockAccountService()

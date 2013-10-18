@@ -8,9 +8,11 @@
 
 using System.Collections.Generic;
 using System.Globalization;
-using System.Net.Http;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
+using Windows.Web.Http;
+using System;
+using Newtonsoft.Json;
 
 namespace AdventureWorks.UILogic.Services
 {
@@ -22,10 +24,10 @@ namespace AdventureWorks.UILogic.Services
         {
             using (var httpClient = new HttpClient())
             {
-                var response = await httpClient.GetAsync(_clientBaseUrl);
+                var response = await httpClient.GetAsync(new Uri(_clientBaseUrl));
                 response.EnsureSuccessStatusCode();
-                var result = await response.Content.ReadAsAsync<IEnumerable<ShippingMethod>>();
-
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<IEnumerable<ShippingMethod>>(responseContent);
                 return result;
             }
         }
@@ -34,10 +36,10 @@ namespace AdventureWorks.UILogic.Services
         {
             using (var httpClient = new HttpClient())
             {
-                var response = await httpClient.GetAsync(_clientBaseUrl + "basic");
+                var response = await httpClient.GetAsync(new Uri(_clientBaseUrl + "basic"));
                 response.EnsureSuccessStatusCode();
-                var result = await response.Content.ReadAsAsync<ShippingMethod>();
-
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<ShippingMethod>(responseContent);
                 return result;
             }
         }

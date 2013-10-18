@@ -22,20 +22,14 @@ namespace AdventureWorks.UILogic.ViewModels
         private DelegateCommand _signOutCommand;
         private string _userName;
         private Action _closeFlyout;
-        private Action _goBack;
 
         public SignOutFlyoutViewModel(IAccountService accountService, INavigationService navigationService)
         {
             _accountService = accountService;
             _navigationService = navigationService;
-            GoBackCommand = new DelegateCommand(() => GoBack());
             if (_accountService != null)
                 _userInfo = _accountService.SignedInUser;
-        }
 
-
-        public void Open(object parameter, Action successAction)
-        {
             if (_userInfo != null)
             {
                 UserName = _userInfo.UserName;
@@ -48,14 +42,6 @@ namespace AdventureWorks.UILogic.ViewModels
             get { return _closeFlyout; }
             set { SetProperty(ref _closeFlyout, value); }
         }
-
-        public Action GoBack
-        {
-            get { return _goBack; }
-            set { SetProperty(ref _goBack, value); }
-        }
-
-        public DelegateCommand GoBackCommand { get; private set; }
 
         public DelegateCommand SignOutCommand
         {

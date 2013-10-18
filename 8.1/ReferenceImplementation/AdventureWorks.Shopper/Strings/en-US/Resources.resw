@@ -149,7 +149,7 @@
     <value>Card expiring on: {0}</value>
     <comment>Label for showing the expiration date of the credit card</comment>
   </data>
-  <data name="TitleAddress.Text" xml:space="preserve">
+  <data name="Address.Header" xml:space="preserve">
     <value>Address*</value>
     <comment>Label for Address</comment>
   </data>
@@ -157,35 +157,35 @@
     <value>Area*</value>
     <comment>Label for the Area controls in the Billing &amp; Shipping Addresses user controls</comment>
   </data>
-  <data name="TitleFirstName.Text" xml:space="preserve">
+  <data name="FirstName.Header" xml:space="preserve">
     <value>First Name*</value>
     <comment>Label for the First Name textbox in the Billing &amp; Shipping Addresses user controls</comment>
   </data>
-  <data name="TitleLastName.Text" xml:space="preserve">
+  <data name="LastName.Header" xml:space="preserve">
     <value>Last Name*</value>
     <comment>Label for the Last Name textbox in the Billing &amp; Shipping Addresses user controls</comment>
   </data>
-  <data name="TitleMiddleInitial.Text" xml:space="preserve">
+  <data name="MiddleInitial.Header" xml:space="preserve">
     <value>Middle Initial</value>
     <comment>Label for the Middle Initial textbox in the Billing &amp; Shipping Addresses user controls</comment>
   </data>
-  <data name="TitleOptionalAddress.Text" xml:space="preserve">
+  <data name="OptionalAddress.Header" xml:space="preserve">
     <value>Optional Address</value>
     <comment>Label for the Optional Address textbox in the Billing &amp; Shipping Addresses user controls</comment>
   </data>
-  <data name="TitlePhone.Text" xml:space="preserve">
+  <data name="Phone.Header" xml:space="preserve">
     <value>Phone*</value>
     <comment>Label for the Phone textbox in the Billing &amp; Shipping Addresses user controls</comment>
   </data>
-  <data name="TitleCardholderName.Text" xml:space="preserve">
+  <data name="CardholderName.Header" xml:space="preserve">
     <value>Cardholder Name*</value>
     <comment>Label for the Cardholder Name</comment>
   </data>
-  <data name="TitleCardNumber.Text" xml:space="preserve">
-    <value>Card #* </value>
+  <data name="CardNumber.Header" xml:space="preserve">
+    <value>Card Number*</value>
     <comment>Label for the Card Number</comment>
   </data>
-  <data name="TitleCardVerificationCode.Text" xml:space="preserve">
+  <data name="CardVerificationCode.Header" xml:space="preserve">
     <value>CVC2*</value>
     <comment>Label for the Card Verification Code</comment>
   </data>
@@ -281,7 +281,7 @@
     <value>Edit Shipping Address</value>
     <comment>Title for the Edit Shipping Address flyout</comment>
   </data>
-  <data name="UsernameLabel.Text" xml:space="preserve">
+  <data name="Username.Header" xml:space="preserve">
     <value>Username</value>
     <comment>Label for the username textbox in the login screen</comment>
   </data>
@@ -317,7 +317,7 @@
     <value>Overview</value>
     <comment>Label for the Overview of the Order</comment>
   </data>
-  <data name="PasswordLabel.Text" xml:space="preserve">
+  <data name="PasswordBox.Header" xml:space="preserve">
     <value>Password</value>
     <comment>Label for the Password box of the Login Flyout</comment>
   </data>
@@ -405,35 +405,27 @@
     <value>Shopping Cart</value>
     <comment>Caption for the Shopping Cart button of the </comment>
   </data>
-  <data name="CheckoutAppBarButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Checkout</value>
-    <comment>Text of the Checkout button</comment>
-  </data>
-  <data name="City.Watermark" xml:space="preserve">
+  <data name="City.PlaceholderText" xml:space="preserve">
     <value>City</value>
     <comment>Watermark for the City input box</comment>
   </data>
-  <data name="EditAmountAppBarButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+  <data name="EditAmountAppBarButton.Label" xml:space="preserve">
     <value>Edit amount</value>
     <comment>Caption for the Edit Amount button on the Shopping Cart page</comment>
   </data>
-  <data name="EditAppBarButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Edit</value>
-    <comment>Caption for the Edit button on the Appbar</comment>
-  </data>
-  <data name="ExpirationMonth.Watermark" xml:space="preserve">
+  <data name="ExpirationMonth.PlaceholderText" xml:space="preserve">
     <value>Month</value>
     <comment>Watermark for the expiration month of the credit card</comment>
   </data>
-  <data name="ExpirationYear.Watermark" xml:space="preserve">
+  <data name="ExpirationYear.PlaceholderText" xml:space="preserve">
     <value>Year</value>
     <comment>Watermark for the expiration year of the credit card</comment>
   </data>
-  <data name="PostalCodeTextBox.Watermark" xml:space="preserve">
-    <value>Zip Code</value>
+  <data name="PostalCodeTextBox.PlaceholderText" xml:space="preserve">
+    <value>Zip code</value>
     <comment>Watermark text of the zip code input box</comment>
   </data>
-  <data name="RemoveAppBarButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+  <data name="RemoveAppBarButton.Label" xml:space="preserve">
     <value>Remove item</value>
     <comment>Caption for the Remove Item of the shopping cart page</comment>
   </data>
@@ -465,7 +457,7 @@
     <value>QTY</value>
     <comment>Label for quantity in a shopping cart product item</comment>
   </data>
-  <data name="SelectCheckoutDataAppBarButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+  <data name="SelectCheckoutDataAppBarButton.Label" xml:space="preserve">
     <value>Select</value>
     <comment>Automation Properties' Name for Selecting different checkout data</comment>
   </data>
@@ -488,14 +480,6 @@
   <data name="StateComboBox.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>State</value>
     <comment>Automation Properties' Name for the State ComboBox</comment>
-  </data>
-  <data name="TitleFirstName.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>First name</value>
-    <comment>Automation Properties Name for the First Name</comment>
-  </data>
-  <data name="EditQuantityPopup.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Edit quantity popup</value>
-    <comment>Automation Properties' Name for the Edit Quantity popup</comment>
   </data>
   <data name="SelectedProductImage.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Selected product image</value>
@@ -557,23 +541,23 @@
     <value>Change Defaults</value>
     <comment>Label for the Change Defaults item of the settings charm</comment>
   </data>
-  <data name="DecrementQuantityButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+  <data name="DecrementQuantityButton.Label" xml:space="preserve">
     <value>Remove</value>
     <comment>Caption for the Decrement Quantity button of the Shopping Cart Page</comment>
   </data>
-  <data name="EditCheckoutDataAppBarButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+  <data name="EditCheckoutDataAppBarButton.Label" xml:space="preserve">
     <value>Edit</value>
     <comment>Caption for the Edit Checkout data button</comment>
   </data>
-  <data name="IncrementQuantityButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+  <data name="IncrementQuantityButton.Label" xml:space="preserve">
     <value>Add</value>
     <comment>Label for the Increment Quantity button in the Shopping Cart page</comment>
   </data>
-  <data name="PinAppBarButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+  <data name="PinAppBarButton.Label" xml:space="preserve">
     <value>Pin To Start</value>
     <comment>Label for the Pin Button of the AppBar</comment>
   </data>
-  <data name="UnpinAppBarButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+  <data name="UnpinAppBarButton.Label" xml:space="preserve">
     <value>Unpin from Start</value>
     <comment>Label for the Unpin Button of the AppBar</comment>
   </data>

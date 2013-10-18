@@ -15,7 +15,6 @@ using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Net.Http;
 using System.Windows.Input;
 using Windows.UI.Xaml.Navigation;
 
@@ -78,7 +77,7 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 subCategories = await _productCatalogRepository.GetSubcategoriesAsync(parentCategoryId, 5);
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
                 errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, ex.Message);
 

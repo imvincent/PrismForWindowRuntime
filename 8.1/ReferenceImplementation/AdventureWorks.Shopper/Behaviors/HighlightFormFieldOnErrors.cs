@@ -50,7 +50,7 @@ namespace AdventureWorks.Shopper.Behaviors
             var control = (FrameworkElement)d;
             var propertyErrors = (ReadOnlyCollection<string>)args.NewValue;
 
-            Style style = (propertyErrors.Any()) ? (Style)Application.Current.Resources["HighlightFormFieldStyle"] : (Style)Application.Current.Resources["FormFieldStyle"];
+            Style style = (propertyErrors.Any()) ? (Style)Application.Current.Resources["HighlightTextBoxStyle"] : null;
             control.Style = style;
         }
     }

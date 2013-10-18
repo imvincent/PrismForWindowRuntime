@@ -15,7 +15,6 @@ using AdventureWorks.UILogic.ViewModels;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using Windows.UI.Xaml.Navigation;
 using System.Collections.Generic;
-using System.Net.Http;
 
 namespace AdventureWorks.UILogic.Tests.ViewModels
 {
@@ -77,7 +76,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
  
             repository.GetCategoryAsyncDelegate = (categoryId) =>
             {
-                throw new HttpRequestException();
+                throw new Exception();
             };
 
             alertService.ShowAsyncDelegate = (msg, title) =>

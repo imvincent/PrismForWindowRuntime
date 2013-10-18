@@ -14,7 +14,6 @@ using Microsoft.Practices.Prism.StoreApps;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Windows.Globalization.NumberFormatting;
 using System.Threading.Tasks;
-using System.Net.Http;
 using AdventureWorks.UILogic.Services;
 
 namespace AdventureWorks.UILogic.ViewModels
@@ -68,7 +67,7 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 await _shoppingCartRepository.AddProductToShoppingCartAsync(ProductNumber);
             }
-            catch (HttpRequestException e)
+            catch (Exception e)
             {
                 errorMessage = e.Message;
             }

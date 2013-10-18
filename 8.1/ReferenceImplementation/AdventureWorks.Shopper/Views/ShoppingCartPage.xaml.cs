@@ -16,15 +16,6 @@ namespace AdventureWorks.Shopper.Views
         public ShoppingCartPage()
         {
             this.InitializeComponent();
-            EditQuantityPopup.Opened += EditQuantityPopup_Opened;
-        }
-
-        private void EditQuantityPopup_Opened(object sender, object e)
-        {
-            int margin = 10;
-            int appbarHeight = 90;
-            EditQuantityPopup.HorizontalOffset = margin;
-            EditQuantityPopup.VerticalOffset = Window.Current.CoreWindow.Bounds.Bottom - appbarHeight - PopupPanel.Height - margin;
         }
     }
 }

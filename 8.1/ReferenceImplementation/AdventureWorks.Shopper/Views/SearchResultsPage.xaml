@@ -250,11 +250,10 @@
 
             <!-- Visual states reflect the application's view state -->
             <VisualStateGroup x:Name="ApplicationViewStates">
-                <VisualState x:Name="FullScreenLandscape" />
-                <VisualState x:Name="Filled" />
+                <VisualState x:Name="DefaultLayout" />
 
                 <!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
-                <VisualState x:Name="FullScreenPortrait">
+                <VisualState x:Name="PortraitLayout">
                 </VisualState>
 
                 <!--
@@ -262,7 +261,7 @@
                     * The query text becomes the page header
                     * A different representation for filter selection and search results is used
                 -->
-                <VisualState x:Name="Snapped">
+                <VisualState x:Name="MinimalLayout">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton"
                                                        Storyboard.TargetProperty="Style">

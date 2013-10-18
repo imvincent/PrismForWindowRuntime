@@ -58,12 +58,11 @@
         <VisualStateManager.VisualStateGroups>
             <!-- Visual states reflect the application's view state -->
             <VisualStateGroup x:Name="ApplicationViewStates">
-                <VisualState x:Name="FullScreenLandscape" />
-                <VisualState x:Name="Filled" />
-                <VisualState x:Name="FullScreenPortrait" />
+                <VisualState x:Name="DefaultLayout" />
+                <VisualState x:Name="PortraitLayout" />
 
                 <!-- The title has different style when snapped -->
-                <VisualState x:Name="Snapped">
+                <VisualState x:Name="MinimalLayout">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle"
                                                        Storyboard.TargetProperty="Style">

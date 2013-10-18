@@ -19,8 +19,8 @@ namespace AdventureWorks.UILogic.Tests.Mocks
     public class MockSecondaryTileService : ISecondaryTileService
     {
         public Func<string, bool> SecondaryTileExistsDelegate { get; set; }
-        public Func<string, string, string, string, Task<bool>> PinSquareSecondaryTileDelegate { get; set; }
-        public Func<string, string, string, string, Task<bool>> PinWideSecondaryTileDelegate { get; set; }
+        public Func<string, string, string, Task<bool>> PinSquareSecondaryTileDelegate { get; set; }
+        public Func<string, string, string, Task<bool>> PinWideSecondaryTileDelegate { get; set; }
         public Func<string, Task<bool>> UnpinTileDelegate { get; set; }
         public Action<string, Uri, PeriodicUpdateRecurrence> ActivateTileNotificationsDelegate { get; set; }
 
@@ -29,14 +29,14 @@ namespace AdventureWorks.UILogic.Tests.Mocks
             return SecondaryTileExistsDelegate(tileId);
         }
 
-        public Task<bool> PinSquareSecondaryTile(string tileId, string shortName, string displayName, string arguments)
+        public Task<bool> PinSquareSecondaryTile(string tileId, string displayName, string arguments)
         {
-            return PinSquareSecondaryTileDelegate(tileId, shortName, displayName, arguments);
+            return PinSquareSecondaryTileDelegate(tileId, displayName, arguments);
         }
 
-        public Task<bool> PinWideSecondaryTile(string tileId, string shortName, string displayName, string arguments)
+        public Task<bool> PinWideSecondaryTile(string tileId, string displayName, string arguments)
         {
-            return PinWideSecondaryTileDelegate(tileId, shortName, displayName, arguments);
+            return PinWideSecondaryTileDelegate(tileId, displayName, arguments);
         }
 
         public Task<bool> UnpinTile(string tileId)

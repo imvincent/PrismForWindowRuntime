@@ -7,10 +7,12 @@
 
 
 using System.Globalization;
-using System.Net.Http;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using Microsoft.Practices.Prism.StoreApps;
+using Newtonsoft.Json;
+using Windows.Web.Http;
+using System;
 
 namespace AdventureWorks.UILogic.Services
 {
@@ -22,10 +24,10 @@ namespace AdventureWorks.UILogic.Services
         {
             using (var shoppingCartClient = new HttpClient())
             {
-                var response = await shoppingCartClient.GetAsync(_shoppingCartBaseUrl + shoppingCartId);
+                var response = await shoppingCartClient.GetAsync(new Uri(_shoppingCartBaseUrl + shoppingCartId));
                 response.EnsureSuccessStatusCode();
-                var result = await response.Content.ReadAsAsync<ShoppingCart>();
-
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<ShoppingCart>(responseContent);
                 return result;
             }
         }
@@ -35,7 +37,7 @@ namespace AdventureWorks.UILogic.Services
             using (var shoppingCartClient = new HttpClient())
             {
                 string requestUrl = _shoppingCartBaseUrl + shoppingCartId + "?productIdToIncrement=" + productIdToIncrement;
-                var response = await shoppingCartClient.PostAsync(requestUrl, null);
+                var response = await shoppingCartClient.PostAsync(new Uri(requestUrl), null);
                 response.EnsureSuccessStatusCode();
             }
         }
@@ -45,7 +47,7 @@ namespace AdventureWorks.UILogic.Services
             using (var shoppingCartClient = new HttpClient())
             {
                 string requestUrl = _shoppingCartBaseUrl + shoppingCartId + "?productIdToDecrement=" + productIdToDecrement;
-                var response = await shoppingCartClient.PostAsync(requestUrl, null);
+                var response = await shoppingCartClient.PostAsync(new Uri(requestUrl), null);
                 response.EnsureSuccessStatusCode();
             }
         }
@@ -55,7 +57,7 @@ namespace AdventureWorks.UILogic.Services
             using (var shoppingCartClient = new HttpClient())
             {
                 string requestUrl = _shoppingCartBaseUrl + shoppingCartId + "?itemIdToRemove=" + itemIdToRemove;
-                var response = await shoppingCartClient.PutAsync(requestUrl, null);
+                var response = await shoppingCartClient.PutAsync(new Uri(requestUrl), null);
                 response.EnsureSuccessStatusCode();
             }
         }
@@ -64,7 +66,7 @@ namespace AdventureWorks.UILogic.Services
         {
             using (var shoppingCartClient = new HttpClient())
             {
-                var response = await shoppingCartClient.DeleteAsync(_shoppingCartBaseUrl + shoppingCartId);
+                var response = await shoppingCartClient.DeleteAsync(new Uri(_shoppingCartBaseUrl + shoppingCartId));
                 response.EnsureSuccessStatusCode();
             }
         }
@@ -74,9 +76,10 @@ namespace AdventureWorks.UILogic.Services
             using (var shoppingCartClient = new HttpClient())
             {
                 string requestUrl = _shoppingCartBaseUrl + authenticatedShoppingCartId + "?anonymousShoppingCartId=" + anonymousShoppingCartId;
-                var response = await shoppingCartClient.PostAsync(requestUrl, null);
+                var response = await shoppingCartClient.PostAsync(new Uri(requestUrl), null);
                 response.EnsureSuccessStatusCode();
-                var result = await response.Content.ReadAsAsync<bool>();
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<bool>(responseContent);
 
                 return result;
             }

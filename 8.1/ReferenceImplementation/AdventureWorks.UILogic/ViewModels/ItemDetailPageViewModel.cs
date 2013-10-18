@@ -15,7 +15,6 @@ using Microsoft.Practices.Prism.StoreApps;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Windows.UI.Xaml.Navigation;
 using AdventureWorks.UILogic.Services;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System;
 using Windows.UI.Notifications;
@@ -134,7 +133,7 @@ namespace AdventureWorks.UILogic.ViewModels
                 Title = SelectedProduct.Title;
                 _searchPaneService.ShowOnKeyboardInput(true);
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
                 errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, ex.Message);
             }
@@ -175,7 +174,7 @@ namespace AdventureWorks.UILogic.ViewModels
                 IsBottomAppBarSticky = true;
 
                 // Documentation on working with tiles can be found at http://go.microsoft.com/fwlink/?LinkID=288821&clcid=0x409
-                isPinned = await _secondaryTileService.PinWideSecondaryTile(tileId, SelectedProduct.Title, SelectedProduct.Description, SelectedProduct.ProductNumber);
+                isPinned = await _secondaryTileService.PinWideSecondaryTile(tileId, SelectedProduct.Title, SelectedProduct.ProductNumber);
                 IsSelectedProductPinned = isPinned;
 
                 IsBottomAppBarSticky = false;

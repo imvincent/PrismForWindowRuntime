@@ -9,13 +9,13 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using Microsoft.Practices.Prism.StoreApps;
 using System.Globalization;
+using Windows.Web.Http;
+using Windows.Web.Http.Filters;
+using Newtonsoft.Json;
 
 namespace AdventureWorks.UILogic.Services
 {
@@ -31,44 +31,30 @@ namespace AdventureWorks.UILogic.Services
 
         public async Task<IReadOnlyCollection<PaymentMethod>> GetPaymentMethodsAsync()
         {
-            using (var handler = new HttpClientHandler { CookieContainer = new CookieContainer() })
+            using (var client = new HttpClient())
             {
-                using (var client = new HttpClient(handler))
-                {
-                    var serverUri = new Uri(Constants.ServerAddress);
-                    handler.CookieContainer.SetCookies(serverUri, _accountService.ServerCookieHeader);
-                    var response = await client.GetAsync(_clientBaseUrl);
-                    response.EnsureSuccessStatusCode();
-                    return await response.Content.ReadAsAsync<ReadOnlyCollection<PaymentMethod>>();
-                }
+                var response = await client.GetAsync(new Uri(_clientBaseUrl));
+                response.EnsureSuccessStatusCode();
+                var responseContent = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<ReadOnlyCollection<PaymentMethod>>(responseContent);
             }
         }
 
         public async Task SavePaymentMethodAsync(PaymentMethod paymentMethod)
         {
-            using (var handler = new HttpClientHandler { CookieContainer = new CookieContainer() })
+            using (var client = new HttpClient())
             {
-                using (var client = new HttpClient(handler))
-                {
-                    var serverUri = new Uri(Constants.ServerAddress);
-                    handler.CookieContainer.SetCookies(serverUri, _accountService.ServerCookieHeader);
-                    var response = await client.PostAsync(_clientBaseUrl, paymentMethod, new JsonMediaTypeFormatter());
-                    await response.EnsureSuccessWithValidationSupportAsync();
-                }
+                var response = await client.PostAsync(new Uri(_clientBaseUrl), new HttpStringContent(JsonConvert.SerializeObject(paymentMethod), Windows.Storage.Streams.UnicodeEncoding.Utf8, "application/json"));
+                await response.EnsureSuccessWithValidationSupportAsync();
             }
         }
 
         public async Task SetDefault(string defaultPaymentMethodId)
         {
-            using (var handler = new HttpClientHandler { CookieContainer = new CookieContainer() })
+            using (var client = new HttpClient())
             {
-                using (var client = new HttpClient(handler))
-                {
-                    var serverUri = new Uri(Constants.ServerAddress);
-                    handler.CookieContainer.SetCookies(serverUri, _accountService.ServerCookieHeader);
-                    var response = await client.PutAsync(_clientBaseUrl + "?defaultPaymentMethodId=" + defaultPaymentMethodId, null);
-                    await response.EnsureSuccessWithValidationSupportAsync();
-                }
+                var response = await client.PutAsync(new Uri(_clientBaseUrl + "?defaultPaymentMethodId=" + defaultPaymentMethodId), null);
+                await response.EnsureSuccessWithValidationSupportAsync();
             }
         }
     }

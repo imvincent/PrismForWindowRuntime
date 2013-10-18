@@ -17,6 +17,7 @@
 
         <!-- Card Information -->
         <Grid x:Name="CardInformationGrid"
+              Margin="0,20,0,0"
               Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
@@ -27,53 +28,41 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <!-- Card Number -->
-            <TextBlock x:Name="TitleCardNumber"
-                       x:Uid="TitleCardNumber"
-                       Style="{StaticResource FormTitleStyle}"
-                       Grid.Row="0"
-                       Grid.Column="0"
-                       Text="Card Number*" />
-            <controls:FormFieldTextBox x:Name="CardNumber"
+            <TextBox x:Name="CardNumber"
+                                       x:Uid="CardNumber"
+                                       Header="Card Number*"
+                                       Margin="5,0"
                                        AutomationProperties.AutomationId="CardNumberTextBox"
                                        AutomationProperties.IsRequiredForForm="True"
-                                       AutomationProperties.LabeledBy="{Binding ElementName=TitleCardNumber}"
-                                       Style="{StaticResource FormFieldStyle}"
-                                       Grid.Row="1"
+                                       Grid.Row="0"
                                        Grid.Column="0"
                                        Text="{Binding PaymentMethod.CardNumber, Mode=TwoWay}"
                                        InputScope="Number"
                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding PaymentMethod.Errors[CardNumber]}" />
             <TextBlock x:Name="ErrorsCardNumber"
                        Style="{StaticResource ErrorMessageStyle}"
-                       Grid.Row="2"
+                       Grid.Row="1"
                        Grid.Column="0"
                        Text="{Binding PaymentMethod.Errors[CardNumber], Converter={StaticResource FirstErrorConverter}}"
                        TextWrapping="Wrap" />
 
             <!-- Cardholder Name -->
-            <TextBlock x:Name="TitleCardholderName"
-                       x:Uid="TitleCardholderName"
-                       Style="{StaticResource FormTitleStyle}"
-                       Grid.Row="0"
-                       Grid.Column="1"
-                       Text="Cardholder Name*" />
-            <controls:FormFieldTextBox x:Name="CardholderName"
+            <TextBox x:Name="CardholderName"
+                                       x:Uid="CardholderName"
+                                       Header="Cardholder Name*"
+                                       Margin="5,0"
                                        AutomationProperties.AutomationId="CardholderNameTextBox"
                                        AutomationProperties.IsRequiredForForm="True"
-                                       AutomationProperties.LabeledBy="{Binding ElementName=TitleCardholderName}"
-                                       Style="{StaticResource FormFieldStyle}"
-                                       Grid.Row="1"
+                                       Grid.Row="0"
                                        Grid.Column="1"
                                        Text="{Binding PaymentMethod.CardholderName, Mode=TwoWay}"
                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding PaymentMethod.Errors[CardholderName]}" />
             <TextBlock x:Name="ErrorsCardholderName"
                        Style="{StaticResource ErrorMessageStyle}"
-                       Grid.Row="2"
+                       Grid.Row="1"
                        Grid.Column="1"
                        Text="{Binding PaymentMethod.Errors[CardholderName], Converter={StaticResource FirstErrorConverter}}"
                        TextWrapping="Wrap" />
@@ -101,21 +90,22 @@
             <!-- Expiration Month -->
             <TextBlock x:Name="TitleExpirationDate"
                        x:Uid="TitleExpirationDate"
+                       Margin="5,0"
                        Style="{StaticResource FormTitleStyle}"
                        Grid.Row="0"
                        Grid.Column="0"
                        Grid.ColumnSpan="2"
                        TextTrimming="WordEllipsis"
                        Text="Expiration Date*" />
-            <controls:FormFieldTextBox x:Name="ExpirationMonth"
+            <TextBox x:Name="ExpirationMonth"
                                        x:Uid="ExpirationMonth"
+                                       Margin="5,0"
                                        AutomationProperties.AutomationId="ExpirationMonthTextBox"
                                        AutomationProperties.IsRequiredForForm="True"
-                                       Style="{StaticResource FormFieldStyle}"
                                        Grid.Row="1"
                                        Grid.Column="0"
                                        Text="{Binding PaymentMethod.ExpirationMonth, Mode=TwoWay}"
-                                       Watermark="Month"
+                                       PlaceholderText="Month"
                                        InputScope="Number"
                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding PaymentMethod.Errors[ExpirationMonth]}" />
             <TextBlock x:Name="ErrorsExpirationMonth"
@@ -126,15 +116,15 @@
                        TextWrapping="Wrap" />
 
             <!-- Expiration Year -->
-            <controls:FormFieldTextBox x:Name="ExpirationYear"
+            <TextBox x:Name="ExpirationYear"
                                        x:Uid="ExpirationYear"
+                                       Margin="5,0"
                                        AutomationProperties.AutomationId="ExpirationYearTextBox"
                                        AutomationProperties.IsRequiredForForm="True"
-                                       Style="{StaticResource FormFieldStyle}"
                                        Grid.Row="1"
                                        Grid.Column="1"
                                        Text="{Binding PaymentMethod.ExpirationYear, Mode=TwoWay}"
-                                       Watermark="Year"
+                                       PlaceholderText="Year"
                                        InputScope="Number"
                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding PaymentMethod.Errors[ExpirationYear]}" />
             <TextBlock x:Name="ErrorsExpirationYear"
@@ -147,14 +137,18 @@
             <!-- Phone -->
             <TextBlock x:Name="TitlePhoneNumber"
                        x:Uid="TitlePhoneNumber"
+                       Margin="5,0"
                        Style="{StaticResource FormTitleStyle}"
                        Grid.Row="0"
                        Grid.Column="2"
-                       Text="Phone Number" />
-            <controls:FormFieldTextBox x:Name="Phone"
+                       Grid.ColumnSpan="2"
+                       TextTrimming="WordEllipsis"
+                       Text="Phone Number*" />
+
+            <TextBox x:Name="Phone"
+                                       x:Uid="Phone"
+                                       Margin="5,0"
                                        AutomationProperties.AutomationId="PhoneTextBox"
-                                       AutomationProperties.LabeledBy="{Binding ElementName=TitlePhoneNumber}"
-                                       Style="{StaticResource FormFieldStyle}"
                                        Grid.Row="1"
                                        Grid.Column="2"
                                        Text="{Binding PaymentMethod.Phone, Mode=TwoWay}"
@@ -178,27 +172,22 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <TextBlock x:Name="TitleCardVerificationCode"
-                       x:Uid="TitleCardVerificationCode"
-                       Style="{StaticResource FormTitleStyle}"
-                       Grid.Row="0"
-                       Grid.Column="0"
-                       Text="CVC2*" />
-            <controls:FormFieldTextBox x:Name="CardVerificationCode"
+
+            <TextBox x:Name="CardVerificationCode"
+                                       x:Uid="CardVerificationCode"
+                                       Header="CVC2*"
+                                       Margin="5,0"
                                        AutomationProperties.AutomationId="CardVerificationCodeTextBox"
                                        AutomationProperties.IsRequiredForForm="True"
-                                       AutomationProperties.LabeledBy="{Binding ElementName=TitleCardVerificationCode}"
-                                       Style="{StaticResource FormFieldStyle}"
-                                       Grid.Row="1"
+                                       Grid.Row="0"
                                        Grid.Column="0"
                                        Text="{Binding PaymentMethod.CardVerificationCode, Mode=TwoWay}"
                                        InputScope="Number"
                                        behaviors:HighlightFormFieldOnErrors.PropertyErrors="{Binding PaymentMethod.Errors[CardVerificationCode]}" />
             <TextBlock x:Name="ErrorsCardVerificationCode"
                        Style="{StaticResource ErrorMessageStyle}"
-                       Grid.Row="2"
+                       Grid.Row="1"
                        Grid.Column="0"
                        Text="{Binding PaymentMethod.Errors[CardVerificationCode], Converter={StaticResource FirstErrorConverter}}"
                        TextWrapping="Wrap" />
@@ -208,9 +197,8 @@
 
             <!-- Visual states reflect the application's view state -->
             <VisualStateGroup x:Name="ApplicationViewStates">
-                <VisualState x:Name="FullScreenLandscape" />
-                <VisualState x:Name="Filled" />
-                <VisualState x:Name="Snapped">
+                <VisualState x:Name="DefaultLayout" />
+                <VisualState x:Name="MinimalLayout">
                     <Storyboard>
                         <!-- Content -->
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.Margin"
@@ -235,50 +223,34 @@
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)"
-                                                       Storyboard.TargetName="TitleCardholderName">
+                                                       Storyboard.TargetName="CardholderName">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>2</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)"
+                                                       Storyboard.TargetName="CardholderName">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>0</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)"
+                                                       Storyboard.TargetName="ErrorsCardholderName">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>0</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)"
+                                                       Storyboard.TargetName="ErrorsCardholderName">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <x:Int32>3</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)"
-                                                       Storyboard.TargetName="TitleCardholderName">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>0</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)"
-                                                       Storyboard.TargetName="CardholderName">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>4</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)"
-                                                       Storyboard.TargetName="CardholderName">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>0</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Column)"
-                                                       Storyboard.TargetName="ErrorsCardholderName">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>0</x:Int32>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)"
-                                                       Storyboard.TargetName="ErrorsCardholderName">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Int32>5</x:Int32>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>

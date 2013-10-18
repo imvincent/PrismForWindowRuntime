@@ -25,11 +25,11 @@ namespace AdventureWorks.Shopper.Services
             return SecondaryTile.Exists(tileId);
         }
 
-        public async Task<bool> PinSquareSecondaryTile(string tileId, string shortName, string displayName, string arguments)
+        public async Task<bool> PinSquareSecondaryTile(string tileId, string displayName, string arguments)
         {
             if (!SecondaryTileExists(tileId))
             {
-                var secondaryTile = new SecondaryTile(tileId, shortName, displayName, arguments, TileOptions.ShowNameOnLogo, _squareLogoUri, null);
+                var secondaryTile = new SecondaryTile(tileId, displayName, arguments, _squareLogoUri, TileSize.Square150x150);
                 bool isPinned = await secondaryTile.RequestCreateAsync();
                 
                 return isPinned;
@@ -38,11 +38,13 @@ namespace AdventureWorks.Shopper.Services
             return true;
         }
 
-        public async Task<bool> PinWideSecondaryTile(string tileId, string shortName, string displayName, string arguments)
+        public async Task<bool> PinWideSecondaryTile(string tileId, string displayName, string arguments)
         {
             if (!SecondaryTileExists(tileId))
             {
-                var secondaryTile = new SecondaryTile(tileId, shortName, displayName, arguments, TileOptions.ShowNameOnWideLogo, _squareLogoUri, _wideLogoUri);
+                var secondaryTile = new SecondaryTile(tileId, displayName, arguments, _squareLogoUri, TileSize.Wide310x150);
+                secondaryTile.VisualElements.ShowNameOnWide310x150Logo = true;
+                secondaryTile.VisualElements.Wide310x150Logo = _wideLogoUri;
                 bool isPinned = await secondaryTile.RequestCreateAsync();
 
                 return isPinned;

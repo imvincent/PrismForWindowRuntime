@@ -17,26 +17,11 @@ namespace Microsoft.Practices.Prism.StoreApps.Interfaces
     public interface IFlyoutViewModel
     {
         /// <summary>
-        /// Gets or sets the action used to go back to the previous view.
-        /// </summary>
-        /// <value>
-        /// The go back action.
-        /// </value>
-        Action GoBack { get; set; }
-
-        /// <summary>
         /// Gets or sets the action used to close the Flyout.
         /// </summary>
         /// <value>
         /// The action that will be executed to close the Flyout.
         /// </value>
         Action CloseFlyout { get; set; }
-
-        /// <summary>
-        /// Opens the Flyout using the specified parameter, and executes the success Action after the Flyout is opened.
-        /// </summary>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="successAction">The success action.</param>
-        void Open(object parameter, Action successAction);
     }
 }

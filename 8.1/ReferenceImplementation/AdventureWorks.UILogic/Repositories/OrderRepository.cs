@@ -50,7 +50,7 @@ namespace AdventureWorks.UILogic.Repositories
                     ShippingMethod = shippingMethod
                 };
 
-            order.Id = await _orderService.CreateOrderAsync(order, _accountService.ServerCookieHeader);
+            order.Id = await _orderService.CreateOrderAsync(order);
 
             return order;
         }

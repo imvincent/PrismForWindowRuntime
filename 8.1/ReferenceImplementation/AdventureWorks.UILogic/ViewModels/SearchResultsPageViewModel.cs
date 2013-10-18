@@ -18,7 +18,6 @@ using AdventureWorks.UILogic.Services;
 using Microsoft.Practices.Prism.StoreApps;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Windows.UI.Xaml.Navigation;
-using System.Net.Http;
 
 namespace AdventureWorks.UILogic.ViewModels
 {
@@ -127,7 +126,7 @@ namespace AdventureWorks.UILogic.ViewModels
                 PreviousSearchTerm = SearchTerm;
                 _searchPaneService.ShowOnKeyboardInput(true);
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
                 errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, ex.Message);
             }

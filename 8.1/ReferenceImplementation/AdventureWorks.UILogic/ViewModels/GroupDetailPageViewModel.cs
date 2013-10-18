@@ -14,7 +14,6 @@ using Microsoft.Practices.Prism.StoreApps;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Windows.UI.Xaml.Navigation;
 using AdventureWorks.UILogic.Services;
-using System.Net.Http;
 using System.Globalization;
 using System.Collections.ObjectModel;
 
@@ -73,7 +72,7 @@ namespace AdventureWorks.UILogic.ViewModels
                                                                          .Select(product => new ProductViewModel(product))
                                                                          .ToList());
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
             errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, ex.Message);
             }

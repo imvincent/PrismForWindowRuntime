@@ -13,7 +13,7 @@ using AdventureWorks.UILogic.Tests.Mocks;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using AdventureWorks.UILogic.Models;
 using Windows.Security.Credentials;
-using System.Net.Http;
+using System;
 
 namespace AdventureWorks.UILogic.Tests.Services
 {
@@ -29,7 +29,7 @@ namespace AdventureWorks.UILogic.Tests.Services
             var sessionStateService = new MockSessionStateService();
             identityService.LogOnAsyncDelegate = (userId, password) =>
                 {
-                    return Task.FromResult(new LogOnResult { ServerCookieHeader = string.Empty, UserInfo = new UserInfo{UserName = userId} });
+                    return Task.FromResult(new LogOnResult { UserInfo = new UserInfo{UserName = userId} });
                 };
 
             var target = new AccountService(identityService, sessionStateService, null);
@@ -41,33 +41,15 @@ namespace AdventureWorks.UILogic.Tests.Services
         }
 
         [TestMethod]
-        public async Task SuccessfullSignIn_SavesServerCookieHeader()
-        {
-            var identityService = new MockIdentityService();
-            var sessionStateService = new MockSessionStateService();
-            identityService.LogOnAsyncDelegate = (userId, password) =>
-                {
-                    return Task.FromResult(new LogOnResult { ServerCookieHeader = "TestServerCookieHeader", UserInfo = new UserInfo { UserName = userId } });
-                };
-
-            var target = new AccountService(identityService, sessionStateService, null);
-
-            var retVal = await target.SignInUserAsync("TestUserName", "TestPassword", false);
-            Assert.AreEqual("TestServerCookieHeader", sessionStateService.SessionState[AccountService.ServerCookieHeaderKey]);
-        }
-
-        [TestMethod]
         public async Task GetSignedInUserAsync_Calls_VerifyActiveSessionAsync()
         {
             bool verifyActiveSessionCalled = false;
             var sessionStateService = new MockSessionStateService();
-            sessionStateService.SessionState[AccountService.ServerCookieHeaderKey] = "TestServerCookieHeader";
             var identityService = new MockIdentityService()
                 {
-                    LogOnAsyncDelegate = (userId, password) => Task.FromResult(new LogOnResult { ServerCookieHeader = "TestServerCookieHeader", UserInfo = new UserInfo { UserName = userId } }),
-                    VerifyActiveSessionDelegate = (userName, serverCookieHeader) =>
+                    LogOnAsyncDelegate = (userId, password) => Task.FromResult(new LogOnResult { UserInfo = new UserInfo { UserName = userId } }),
+                    VerifyActiveSessionDelegate = (userName) =>
                         {
-                            Assert.AreEqual("TestServerCookieHeader", serverCookieHeader);
                             verifyActiveSessionCalled = true;
                             return Task.FromResult(true);
                         }
@@ -86,11 +68,10 @@ namespace AdventureWorks.UILogic.Tests.Services
         public async Task GetSignedInUserAsync_SignsInUsingCredentialStore_IfNoActiveSession()
         {
             var sessionStateService = new MockSessionStateService();
-            sessionStateService.SessionState[AccountService.ServerCookieHeaderKey] = "TestServerCookieHeader";
             var identityService = new MockIdentityService()
             {
-                LogOnAsyncDelegate = (userId, password) => Task.FromResult(new LogOnResult { ServerCookieHeader = "TestServerCookieHeader", UserInfo = new UserInfo { UserName = userId } }),
-                VerifyActiveSessionDelegate = (userName, serverCookieHeader) => Task.FromResult(false)
+                LogOnAsyncDelegate = (userId, password) => Task.FromResult(new LogOnResult { UserInfo = new UserInfo { UserName = userId } }),
+                VerifyActiveSessionDelegate = (userName) => Task.FromResult(false)
             };
             var credentialStore = new MockCredentialStore()
                 {
@@ -116,7 +97,7 @@ namespace AdventureWorks.UILogic.Tests.Services
             var sessionStateService = new MockSessionStateService();
             identityService.LogOnAsyncDelegate = (userId, password) =>
             {
-                throw new HttpRequestException();
+                throw new Exception();
             };
 
             var target = new AccountService(identityService, sessionStateService, null);
@@ -132,12 +113,11 @@ namespace AdventureWorks.UILogic.Tests.Services
         {
             var sessionStateService = new MockSessionStateService();
             var identityService = new MockIdentityService();
-            identityService.VerifyActiveSessionDelegate = (userName, cookieHeader) => Task.FromResult(true);
+            identityService.VerifyActiveSessionDelegate = (userName) => Task.FromResult(true);
             identityService.LogOnAsyncDelegate = (userName, password) =>
                 {
                     return Task.FromResult(new LogOnResult()
                         {
-                            ServerCookieHeader = "cookie",
                             UserInfo = new UserInfo() {UserName = "TestUsername"}
                         });
                 };
@@ -156,7 +136,7 @@ namespace AdventureWorks.UILogic.Tests.Services
         public async Task CheckIfUserSignedIn_ReturnsNull_IfSessionIsStillInactiveAndNoSavedCredentials()
         {
             var identityService = new MockIdentityService();
-            identityService.VerifyActiveSessionDelegate = (userName, cookieHeader) => Task.FromResult(false);
+            identityService.VerifyActiveSessionDelegate = (userName) => Task.FromResult(false);
             var credentialStore = new MockCredentialStore();
             credentialStore.GetSavedCredentialsDelegate = s => null;
             var sessionStateService = new MockSessionStateService();
@@ -172,7 +152,7 @@ namespace AdventureWorks.UILogic.Tests.Services
         {
             var sessionStateService = new MockSessionStateService();
             var identityService = new MockIdentityService();
-            identityService.VerifyActiveSessionDelegate = (userName, cookieHeader) => Task.FromResult(false);
+            identityService.VerifyActiveSessionDelegate = (userName) => Task.FromResult(false);
             identityService.LogOnAsyncDelegate =
                 (userName, password) =>
                     {
@@ -198,13 +178,13 @@ namespace AdventureWorks.UILogic.Tests.Services
         {
             var sessionStateService = new MockSessionStateService();
             var identityService = new MockIdentityService();
-            identityService.VerifyActiveSessionDelegate = (userName, cookieHeader) => Task.FromResult(false);
+            identityService.VerifyActiveSessionDelegate = (userName) => Task.FromResult(false);
             identityService.LogOnAsyncDelegate =
                 (userName, password) =>
                 {
                     Assert.AreEqual("TestUserName", userName);
                     Assert.AreEqual("TestPassword", password);
-                    throw new HttpRequestException();
+                    throw new Exception();
                 };
             var credentialStore = new MockCredentialStore();
             credentialStore.GetSavedCredentialsDelegate = s => new PasswordCredential(AccountService.PasswordVaultResourceName, "TestUserName", "TestPassword");

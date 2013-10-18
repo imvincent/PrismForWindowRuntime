@@ -44,7 +44,6 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
 
             var target = new SignOutFlyoutViewModel(accountService, navigationService) { CloseFlyout = () => closeFlyoutCalled = true };
 
-            target.Open(null, null);
             await target.SignOutCommand.Execute();
 
             Assert.IsTrue(accountServiceSignOutCalled);

@@ -7,15 +7,15 @@
 
 
 using System.Globalization;
-using System.Net.Http;
 using System.Security;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
-using System.Net;
 using System;
 using Microsoft.Practices.Prism.StoreApps;
 using Windows.Security.Cryptography;
 using Windows.Security.Cryptography.Core;
+using Windows.Web.Http;
+using Newtonsoft.Json;
 
 namespace AdventureWorks.UILogic.Services
 {
@@ -25,53 +25,48 @@ namespace AdventureWorks.UILogic.Services
 
         public async Task<LogOnResult> LogOnAsync(string userId, string password)
         {
-            using (var handler = new HttpClientHandler { CookieContainer = new CookieContainer() })
+            using (var client = new HttpClient())
             {
-                using (var client = new HttpClient(handler))
-                {
 
-                    // Ask the server for a password challenge string
-                    var requestId = CryptographicBuffer.EncodeToHexString(CryptographicBuffer.GenerateRandom(4));
-                    var challengeResponse = await client.GetAsync(_clientBaseUrl + "GetPasswordChallenge?requestId=" + requestId);
-                    challengeResponse.EnsureSuccessStatusCode();
-                    var challengeEncoded = await challengeResponse.Content.ReadAsAsync<string>();
-                    var challengeBuffer = CryptographicBuffer.DecodeFromHexString(challengeEncoded);
+                // Ask the server for a password challenge string
+                var requestId = CryptographicBuffer.EncodeToHexString(CryptographicBuffer.GenerateRandom(4));
+                var challengeResponse = await client.GetAsync(new Uri(_clientBaseUrl + "GetPasswordChallenge?requestId=" + requestId));
+                challengeResponse.EnsureSuccessStatusCode();
+                var challengeEncoded = await challengeResponse.Content.ReadAsStringAsync();
+                challengeEncoded = challengeEncoded.Replace(@"""", string.Empty);
+                var challengeBuffer = CryptographicBuffer.DecodeFromHexString(challengeEncoded);
 
-                    // Use HMAC_SHA512 hash to encode the challenge string using the password being authenticated as the key.
-                    var provider = MacAlgorithmProvider.OpenAlgorithm(MacAlgorithmNames.HmacSha512);
-                    var passwordBuffer = CryptographicBuffer.ConvertStringToBinary(password, BinaryStringEncoding.Utf8);
-                    var hmacKey = provider.CreateKey(passwordBuffer);
-                    var buffHmac = CryptographicEngine.Sign(hmacKey, challengeBuffer);
-                    var hmacString = CryptographicBuffer.EncodeToHexString(buffHmac);
+                // Use HMAC_SHA512 hash to encode the challenge string using the password being authenticated as the key.
+                var provider = MacAlgorithmProvider.OpenAlgorithm(MacAlgorithmNames.HmacSha512);
+                var passwordBuffer = CryptographicBuffer.ConvertStringToBinary(password, BinaryStringEncoding.Utf8);
+                var hmacKey = provider.CreateKey(passwordBuffer);
+                var buffHmac = CryptographicEngine.Sign(hmacKey, challengeBuffer);
+                var hmacString = CryptographicBuffer.EncodeToHexString(buffHmac);
 
-                    // Send the encoded challenge to the server for authentication (to avoid sending the password itself)
-                    var response = await client.GetAsync(_clientBaseUrl + userId + "?requestID=" + requestId +"&passwordHash=" + hmacString);
+                // Send the encoded challenge to the server for authentication (to avoid sending the password itself)
+                var response = await client.GetAsync(new Uri(_clientBaseUrl + userId + "?requestID=" + requestId +"&passwordHash=" + hmacString));
 
-                    // Raise exception if sign in failed
-                    response.EnsureSuccessStatusCode();
+                // Raise exception if sign in failed
+                response.EnsureSuccessStatusCode();
 
-                    // On success, return sign in results from the server response packet
-                    var result = await response.Content.ReadAsAsync<UserInfo>();
-                    var serverUri = new Uri(Constants.ServerAddress);
-                    return new LogOnResult { ServerCookieHeader = handler.CookieContainer.GetCookieHeader(serverUri), UserInfo = result };
-                }
+                // On success, return sign in results from the server response packet
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<UserInfo>(responseContent);
+                var serverUri = new Uri(Constants.ServerAddress);
+                return new LogOnResult { UserInfo = result };
             }
         }
 
-        public async Task<bool> VerifyActiveSessionAsync(string userId, string serverCookieHeader)
+        public async Task<bool> VerifyActiveSessionAsync(string userId)
         {
-            using (var handler = new HttpClientHandler { CookieContainer = new CookieContainer() })
+            using (var client = new HttpClient())
             {
-                using (var client = new HttpClient(handler))
-                {
-                    var serverUri = new Uri(Constants.ServerAddress);
-                    handler.CookieContainer.SetCookies(serverUri, serverCookieHeader);
-                    var response = await client.GetAsync(_clientBaseUrl + "GetIsValidSession");
-                    if (response.StatusCode == HttpStatusCode.Unauthorized)
-                        throw new SecurityException();
-                    response.EnsureSuccessStatusCode();
-                    return await response.Content.ReadAsAsync<bool>();
-                }
+                var response = await client.GetAsync(new Uri(_clientBaseUrl + "GetIsValidSession"));
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    throw new SecurityException();
+                response.EnsureSuccessStatusCode();
+                var responseContent = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<bool>(responseContent);
             }
         }
     }

@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AdventureWorks.UILogic.Models;
@@ -32,7 +31,6 @@ namespace AdventureWorks.UILogic.ViewModels
         private CheckoutDataViewModel _selectedBillingAddress;
         private CheckoutDataViewModel _selectedPaymentMethod;
         private Action _closeFlyout;
-        private Action _goBack;
 
         public ChangeDefaultsFlyoutViewModel(ICheckoutDataRepository checkoutDataRepository, IResourceLoader resourceLoader, IAlertMessageService alertMessageService, IAccountService accountService)
         {
@@ -42,7 +40,8 @@ namespace AdventureWorks.UILogic.ViewModels
             _accountService = accountService;
 
             SaveCommand = DelegateCommand.FromAsyncHandler(SaveAsync);
-            GoBackCommand = new DelegateCommand(() => GoBack());
+
+            Initialize();
         }
 
         public IReadOnlyCollection<CheckoutDataViewModel> PaymentMethods { get; private set; }
@@ -57,15 +56,7 @@ namespace AdventureWorks.UILogic.ViewModels
             set { SetProperty(ref _closeFlyout, value); }
         }
 
-        public Action GoBack
-        {
-            get { return _goBack; }
-            set { SetProperty(ref _goBack, value); }
-        }
-
         public ICommand SaveCommand { get; private set; }
-
-        public ICommand GoBackCommand { get; private set; }
 
         public CheckoutDataViewModel SelectedShippingAddress
         {
@@ -85,7 +76,7 @@ namespace AdventureWorks.UILogic.ViewModels
             set { SetProperty(ref _selectedPaymentMethod, value); }
         }
 
-        public async void Open(object parameter, Action successAction)
+        private async void Initialize()
         {
             if (await _accountService.VerifyUserAuthenticationAsync() == null) return;
 
@@ -159,7 +150,7 @@ namespace AdventureWorks.UILogic.ViewModels
                 CloseFlyout();
             }
 
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
                 errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, ex.Message);
             }

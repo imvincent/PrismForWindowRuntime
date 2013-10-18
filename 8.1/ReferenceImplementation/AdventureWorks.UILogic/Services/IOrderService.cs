@@ -18,8 +18,8 @@ namespace AdventureWorks.UILogic.Services
 {
     public interface IOrderService
     {
-        Task<int> CreateOrderAsync(Order order, string serverCookieHeader);
+        Task<int> CreateOrderAsync(Order order);
 
-        Task ProcessOrderAsync(Order order, string serverCookieHeader);
+        Task ProcessOrderAsync(Order order);
     }
 }

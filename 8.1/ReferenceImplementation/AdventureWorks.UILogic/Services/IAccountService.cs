@@ -14,8 +14,6 @@ namespace AdventureWorks.UILogic.Services
 {
     public interface IAccountService
     {
-        string ServerCookieHeader { get; }
-
         UserInfo SignedInUser { get; }
 
         Task<UserInfo> VerifyUserAuthenticationAsync();

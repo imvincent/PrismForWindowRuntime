@@ -19,7 +19,6 @@ using Microsoft.Practices.Prism.StoreApps;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Windows.Globalization.NumberFormatting;
 using Windows.UI.Xaml.Navigation;
-using System.Net.Http;
 
 namespace AdventureWorks.UILogic.ViewModels
 {
@@ -31,7 +30,6 @@ namespace AdventureWorks.UILogic.ViewModels
         private string _shippingCost;
         private string _taxCost;
         private string _grandTotal;
-        private bool _isSelectCheckoutDataPopupOpened;
         private bool _isBottomAppBarOpened;
         private string _selectCheckoutDataTypeLabel;
         private IReadOnlyCollection<ShoppingCartItemViewModel> _shoppingCartItemViewModels;
@@ -95,12 +93,6 @@ namespace AdventureWorks.UILogic.ViewModels
         {
             get { return _grandTotal; }
             private set { SetProperty(ref _grandTotal, value); }
-        }
-
-        public bool IsSelectCheckoutDataPopupOpened
-        {
-            get { return _isSelectCheckoutDataPopupOpened; }
-            set { SetProperty(ref _isSelectCheckoutDataPopupOpened, value); }
         }
 
         public bool IsBottomAppBarOpened
@@ -276,7 +268,7 @@ namespace AdventureWorks.UILogic.ViewModels
                     await SubmitOrderTransactionAsync();
                 }
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
                 errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, ex.Message);
             }
@@ -292,7 +284,7 @@ namespace AdventureWorks.UILogic.ViewModels
 
             try
             {
-                await _orderService.ProcessOrderAsync(_order, _accountService.ServerCookieHeader);
+                await _orderService.ProcessOrderAsync(_order);
                 await _shoppingCartRepository.ClearCartAsync();
 
                 _navigationService.ClearHistory();
@@ -320,9 +312,6 @@ namespace AdventureWorks.UILogic.ViewModels
             // Add a new address/payment
             string addNewAddressType = selectedData.DataType == Constants.ShippingAddress ? "ShippingAddress"
                                     : selectedData.DataType == Constants.BillingAddress ? "BillingAddress" : "PaymentMethod";
-
-            // Hide the Popup
-            IsSelectCheckoutDataPopupOpened = false;
 
             _navigationService.Navigate(addNewAddressType, null);
         }
@@ -365,8 +354,6 @@ namespace AdventureWorks.UILogic.ViewModels
 
             if (AllCheckoutDataViewModels != null)
             {
-                IsSelectCheckoutDataPopupOpened = true;
-
                 // Select the order's CheckoutData
                 SelectedAllCheckoutData = AllCheckoutDataViewModels.FirstOrDefault(c => c.EntityId == SelectedCheckoutData.EntityId);
             }

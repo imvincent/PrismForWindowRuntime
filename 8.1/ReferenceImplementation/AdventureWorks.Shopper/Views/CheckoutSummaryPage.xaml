@@ -246,48 +246,6 @@
             </Grid>
         </ScrollViewer>
 
-        <!-- Select CheckoutData Popup -->
-        <Popup x:Name="Popup"
-               IsLightDismissEnabled="True"
-               IsOpen="{Binding IsSelectCheckoutDataPopupOpened, Mode=TwoWay}"
-               HorizontalOffset="0"
-               VerticalOffset="150">
-            <Grid x:Name="PopupPanel"
-                  Background="Black"
-                  Opacity=".9"
-                  Height="250"
-                  Width="410">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="65" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <TextBlock x:Name="PopupTitle"
-                           Margin="15,5"
-                           Text="{Binding SelectCheckoutDataLabel}"
-                           Foreground="{StaticResource AWShopperAccentBrush}"
-                           Style="{StaticResource GroupHeaderTextStyle}"
-                           VerticalAlignment="Center" />
-                <ListView x:Name="PopupItems"
-                          Grid.Row="1"
-                          Margin="10,0"
-                          SelectionMode="Single"
-                          Width="390"
-                          Height="130"
-                          ItemsSource="{Binding AllCheckoutDataViewModels}"
-                          ItemTemplate="{StaticResource SmallCheckoutDataTemplate}"
-                          SelectedItem="{Binding SelectedAllCheckoutData, Mode=TwoWay}"
-                          ScrollViewer.VerticalScrollBarVisibility="Auto" />
-                <Button x:Name="PopupButton"
-                        x:Uid="AddCheckoutData"
-                        Grid.Row="2"
-                        Width="370"
-                        Margin="10,5"
-                        Background="{StaticResource AWShopperAccentBrush}"
-                        Command="{Binding AddCheckoutDataCommand}" />
-            </Grid>
-        </Popup>
-
         <!--Sign In UserControl-->
         <Views:SignInUserControl Grid.RowSpan="2"
                                  Grid.ColumnSpan="2"
@@ -296,16 +254,15 @@
                                  IsEnabled="{Binding IsOpened}"
                                  Loaded="StartLayoutUpdates"
                                  Unloaded="StopLayoutUpdates" />
-        
+
         <VisualStateManager.VisualStateGroups>
 
             <!-- Visual states reflect the application's view state -->
             <VisualStateGroup x:Name="ApplicationViewStates">
-                <VisualState x:Name="FullScreenLandscape" />
-                <VisualState x:Name="Filled" />
+                <VisualState x:Name="DefaultLayout" />
 
                 <!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
-                <VisualState x:Name="FullScreenPortrait">
+                <VisualState x:Name="PortraitLayout">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton"
                                                        Storyboard.TargetProperty="Style">
@@ -324,7 +281,7 @@
                 </VisualState>
 
                 <!-- The back button and title have different styles when snapped -->
-                <VisualState x:Name="Snapped">
+                <VisualState x:Name="MinimalLayout">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton"
                                                        Storyboard.TargetProperty="Style">
@@ -643,35 +600,66 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </Grid>
-
     <Page.BottomAppBar>
-        <AppBar Style="{StaticResource AppBarStyle}"
+        <CommandBar Style="{StaticResource AppBarStyle}"
                 IsOpen="{Binding IsBottomAppBarOpened, Mode=TwoWay}"
                 IsSticky="True"
                 x:Uid="BottomAppBar">
-            <Grid>
-                <StackPanel Orientation="Horizontal"
-                            HorizontalAlignment="Left">
-                    <Button x:Name="SelectCheckoutDataAppBarButton"
+            <CommandBar.SecondaryCommands>
+                <AppBarButton x:Name="SelectCheckoutDataAppBarButton"
                             x:Uid="SelectCheckoutDataAppBarButton"
                             AutomationProperties.AutomationId="SelectCheckoutDataAppBarButton"
-                            AutomationProperties.Name="Select"
-                            Style="{StaticResource ListAppBarButtonStyle}"
+                            Label="Select"
+                            Icon="List"
                             Visibility="{Binding SelectedCheckoutData, Converter={StaticResource NotNullToVisibleConverter}}"
-                            Command="{Binding SelectCheckoutDataCommand}"
-                            Loaded="StartLayoutUpdates"
-                            Unloaded="StopLayoutUpdates" />
-                    <Button x:Name="EditCheckoutDataAppBarButton"
+                            Command="{Binding SelectCheckoutDataCommand}">
+                    <AppBarButton.Flyout>
+                        <Flyout FlyoutPresenterStyle="{StaticResource AWShopperFlyoutStyle}">
+                            <Grid x:Name="PopupPanel"
+                  Background="Black"
+                  Opacity=".9"
+                  Height="250"
+                  Width="410">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="65" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <TextBlock x:Name="PopupTitle"
+                           Margin="15,5"
+                           Text="{Binding SelectCheckoutDataLabel}"
+                           Foreground="{StaticResource AWShopperAccentBrush}"
+                           Style="{StaticResource GroupHeaderTextStyle}"
+                           VerticalAlignment="Center" />
+                                <ListView x:Name="PopupItems"
+                          Grid.Row="1"
+                          Margin="10,0"
+                          SelectionMode="Single"
+                          Width="390"
+                          Height="130"
+                          ItemsSource="{Binding AllCheckoutDataViewModels}"
+                          ItemTemplate="{StaticResource SmallCheckoutDataTemplate}"
+                          SelectedItem="{Binding SelectedAllCheckoutData, Mode=TwoWay}"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                                <Button x:Name="PopupButton"
+                        x:Uid="AddCheckoutData"
+                        Grid.Row="2"
+                        Width="370"
+                        Margin="10,5"
+                        Background="{StaticResource AWShopperAccentBrush}"
+                        Command="{Binding AddCheckoutDataCommand}" />
+                            </Grid>
+                        </Flyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+                <AppBarButton x:Name="EditCheckoutDataAppBarButton"
                             x:Uid="EditCheckoutDataAppBarButton"
                             AutomationProperties.AutomationId="EditCheckoutDataAppBarButton"
-                            AutomationProperties.Name="Edit"
-                            Style="{StaticResource EditAppBarButtonStyle}"
+                            Label="Edit"
+                            Icon="Edit"
                             Visibility="{Binding SelectedCheckoutData, Converter={StaticResource NotNullToVisibleConverter}}"
-                            Command="{Binding EditCheckoutDataCommand}"
-                            Loaded="StartLayoutUpdates"
-                            Unloaded="StopLayoutUpdates" />
-                </StackPanel>
-            </Grid>
-        </AppBar>
+                            Command="{Binding EditCheckoutDataCommand}"/>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
     </Page.BottomAppBar>
 </Infrastructure:VisualStateAwarePage>

@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
 using AdventureWorks.UILogic.Services;
-using System.Net.Http;
 using System.Globalization;
 using Microsoft.Practices.Prism.StoreApps;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
@@ -30,7 +29,6 @@ namespace AdventureWorks.UILogic.ViewModels
         private readonly IShippingAddressUserControlViewModel _shippingAddressViewModel;
         private readonly IBillingAddressUserControlViewModel _billingAddressViewModel;
         private readonly IPaymentMethodUserControlViewModel _paymentMethodViewModel;
-        private readonly IFlyoutService _flyoutService;
         private readonly IAlertMessageService _alertMessageService;
         private readonly IResourceLoader _resourceLoader;
         private bool _useSameAddressAsShipping;
@@ -40,7 +38,7 @@ namespace AdventureWorks.UILogic.ViewModels
 
         public CheckoutHubPageViewModel(INavigationService navigationService, IAccountService accountService, IOrderRepository orderRepository, IShoppingCartRepository shoppingCartRepository,
                                         IShippingAddressUserControlViewModel shippingAddressViewModel, IBillingAddressUserControlViewModel billingAddressViewModel, IPaymentMethodUserControlViewModel paymentMethodViewModel,
-                                        IFlyoutService flyoutService, IResourceLoader resourceLoader, IAlertMessageService alertMessageService)
+                                        IResourceLoader resourceLoader, IAlertMessageService alertMessageService)
         {
             _navigationService = navigationService;
             _accountService = accountService;
@@ -49,7 +47,6 @@ namespace AdventureWorks.UILogic.ViewModels
             _shippingAddressViewModel = shippingAddressViewModel;
             _billingAddressViewModel = billingAddressViewModel;
             _paymentMethodViewModel = paymentMethodViewModel;
-            _flyoutService = flyoutService;
             _alertMessageService = alertMessageService;
             _resourceLoader = resourceLoader;
 
@@ -154,14 +151,14 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 if (await _accountService.VerifyUserAuthenticationAsync() == null)
                 {
-                    _flyoutService.ShowFlyout("SignIn", null, async () => await ProcessFormAsync());
+                    //Show sign in modal dialog? _flyoutService.ShowFlyout("SignIn", null, async () => await ProcessFormAsync());
                 }
                 else
                 {
                     await ProcessFormAsync();
                 }
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
                 errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, ex.Message);
             }

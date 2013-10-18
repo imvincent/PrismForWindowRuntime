@@ -16,16 +16,16 @@ namespace AdventureWorks.UILogic.Tests.Mocks
     public class MockIdentityService : IIdentityService
     {
         public Func<string, string, Task<LogOnResult>> LogOnAsyncDelegate { get; set; }
-        public Func<string, string, Task<bool>> VerifyActiveSessionDelegate { get; set; }
+        public Func<string, Task<bool>> VerifyActiveSessionDelegate { get; set; }
  
         public Task<LogOnResult> LogOnAsync(string userId, string password)
         {
             return LogOnAsyncDelegate(userId, password);
         }
 
-        public Task<bool> VerifyActiveSessionAsync(string userId, string serverCookieHeader)
+        public Task<bool> VerifyActiveSessionAsync(string userId)
         {
-            return VerifyActiveSessionDelegate(userId, serverCookieHeader);
+            return VerifyActiveSessionDelegate(userId);
         }
     }
 }

@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Services;
@@ -253,7 +252,7 @@ namespace AdventureWorks.UILogic.Repositories
                 {
                     _cachedAddresses = await _addressService.GetAddressesAsync();
                 }
-                catch (HttpRequestException)
+                catch (Exception)
                 {
                     retryWithRefreshedUser = true;
                 }
@@ -280,7 +279,7 @@ namespace AdventureWorks.UILogic.Repositories
                 {
                     _cachedPaymentMethods = await _paymentMethodService.GetPaymentMethodsAsync();
                 }
-                catch (HttpRequestException)
+                catch (Exception)
                 {
                     retryWithRefreshedUser = true;
                 }

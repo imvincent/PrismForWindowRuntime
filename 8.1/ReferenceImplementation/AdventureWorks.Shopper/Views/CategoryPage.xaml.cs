@@ -74,7 +74,7 @@ namespace AdventureWorks.Shopper.Views
                 {
                     // Update the Horizontal offset
                     virtualizingStackPanel.SetHorizontalOffset(_virtualizingStackPanelHorizontalOffset);
-                    scrollViewer.ScrollToHorizontalOffset(_scrollViewerHorizontalOffset);
+                    scrollViewer.ChangeView(_scrollViewerHorizontalOffset, null, null);
                 }
                 else
                 {
@@ -95,7 +95,7 @@ namespace AdventureWorks.Shopper.Views
             {
                 // Update the Horizontal offset
                 virtualizingStackPanel.SetHorizontalOffset(_virtualizingStackPanelHorizontalOffset);
-                scrollViewer.ScrollToHorizontalOffset(_scrollViewerHorizontalOffset);
+                scrollViewer.ChangeView(_scrollViewerHorizontalOffset, null, null);
                 helper.PropertyChanged -= ScrollBarHorizontalVisibilityChanged;
             };
         }

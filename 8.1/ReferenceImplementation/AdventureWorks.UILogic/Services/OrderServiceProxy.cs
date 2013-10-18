@@ -8,11 +8,13 @@
 
 using System;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using Microsoft.Practices.Prism.StoreApps;
 using System.Globalization;
+using Windows.Web.Http;
+using Newtonsoft.Json;
+using Windows.Web.Http.Filters;
 
 namespace AdventureWorks.UILogic.Services
 {
@@ -20,14 +22,10 @@ namespace AdventureWorks.UILogic.Services
     {
         private string _clientBaseUrl = string.Format(CultureInfo.InvariantCulture, "{0}/api/Order/", Constants.ServerAddress);
 
-        public async Task<int> CreateOrderAsync(Order order, string serverCookieHeader)
+        public async Task<int> CreateOrderAsync(Order order)
         {
-            using (HttpClientHandler handler = new HttpClientHandler { CookieContainer = new CookieContainer() })
-            {
-                using (var orderClient = new HttpClient(handler))
+                using (var orderClient = new HttpClient())
                 {
-                    Uri serverUri = new Uri(Constants.ServerAddress);
-                    handler.CookieContainer.SetCookies(serverUri, serverCookieHeader);
                     orderClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
                     // In order to meet the Windows 8 app certification requirements, 
@@ -57,22 +55,19 @@ namespace AdventureWorks.UILogic.Services
                         };
 
                     string requestUrl = _clientBaseUrl;
-                    var response = await orderClient.PostAsJsonAsync<Order>(requestUrl, orderToSend);
+                    var stringContent = new HttpStringContent(JsonConvert.SerializeObject(orderToSend), Windows.Storage.Streams.UnicodeEncoding.Utf8, "application/json");
+                    var response = await orderClient.PostAsync(new Uri(requestUrl), stringContent);
                     await response.EnsureSuccessWithValidationSupportAsync();
 
-                    return await response.Content.ReadAsAsync<int>();
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<int>(responseContent);
                 }
-            }
         }
 
-        public async Task ProcessOrderAsync(Order order, string serverCookieHeader)
+        public async Task ProcessOrderAsync(Order order)
         {
-            using (HttpClientHandler handler = new HttpClientHandler { CookieContainer = new CookieContainer() })
-            {
-                using (var orderClient = new HttpClient(handler))
+                using (var orderClient = new HttpClient())
                 {
-                    Uri serverUri = new Uri(Constants.ServerAddress);
-                    handler.CookieContainer.SetCookies(serverUri, serverCookieHeader);
                     orderClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
                     // In order to meet the Windows 8 app certification requirements, 
@@ -103,10 +98,10 @@ namespace AdventureWorks.UILogic.Services
                     };
 
                     string requestUrl = _clientBaseUrl + orderToSend.Id;
-                    var response = await orderClient.PutAsJsonAsync<Order>(requestUrl, orderToSend);
+                    var stringContent = new HttpStringContent(JsonConvert.SerializeObject(orderToSend), Windows.Storage.Streams.UnicodeEncoding.Utf8, "application/json");
+                    var response = await orderClient.PutAsync(new Uri(requestUrl), stringContent);
                     await response.EnsureSuccessWithValidationSupportAsync();
                 }
-            }
         }
     }
 }

@@ -8,7 +8,6 @@
 
 using System;
 using System.Collections.ObjectModel;
-using System.Net.Http;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Services;
@@ -100,7 +99,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             var searchPaneService = new MockSearchPaneService();
             productCatalogRepository.GetRootCategoriesAsyncDelegate = (maxAmmountOfProducts) =>
             {
-                throw new HttpRequestException();
+                throw new Exception();
             };
             var alertMessageService = new MockAlertMessageService();
             alertMessageService.ShowAsyncDelegate = (s, s1) =>

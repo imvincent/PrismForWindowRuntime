@@ -49,7 +49,7 @@ namespace AdventureWorks.Shopper.Behaviors
             var control = (FrameworkElement)d;
             var propertyErrors = (ReadOnlyCollection<string>)args.NewValue;
 
-            Style style = (propertyErrors.Any()) ? (Style)Application.Current.Resources["HighlightFormComboStyle"] : (Style)Application.Current.Resources["FormComboStyle"];
+            Style style = (propertyErrors.Any()) ? (Style)Application.Current.Resources["HighlightComboBoxStyle"] : null;
             control.Style = style;
         }
     }

@@ -16,7 +16,6 @@ using AdventureWorks.UILogic.Services;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Net.Http;
 using System.Globalization;
 
 namespace AdventureWorks.UILogic.ViewModels
@@ -90,7 +89,7 @@ namespace AdventureWorks.UILogic.ViewModels
                 {
                     DisplayValidationErrors(mvex.ValidationResult);
                 }
-                catch (HttpRequestException ex)
+                catch (Exception ex)
                 {
                     errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, ex.Message);
                 }

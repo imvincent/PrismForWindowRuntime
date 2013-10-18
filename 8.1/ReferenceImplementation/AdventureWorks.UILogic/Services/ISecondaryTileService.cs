@@ -16,9 +16,9 @@ namespace AdventureWorks.UILogic.Services
     {
         bool SecondaryTileExists(string tileId);
 
-        Task<bool> PinSquareSecondaryTile(string tileId, string shortName, string displayName, string arguments);
+        Task<bool> PinSquareSecondaryTile(string tileId, string displayName, string arguments);
 
-        Task<bool> PinWideSecondaryTile(string tileId, string shortName, string displayName, string arguments);
+        Task<bool> PinWideSecondaryTile(string tileId, string displayName, string arguments);
 
         Task<bool> UnpinTile(string tileId);
 

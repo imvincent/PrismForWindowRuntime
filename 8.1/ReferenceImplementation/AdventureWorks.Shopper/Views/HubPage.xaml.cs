@@ -79,7 +79,7 @@ namespace AdventureWorks.Shopper.Views
                     // Without updating the ScrollViewer, the scroll bar would appear to be on the 
                     // far left, even though the VirtualizingStackPanel has scrolled to the right.
                     virtualizingStackPanel.SetHorizontalOffset(_virtualizingStackPanelHorizontalOffset);
-                    scrollViewer.ScrollToHorizontalOffset(_scrollViewerHorizontalOffset);
+                    scrollViewer.ChangeView(_scrollViewerHorizontalOffset, null, null);
                 }
                 else
                 {
@@ -100,7 +100,7 @@ namespace AdventureWorks.Shopper.Views
             {
                 // Update the Horizontal offset
                 virtualizingStackPanel.SetHorizontalOffset(_virtualizingStackPanelHorizontalOffset);
-                scrollViewer.ScrollToHorizontalOffset(_scrollViewerHorizontalOffset);
+                scrollViewer.ChangeView(_scrollViewerHorizontalOffset, null, null);
                 helper.PropertyChanged -= ScrollBarHorizontalVisibilityChanged;
             };
         }

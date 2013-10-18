@@ -8,10 +8,12 @@
 
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Net.Http;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using Microsoft.Practices.Prism.StoreApps;
+using Newtonsoft.Json;
+using Windows.Web.Http;
+using System;
 
 namespace AdventureWorks.UILogic.Services
 {
@@ -24,9 +26,10 @@ namespace AdventureWorks.UILogic.Services
         {
             using (var httpClient = new HttpClient())
             {
-                var response = await httpClient.GetAsync(string.Format("{0}?parentId={1}&maxAmountOfProducts={2}", _categoriesBaseUrl, parentId, maxAmountOfProducts));
+                var response = await httpClient.GetAsync(new Uri(string.Format("{0}?parentId={1}&maxAmountOfProducts={2}", _categoriesBaseUrl, parentId, maxAmountOfProducts)));
                 response.EnsureSuccessStatusCode();
-                var result = await response.Content.ReadAsAsync<ReadOnlyCollection<Category>>();
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<ReadOnlyCollection<Category>>(responseContent);
 
                 return result;
             }
@@ -36,9 +39,10 @@ namespace AdventureWorks.UILogic.Services
         {
             using (var httpClient = new HttpClient())
             {
-                var response = await httpClient.GetAsync(string.Format("{0}?queryString={1}", _productsBaseUrl, productsQueryString));
+                var response = await httpClient.GetAsync(new Uri(string.Format("{0}?queryString={1}", _productsBaseUrl, productsQueryString)));
                 response.EnsureSuccessStatusCode();
-                var result = await response.Content.ReadAsAsync<SearchResult>();
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<SearchResult>(responseContent);
 
                 return result;
             }
@@ -49,9 +53,10 @@ namespace AdventureWorks.UILogic.Services
             using (var httpClient = new HttpClient())
             {
                 var response =
-                    await httpClient.GetAsync(string.Format("{0}?categoryId={1}", _productsBaseUrl, categoryId));
+                    await httpClient.GetAsync(new Uri(string.Format("{0}?categoryId={1}", _productsBaseUrl, categoryId)));
                 response.EnsureSuccessStatusCode();
-                var result = await response.Content.ReadAsAsync<ReadOnlyCollection<Product>>();
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<ReadOnlyCollection<Product>>(responseContent);
 
                 return result;
             }
@@ -61,9 +66,10 @@ namespace AdventureWorks.UILogic.Services
         {
             using (var httpClient = new HttpClient())
             {
-                var response = await httpClient.GetAsync(_categoriesBaseUrl + categoryId.ToString());
+                var response = await httpClient.GetAsync(new Uri(_categoriesBaseUrl + categoryId.ToString()));
                 response.EnsureSuccessStatusCode();
-                var result = await response.Content.ReadAsAsync<Category>();
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<Category>(responseContent);
 
                 return result;
             }
@@ -73,9 +79,10 @@ namespace AdventureWorks.UILogic.Services
         {
             using (var httpClient = new HttpClient())
             {
-                var response = await httpClient.GetAsync(_productsBaseUrl + productNumber);
+                var response = await httpClient.GetAsync(new Uri(_productsBaseUrl + productNumber));
                 response.EnsureSuccessStatusCode();
-                var result = await response.Content.ReadAsAsync<Product>();
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<Product>(responseContent);
 
                 return result;
             }

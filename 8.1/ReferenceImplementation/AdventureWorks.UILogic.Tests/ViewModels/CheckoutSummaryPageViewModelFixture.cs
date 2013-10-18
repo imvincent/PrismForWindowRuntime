@@ -47,7 +47,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             var orderService = new MockOrderService()
                 {
                     // the order is valid, it can be processed
-                    ProcessOrderAsyncDelegate = (a, b) => Task.FromResult(true)
+                    ProcessOrderAsyncDelegate = (o) => Task.FromResult(true)
                 };
             var resourcesService = new MockResourceLoader()
                 {
@@ -80,7 +80,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             var orderService = new MockOrderService()
                 {
                     // the order is invalid, it cannot be processed
-                    ProcessOrderAsyncDelegate = (a, b) =>
+                    ProcessOrderAsyncDelegate = (o) =>
                         {
                             var modelValidationResult = new ModelValidationResult();
                             modelValidationResult.ModelState.Add("someKey", new List<string>() { "the value of someKey is invalid" });

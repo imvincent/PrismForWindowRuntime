@@ -60,7 +60,7 @@
                    AutomationProperties.Name="AppLogo"
                    Source="../Assets/BannerLogo.png"
                    Height="60"
-                   Margin="0,10,0,0"
+                   Margin="0,0,0,0"
                    Grid.Column="1"
                    HorizontalAlignment="Left" />
             <views:SearchUserControl x:Name="searchUserControl"
@@ -102,8 +102,8 @@
                 <controls:MultipleSizedGridView x:Name="itemsGridView"
                                                 AutomationProperties.AutomationId="HubPageItemGridView"
                                                 AutomationProperties.Name="Grouped Items"
-                                                Margin="0,-3,0,0"
-                                                Padding="116,0,40,46"
+                                                Margin="0,0,0,0"
+                                                Padding="120,0,40,50"
                                                 ItemsSource="{Binding Source={StaticResource groupedItemsViewSource}}"
                                                 ItemTemplate="{StaticResource AWShopperItemTemplate}"
                                                 SelectionMode="None"
@@ -158,7 +158,7 @@
                   AutomationProperties.Name="Grouped Items"
                   Grid.Row="1"
                   Visibility="Collapsed"
-                  Padding="10,0,0,0"
+                  Padding="20,0,0,0"
                   ItemsSource="{Binding Source={StaticResource groupedItemsViewSource}}"
                   ItemTemplate="{StaticResource ProductTemplateSnapped}"
                   SelectionMode="None"
@@ -193,16 +193,36 @@
         <VisualStateManager.VisualStateGroups>
             <!-- Visual states reflect the application's view state -->
             <VisualStateGroup x:Name="ApplicationViewStates">
-                <VisualState x:Name="FullScreenLandscape" />
-                <VisualState x:Name="Filled" />
-
+                <VisualState x:Name="DefaultLayout">
+                    <!-- The default Visibility properties are set in the XAML that defines the objects. -->
+                </VisualState>
                 <!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
-                <VisualState x:Name="FullScreenPortrait">
+                <VisualState x:Name="PortraitLayout">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemsGridView"
                                                        Storyboard.TargetProperty="Padding">
                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="96,0,10,56" />
+                                                    Value="95,0,10,55" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemListView"
+                                                       Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                       Storyboard.TargetName="semanticZoom">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Collapsed</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="AppLogo">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<Thickness>-90,0,0,0</Thickness>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
@@ -211,7 +231,7 @@
                     The back button and title have different styles when snapped, and the list representation is substituted
                     for the grid displayed in all other view states
                 -->
-                <VisualState x:Name="Snapped">
+                <VisualState x:Name="MinimalLayout">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton"
                                                        Storyboard.TargetProperty="Style">
@@ -235,7 +255,7 @@
                                                        Storyboard.TargetName="AppLogo">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
-                                    <Thickness>0,30,0,0</Thickness>
+                                    <Thickness>10,30,0,0</Thickness>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>

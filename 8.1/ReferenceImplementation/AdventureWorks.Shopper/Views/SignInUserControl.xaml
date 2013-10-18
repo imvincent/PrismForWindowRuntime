@@ -31,8 +31,6 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
@@ -52,42 +50,27 @@
                        Text="Please sign in."
                        Grid.Row="1"
                        Grid.Column="1" />
-            <TextBlock x:Name="UsernameLabel"
-                       x:Uid="UsernameLabel"
-                       Text="Username"
-                       Margin="0,10,0,5"
-                       HorizontalAlignment="Left"
-                       Style="{StaticResource ItemTextStyle}"
-                       Grid.Row="2"
-                       Grid.Column="1" />
-            <TextBox HorizontalAlignment="Left"
-                     x:Name="UserNameTextBox"
+            <TextBox Header="Username"
+                     Margin="0,10,0,0"
+                     HorizontalAlignment="Left"
+                     x:Name="Username"
+                     x:Uid="Username"
                      AutomationProperties.AutomationId="UserNameTextBox"
                      AutomationProperties.IsRequiredForForm="True"
-                     AutomationProperties.LabeledBy="{Binding ElementName=UsernameLabel}"
                      Width="280"
                      Text="{Binding UserName, Mode=TwoWay}"
                      IsEnabled="{Binding IsNewSignIn}"
-                     Style="{StaticResource LightTextBoxStyle}"
-                     Grid.Row="3"
+                     Grid.Row="2"
                      Grid.Column="1" />
-            <TextBlock x:Name="PasswordLabel"
-                       x:Uid="PasswordLabel"
-                       Text="Password"
-                       HorizontalAlignment="Left"
-                       Width="280"
-                       Margin="0,0,0,5"
-                       Style="{StaticResource ItemTextStyle}"
-                       Grid.Row="4"
-                       Grid.Column="1" />
-            <PasswordBox  Width="280"
+            <PasswordBox  Header="Password"
+                          Width="280"
                           x:Name="PasswordBox"
+                          x:Uid="PasswordBox"
                           AutomationProperties.AutomationId="PasswordBox"
                           AutomationProperties.IsRequiredForForm="True"
-                          AutomationProperties.LabeledBy="{Binding ElementName=PasswordLabel}"
                           HorizontalAlignment="Left"
                           Password="{Binding Password,Mode=TwoWay}"
-                          Grid.Row="5"
+                          Grid.Row="3"
                           Grid.Column="1" />
             <CheckBox x:Name="SaveCredentialsLabel"
                       x:Uid="SaveCredentialsLabel"
@@ -97,19 +80,19 @@
                       AutomationProperties.AutomationId="SaveCredentialsCheckBox"
                       Foreground="{StaticResource ApplicationForegroundThemeBrush}"
                       Content="Save Credentials?"
-                      Grid.Row="6"
+                      Grid.Row="4"
                       Grid.Column="1" />
-            <TextBlock Style="{StaticResource LightBasicTextStyle}"
+            <TextBlock Style="{StaticResource BodyTextBlockStyle}"
                        Margin="0,10,0,0"
                        TextWrapping="Wrap"
                        Foreground="Red"
                        Text="{Binding IsSignInInvalid, Converter={StaticResource IsSignInInvalidConverter}}"
-                       Grid.Row="7"
+                       Grid.Row="5"
                        Grid.Column="1" />
             <StackPanel x:Name="ButtonsPanel"
                         Orientation="Horizontal"
                         Margin="125,0,0,0"
-                        Grid.Row="8"
+                        Grid.Row="6"
                         Grid.Column="1">
                 <Button x:Uid="SubmitButton"
                         x:Name="SubmitButton"
@@ -118,24 +101,22 @@
                         Foreground="{StaticResource AWShopperButtonForegroundBrush}"
                         Margin="0,10,0,0"
                         Command="{Binding SignInCommand}"
-                        AutomationProperties.AutomationId="SignInSubmitButton"
-                        Style="{StaticResource LightButtonStyle}" />
+                        AutomationProperties.AutomationId="SignInSubmitButton" />
                 <Button x:Uid="SignInCancelButton"
                         Background="{StaticResource AWShopperAccentBrush}"
                         Content="Cancel"
                         Foreground="{StaticResource AWShopperButtonForegroundBrush}"
                         Margin="0,10,0,0"
                         Command="{Binding GoBackCommand}"
-                        AutomationProperties.AutomationId="SignInCancelButton"
-                        Style="{StaticResource LightButtonStyle}" />
+                        AutomationProperties.AutomationId="SignInCancelButton"/>
             </StackPanel>
         </Grid>
         <VisualStateManager.VisualStateGroups>
             <!-- Visual states reflect the application's view state -->
             <VisualStateGroup x:Name="ApplicationViewStates">
-                <VisualState x:Name="FullScreenLandscape" />
+                <VisualState x:Name="DefaultLayout" />
                 <VisualState x:Name="Filled" />
-                <VisualState x:Name="FullScreenPortrait">
+                <VisualState x:Name="PortraitLayout">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.ColumnDefinitions[1].Width"
                                                        Storyboard.TargetName="ContentGrid">
@@ -151,7 +132,7 @@
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
-                <VisualState x:Name="Snapped">
+                <VisualState x:Name="MinimalLayout">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.ColumnDefinitions[0].Width"
                                                        Storyboard.TargetName="ContentGrid">

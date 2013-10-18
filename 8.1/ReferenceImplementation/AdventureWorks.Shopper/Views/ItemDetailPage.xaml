@@ -365,9 +365,8 @@
 
                                 <!-- Visual states reflect the application's view state inside the FlipView -->
                                 <VisualStateGroup x:Name="ApplicationViewStates">
-                                    <VisualState x:Name="FullScreenLandscape" />
-                                    <VisualState x:Name="Filled" />
-                                    <VisualState x:Name="FullScreenPortrait">
+                                    <VisualState x:Name="DefaultLayout" />
+                                    <VisualState x:Name="PortraitLayout">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.Padding)"
                                                                            Storyboard.TargetName="scrollViewer">
@@ -459,7 +458,7 @@
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
-                                    <VisualState x:Name="Snapped">
+                                    <VisualState x:Name="MinimalLayout">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)"
                                                                            Storyboard.TargetName="mainGrid">
@@ -619,11 +618,10 @@
 
             <!-- Visual states reflect the application's view state -->
             <VisualStateGroup x:Name="ApplicationViewStates">
-                <VisualState x:Name="FullScreenLandscape" />
-                <VisualState x:Name="Filled" />
+                <VisualState x:Name="DefaultLayout" />
 
                 <!-- The back button respects the narrower 100-pixel margin convention for portrait -->
-                <VisualState x:Name="FullScreenPortrait">
+                <VisualState x:Name="PortraitLayout">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton"
                                                        Storyboard.TargetProperty="Style">
@@ -634,7 +632,7 @@
                 </VisualState>
 
                 <!-- The back button and title have different styles when snapped -->
-                <VisualState x:Name="Snapped">
+                <VisualState x:Name="MinimalLayout">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton"
                                                        Storyboard.TargetProperty="Style">
@@ -678,33 +676,28 @@
 
     <!-- AppBar -->
     <Page.BottomAppBar>
-        <AppBar Style="{StaticResource AppBarStyle}"
+        <CommandBar Style="{StaticResource AppBarStyle}"
                 AutomationProperties.AutomationId="BottomAppBar"
                 x:Uid="BottomAppBar"
                 IsSticky="{Binding IsBottomAppBarSticky, Mode=TwoWay}"
                 IsOpen="{Binding IsBottomAppBarOpened, Mode=TwoWay}">
-            <Grid>
-                <StackPanel Orientation="Horizontal"
-                            HorizontalAlignment="Left">
-                    <Button x:Name="PinAppBarButton"
+            <CommandBar.SecondaryCommands>
+                <AppBarButton  x:Name="PinAppBarButton"
                             x:Uid="PinAppBarButton"
                             AutomationProperties.AutomationId="PinAppBarButton"
-                            Style="{StaticResource PinAppBarButtonStyle}"
+                            Label="Pin to Start"
+                            Icon="Pin"
                             Visibility="{Binding IsSelectedProductPinned, Converter={StaticResource BooleanNegationToVisibilityConverter}}"
-                            Command="{Binding PinProductCommand}"
-                            Loaded="StartLayoutUpdates"
-                            Unloaded="StopLayoutUpdates" />
-                    <Button x:Name="UnpinAppBarButton"
+                            Command="{Binding PinProductCommand}"/>
+                <AppBarButton x:Name="UnpinAppBarButton"
                             x:Uid="UnpinAppBarButton"
                             AutomationProperties.AutomationId="UnpinAppBarButton"
-                            Style="{StaticResource UnpinAppBarButtonStyle}"
+                            Label="Unpin from Start"
+                            Icon="UnPin"
                             Visibility="{Binding IsSelectedProductPinned, Converter={StaticResource BooleanToVisibilityConverter}}"
-                            Command="{Binding UnpinProductCommand}"
-                            Loaded="StartLayoutUpdates"
-                            Unloaded="StopLayoutUpdates" />
-                </StackPanel>
-            </Grid>
-        </AppBar>
+                            Command="{Binding UnpinProductCommand}"/>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
     </Page.BottomAppBar>
 
 </Infrastructure:VisualStateAwarePage>

@@ -8,39 +8,15 @@
 
 using Microsoft.Practices.Prism.StoreApps;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace AdventureWorks.Shopper.Views
 {
-    public sealed partial class ChangeDefaultsFlyout : FlyoutView
+    public sealed partial class ChangeDefaultsFlyout : SettingsFlyout
     {
         public ChangeDefaultsFlyout()
-            : base(StandardFlyoutSize.Narrow)
         {
             InitializeComponent();
-        }
-
-        private void ExpandShippingAddressButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Display the proper popup, hide the rest
-            ShippingAddressesPopup.IsOpen = true;
-            BillingAddressesPopup.IsOpen = false;
-            PaymentMethodsPopup.IsOpen = false;
-        }
-
-        private void ExpandBillingAddressButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Display the proper popup, hide the rest
-            ShippingAddressesPopup.IsOpen = false;
-            BillingAddressesPopup.IsOpen = true;
-            PaymentMethodsPopup.IsOpen = false;
-        }
-
-        private void ExpandPaymentMethodButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Display the proper popup, hide the rest
-            ShippingAddressesPopup.IsOpen = false;
-            BillingAddressesPopup.IsOpen = false;
-            PaymentMethodsPopup.IsOpen = true;
         }
     }
 }

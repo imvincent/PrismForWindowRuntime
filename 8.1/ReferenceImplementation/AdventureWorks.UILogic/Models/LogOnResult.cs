@@ -10,7 +10,6 @@ namespace AdventureWorks.UILogic.Models
 {
     public class LogOnResult
     {
-        public string ServerCookieHeader { get; set; }
         public UserInfo UserInfo { get; set; }
     }
 }

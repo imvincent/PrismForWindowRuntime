@@ -9,10 +9,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Practices.Prism.StoreApps;
 using AdventureWorks.UILogic.Models;
+using Windows.Web.Http;
+using System;
+using Newtonsoft.Json;
 
 namespace AdventureWorks.UILogic.Services
 {
@@ -24,9 +26,11 @@ namespace AdventureWorks.UILogic.Services
         {
             using (var client = new HttpClient())
             {
-                var response = await client.GetAsync(_clientBaseUrl);
+                var response = await client.GetAsync(new Uri(_clientBaseUrl));
                 response.EnsureSuccessStatusCode();
-                var result = await response.Content.ReadAsAsync<ReadOnlyCollection<string>>();
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<ReadOnlyCollection<string>>(responseContent);
+
                 return result;
             }
         }

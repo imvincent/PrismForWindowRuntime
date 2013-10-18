@@ -54,14 +54,6 @@ namespace Microsoft.Practices.Prism.StoreApps
         protected INavigationService NavigationService { get; set; }
 
         /// <summary>
-        /// Gets or sets the Flyout service.
-        /// </summary>
-        /// <value>
-        /// The Flyout service.
-        /// </value>
-        protected IFlyoutService FlyoutService { get; set; }
-
-        /// <summary>
         /// Gets a value indicating whether the application is suspending.
         /// </summary>
         /// <value>
@@ -97,7 +89,7 @@ namespace Microsoft.Practices.Prism.StoreApps
 
             if (viewType == null)
             {
-                var resourceLoader = new ResourceLoader(Constants.StoreAppsInfrastructureResourceMapId);
+                var resourceLoader = ResourceLoader.GetForCurrentView(Constants.StoreAppsInfrastructureResourceMapId);
                 throw new ArgumentException(
                     string.Format(CultureInfo.InvariantCulture, resourceLoader.GetString("DefaultPageTypeLookupErrorMessage"), pageToken, this.GetType().Namespace + ".Views"),
                     "pageToken");
@@ -117,31 +109,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// <param name="args">The <see cref="IActivatedEventArgs"/> instance containing the event data.</param>
         protected virtual void OnInitialize(IActivatedEventArgs args) { }
 
-        /// <summary>
-        /// Creates the Flyout view.
-        /// </summary>
-        /// <param name="flyoutName">Name of the Flyout.</param>
-        /// <returns>The specified Flyout view</returns>
-        /// <exception cref="System.InvalidOperationException">Could not find associated Flyout in the Views folder.</exception>
-        protected virtual FlyoutView CreateFlyoutView(string flyoutName)
-        {
-            var assemblyQualifiedAppType = this.GetType().GetTypeInfo().AssemblyQualifiedName;
-
-            var flyoutNameWithParameter = assemblyQualifiedAppType.Replace(this.GetType().FullName, this.GetType().Namespace + ".Views.{0}Flyout");
-
-            var flyoutFullName = string.Format(CultureInfo.InvariantCulture, flyoutNameWithParameter, flyoutName);
-            var flyoutType = Type.GetType(flyoutFullName);
-            if (flyoutType == null)
-            {
-                var resourceLoader = new ResourceLoader(Constants.StoreAppsInfrastructureResourceMapId);
-                throw new InvalidOperationException(resourceLoader.GetString("CouldNotFindAssociatedFlyoutInTheViewsFolder"));
-            }
-
-            var flyoutInstance = Resolve(flyoutType);
-            return flyoutInstance as FlyoutView;
-        }
-
-        /// <summary>
+                /// <summary>
         /// Gets the Settings charm action items.
         /// </summary>
         /// <returns>The list of Setting charm action items that will populate the Settings pane.</returns>
@@ -245,8 +213,7 @@ namespace Microsoft.Practices.Prism.StoreApps
                 SessionStateService.RegisterFrame(frameFacade, "AppFrame");
 
                 NavigationService = CreateNavigationService(frameFacade, SessionStateService);
-                FlyoutService = new FlyoutService();
-                FlyoutService.FlyoutResolver = CreateFlyoutView;
+
                 SettingsPane.GetForCurrentView().CommandsRequested += OnCommandsRequested;
 
                 // Set a factory for the ViewModelLocator to use the default resolution mechanism to construct view models

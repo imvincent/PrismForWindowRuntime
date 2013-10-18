@@ -1,13 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.20827.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C3F03DDF-A032-4E32-BD38-24CCBF104705}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{94AB71ED-9045-41F9-AD7D-18F42EE9B09E}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventureWorks.Shopper", "ReferenceImplementation\AdventureWorks.Shopper\AdventureWorks.Shopper.csproj", "{0DB06939-5AF8-4446-8321-AF6ABA56318E}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5B10DC48-600B-4F27-84D8-F041FEE71A34} = {5B10DC48-600B-4F27-84D8-F041FEE71A34}
 		{6FA921C7-05EB-4881-8CDA-F4279B6EB23D} = {6FA921C7-05EB-4881-8CDA-F4279B6EB23D}
 	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C3F03DDF-A032-4E32-BD38-24CCBF104705}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventureWorks.Shopper.Tests", "ReferenceImplementation\AdventureWorks.Shopper.Tests\AdventureWorks.Shopper.Tests.csproj", "{89B02E89-C230-42C4-BBDA-6FD74FB3A58A}"
 EndProject
@@ -16,12 +24,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventureWorks.UILogic", "ReferenceImplementation\AdventureWorks.UILogic\AdventureWorks.UILogic.csproj", "{5B10DC48-600B-4F27-84D8-F041FEE71A34}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventureWorks.UILogic.Tests", "ReferenceImplementation\AdventureWorks.UILogic.Tests\AdventureWorks.UILogic.Tests.csproj", "{3F9E75B9-C645-4E98-ABEC-A53B85DDA651}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{94AB71ED-9045-41F9-AD7D-18F42EE9B09E}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Practices.Prism.StoreApps", "Prism.StoreApps\Microsoft.Practices.Prism.StoreApps.csproj", "{A2303152-0F67-4CA5-8639-0A16E64A8B6D}"
 EndProject

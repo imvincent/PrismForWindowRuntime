@@ -350,11 +350,11 @@
     <DataTemplate x:Key="CheckoutDataFlyoutTemplate">
         <StackPanel Margin="10">
             <TextBlock Text="{Binding FirstLine}"
-                       Style="{StaticResource LightBasicTextStyle}" />
+                       Style="{StaticResource BodyTextBlockStyle}" />
             <TextBlock Text="{Binding SecondLine}"
-                       Style="{StaticResource LightBasicTextStyle}" />
+                       Style="{StaticResource BodyTextBlockStyle}" />
             <TextBlock Text="{Binding BottomLine}"
-                       Style="{StaticResource LightBasicTextStyle}" />
+                       Style="{StaticResource BodyTextBlockStyle}" />
         </StackPanel>
     </DataTemplate>
 

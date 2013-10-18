@@ -15,23 +15,17 @@ namespace AdventureWorks.UILogic.Tests.Mocks
 {
     public class MockOrderService : IOrderService
     {
-        public Func<Order, string, Task<int>> CreateOrderAsyncDelegate { get; set; }
-        public Func<Order, string, Task<Order>> UpdateOrderAsyncDelegate { get; set; }
-        public Func<Order, string, Task> ProcessOrderAsyncDelegate { get; set; }
+        public Func<Order, Task<int>> CreateOrderAsyncDelegate { get; set; }
+        public Func<Order, Task> ProcessOrderAsyncDelegate { get; set; }
 
-        public Task<int> CreateOrderAsync(Order order, string serverCookieHeader)
+        public Task<int> CreateOrderAsync(Order order)
         {
-            return CreateOrderAsyncDelegate(order, serverCookieHeader);
+            return CreateOrderAsyncDelegate(order);
         }
 
-        public Task<Order> UpdateOrderAsync(Order order, string serverCookieHeader)
+        public Task ProcessOrderAsync(Order order)
         {
-            return UpdateOrderAsyncDelegate(order, serverCookieHeader);
-        }
-
-        public Task ProcessOrderAsync(Order order, string serverCookieHeader)
-        {
-            return ProcessOrderAsyncDelegate(order, serverCookieHeader);
+            return ProcessOrderAsyncDelegate(order);
         }
     }
 }

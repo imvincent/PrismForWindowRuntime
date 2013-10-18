@@ -25,6 +25,7 @@ using Windows.System;
 using Windows.UI.Notifications;
 using Windows.UI.Xaml;
 using AdventureWorks.Shopper.Services;
+using AdventureWorks.Shopper.Views;
 
 namespace AdventureWorks.Shopper
 {
@@ -97,7 +98,6 @@ namespace AdventureWorks.Shopper
 
             _container.RegisterInstance<INavigationService>(NavigationService);
             _container.RegisterInstance<ISessionStateService>(SessionStateService);
-            _container.RegisterInstance<IFlyoutService>(FlyoutService);
             _container.RegisterInstance<IEventAggregator>(_eventAggregator);
             _container.RegisterInstance<IResourceLoader>(new ResourceLoaderAdapter(new ResourceLoader()));
 
@@ -160,15 +160,15 @@ namespace AdventureWorks.Shopper
 
             if (accountService.SignedInUser == null)
             {
-                settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("LoginText"), () => FlyoutService.ShowFlyout("SignIn")));
+                settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("LoginText"), () => new SignInFlyout().Show()));
             }
             else
             {
-                settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("LogoutText"), () => FlyoutService.ShowFlyout("SignOut")));
+                settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("LogoutText"), () => new SignOutFlyout().Show()));
                 settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("AddShippingAddressTitle"), () => NavigationService.Navigate("ShippingAddress", null)));
                 settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("AddBillingAddressTitle"), () => NavigationService.Navigate("BillingAddress", null)));
                 settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("AddPaymentMethodTitle"), () => NavigationService.Navigate("PaymentMethod", null)));
-                settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("ChangeDefaults"), () => FlyoutService.ShowFlyout("ChangeDefaults")));
+                settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("ChangeDefaults"), () => new ChangeDefaultsFlyout().Show()));
             }
             settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("PrivacyPolicy"), async () => await Launcher.LaunchUriAsync(new Uri(resourceLoader.GetString("PrivacyPolicyUrl")))));
 

@@ -66,10 +66,9 @@
         <VisualStateManager.VisualStateGroups>
             <!-- Visual states reflect the application's view state -->
             <VisualStateGroup x:Name="ApplicationViewStates">
-                <VisualState x:Name="FullScreenLandscape" />
-                <VisualState x:Name="Filled" />
-                <VisualState x:Name="FullScreenPortrait"/>
-                <VisualState x:Name="Snapped">
+                <VisualState x:Name="DefaultLayout" />
+                <VisualState x:Name="PortraitLayout"/>
+                <VisualState x:Name="MinimalLayout">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton"
                                                        Storyboard.TargetProperty="Style">

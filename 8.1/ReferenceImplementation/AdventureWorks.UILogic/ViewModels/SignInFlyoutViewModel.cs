@@ -28,10 +28,12 @@ namespace AdventureWorks.UILogic.ViewModels
         private Action _successAction;
         private readonly UserInfo _lastSignedInUser;
         private Action _closeFlyout;
-        private Action _goBack;
+
+        const int Error401 = -2145844847; //BG_E_HTTP_ERROR_401 (0x80190191)
 
         public SignInFlyoutViewModel(IAccountService accountService, IAlertMessageService alertMessageService, IResourceLoader resourceLoader)
         {
+            
             _accountService = accountService;
             _alertMessageService = alertMessageService;
             _resourceLoader = resourceLoader;
@@ -40,7 +42,6 @@ namespace AdventureWorks.UILogic.ViewModels
                 _lastSignedInUser = _accountService.SignedInUser;
             }
             SignInCommand = DelegateCommand.FromAsyncHandler(SignInAsync, CanSignIn);
-            GoBackCommand = new DelegateCommand(() => GoBack());
         }
 
         public string UserName
@@ -98,20 +99,7 @@ namespace AdventureWorks.UILogic.ViewModels
         }
 
 
-        public Action GoBack
-        {
-            get { return _goBack; }
-            set { SetProperty(ref _goBack, value); }
-        }
-
-        public DelegateCommand GoBackCommand { get; private set; }
-
         public DelegateCommand SignInCommand { get; private set; }
-
-        public void Open(object parameter, Action successAction)
-        {
-            _successAction = successAction;
-        }
 
         public bool CanSignIn()
         {
@@ -126,9 +114,12 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 signinSuccessfull = await _accountService.SignInUserAsync(UserName, Password, SaveCredentials);
             }
-            catch (WebException)
+            catch (Exception ex)
             {
-                signinCallFailed = true;
+                if (ex.HResult != Error401)
+                {
+                    signinCallFailed = true;
+                }
             }
             if (signinCallFailed)
             {
@@ -152,5 +143,7 @@ namespace AdventureWorks.UILogic.ViewModels
                 IsSignInInvalid = true;
             }
         }
+
+        public int rror { get; set; }
     }
 }

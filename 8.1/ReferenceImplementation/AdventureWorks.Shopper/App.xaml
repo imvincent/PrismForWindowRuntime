@@ -13,18 +13,10 @@
                     Styles that define common aspects of the platform look and feel
                     Required by Visual Studio project and item templates
                  -->
-                <ResourceDictionary Source="Common/StandardStyles.xaml" />
-                <ResourceDictionary Source="Themes/Generic.xaml" />
-                <ResourceDictionary Source="Themes/LightThemedStyles.xaml" />
+                <ResourceDictionary Source="Themes/AWShopperStyles.xaml" />
                 <ResourceDictionary Source="Themes/DataTemplates.xaml" />
                 
             </ResourceDictionary.MergedDictionaries>
-            <Style x:Key="WorldAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
-                <Setter Property="AutomationProperties.AutomationId" Value="WorldAppBarButton"/>
-                <Setter Property="AutomationProperties.Name" Value="World"/>
-                <Setter Property="Content" Value="&#xE128;"/>
-            </Style>
-
             <!-- Converters -->
             <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <converters:BooleanNegationToVisibilityConverter x:Key="BooleanNegationToVisibilityConverter" />

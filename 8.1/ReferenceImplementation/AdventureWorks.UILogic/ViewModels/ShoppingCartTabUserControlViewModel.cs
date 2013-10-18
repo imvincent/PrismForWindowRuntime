@@ -12,7 +12,6 @@ using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
 using AdventureWorks.UILogic.Services;
 using Microsoft.Practices.Prism.PubSubEvents;
-using System.Net.Http;
 using System.IO;
 using Microsoft.Practices.Prism.StoreApps;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
@@ -62,13 +61,12 @@ namespace AdventureWorks.UILogic.ViewModels
                 await _accountService.VerifyUserAuthenticationAsync();
                 shoppingCart = await _shoppingCartRepository.GetShoppingCartAsync();
             }
-            catch (HttpRequestException ex)
+            catch(FileNotFoundException){}
+            catch(UnauthorizedAccessException){}
+            catch(Exception ex)
             {
                 errorMessage = string.Format(CultureInfo.CurrentCulture, _resourceLoader.GetString("GeneralServiceErrorMessage"), Environment.NewLine, ex.Message);
             }
-            catch(FileNotFoundException){}
-            catch(UnauthorizedAccessException){}
-            catch(Exception){}
 
             if (!string.IsNullOrWhiteSpace(errorMessage))
             {

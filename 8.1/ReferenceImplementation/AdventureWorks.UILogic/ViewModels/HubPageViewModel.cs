@@ -14,7 +14,6 @@ using AdventureWorks.UILogic.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Net.Http;
 using System.Windows.Input;
 using Microsoft.Practices.Prism.StoreApps;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
@@ -77,7 +76,7 @@ namespace AdventureWorks.UILogic.ViewModels
                 LoadingData = true;
                 rootCategories = await _productCatalogRepository.GetRootCategoriesAsync(5);
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
                 errorMessage = string.Format(CultureInfo.CurrentCulture,
                                              _resourceLoader.GetString("GeneralServiceErrorMessage"),

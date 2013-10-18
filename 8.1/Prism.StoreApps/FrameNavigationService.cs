@@ -60,7 +60,7 @@ namespace Microsoft.Practices.Prism.StoreApps
 
             if (pageType == null)
             {
-                var resourceLoader = new ResourceLoader(Constants.StoreAppsInfrastructureResourceMapId);
+                var resourceLoader = ResourceLoader.GetForCurrentView(Constants.StoreAppsInfrastructureResourceMapId);
                 var error = string.Format(CultureInfo.CurrentCulture, resourceLoader.GetString("FrameNavigationServiceUnableResolveMessage"), pageToken);
                 throw new ArgumentException(error, "pageToken");
             }

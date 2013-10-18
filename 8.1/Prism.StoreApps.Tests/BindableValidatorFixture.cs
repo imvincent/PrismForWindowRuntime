@@ -99,13 +99,13 @@ namespace Microsoft.Practices.Prism.StoreApps.Tests
         public void Validation_Of_A_Nonexistent_Property_Should_Throw()
         {
             var model = new MockModelWithValidation();
-            var target = new BindableValidator(model);
+            var target = new BindableValidator(model, (mapId, key) => "ErrorMessage");
    
            var exception = Assert.ThrowsException<ArgumentException>(() =>
                                        {
                                            target.ValidateProperty("DoesNotExist");
                                        });
-            const string expectedMessage = "The entity does not contain a property with that name\r\nParameter name: DoesNotExist";
+            const string expectedMessage = "ErrorMessage\r\nParameter name: DoesNotExist";
 
             Assert.AreEqual(expectedMessage, exception.Message);
         }

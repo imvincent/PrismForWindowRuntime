@@ -40,8 +40,6 @@ namespace AdventureWorks.Shopper.DesignViewModels
 
         public IEnumerable<CheckoutDataViewModel> AllCheckoutDataViewModels { get; set; }
 
-        public bool IsSelectCheckoutDataPopupOpened { get; set; }
-
         public string SelectCheckoutDataLabel { get; set; }
 
         public bool IsBottomAppBarOpened { get; set; }
@@ -61,7 +59,6 @@ namespace AdventureWorks.Shopper.DesignViewModels
 
             IsBottomAppBarOpened = true;
 
-            IsSelectCheckoutDataPopupOpened = true;
             SelectCheckoutDataLabel = "Select Shipping Address";
 
             var resourceLoader = new ResourceLoader();

@@ -34,7 +34,7 @@ namespace AdventureWorks.Shopper.Views
         {
             if (this.Visibility == Visibility.Visible)
             {
-                UserNameTextBox.Focus(FocusState.Programmatic);
+                Username.Focus(FocusState.Programmatic);
             }
         }
     }

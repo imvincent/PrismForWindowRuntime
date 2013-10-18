@@ -54,6 +54,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="100" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -155,11 +156,10 @@
 
             <!-- Visual states reflect the application's view state -->
             <VisualStateGroup x:Name="ApplicationViewStates">
-                <VisualState x:Name="FullScreenLandscape" />
-                <VisualState x:Name="Filled" />
+                <VisualState x:Name="DefaultLayout" />
 
                 <!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
-                <VisualState x:Name="FullScreenPortrait">
+                <VisualState x:Name="PortraitLayout">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton"
                                                        Storyboard.TargetProperty="Style">
@@ -436,7 +436,7 @@
                     The back button and title have different styles when snapped, and the list representation is substituted
                     for the grid displayed in all other view states
                 -->
-                <VisualState x:Name="Snapped">
+                <VisualState x:Name="MinimalLayout">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton"
                                                        Storyboard.TargetProperty="Style">

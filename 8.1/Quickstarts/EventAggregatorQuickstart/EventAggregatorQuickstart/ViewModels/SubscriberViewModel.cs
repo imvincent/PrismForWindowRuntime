@@ -61,6 +61,8 @@ namespace EventAggregatorQuickstart.ViewModels
 
         private void AddBackgroundSubscriber()
         {
+            if (_subscriber != null) return;
+
             // Create subscriber and hold on to it so it does not get garbage collected
             _subscriber = new BackgroundSubscriber(Window.Current.Dispatcher);
             // Subscribe with defaults, pointing to subscriber method that pops a message box when the event fires
