@@ -18,7 +18,6 @@ namespace AdventureWorks.Shopper.Views
 {
     public sealed partial class SearchResultsPage : VisualStateAwarePage
     {
-        private double _wrapPanelHorizontalOffset;
         private double _scrollViewerHorizontalOffset;
 
         public SearchResultsPage()
@@ -26,10 +25,8 @@ namespace AdventureWorks.Shopper.Views
             this.InitializeComponent();
         }
 
-        private void wrapGrid_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void itemsGridView_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            var wrapGrid = (WrapGrid)sender;
-
             // Find the ScrollViewer inside the GridView
             var scrollViewer = VisualTreeUtilities.GetVisualChild<ScrollViewer>(itemsGridView);
 
@@ -37,7 +34,6 @@ namespace AdventureWorks.Shopper.Views
             {
                 if (scrollViewer.ComputedHorizontalScrollBarVisibility == Visibility.Visible)
                 {
-                    wrapGrid.SetHorizontalOffset(_wrapPanelHorizontalOffset);
                     scrollViewer.ChangeView(_scrollViewerHorizontalOffset, null, null);
                 }
                 else
@@ -53,12 +49,10 @@ namespace AdventureWorks.Shopper.Views
             var helper = (DependencyPropertyChangedHelper)sender;
 
             var scrollViewer = VisualTreeUtilities.GetVisualChild<ScrollViewer>(itemsGridView);
-            var wrapGrid = VisualTreeUtilities.GetVisualChild<WrapGrid>(itemsGridView);
 
             if (((Visibility)e.NewValue) == Visibility.Visible)
             {
                 // Update the Horizontal offset
-                wrapGrid.SetHorizontalOffset(_wrapPanelHorizontalOffset);
                 scrollViewer.ChangeView(_scrollViewerHorizontalOffset, null, null);
                 helper.PropertyChanged -= ScrollBarHorizontalVisibilityChanged;
             };
@@ -69,12 +63,6 @@ namespace AdventureWorks.Shopper.Views
             if (pageState == null) return;
 
             base.SaveState(pageState);
-
-            var wrapGrid = VisualTreeUtilities.GetVisualChild<WrapGrid>(itemsGridView);
-            if (wrapGrid != null)
-            {
-                pageState["wrapGridHorizontalOffset"] = wrapGrid.HorizontalOffset;
-            }
 
             var scrollViewer = VisualTreeUtilities.GetVisualChild<ScrollViewer>(itemsGridView);
             if (scrollViewer != null)
@@ -88,11 +76,6 @@ namespace AdventureWorks.Shopper.Views
             if (pageState == null) return;
 
             base.LoadState(navigationParameter, pageState);
-
-            if (pageState.ContainsKey("wrapGridHorizontalOffset"))
-            {
-                _wrapPanelHorizontalOffset = double.Parse(pageState["wrapGridHorizontalOffset"].ToString(), CultureInfo.InvariantCulture.NumberFormat);
-            }
 
             if (pageState.ContainsKey("scrollViewerHorizontalOffset"))
             {

@@ -1,5 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" xmlns:Core="using:Microsoft.Xaml.Interactions.Core">
+
+    <!-- Item Panel Templates -->
+    <ItemsPanelTemplate x:Key="VerticalStackPanelItemTemplate">
+        <StackPanel Orientation="Vertical" />
+    </ItemsPanelTemplate>
+
 
     <DataTemplate x:Key="AWShopperItemTemplate">
         <Grid>
@@ -11,7 +18,7 @@
                    Source="{Binding Image}"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"
-                   AutomationProperties.Name="{Binding Title}" />
+                   AutomationProperties.Name="{Binding Title}"/>
             <StackPanel VerticalAlignment="Bottom"
                         Grid.Row="1"
                         Background="{StaticResource ListViewItemOverlayBackgroundThemeBrush}"
@@ -20,17 +27,17 @@
                            Foreground="White"
                            FontSize="26"
                            Margin="15,0,15,0"
-                           FontWeight="ExtraBold"></TextBlock>
+                           FontWeight="ExtraBold"/>
                 <TextBlock Text="{Binding Title}"
                            Foreground="{StaticResource ListViewItemOverlayForegroundThemeBrush}"
                            Style="{StaticResource TitleTextStyle}"
                            TextWrapping="NoWrap"
-                           Margin="15,0,15,0" />
+                           Margin="15,0,15,0"/>
                 <TextBlock Text="{Binding Description}"
                            Foreground="{StaticResource ListViewItemOverlaySecondaryForegroundThemeBrush}"
                            Style="{StaticResource CaptionTextStyle}"
                            TextWrapping="NoWrap"
-                           Margin="15,0,15,10" />
+                           Margin="15,0,15,10"/>
             </StackPanel>
         </Grid>
     </DataTemplate>
@@ -42,7 +49,7 @@
                 <RowDefinition Height="100" />
             </Grid.RowDefinitions>
             <Image Stretch="UniformToFill"
-                   Source="{Binding Group.Image}" />
+                   Source="{Binding Group.Image}"/>
             <StackPanel Background="{StaticResource ListViewItemOverlayBackgroundThemeBrush}"
                         Grid.Row="1"
                         Height="100">
@@ -50,16 +57,16 @@
                            TextTrimming="WordEllipsis"
                            FontSize="26"
                            FontWeight="ExtraBold"
-                           Margin="10" />
+                           Margin="10"/>
                 <StackPanel Orientation="Horizontal"
                             Margin="10,0,10,0"
                             HorizontalAlignment="Left">
                     <TextBlock Text="{Binding Group.TotalNumberOfItems}"
-                               FontSize="20" />
+                               FontSize="20"/>
                     <TextBlock Text="Products"
                                Margin="10,0,10,0"
                                FontSize="20"
-                               HorizontalAlignment="Center" />
+                               HorizontalAlignment="Center"/>
                 </StackPanel>
             </StackPanel>
         </Grid>
@@ -67,8 +74,8 @@
 
     <DataTemplate x:Key="ShoppingCartItemTemplate">
         <Grid Margin="0"
-              Width="357"
-              Height="162"
+              MinWidth="355"
+              Height="165"
               Background="{StaticResource AWShopperItemBackgroundBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="134" />
@@ -159,7 +166,7 @@
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="ShoppingCartItemTemplateSnapped">
+    <DataTemplate x:Key="ShoppingCartItemTemplateMinimal">
         <Grid Width="270"
               Height="150"
               Background="{StaticResource AWShopperItemBackgroundBrush}">
@@ -253,10 +260,10 @@
     </DataTemplate>
 
     <DataTemplate x:Key="ShippingMethodTemplate">
-        <Grid Width="377"
+        <Grid MinWidth="200"
               Height="80"
               Background="{StaticResource AWShopperItemBackgroundBrush}"
-              AutomationProperties.Name="sarasa">
+              AutomationProperties.Name="ShippingMethodMainGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width="90" />
@@ -286,8 +293,43 @@
         </Grid>
     </DataTemplate>
 
+        <DataTemplate x:Key="ShippingMethodTemplateMinimal">
+        <Grid MinWidth="200"
+              Height="80"
+              Background="{StaticResource AWShopperItemBackgroundBrush}"
+              AutomationProperties.Name="ShippingMethodMainGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="90" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <TextBlock Text="{Binding Description}"
+                       Grid.Row="0"
+                       Grid.Column="0"
+                       FontSize="20"
+                       Margin="5,0"></TextBlock>
+            <TextBlock Text="{Binding EstimatedTime}"
+                       Grid.Row="1"
+                       Foreground="White"
+                       TextWrapping="Wrap"
+                       Margin="5,15,5,5"></TextBlock>
+            <TextBlock Text="{Binding Cost}"
+                       Grid.Row="0"
+                       Grid.Column="1"
+                       Grid.RowSpan="2"
+                       FontSize="20"
+                       Foreground="White"
+                       TextWrapping="Wrap"
+                       Margin="3"></TextBlock>
+        </Grid>
+    </DataTemplate>
+
+    
     <DataTemplate x:Key="CheckoutDataTemplate">
-        <Grid Width="360"
+        <Grid MinWidth="270"
               Height="130"
               Background="{StaticResource AWShopperItemBackgroundBrush}">
             <Grid Grid.Row="0">
@@ -359,7 +401,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="ProductTemplate">
-        <Grid Width="420">
+        <Grid MinWidth="420">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
@@ -370,28 +412,40 @@
                     Width="150"
                     Height="100">
                 <Image Source="{Binding Image}"
-                       Stretch="UniformToFill" />
+                       Stretch="UniformToFill">
+                    <Interactivity:Interaction.Behaviors>
+                        <Core:IncrementalUpdateBehavior Phase="2"/>
+                    </Interactivity:Interaction.Behaviors>
+                </Image>
             </Border>
             <StackPanel Grid.Column="1"
-                        Margin="10,-10,0,0">
+                        Margin="10,-10,0,0" HorizontalAlignment="Stretch">
                 <TextBlock Text="{Binding Title}"
                            Margin="5"
                            FontSize="25"
                            Height="Auto"
                            MaxHeight="80"
                            TextWrapping="Wrap"
-                           TextTrimming="WordEllipsis" />
+                           TextTrimming="WordEllipsis">
+                        <Interactivity:Interaction.Behaviors>
+                            <Core:IncrementalUpdateBehavior Phase="1"/>
+                        </Interactivity:Interaction.Behaviors>
+                </TextBlock>
                 <TextBlock Text="{Binding SalePrice}"
                            Style="{StaticResource BodyTextStyle}"
                            Margin="5"
                            FontSize="32"
-                           FontWeight="ExtraBold"></TextBlock>
+                           FontWeight="ExtraBold">
+                        <Interactivity:Interaction.Behaviors>
+                            <Core:IncrementalUpdateBehavior Phase="2"/>
+                        </Interactivity:Interaction.Behaviors>
+                </TextBlock>
             </StackPanel>
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="ProductTemplateSnapped">
-        <Grid Margin="6,0">
+    <DataTemplate x:Key="ProductTemplateMinimal">
+        <Grid Margin="6,0" Width="400" Height="90">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
@@ -403,7 +457,11 @@
                     Height="55"
                     Margin="0,10">
                 <Image Source="{Binding Image}"
-                       Stretch="UniformToFill" />
+                       Stretch="UniformToFill">
+                    <Interactivity:Interaction.Behaviors>
+                        <Core:IncrementalUpdateBehavior Phase="2"/>
+                    </Interactivity:Interaction.Behaviors>                    
+                </Image>
             </Border>
             <StackPanel Grid.Column="1"
                         Margin="10,0,0,0">
@@ -413,12 +471,20 @@
                            MaxHeight="60"
                            Text="{Binding Title}"
                            TextWrapping="Wrap"
-                           TextTrimming="WordEllipsis" />
+                           TextTrimming="WordEllipsis">
+                    <Interactivity:Interaction.Behaviors>
+                        <Core:IncrementalUpdateBehavior Phase="1"/>
+                    </Interactivity:Interaction.Behaviors>                    
+                </TextBlock>
                 <TextBlock Text="{Binding SalePrice}"
                            Style="{StaticResource BodyTextStyle}"
                            Margin="5"
                            FontSize="27"
-                           FontWeight="ExtraBold"></TextBlock>
+                           FontWeight="ExtraBold">
+                    <Interactivity:Interaction.Behaviors>
+                        <Core:IncrementalUpdateBehavior Phase="2"/>
+                    </Interactivity:Interaction.Behaviors>                    
+                </TextBlock>
             </StackPanel>
         </Grid>
     </DataTemplate>

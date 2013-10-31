@@ -15,17 +15,13 @@ namespace AdventureWorks.UILogic.ViewModels
 {
     public class OrderConfirmationPageViewModel : ViewModel
     {
-        private readonly INavigationService _navigationService;
         private readonly IResourceLoader _resourceLoader;
 
         public OrderConfirmationPageViewModel(INavigationService navigationService, IResourceLoader resourceLoader)
         {
-            _navigationService = navigationService;
             _resourceLoader = resourceLoader;
-            ContinueShoppingCommand = new DelegateCommand(() => _navigationService.Navigate("Hub", null));
         }
 
-        public DelegateCommand ContinueShoppingCommand { get; private set; }
         public string OrderConfirmationContent { get; set; }
 
         public override void OnNavigatedTo(object navigationParameter, Windows.UI.Xaml.Navigation.NavigationMode navigationMode, System.Collections.Generic.Dictionary<string, object> viewModelState)

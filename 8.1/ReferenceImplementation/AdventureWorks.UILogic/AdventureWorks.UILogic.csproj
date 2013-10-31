@@ -192,11 +192,9 @@
     <Compile Include="ViewModels\ShoppingCartItemViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartPageViewModel.cs" />
     <Compile Include="ViewModels\SignInFlyoutViewModel.cs" />
-    <Compile Include="ViewModels\TopAppBarUserControlViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="TemporaryKey.pfx" />
     <PRIResource Include="Strings\en-US\Resources.resw" />
   </ItemGroup>
   <ItemGroup>

@@ -21,7 +21,7 @@
             <SolidColorBrush x:Key="AWShopperHighlightButtonForegroundBrush"
                              Color="Black" />
             <x:String x:Key="BackButtonGlyph">&#xE071;</x:String>
-            <x:String x:Key="BackButtonSnappedGlyph">&#xE0BA;</x:String>
+            <x:String x:Key="BackButtonMinimalGlyph">&#xE0BA;</x:String>
 
             <!-- ListView Selection Color -->
             <Color x:Key="ItemSelectionColor">#FFE2742F</Color>
@@ -61,7 +61,7 @@
             <SolidColorBrush x:Key="ListViewItemSelectedPointerOverBorderThemeBrush"
                              Color="{StaticResource SystemColorHighlightColor}" />
             <x:String x:Key="BackButtonGlyph">&#xE071;</x:String>
-            <x:String x:Key="BackButtonSnappedGlyph">&#xE0C4;</x:String>
+            <x:String x:Key="BackButtonMinimalGlyph">&#xE0C4;</x:String>
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 
@@ -88,6 +88,16 @@
 
     <x:String x:Key="ChevronGlyph">&#xE26B;</x:String>
     <x:String x:Key="OpenedChevronGlyph">&#xE015;</x:String>
+
+    <!--Item Panel Templates-->
+
+    <ItemsPanelTemplate x:Key="VerticalStackPanelItemsPanel">
+        <StackPanel Orientation="Vertical" />
+    </ItemsPanelTemplate>
+
+    <ItemsPanelTemplate x:Key="VerticalItemsStackPanelItemsPanel">
+        <ItemsStackPanel Orientation="Vertical" />
+    </ItemsPanelTemplate>
 
     <!-- TextBlock styles -->
 
@@ -271,7 +281,7 @@
         <Setter Property="Margin" Value="0,0,0,40"/>
     </Style>
 
-    <Style x:Key="SnappedPageHeaderTextStyle" TargetType="TextBlock" BasedOn="{StaticResource PageSubheaderTextStyle}">
+    <Style x:Key="MinimalPageHeaderTextStyle" TargetType="TextBlock" BasedOn="{StaticResource PageSubheaderTextStyle}">
         <Setter Property="Margin" Value="0,0,18,40"/>
     </Style>
 
@@ -389,13 +399,13 @@
     </Style>
 
     <!--
-        SnappedBackButtonStyle is used to style a Button for use in the title area of a snapped page.  Margins appropriate
+        MinimalBackButtonStyle is used to style a Button for use in the title area of a minimal layout page.  Margins appropriate
         for the conventional page layout are included as part of the style.
         
-        The obvious duplication here is necessary as the glyphs used in snapped are not merely smaller versions of the same
+        The obvious duplication here is necessary as the glyphs used in minimal layout are not merely smaller versions of the same
         glyph but are actually distinct.
     -->
-    <Style x:Key="SnappedBackButtonStyle" TargetType="Button">
+    <Style x:Key="MinimalBackButtonStyle" TargetType="Button">
         <Setter Property="MinWidth" Value="0"/>
         <Setter Property="Margin" Value="20,0,0,0"/>
         <Setter Property="VerticalAlignment" Value="Bottom"/>
@@ -411,7 +421,7 @@
                     <Grid x:Name="RootGrid" Width="36" Height="36" Margin="-3,0,7,33">
                         <Grid Margin="-1,-1,0,0">
                             <TextBlock x:Name="BackgroundGlyph" Text="&#xE0D4;" Foreground="{StaticResource BackButtonBackgroundThemeBrush}"/>
-                            <TextBlock x:Name="NormalGlyph" Text="{StaticResource BackButtonSnappedGlyph}" Foreground="{StaticResource BackButtonForegroundThemeBrush}"/>
+                            <TextBlock x:Name="NormalGlyph" Text="{StaticResource BackButtonMinimalGlyph}" Foreground="{StaticResource BackButtonForegroundThemeBrush}"/>
                             <TextBlock x:Name="ArrowGlyph" Text="&#xE0C4;" Foreground="{StaticResource BackButtonPressedForegroundThemeBrush}" Opacity="0"/>
                         </Grid>
                         <Rectangle
@@ -505,7 +515,7 @@
     </Style>
 
     <Style x:Key="VerticalScrollViewerStyle" TargetType="ScrollViewer">
-        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="HorizontalScrollBarVisibility" Value="Hidden"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
         <Setter Property="ScrollViewer.VerticalScrollMode" Value="Enabled" />

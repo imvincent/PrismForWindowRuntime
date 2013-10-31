@@ -64,7 +64,6 @@ namespace AdventureWorks.UILogic.ViewModels
             _signInUserControlViewModel = signInUserControlViewModel;
 
             SubmitCommand = DelegateCommand.FromAsyncHandler(SubmitAsync, CanSubmit);
-            GoBackCommand = new DelegateCommand(_navigationService.GoBack);
 
             EditCheckoutDataCommand = new DelegateCommand(EditCheckoutData);
             SelectCheckoutDataCommand = new DelegateCommand(async () => await SelectCheckoutDataAsync());
@@ -181,8 +180,6 @@ namespace AdventureWorks.UILogic.ViewModels
         }
 
         public DelegateCommand SubmitCommand { get; private set; }
-
-        public DelegateCommand GoBackCommand { get; private set; }
 
         public DelegateCommand EditCheckoutDataCommand { get; private set; }
 

@@ -96,6 +96,33 @@ namespace Microsoft.Practices.Prism.StoreApps
 
         #region Navigation support
 
+        DelegateCommand _goBackCommand;
+
+        /// <summary>
+        /// <see cref="DelegateCommand"/> used to bind to the back Button's Command property
+        /// for navigating to the most recent item in back navigation history, if a Frame
+        /// manages its own navigation history.
+        /// 
+        /// The <see cref="DelegateCommand"/> is set up to use the virtual method <see cref="GoBack"/>
+        /// as the Execute Action and <see cref="CanGoBack"/> for CanExecute.
+        /// </summary>
+        public DelegateCommand GoBackCommand
+        {
+            get
+            {
+                if (_goBackCommand == null)
+                {
+                    _goBackCommand = new DelegateCommand(
+                        () => this.GoBack(this, null),
+                        () => this.CanGoBack());
+                }
+                return _goBackCommand;
+            }
+            set
+            {
+                _goBackCommand = value;
+            }
+        }
         /// <summary>
         /// Invoked as an event handler to navigate backward in the page's associated
         /// <see cref="Frame"/> until it reaches the top of the navigation stack.
@@ -109,6 +136,19 @@ namespace Microsoft.Practices.Prism.StoreApps
             {
                 while (this.Frame.CanGoBack) this.Frame.GoBack();
             }
+        }
+
+        /// <summary>
+        /// Virtual method used by the <see cref="GoBackCommand"/> property
+        /// to determine if the <see cref="Frame"/> can go back.
+        /// </summary>
+        /// <returns>
+        /// true if the <see cref="Frame"/> has at least one entry 
+        /// in the back navigation history.
+        /// </returns>
+        public virtual bool CanGoBack()
+        {
+            return this.Frame != null && this.Frame.CanGoBack;
         }
 
         /// <summary>

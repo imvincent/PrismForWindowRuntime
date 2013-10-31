@@ -254,7 +254,7 @@
     <comment>Title of the Change Defaults Page</comment>
   </data>
   <data name="CheckoutButton.Content" xml:space="preserve">
-    <value>CHECKOUT</value>
+    <value>Checkout</value>
     <comment>Text of the checkout button used for initiating the checkout process</comment>
   </data>
   <data name="CheckoutHubTitle.Text" xml:space="preserve">

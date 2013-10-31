@@ -26,6 +26,7 @@ using Windows.UI.Notifications;
 using Windows.UI.Xaml;
 using AdventureWorks.Shopper.Services;
 using AdventureWorks.Shopper.Views;
+using Windows.UI.ApplicationSettings;
 
 namespace AdventureWorks.Shopper
 {
@@ -152,27 +153,27 @@ namespace AdventureWorks.Shopper
             return _container.Resolve(type);
         }
 
-        protected override IList<SettingsCharmActionItem> GetSettingsCharmActionItems()
+        protected override IList<SettingsCommand> GetSettingsCommands()
         {
-            var settingsCharmItems = new List<SettingsCharmActionItem>();
+            var settingsCommands = new List<SettingsCommand>();
             var accountService = _container.Resolve<IAccountService>();
             var resourceLoader = _container.Resolve<IResourceLoader>();
 
             if (accountService.SignedInUser == null)
             {
-                settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("LoginText"), () => new SignInFlyout().Show()));
+                settingsCommands.Add(new SettingsCommand(Guid.NewGuid().ToString(), resourceLoader.GetString("LoginText"), (c) => new SignInFlyout().Show()));
             }
             else
             {
-                settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("LogoutText"), () => new SignOutFlyout().Show()));
-                settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("AddShippingAddressTitle"), () => NavigationService.Navigate("ShippingAddress", null)));
-                settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("AddBillingAddressTitle"), () => NavigationService.Navigate("BillingAddress", null)));
-                settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("AddPaymentMethodTitle"), () => NavigationService.Navigate("PaymentMethod", null)));
-                settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("ChangeDefaults"), () => new ChangeDefaultsFlyout().Show()));
+                settingsCommands.Add(new SettingsCommand(Guid.NewGuid().ToString(), resourceLoader.GetString("LogoutText"), (c) => new SignOutFlyout().Show()));
+                settingsCommands.Add(new SettingsCommand(Guid.NewGuid().ToString(), resourceLoader.GetString("AddShippingAddressTitle"), (c) => NavigationService.Navigate("ShippingAddress", null)));
+                settingsCommands.Add(new SettingsCommand(Guid.NewGuid().ToString(), resourceLoader.GetString("AddBillingAddressTitle"), (c) => NavigationService.Navigate("BillingAddress", null)));
+                settingsCommands.Add(new SettingsCommand(Guid.NewGuid().ToString(), resourceLoader.GetString("AddPaymentMethodTitle"), (c) => NavigationService.Navigate("PaymentMethod", null)));
+                settingsCommands.Add(new SettingsCommand(Guid.NewGuid().ToString(), resourceLoader.GetString("ChangeDefaults"), (c) => new ChangeDefaultsFlyout().Show()));
             }
-            settingsCharmItems.Add(new SettingsCharmActionItem(resourceLoader.GetString("PrivacyPolicy"), async () => await Launcher.LaunchUriAsync(new Uri(resourceLoader.GetString("PrivacyPolicyUrl")))));
+            settingsCommands.Add(new SettingsCommand(Guid.NewGuid().ToString(), resourceLoader.GetString("PrivacyPolicy"), async (c) => await Launcher.LaunchUriAsync(new Uri(resourceLoader.GetString("PrivacyPolicyUrl")))));
 
-            return settingsCharmItems;
+            return settingsCommands;
         }
     }
 }

@@ -113,7 +113,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// Gets the Settings charm action items.
         /// </summary>
         /// <returns>The list of Setting charm action items that will populate the Settings pane.</returns>
-        protected virtual IList<SettingsCharmActionItem> GetSettingsCharmActionItems()
+        protected virtual IList<SettingsCommand> GetSettingsCommands()
         {
             return null;
         }
@@ -300,7 +300,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         }
 
         /// <summary>
-        /// Called when the Settings charm is invoked, this handler populates the Settings charm with the charm items returned by the GetSettingsCharmActionItems function.
+        /// Called when the Settings charm is invoked, this handler populates the Settings charm with the charm items returned by the GetSettingsCommands function.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="args">The <see cref="SettingsPaneCommandsRequestedEventArgs"/> instance containing the event data.</param>
@@ -312,11 +312,10 @@ namespace Microsoft.Practices.Prism.StoreApps
             }
 
             var applicationCommands = args.Request.ApplicationCommands;
-            var settingsCharmActionItems = GetSettingsCharmActionItems();
+            var settingsCommands = GetSettingsCommands();
 
-            foreach (var item in settingsCharmActionItems)
+            foreach (var settingsCommand in settingsCommands)
             {
-                var settingsCommand = new SettingsCommand(item.Id, item.Title, (o) => item.Action.Invoke());
                 applicationCommands.Add(settingsCommand);
             }
         }

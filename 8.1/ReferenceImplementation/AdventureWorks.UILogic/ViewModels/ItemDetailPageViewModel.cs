@@ -38,7 +38,7 @@ namespace AdventureWorks.UILogic.ViewModels
         private bool _isBottomAppBarOpened;
         private int _selectedIndex;
 
-        public ItemDetailPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService, IShoppingCartRepository shoppingCartRepository, IAlertMessageService alertMessageService, IResourceLoader resourceLoader, ISecondaryTileService secondaryTileService, ISearchPaneService searchPaneService)
+        public ItemDetailPageViewModel(IProductCatalogRepository productCatalogRepository, IShoppingCartRepository shoppingCartRepository, IAlertMessageService alertMessageService, IResourceLoader resourceLoader, ISecondaryTileService secondaryTileService, ISearchPaneService searchPaneService)
         {
             _productCatalogRepository = productCatalogRepository;
             _shoppingCartRepository = shoppingCartRepository;
@@ -47,13 +47,10 @@ namespace AdventureWorks.UILogic.ViewModels
             _secondaryTileService = secondaryTileService;
             _searchPaneService = searchPaneService;
 
-            GoBackCommand = new DelegateCommand(navigationService.GoBack, navigationService.CanGoBack);
-
             PinProductCommand = DelegateCommand.FromAsyncHandler(PinProduct, () => SelectedProduct != null);
             UnpinProductCommand = DelegateCommand.FromAsyncHandler(UnpinProduct, () => SelectedProduct != null);
         }
 
-        public DelegateCommand GoBackCommand { get; private set; }
         public DelegateCommand PinProductCommand { get; private set; }
         public DelegateCommand UnpinProductCommand { get; private set; }
 

@@ -50,7 +50,7 @@
                     Grid.Row="1"
                     Command="{Binding ContinueShoppingCommand}"
                     Width="300"
-                    Margin="0,50,0,0"
+                    Margin="0,80,0,0"
                     VerticalAlignment="Top"
                     Background="{StaticResource AWShopperAccentBrush}" />
 
@@ -59,20 +59,29 @@
             <!-- Visual states reflect the application's view state -->
             <VisualStateGroup x:Name="ApplicationViewStates">
                 <VisualState x:Name="DefaultLayout" />
-                <VisualState x:Name="PortraitLayout" />
+                <VisualState x:Name="PortraitLayout" >
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.ColumnDefinitions[0].Width"
+                                                       Storyboard.TargetName="MainGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>40</DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
 
-                <!-- The title has different style when snapped -->
+                <!-- The title has different style when in minimal layout -->
                 <VisualState x:Name="MinimalLayout">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle"
                                                        Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="{StaticResource SnappedPageHeaderTextStyle}" />
+                                                    Value="{StaticResource MinimalPageHeaderTextStyle}" />
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.ColumnDefinitions[0].Width"
                                                        Storyboard.TargetName="MainGrid">
                             <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>10</DiscreteObjectKeyFrame.Value>
+                                <DiscreteObjectKeyFrame.Value>20</DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>

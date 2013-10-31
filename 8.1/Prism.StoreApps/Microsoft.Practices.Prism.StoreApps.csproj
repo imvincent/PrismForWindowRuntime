@@ -107,7 +107,6 @@
   <ItemGroup>
     <Compile Include="AppManifestHelper.cs" />
     <Compile Include="BindableBase.cs" />
-    <Compile Include="SettingsCharmActionItem.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="DelegateCommandBase.cs" />
     <Compile Include="BindableValidator.cs" />
@@ -139,9 +138,6 @@
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Strings\en-US\Resources.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="TemporaryKey.pfx" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>

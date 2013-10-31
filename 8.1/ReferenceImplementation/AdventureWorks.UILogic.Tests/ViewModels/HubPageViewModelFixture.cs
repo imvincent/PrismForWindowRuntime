@@ -48,49 +48,6 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
         }
 
         [TestMethod]
-        public void ProductNav_With_Valid_Parameter()
-        {
-            var repository = new MockProductCatalogRepository();
-            var navigationService = new MockNavigationService();
-            var productToNavigate =
-              new ProductViewModel(new Product()
-              {
-                  ListPrice = 100,
-                  DiscountPercentage = 50,
-                  ProductNumber = "p1",
-                  ImageUri = new Uri("http://image"),
-                  Currency = "USD",
-                  Title = "My Title",
-                  Description = "My Description",
-              });
-            navigationService.NavigateDelegate = (pageName, categoryId) =>
-            {
-                Assert.AreEqual("ItemDetail", pageName);
-                Assert.AreEqual(productToNavigate.ProductNumber, categoryId);
-                return true;
-            };
-
-            var viewModel = new HubPageViewModel(repository, navigationService, null, null, null);
-            viewModel.ProductNavigationAction.Invoke(productToNavigate);
-        }
-
-        [TestMethod]
-        public void ProductNav_With_Null_Parameter_Does_Not_Navigate()
-        {
-            var repository = new MockProductCatalogRepository();
-            var navigationService = new MockNavigationService();
-
-            navigationService.NavigateDelegate = (pageName, categoryId) =>
-            {
-                Assert.Fail();
-                return false;
-            };
-                
-            var viewModel = new HubPageViewModel(repository, navigationService, null, null, null);
-            viewModel.ProductNavigationAction.Invoke(null);
-        }
-
-        [TestMethod]
         public void FailedCallToProductCatalogRepository_ShowsAlert()
         {
             var alertCalled = false;

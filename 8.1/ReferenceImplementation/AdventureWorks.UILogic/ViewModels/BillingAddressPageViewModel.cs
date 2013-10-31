@@ -38,7 +38,6 @@ namespace AdventureWorks.UILogic.ViewModels
             _navigationService = navigationService;
 
             SaveCommand = DelegateCommand.FromAsyncHandler(SaveAsync);
-            GoBackCommand = new DelegateCommand(() => _navigationService.GoBack());
         }
 
         public IBillingAddressUserControlViewModel BillingAddressViewModel
@@ -53,8 +52,6 @@ namespace AdventureWorks.UILogic.ViewModels
         }
 
         public ICommand SaveCommand { get; private set; }
-
-        public ICommand GoBackCommand { get; private set; }
 
         public override async void OnNavigatedTo(object navigationParameter, Windows.UI.Xaml.Navigation.NavigationMode navigationMode, Dictionary<string, object> viewModelState)
         {

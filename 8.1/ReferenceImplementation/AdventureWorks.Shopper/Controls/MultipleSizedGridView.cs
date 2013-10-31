@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace AdventureWorks.Shopper.Controls
 {
-    public class MultipleSizedGridView : GridView
+    public class MultipleSizedGridView : AutoRotatingGridView
     {
         private int _rowVal;
         private int _colVal;

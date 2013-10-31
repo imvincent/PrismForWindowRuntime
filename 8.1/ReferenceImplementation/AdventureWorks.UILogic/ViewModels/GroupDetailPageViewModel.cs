@@ -16,28 +16,25 @@ using Windows.UI.Xaml.Navigation;
 using AdventureWorks.UILogic.Services;
 using System.Globalization;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace AdventureWorks.UILogic.ViewModels
 {
     public class GroupDetailPageViewModel : ViewModel
     {
         private readonly IProductCatalogRepository _productCatalogRepository;
-        private readonly INavigationService _navigationService;
         private readonly IAlertMessageService _alertMessageService;
         private readonly IResourceLoader _resourceLoader;
         private readonly ISearchPaneService _searchPaneService;
         private string _title;
         private IReadOnlyCollection<ProductViewModel> _items;
 
-        public GroupDetailPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService, IAlertMessageService alertMessageService, IResourceLoader resourceLoader, ISearchPaneService searchPaneService)
+        public GroupDetailPageViewModel(IProductCatalogRepository productCatalogRepository, IAlertMessageService alertMessageService, IResourceLoader resourceLoader, ISearchPaneService searchPaneService)
         {
             _productCatalogRepository = productCatalogRepository;
-            _navigationService = navigationService;
             _alertMessageService = alertMessageService;
             _resourceLoader = resourceLoader;
             _searchPaneService = searchPaneService;
-            ProductNavigationAction = NavigateToProduct;
-            GoBackCommand = new DelegateCommand(navigationService.GoBack, navigationService.CanGoBack);
         }
 
         public string Title
@@ -51,9 +48,6 @@ namespace AdventureWorks.UILogic.ViewModels
             get { return _items; }
             private set { SetProperty(ref _items, value); }
         }
-
-        public Action<object> ProductNavigationAction { get; private set; }
-        public DelegateCommand GoBackCommand { get; private set; }
 
         public async override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewModelState)
         {
@@ -92,13 +86,5 @@ namespace AdventureWorks.UILogic.ViewModels
             }
         }
 
-        private void NavigateToProduct(object parameter)
-        {
-            var product = parameter as ProductViewModel;
-            if (product != null)
-            {
-                _navigationService.Navigate("ItemDetail", product.ProductNumber);
-            }
-        }
     }
 }

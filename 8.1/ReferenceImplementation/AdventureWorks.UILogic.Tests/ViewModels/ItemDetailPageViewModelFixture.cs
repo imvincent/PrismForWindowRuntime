@@ -27,7 +27,6 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
         public void OnNavigatedTo_Fill_Items_And_SelectedProduct()
         {
             var repository = new MockProductCatalogRepository();
-            var navigationService = new MockNavigationService();
 
             repository.GetProductAsyncDelegate = (productNumber) =>
                 {
@@ -60,7 +59,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
 
             var secondaryTileService = new MockSecondaryTileService() { SecondaryTileExistsDelegate = s => false};
 
-            var target = new ItemDetailPageViewModel(repository, navigationService, new MockShoppingCartRepository(), null, null, secondaryTileService, new MockSearchPaneService());
+            var target = new ItemDetailPageViewModel(repository, new MockShoppingCartRepository(), null, null, secondaryTileService, new MockSearchPaneService());
             target.OnNavigatedTo("1", NavigationMode.New, null);
 
             Assert.IsNotNull(target.Items);
@@ -72,7 +71,6 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
         public void OnNavigatedTo_When_Service_Not_Available_Then_Pops_Alert()
         {
             var repository = new MockProductCatalogRepository();
-            var navigationService = new MockNavigationService();
             var alertService = new MockAlertMessageService();
             var resourceLoader = new MockResourceLoader();
 
@@ -93,49 +91,10 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                     return Task.FromResult(string.Empty);
                 };
 
-            var target = new ItemDetailPageViewModel(repository, navigationService, new MockShoppingCartRepository(), alertService, resourceLoader, null, new MockSearchPaneService());
+            var target = new ItemDetailPageViewModel(repository, new MockShoppingCartRepository(), alertService, resourceLoader, null, new MockSearchPaneService());
             target.OnNavigatedTo("1", NavigationMode.New, null);
 
             Assert.IsTrue(alertCalled);
-        }
-
-        [TestMethod]
-        public async Task GoBack_When_CanGoBack_Is_Not_True()
-        {
-            var repository = new MockProductCatalogRepository();
-            var navigationService = new MockNavigationService
-                {
-                    CanGoBackDelegate = () => false,
-                    GoBackDelegate = Assert.Fail
-                };
-
-            var target = new ItemDetailPageViewModel(repository, navigationService, new MockShoppingCartRepository(), null, null, null, null);
-            bool canExecute = target.GoBackCommand.CanExecute();
-
-            if (canExecute) await target.GoBackCommand.Execute();
-        }
-
-        [TestMethod]
-        public async Task GoBack_When_CanGoBack_Is_True()
-        {
-            var repository = new MockProductCatalogRepository();
-            var navigationService = new MockNavigationService
-                {
-                    CanGoBackDelegate = () => true,
-                    GoBackDelegate = () => Assert.IsTrue(true, "I can go back")
-                };
-
-            var target = new ItemDetailPageViewModel(repository, navigationService, new MockShoppingCartRepository(), null, null, null, null);
-            bool canExecute = target.GoBackCommand.CanExecute();
-
-            if (canExecute)
-            {
-                await target.GoBackCommand.Execute();
-            }
-            else
-            {
-                Assert.Fail();
-            }
         }
 
         [TestMethod]
@@ -143,7 +102,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
         {
             bool fired = false;
             var secondaryTileService = new MockSecondaryTileService() { ActivateTileNotificationsDelegate = (a, b, c) => Task.Delay(0) };
-            var target = new ItemDetailPageViewModel(null, new MockNavigationService(), null, null, null, secondaryTileService, null);
+            var target = new ItemDetailPageViewModel(null, null, null, null, secondaryTileService, null);
 
             // Case 1: Item not selected --> should not be fired
             secondaryTileService.SecondaryTileExistsDelegate = (a) => false;
@@ -183,7 +142,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                 SecondaryTileExistsDelegate = (a) => false ,
                 ActivateTileNotificationsDelegate = (a, b, c) => Task.Delay(0)
             };
-            var target = new ItemDetailPageViewModel(null, new MockNavigationService(), null, null, null, secondaryTileService, null);
+            var target = new ItemDetailPageViewModel(null, null, null, null, secondaryTileService, null);
             target.SelectedProduct = new ProductViewModel(new Product() { ImageUri = new Uri("http://dummy-image-uri.com") });
 
             // The AppBar should be sticky when the item is being pinned
@@ -222,7 +181,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                         Assert.IsNotNull(recurrence);
                     }
             };
-            var target = new ItemDetailPageViewModel(null, new MockNavigationService(), null, null, null, tileService, null);
+            var target = new ItemDetailPageViewModel(null, null, null, null, tileService, null);
             target.SelectedProduct = new ProductViewModel(new Product() { ProductNumber = "MyProduct", ImageUri = new Uri("http://dummy-image-uri.com") });
 
             await target.PinProductCommand.Execute();
@@ -233,7 +192,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
         {
             bool fired = false;
             var secondaryTileService = new MockSecondaryTileService();
-            var target = new ItemDetailPageViewModel(null, new MockNavigationService(), null, null, null, secondaryTileService, null);
+            var target = new ItemDetailPageViewModel(null, null, null, null, secondaryTileService, null);
 
             // Case 1: Item not selected --> should not be fired
             secondaryTileService.SecondaryTileExistsDelegate = (a) => true;
@@ -264,7 +223,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
         public async Task UnpinFromStart_Changes_IsBottomAppBarSticky()
         {
             var tileService = new MockSecondaryTileService() { SecondaryTileExistsDelegate = (a) => false };
-            var target = new ItemDetailPageViewModel(null, new MockNavigationService(), null, null, null, tileService, null);
+            var target = new ItemDetailPageViewModel(null, null, null, null, tileService, null);
             target.SelectedProduct = new ProductViewModel(new Product() { ImageUri = new Uri("http://dummy-image-uri.com") });
 
             // The AppBar should be sticky when the item is being unpinned

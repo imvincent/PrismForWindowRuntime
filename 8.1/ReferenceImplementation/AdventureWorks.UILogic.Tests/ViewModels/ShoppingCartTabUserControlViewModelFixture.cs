@@ -40,7 +40,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             var accountService = new MockAccountService();
             accountService.VerifyUserAuthenticationAsyncDelegate = () => Task.FromResult((UserInfo)null);
             shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult(shoppingCart);
-            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, null, null, null, accountService);
+            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, null, null, accountService);
 
             Assert.AreEqual(3, target.ItemCount);
         }
@@ -62,7 +62,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             };
             var accountService = new MockAccountService();
             accountService.VerifyUserAuthenticationAsyncDelegate = () => Task.FromResult((UserInfo)null);
-            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, null, null, null, accountService);
+            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, null, null, accountService);
 
             shoppingCart = new ShoppingCart(new List<ShoppingCartItem>()
                                                {
@@ -76,34 +76,6 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
 
             Assert.AreEqual(3, target.ItemCount);
 
-        }
-
-        [TestMethod]
-        public void ExecutingShoppingCartCommand_NavigatesToShoppingCart()
-        {
-            var navigateCalled = false;
-            var navigationService = new MockNavigationService();
-            navigationService.NavigateDelegate = (s, o) =>
-                                                     {
-                                                         Assert.AreEqual("ShoppingCart", s);
-                                                         navigateCalled = true;
-                                                         return true;
-                                                     };
-            var eventAggregator = new MockEventAggregator();
-            eventAggregator.GetEventDelegate = type =>
-            {
-                if (type == typeof(ShoppingCartUpdatedEvent)) return new ShoppingCartUpdatedEvent();
-                if (type == typeof(ShoppingCartItemUpdatedEvent)) return new ShoppingCartItemUpdatedEvent();
-                return null;
-            };
-            var shoppingCartRepository = new MockShoppingCartRepository();
-            shoppingCartRepository.GetShoppingCartAsyncDelegate = () => Task.FromResult(new ShoppingCart(null));
-            var accountService = new MockAccountService();
-            accountService.VerifyUserAuthenticationAsyncDelegate = () => Task.FromResult((UserInfo)null);
-            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, navigationService, null, null, accountService);
-            target.ShoppingCartTabCommand.Execute();
-
-            Assert.IsTrue(navigateCalled);
         }
 
         [TestMethod]
@@ -122,7 +94,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             };
             var accountService = new MockAccountService();
             accountService.VerifyUserAuthenticationAsyncDelegate = () => Task.FromResult((UserInfo)null);
-            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, null, null, null, accountService);
+            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, eventAggregator, null, null, accountService);
 
             shoppingCartUpdatedEvent.Publish(null);
 
@@ -152,8 +124,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                                                         };
             var accountService = new MockAccountService();
             accountService.VerifyUserAuthenticationAsyncDelegate = () => Task.FromResult((UserInfo)null);
-            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, null, null,
-                                                                 alertMessageService, new MockResourceLoader(), accountService);
+            var target = new ShoppingCartTabUserControlViewModel(shoppingCartRepository, null, alertMessageService, new MockResourceLoader(), accountService);
 
             Assert.IsTrue(alertCalled);
         }

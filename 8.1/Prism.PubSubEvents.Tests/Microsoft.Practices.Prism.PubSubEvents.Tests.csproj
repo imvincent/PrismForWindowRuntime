@@ -147,9 +147,6 @@
       <Name>Microsoft.Practices.Prism.PubSubEvents</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="TemporaryKey.pfx" />
-  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>

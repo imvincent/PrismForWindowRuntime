@@ -34,6 +34,8 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// </summary>
         public static readonly ReadOnlyCollection<string> EmptyErrorsCollection = new ReadOnlyCollection<string>(new List<string>());
 
+        private Func<string, string, string> _getResourceDelegate;
+
         /// <summary>
         /// Initializes a new instance of the BindableValidator class with the entity to validate.
         /// </summary>
@@ -43,7 +45,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         public BindableValidator(INotifyPropertyChanged entityToValidate, Func<string, string, string> getResourceDelegate)
             : this(entityToValidate)
         {
-            GetResource = getResourceDelegate;
+            _getResourceDelegate = getResourceDelegate;
         }
 
         /// <summary>
@@ -60,7 +62,7 @@ namespace Microsoft.Practices.Prism.StoreApps
 
             _entityToValidate = entityToValidate;
             IsValidationEnabled = true;
-            GetResource = (mapId, key) =>
+            _getResourceDelegate = (mapId, key) =>
             {
                 var resourceLoader = ResourceLoader.GetForCurrentView(mapId);
                 return resourceLoader.GetString(key);
@@ -105,11 +107,6 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// Returns true if the Validation functionality is enabled. Otherwise, false.
         /// </summary>
         public bool IsValidationEnabled { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private Func<string, string, string> GetResource { get; set; }
 
         /// <summary>
         /// Returns a new ReadOnlyDictionary containing all the errors of the Entity, separated by property.
@@ -164,7 +161,7 @@ namespace Microsoft.Practices.Prism.StoreApps
 
             if (propertyInfo == null)
             {
-                var errorString = GetResource(Constants.StoreAppsInfrastructureResourceMapId, "InvalidPropertyNameException");
+                var errorString = _getResourceDelegate(Constants.StoreAppsInfrastructureResourceMapId, "InvalidPropertyNameException");
 
                 throw new ArgumentException(errorString, propertyName);
             }

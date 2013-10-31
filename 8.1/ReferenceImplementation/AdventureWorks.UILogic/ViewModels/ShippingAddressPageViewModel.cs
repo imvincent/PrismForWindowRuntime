@@ -38,7 +38,6 @@ namespace AdventureWorks.UILogic.ViewModels
             _navigationService = navigationService;
 
             SaveCommand = DelegateCommand.FromAsyncHandler(SaveAsync);
-            GoBackCommand = new DelegateCommand(() => _navigationService.GoBack());
         }
 
         public IShippingAddressUserControlViewModel ShippingAddressViewModel

@@ -42,7 +42,7 @@
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton"
                     AutomationProperties.AutomationId="ItemDetailsPageBackButton"
-                    Command="{Binding GoBackCommand}"
+                    Command="{Binding GoBackCommand, ElementName=pageRoot}"
                     Style="{StaticResource BackButtonStyle}" />
             <TextBlock x:Name="pageTitle"
                        x:Uid="ProductInformationTitle"
@@ -77,7 +77,6 @@
                   ItemsSource="{Binding Items}"
                   SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
                   SelectedItem="{Binding SelectedProduct, Mode=TwoWay}">
-
             <FlipView.ItemTemplate>
                 <DataTemplate>
                     <!--
@@ -88,7 +87,7 @@
                                  Unloaded="StopLayoutUpdates">
                         <ScrollViewer x:Name="scrollViewer"
                                       Grid.Row="1"
-                                      Padding="120,0,0,0"
+                                      Padding="120,0,0,50"
                                       ZoomMode="Disabled"
                                       VerticalScrollBarVisibility="Auto"
                                       HorizontalScrollBarVisibility="Auto">
@@ -120,10 +119,12 @@
                                     <Image Grid.Row="1"
                                            x:Name="ProductImage"
                                            Width="320"
+                                           MaxHeight="400"
                                            Margin="0,30,0,0"
                                            Source="{Binding Image}"
                                            Stretch="Uniform" />
-                                    <Button Grid.Row="2"
+                                    <Button x:Name="addToCartButton"
+                                            Grid.Row="2"
                                             x:Uid="AddToCartButton"
                                             AutomationProperties.AutomationId="AddToCartButton"
                                             Content="Add to Cart"
@@ -136,7 +137,7 @@
                                       Column="1"
                                       Width="320"
                                       HorizontalAlignment="Stretch"
-                                      Margin="25,0,0,0">
+                                      Margin="40,0,0,0">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
@@ -182,7 +183,8 @@
                                                    Foreground="Yellow"
                                                    FontSize="20"></TextBlock>
                                     </StackPanel>
-                                    <TextBlock Grid.Row="5"
+                                    <TextBlock x:Name="textBlock2"
+                                               Grid.Row="5"
                                                Text="{Binding Description}"
                                                MaxHeight="220"
                                                Margin="0,15,10,10"
@@ -193,7 +195,7 @@
                                 <Grid x:Name="grid3"
                                       Column="2"
                                       Width="450"
-                                      Margin="25,0,0,0">
+                                      Margin="40,0,0,0">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
@@ -376,38 +378,6 @@
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)"
-                                                                           Storyboard.TargetName="grid1">
-                                                <DiscreteObjectKeyFrame KeyTime="0">
-                                                    <DiscreteObjectKeyFrame.Value>
-                                                        <x:Double>500</x:Double>
-                                                    </DiscreteObjectKeyFrame.Value>
-                                                </DiscreteObjectKeyFrame>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)"
-                                                                           Storyboard.TargetName="ProductImage">
-                                                <DiscreteObjectKeyFrame KeyTime="0">
-                                                    <DiscreteObjectKeyFrame.Value>
-                                                        <x:Double>500</x:Double>
-                                                    </DiscreteObjectKeyFrame.Value>
-                                                </DiscreteObjectKeyFrame>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)"
-                                                                           Storyboard.TargetName="grid2">
-                                                <DiscreteObjectKeyFrame KeyTime="0">
-                                                    <DiscreteObjectKeyFrame.Value>
-                                                        <x:Double>500</x:Double>
-                                                    </DiscreteObjectKeyFrame.Value>
-                                                </DiscreteObjectKeyFrame>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)"
-                                                                           Storyboard.TargetName="grid3">
-                                                <DiscreteObjectKeyFrame KeyTime="0">
-                                                    <DiscreteObjectKeyFrame.Value>
-                                                        <x:Double>500</x:Double>
-                                                    </DiscreteObjectKeyFrame.Value>
-                                                </DiscreteObjectKeyFrame>
-                                            </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Row)"
                                                                            Storyboard.TargetName="grid2">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
@@ -456,18 +426,66 @@
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="grid3">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <x:Double>NaN</x:Double>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.MaxWidth)" Storyboard.TargetName="textBlock2">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <x:Double>380</x:Double>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="grid2">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <x:Double>NaN</x:Double>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.HorizontalAlignment)" Storyboard.TargetName="grid3">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <HorizontalAlignment>Left</HorizontalAlignment>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.MaxWidth)" Storyboard.TargetName="grid3">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <x:Double>400</x:Double>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.HorizontalAlignment)" Storyboard.TargetName="textBlock2">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <HorizontalAlignment>Left</HorizontalAlignment>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="addToCartButton">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Thickness>10,10,10,0</Thickness>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="ProductImage">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <x:Double>360</x:Double>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="MinimalLayout">
                                         <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)"
-                                                                           Storyboard.TargetName="mainGrid">
-                                                <DiscreteObjectKeyFrame KeyTime="0">
-                                                    <DiscreteObjectKeyFrame.Value>
-                                                        <x:Double>300</x:Double>
-                                                    </DiscreteObjectKeyFrame.Value>
-                                                </DiscreteObjectKeyFrame>
-                                            </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"
                                                                            Storyboard.TargetName="mainGrid">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
@@ -480,7 +498,7 @@
                                                                            Storyboard.TargetName="grid1">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
-                                                        <x:Double>260</x:Double>
+                                                        <x:Double>NaN</x:Double>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
@@ -564,14 +582,6 @@
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)"
-                                                                           Storyboard.TargetName="scrollViewer">
-                                                <DiscreteObjectKeyFrame KeyTime="0">
-                                                    <DiscreteObjectKeyFrame.Value>
-                                                        <x:Double>315</x:Double>
-                                                    </DiscreteObjectKeyFrame.Value>
-                                                </DiscreteObjectKeyFrame>
-                                            </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.Padding)"
                                                                            Storyboard.TargetName="scrollViewer">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
@@ -593,6 +603,13 @@
                                                 <DiscreteObjectKeyFrame KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
                                                         <ScrollMode>Disabled</ScrollMode>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ScrollViewer.HorizontalScrollBarVisibility)" Storyboard.TargetName="scrollViewer">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <ScrollBarVisibility>Hidden</ScrollBarVisibility>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
@@ -628,21 +645,32 @@
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="{StaticResource PortraitBackButtonStyle}" />
                         </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle"
+                                                       Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="{StaticResource MinimalPageHeaderTextStyle}" />
+                        </ObjectAnimationUsingKeyFrames>
+
                     </Storyboard>
                 </VisualState>
 
-                <!-- The back button and title have different styles when snapped -->
+                <!-- The back button and title have different styles when in minimal layout -->
                 <VisualState x:Name="MinimalLayout">
                     <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="flipView"
+                                                       Storyboard.TargetProperty="ItemsPanel">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="{StaticResource VerticalStackPanelItemsPanel}" />
+                        </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton"
                                                        Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="{StaticResource SnappedBackButtonStyle}" />
+                                                    Value="{StaticResource MinimalBackButtonStyle}" />
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle"
                                                        Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="{StaticResource SnappedPageHeaderTextStyle}" />
+                                                    Value="{StaticResource MinimalPageHeaderTextStyle}" />
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"
                                                        Storyboard.TargetName="shoppingCartTabUserControl">

@@ -50,11 +50,9 @@ namespace AdventureWorks.UILogic.ViewModels
             _alertMessageService = alertMessageService;
             _resourceLoader = resourceLoader;
 
-            GoBackCommand = new DelegateCommand(navigationService.GoBack, navigationService.CanGoBack);
             GoNextCommand = new DelegateCommand(GoNext);
         }
 
-        public DelegateCommand GoBackCommand { get; private set; }
         public DelegateCommand GoNextCommand { get; private set; }
 
         public IShippingAddressUserControlViewModel ShippingAddressViewModel { get { return _shippingAddressViewModel; } }

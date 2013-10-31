@@ -26,7 +26,6 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
         public void OnNavigatingTo_Search_Results_Page_With_Search_Term()
         {
             var repository = new MockProductCatalogRepository();
-            var navigationService = new MockNavigationService();
             repository.GetFilteredProductsAsyncDelegate = (queryString) =>
                 {
                     ReadOnlyCollection<Product> products;
@@ -49,7 +48,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                     return Task.FromResult(new SearchResult(3, products));
                 };
 
-            var target = new SearchResultsPageViewModel(repository, navigationService, new MockSearchPaneService(), new MockResourceLoader(), new MockAlertMessageService());
+            var target = new SearchResultsPageViewModel(repository, new MockSearchPaneService(), new MockResourceLoader(), new MockAlertMessageService());
             const string searchTerm = "bike";
             target.OnNavigatedTo(searchTerm, NavigationMode.New, null);
             Assert.AreEqual("bike", target.SearchTerm);
@@ -63,7 +62,6 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
         public void OnNavigatingTo_Search_Results_Page_Without_Search_Term()
         {
             var repository = new MockProductCatalogRepository();
-            var navigationService = new MockNavigationService();
             repository.GetFilteredProductsAsyncDelegate = (queryString) =>
             {
                 ReadOnlyCollection<Product> products;
@@ -86,45 +84,12 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                 return Task.FromResult(new SearchResult(3, products));
             };
 
-            var target = new SearchResultsPageViewModel(repository, navigationService, new MockSearchPaneService(), new MockResourceLoader(), new MockAlertMessageService());
+            var target = new SearchResultsPageViewModel(repository, new MockSearchPaneService(), new MockResourceLoader(), new MockAlertMessageService());
             var searchTerm = string.Empty;
             target.OnNavigatedTo(searchTerm, NavigationMode.New, null);
             Assert.AreEqual(string.Empty, target.SearchTerm);
             Assert.IsNotNull(target.Results);
             Assert.AreEqual(3, target.Results.Count);
-        }
-
-        [TestMethod]
-        public void ProductNav_With_Valid_Parameter_Does_Navigate()
-        {
-            var repository = new MockProductCatalogRepository();
-            var navigationService = new MockNavigationService();
-            var productToNavigate = new ProductViewModel(new Product() { ListPrice = 100, DiscountPercentage = 50, ProductNumber = "p1", ImageUri = new Uri("http://image"), Currency = "USD", Title = "My Title", Description = "My Description", });
-            navigationService.NavigateDelegate = (pageName, productId) =>
-            {
-                Assert.AreEqual("ItemDetail", pageName);
-                Assert.AreEqual(productToNavigate.ProductNumber, productId);
-                return true;
-            };
-
-            var viewModel = new SearchResultsPageViewModel(repository, navigationService, null, new MockResourceLoader(), new MockAlertMessageService());
-            viewModel.ProductNavigationAction.Invoke(productToNavigate);
-        }
-
-        [TestMethod]
-        public void ProductNav_With_Null_Parameter_Does_Not_Navigate()
-        {
-            var repository = new MockProductCatalogRepository();
-            var navigationService = new MockNavigationService();
-
-            navigationService.NavigateDelegate = (pageName, categoryId) =>
-            {
-                Assert.Fail();
-                return false;
-            };
-
-            var viewModel = new SearchResultsPageViewModel(repository, navigationService, null, new MockResourceLoader(), new MockAlertMessageService());
-            viewModel.ProductNavigationAction.Invoke(null);
         }
     }
 }

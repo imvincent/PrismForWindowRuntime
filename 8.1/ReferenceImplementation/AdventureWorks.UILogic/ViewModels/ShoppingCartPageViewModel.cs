@@ -52,7 +52,6 @@ namespace AdventureWorks.UILogic.ViewModels
 
             CheckoutCommand = DelegateCommand.FromAsyncHandler(CheckoutAsync, CanCheckout);
             RemoveCommand = DelegateCommand<ShoppingCartItemViewModel>.FromAsyncHandler(Remove);
-            GoBackCommand = new DelegateCommand(navigationService.GoBack);
             IncrementCountCommand = DelegateCommand.FromAsyncHandler(IncrementCount);
             DecrementCountCommand = DelegateCommand.FromAsyncHandler(DecrementCount, CanDecrementCount);
 
@@ -124,8 +123,6 @@ namespace AdventureWorks.UILogic.ViewModels
         }
 
         public DelegateCommand CheckoutCommand { get; private set; }
-
-        public DelegateCommand GoBackCommand { get; private set; }
 
         public DelegateCommand<ShoppingCartItemViewModel> RemoveCommand { get; private set; }
 

@@ -26,7 +26,6 @@ namespace AdventureWorks.UILogic.ViewModels
     public class SearchResultsPageViewModel : ViewModel
     {
         private readonly IProductCatalogRepository _productCatalogRepository;
-        private readonly INavigationService _navigationService;
         private readonly ISearchPaneService _searchPaneService;
         private readonly IResourceLoader _resourceLoader;
         private readonly IAlertMessageService _alertMessageService;
@@ -36,15 +35,12 @@ namespace AdventureWorks.UILogic.ViewModels
         private ReadOnlyCollection<ProductViewModel> _results;
         private int _totalCount;
 
-        public SearchResultsPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService, ISearchPaneService searchPaneService, IResourceLoader resourceLoader, IAlertMessageService alertMessageService)
+        public SearchResultsPageViewModel(IProductCatalogRepository productCatalogRepository, ISearchPaneService searchPaneService, IResourceLoader resourceLoader, IAlertMessageService alertMessageService)
         {
             _productCatalogRepository = productCatalogRepository;
-            _navigationService = navigationService;
             _searchPaneService = searchPaneService;
             _resourceLoader = resourceLoader;
             _alertMessageService = alertMessageService;
-            ProductNavigationAction = NavigateToItem;
-            GoBackCommand = new DelegateCommand(_navigationService.GoBack, _navigationService.CanGoBack);
         }
 
         [RestorableState]
@@ -83,10 +79,6 @@ namespace AdventureWorks.UILogic.ViewModels
             get { return _noResults; }
             private set { SetProperty(ref _noResults, value); }
         }
-
-        public Action<object> ProductNavigationAction { get; private set; }
-
-        public ICommand GoBackCommand { get; private set; }
 
         public async override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewModelState)
         {
@@ -147,13 +139,5 @@ namespace AdventureWorks.UILogic.ViewModels
             }
         }
 
-        private void NavigateToItem(object parameter)
-        {
-            var product = parameter as ProductViewModel;
-            if (product != null)
-            {
-                _navigationService.Navigate("ItemDetail", product.ProductNumber);
-            }
-        }
     }
 }

@@ -37,8 +37,6 @@ namespace AdventureWorks.UILogic.ViewModels
             _alertMessageService = alertMessageService;
             _resourceLoader = resourceLoader;
             _searchPaneService = searchPaneService;
-            ProductNavigationAction = NavigateToItem;
-            GoBackCommand = new DelegateCommand(navigationService.GoBack, navigationService.CanGoBack);
         }
 
         public IReadOnlyCollection<CategoryViewModel> Subcategories
@@ -52,19 +50,6 @@ namespace AdventureWorks.UILogic.ViewModels
         {
             get { return _title; }
             private set { SetProperty(ref _title, value); }
-        }
-
-        public ICommand GoBackCommand { get; private set; }
-
-        public Action<object> ProductNavigationAction { get; private set; }
-
-        private void NavigateToItem(object parameter)
-        {
-            var product = parameter as ProductViewModel;
-            if (product != null)
-            {
-                _navigationService.Navigate("ItemDetail", product.ProductNumber);
-            }
         }
 
         public async override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewModelState)

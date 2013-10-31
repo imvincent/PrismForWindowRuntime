@@ -21,18 +21,16 @@ namespace AdventureWorks.UILogic.ViewModels
     public class ShoppingCartTabUserControlViewModel : BindableBase
     {
         private readonly IShoppingCartRepository _shoppingCartRepository;
-        private readonly INavigationService _navigationService;
         private readonly IAlertMessageService _alertMessageService;
         private readonly IResourceLoader _resourceLoader;
         private readonly IAccountService _accountService;
         private int _itemCount;
 
-        public ShoppingCartTabUserControlViewModel(IShoppingCartRepository shoppingCartRepository, IEventAggregator eventAggregator, INavigationService navigationService, IAlertMessageService alertMessageService, IResourceLoader resourceLoader, IAccountService accountService)
+        public ShoppingCartTabUserControlViewModel(IShoppingCartRepository shoppingCartRepository, IEventAggregator eventAggregator, IAlertMessageService alertMessageService, IResourceLoader resourceLoader, IAccountService accountService)
         {
             _itemCount = 0; //ItemCount will be set using async method call.
 
             _shoppingCartRepository = shoppingCartRepository;
-            _navigationService = navigationService;
             _alertMessageService = alertMessageService;
             _resourceLoader = resourceLoader;
             _accountService = accountService;
@@ -43,8 +41,6 @@ namespace AdventureWorks.UILogic.ViewModels
                 eventAggregator.GetEvent<ShoppingCartUpdatedEvent>().Subscribe(UpdateItemCountAsync);
                 eventAggregator.GetEvent<ShoppingCartItemUpdatedEvent>().Subscribe(UpdateItemCountAsync);
             }
-
-            ShoppingCartTabCommand = new DelegateCommand(NavigateToShoppingCartPage);
 
             //Start process of updating item count.
             UpdateItemCountAsync(null);
@@ -94,13 +90,6 @@ namespace AdventureWorks.UILogic.ViewModels
         {
             get { return _itemCount; }
             private set { SetProperty(ref _itemCount, value); }
-        }
-
-        public DelegateCommand ShoppingCartTabCommand { get; private set; }
-
-        private void NavigateToShoppingCartPage()
-        {
-            _navigationService.Navigate("ShoppingCart", null);
         }
     }
 }
