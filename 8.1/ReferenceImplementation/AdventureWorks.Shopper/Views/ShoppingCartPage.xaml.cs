@@ -7,7 +7,6 @@
 
 
 using Microsoft.Practices.Prism.StoreApps;
-using Windows.UI.Xaml;
 
 namespace AdventureWorks.Shopper.Views
 {

@@ -10,7 +10,6 @@ using System;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
-using AdventureWorks.UILogic.Services;
 
 namespace AdventureWorks.UILogic.Tests.Mocks
 {

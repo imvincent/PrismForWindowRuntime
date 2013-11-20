@@ -7,14 +7,13 @@
 
 
 using System.Globalization;
-using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
 using AdventureWorks.UILogic.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 using Microsoft.Practices.Prism.StoreApps;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Windows.UI.Xaml.Navigation;
@@ -27,17 +26,15 @@ namespace AdventureWorks.UILogic.ViewModels
         private INavigationService _navigationService;
         private readonly IAlertMessageService _alertMessageService;
         private readonly IResourceLoader _resourceLoader;
-        private readonly ISearchPaneService _searchPaneService;
         private IReadOnlyCollection<CategoryViewModel> _rootCategories;
         private bool _loadingData;
 
-        public HubPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService, IAlertMessageService alertMessageService, IResourceLoader resourceLoader, ISearchPaneService searchPaneService)
+        public HubPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService, IAlertMessageService alertMessageService, IResourceLoader resourceLoader)
         {
             _productCatalogRepository = productCatalogRepository;
             _navigationService = navigationService;
             _alertMessageService = alertMessageService;
             _resourceLoader = resourceLoader;
-            _searchPaneService = searchPaneService;
         }
 
         public bool LoadingData
@@ -51,7 +48,6 @@ namespace AdventureWorks.UILogic.ViewModels
             get { return _rootCategories; }
             private set { SetProperty(ref _rootCategories, value); }
         }
-
 
         public async override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewModelState)
         {
@@ -85,16 +81,6 @@ namespace AdventureWorks.UILogic.ViewModels
                 rootCategoryViewModels.Add(new CategoryViewModel(rootCategory, _navigationService));
             }
             RootCategories = new ReadOnlyCollection<CategoryViewModel>(rootCategoryViewModels);
-            _searchPaneService.ShowOnKeyboardInput(true);
-        }
-
-        public override void OnNavigatedFrom(Dictionary<string, object> viewModelState, bool suspending)
-        {
-            base.OnNavigatedFrom(viewModelState, suspending);
-            if (!suspending)
-            {
-                _searchPaneService.ShowOnKeyboardInput(false);
-            }
-        }
+        }  
     }
 }

@@ -15,30 +15,26 @@ namespace AdventureWorks.Shopper.Behaviors
 {
     // Documentation on validating user input is at http://go.microsoft.com/fwlink/?LinkID=288817&clcid=0x409
 
-    public static class HighlightFormFieldOnErrors
+    public class HighlightFormFieldOnErrors : Behavior<FrameworkElement>
     {
+        public ReadOnlyCollection<string> PropertyErrors
+        {
+            get { return (ReadOnlyCollection<string>)GetValue(PropertyErrorsProperty); }
+            set { SetValue(PropertyErrorsProperty, value); }
+        }
+
+        public string HighlightStyleName
+        {
+            get { return (string)GetValue(HighlightStyleNameProperty); }
+            set { SetValue(HighlightStyleNameProperty, value); }
+        }
+
         public static DependencyProperty PropertyErrorsProperty =
             DependencyProperty.RegisterAttached("PropertyErrors", typeof(ReadOnlyCollection<string>), typeof(HighlightFormFieldOnErrors), new PropertyMetadata(BindableValidator.EmptyErrorsCollection, OnPropertyErrorsChanged));
 
-        public static ReadOnlyCollection<string> GetPropertyErrors(DependencyObject sender)
-        {
-            if (sender == null)
-            {
-                return null;
-            }
-
-            return (ReadOnlyCollection<string>)sender.GetValue(PropertyErrorsProperty);
-        }
-
-        public static void SetPropertyErrors(DependencyObject sender, ReadOnlyCollection<string> value)
-        {
-            if (sender == null)
-            {
-                return;
-            }
-
-            sender.SetValue(PropertyErrorsProperty, value);
-        }
+        //The default for this property only applies to TextBox controls.
+        public static DependencyProperty HighlightStyleNameProperty =
+            DependencyProperty.RegisterAttached("HighlightStyleName", typeof(string), typeof(HighlightFormFieldOnErrors), new PropertyMetadata("HighlightTextBoxStyle"));
 
         private static void OnPropertyErrorsChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
@@ -47,11 +43,19 @@ namespace AdventureWorks.Shopper.Behaviors
                 return;
             }
 
-            var control = (FrameworkElement)d;
+            var control = ((Behavior<FrameworkElement>)d).AssociatedObject;
             var propertyErrors = (ReadOnlyCollection<string>)args.NewValue;
 
-            Style style = (propertyErrors.Any()) ? (Style)Application.Current.Resources["HighlightTextBoxStyle"] : null;
+            Style style = (propertyErrors.Any()) ? (Style)Application.Current.Resources[((HighlightFormFieldOnErrors)d).HighlightStyleName] : null;
             control.Style = style;
+        }
+
+        protected override void OnAttached()
+        {
+        }
+
+        protected override void OnDetached()
+        {
         }
     }
 }

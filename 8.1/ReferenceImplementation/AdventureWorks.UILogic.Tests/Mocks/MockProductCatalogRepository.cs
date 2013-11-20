@@ -19,6 +19,7 @@ namespace AdventureWorks.UILogic.Tests.Mocks
         public Func<int, Task<ReadOnlyCollection<Category>>> GetRootCategoriesAsyncDelegate { get; set; }
         public Func<int, int, Task<ReadOnlyCollection<Category>>> GetSubcategoriesAsyncDelegate { get; set; }
         public Func<string, Task<SearchResult>> GetFilteredProductsAsyncDelegate { get; set; }
+        public Func<string, Task<ReadOnlyCollection<string>>> GetSearchSuggestionsAsyncDelegate { get; set; }
         public Func<int, Task<ReadOnlyCollection<Product>>> GetProductsAsyncDelegate { get; set; }
         public Func<int, Task<Category>> GetCategoryAsyncDelegate { get; set; }
         public Func<string, Task<Product>> GetProductAsyncDelegate { get; set; }
@@ -51,6 +52,11 @@ namespace AdventureWorks.UILogic.Tests.Mocks
         public Task<Product> GetProductAsync(string productNumber)
         {
             return this.GetProductAsyncDelegate(productNumber);
+        }
+
+        public Task<ReadOnlyCollection<string>> GetSearchSuggestionsAsync(string searchTerm)
+        {
+            return this.GetSearchSuggestionsAsyncDelegate(searchTerm);
         }
 
         public string GetCategoryName(int parentId)

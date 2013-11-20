@@ -9,10 +9,6 @@
 using Microsoft.Xaml.Interactivity;
 using System;
 using System.Reflection;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -33,10 +29,10 @@ namespace AdventureWorks.Shopper.Behaviors
                 var propInfo = propertyValue.GetType().GetTypeInfo().GetDeclaredProperty(propertyPathPart);
                 propertyValue = propInfo.GetValue(propertyValue);    
             }
-            
-            var pageType = Type.GetType(TargetPage);
-            var frame = GetFrame(sender as DependencyObject);
 
+            var pageType = Type.GetType(TargetPage);
+            
+            var frame = GetFrame(sender as DependencyObject);
             return frame.Navigate(pageType, propertyValue);
         }
 

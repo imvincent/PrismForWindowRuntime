@@ -9,10 +9,8 @@
 using System.Web.Http;
 using AdventureWorks.WebServices.Models;
 using AdventureWorks.WebServices.Repositories;
-using System;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 
 namespace AdventureWorks.WebServices.Controllers
 {

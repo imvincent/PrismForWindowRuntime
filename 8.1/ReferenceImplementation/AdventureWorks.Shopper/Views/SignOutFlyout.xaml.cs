@@ -6,7 +6,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using Microsoft.Practices.Prism.StoreApps;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Windows.UI.Xaml.Controls;
 

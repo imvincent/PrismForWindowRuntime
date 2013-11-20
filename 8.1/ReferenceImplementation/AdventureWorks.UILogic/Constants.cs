@@ -6,8 +6,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System;
-namespace AdventureWorks.UILogic.Models
+namespace AdventureWorks.UILogic
 {
     public static class Constants
     {

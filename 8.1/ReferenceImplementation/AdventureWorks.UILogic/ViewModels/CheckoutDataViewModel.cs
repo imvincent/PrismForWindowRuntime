@@ -8,7 +8,6 @@
 
 using System;
 using System.Globalization;
-using Microsoft.Practices.Prism.StoreApps;
 
 namespace AdventureWorks.UILogic.ViewModels
 {

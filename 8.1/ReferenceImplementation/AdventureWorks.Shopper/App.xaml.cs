@@ -6,7 +6,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System.Globalization;
+using AdventureWorks.Shopper.Services;
+using AdventureWorks.Shopper.Views;
+using AdventureWorks.UILogic;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
 using AdventureWorks.UILogic.Services;
@@ -18,15 +20,14 @@ using Microsoft.Practices.Unity;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Resources;
-using Windows.ApplicationModel.Search;
 using Windows.System;
+using Windows.UI.ApplicationSettings;
 using Windows.UI.Notifications;
 using Windows.UI.Xaml;
-using AdventureWorks.Shopper.Services;
-using AdventureWorks.Shopper.Views;
-using Windows.UI.ApplicationSettings;
 
 namespace AdventureWorks.Shopper
 {
@@ -47,10 +48,11 @@ namespace AdventureWorks.Shopper
         {
             this.InitializeComponent();
             this.RequestedTheme = ApplicationTheme.Dark;
+            this.ExtendedSplashScreenFactory = (splashscreen) => new ExtendedSplashScreen(splashscreen);
         }
 
         // Documentation on navigation between pages is at http://go.microsoft.com/fwlink/?LinkID=288815&clcid=0x409
-        protected override void OnLaunchApplication(LaunchActivatedEventArgs args)
+        protected override Task OnLaunchApplication(LaunchActivatedEventArgs args)
         {
             if (args != null && !string.IsNullOrEmpty(args.Arguments))
             {
@@ -63,19 +65,13 @@ namespace AdventureWorks.Shopper
                 // Navigate to the initial page
                 NavigationService.Navigate("Hub", null);
             }
-        }
 
-        // Documentation on using search can be found at http://go.microsoft.com/fwlink/?LinkID=288822&clcid=0x409
-        protected override void OnSearchApplication(SearchQueryArguments args)
-        {
-            if (args != null && !string.IsNullOrEmpty(args.QueryText))
-            {
-                NavigationService.Navigate("SearchResults", args.QueryText);
-            }
-            else
-            {
-                NavigationService.Navigate("Hub", null);
-            }
+            // As an extended splash screen is set, the MvvmAppBase does not activate the window by itself.
+            // Instead, it delegates the activation of the current window to the splash screen.
+            // Therefore we want to ensure that the window is active, in case the initialization is so fast that
+            // the extended splashscreen does not get to show.
+            Window.Current.Activate();
+            return Task.FromResult<object>(null);
         }
 
         protected override void OnRegisterKnownTypesForSerialization()
@@ -107,7 +103,6 @@ namespace AdventureWorks.Shopper
             _container.RegisterType<ICacheService, TemporaryFolderCacheService>(new ContainerControlledLifetimeManager());
             _container.RegisterType<ISecondaryTileService, SecondaryTileService>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IAlertMessageService, AlertMessageService>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<ISearchPaneService, SearchPaneService>(new ContainerControlledLifetimeManager());
 
             // Register repositories
             _container.RegisterType<IProductCatalogRepository, ProductCatalogRepository>(new ContainerControlledLifetimeManager());
@@ -143,7 +138,6 @@ namespace AdventureWorks.Shopper
             _tileUpdater.StartPeriodicUpdate(new Uri(Constants.ServerAddress + "/api/TileNotification"), PeriodicUpdateRecurrence.HalfHour);
 
             var resourceLoader = _container.Resolve<IResourceLoader>();
-            SearchPane.GetForCurrentView().PlaceholderText = resourceLoader.GetString("SearchPanePlaceHolderText");
         }
 
         protected override object Resolve(Type type)
@@ -158,10 +152,11 @@ namespace AdventureWorks.Shopper
             var settingsCommands = new List<SettingsCommand>();
             var accountService = _container.Resolve<IAccountService>();
             var resourceLoader = _container.Resolve<IResourceLoader>();
+            var eventAggregator = _container.Resolve<IEventAggregator>();
 
             if (accountService.SignedInUser == null)
             {
-                settingsCommands.Add(new SettingsCommand(Guid.NewGuid().ToString(), resourceLoader.GetString("LoginText"), (c) => new SignInFlyout().Show()));
+                settingsCommands.Add(new SettingsCommand(Guid.NewGuid().ToString(), resourceLoader.GetString("LoginText"), (c) => new SignInFlyout(eventAggregator).Show()));
             }
             else
             {

@@ -9,14 +9,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Net;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
-using Microsoft.Practices.Prism.StoreApps;
 using System.Globalization;
 using Newtonsoft.Json;
 using Windows.Web.Http;
-using Windows.Web.Http.Filters;
 
 namespace AdventureWorks.UILogic.Services
 {

@@ -3,12 +3,12 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                    xmlns:Infrastructure="using:Microsoft.Practices.Prism.StoreApps"
+                    xmlns:prism="using:Microsoft.Practices.Prism.StoreApps"
                     Title="Login"
                     Background="White"
                     x:Uid="Page"
                     mc:Ignorable="d"
-                    Infrastructure:ViewModelLocator.AutoWireViewModel="true">
+                    prism:ViewModelLocator.AutoWireViewModel="true">
 
         <!-- Settings Panel Content -->
     <StackPanel x:Name="FlyoutContent">

@@ -112,6 +112,7 @@ namespace AdventureWorks.UILogic.ViewModels
                     {
                         IsBottomAppBarOpened = false;
                     }
+                    OnPropertyChanged("IsItemSelected");
                 }
             }
         }
@@ -140,6 +141,14 @@ namespace AdventureWorks.UILogic.ViewModels
                 // See http://go.microsoft.com/fwlink/?LinkID=288840
                 _isBottomAppBarOpened = value;
                 OnPropertyChanged("IsBottomAppBarOpened");
+            }
+        }
+
+        public bool IsItemSelected
+        {
+            get
+            {
+                return SelectedItem != null;
             }
         }
 

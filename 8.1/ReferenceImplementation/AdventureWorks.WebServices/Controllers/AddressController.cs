@@ -7,13 +7,10 @@
 
 
 using System.Collections.Generic;
-using System.Globalization;
 using AdventureWorks.WebServices.Repositories;
-using System;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Xml;
 using AdventureWorks.WebServices.Models;
 using AdventureWorks.WebServices.Strings;
 

@@ -6,8 +6,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System;
-
 namespace AdventureWorks.UILogic.Models
 {
     public class ShoppingCartItem

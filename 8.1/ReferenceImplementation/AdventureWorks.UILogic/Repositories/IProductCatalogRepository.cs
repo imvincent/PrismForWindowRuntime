@@ -22,6 +22,8 @@ namespace AdventureWorks.UILogic.Repositories
 
         Task<ReadOnlyCollection<Product>> GetProductsAsync(int categoryId);
 
+        Task<ReadOnlyCollection<string>> GetSearchSuggestionsAsync(string searchTerm);
+
         Task<Category> GetCategoryAsync(int categoryId);
 
         Task<Product> GetProductAsync(string productNumber);

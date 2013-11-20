@@ -7,14 +7,9 @@
 
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.ViewModels;
-using Windows.UI.Xaml.Media.Imaging;
 
 namespace AdventureWorks.Shopper.DesignViewModels
 {

@@ -6,7 +6,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System;
 using System.Windows.Input;
 using AdventureWorks.UILogic.Services;
 using Microsoft.Practices.Prism.StoreApps;
@@ -49,8 +48,6 @@ namespace AdventureWorks.UILogic.ViewModels
         }
 
         public ICommand SaveCommand { get; private set; }
-
-        public ICommand GoBackCommand { get; private set; }
 
         public override async void OnNavigatedTo(object navigationParameter, Windows.UI.Xaml.Navigation.NavigationMode navigationMode, System.Collections.Generic.Dictionary<string, object> viewModelState)
         {

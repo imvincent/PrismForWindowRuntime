@@ -1,17 +1,17 @@
-<Infrastructure:VisualStateAwarePage x:Name="pageRoot"
-                                     x:Class="AdventureWorks.Shopper.Views.ItemDetailPage"
-                                     IsTabStop="false"
-                                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                                     xmlns:designViewModels="using:AdventureWorks.Shopper.DesignViewModels"
-                                     xmlns:views="using:AdventureWorks.Shopper.Views"
-                                     xmlns:Infrastructure="using:Microsoft.Practices.Prism.StoreApps"
-                                     Infrastructure:ViewModelLocator.AutoWireViewModel="true"
-                                     x:Uid="Page"
-                                     mc:Ignorable="d"
-                                     d:DataContext="{d:DesignInstance designViewModels:ItemDetailsPageDesignViewModel, IsDesignTimeCreatable=True}">
+<prism:VisualStateAwarePage x:Name="pageRoot"
+                            x:Class="AdventureWorks.Shopper.Views.ItemDetailPage"
+                            IsTabStop="false"
+                            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                            xmlns:designViewModels="using:AdventureWorks.Shopper.DesignViewModels"
+                            xmlns:views="using:AdventureWorks.Shopper.Views"
+                            xmlns:prism="using:Microsoft.Practices.Prism.StoreApps"
+                            prism:ViewModelLocator.AutoWireViewModel="true"
+                            x:Uid="Page"
+                            mc:Ignorable="d"
+                            d:DataContext="{d:DesignInstance designViewModels:ItemDetailsPageDesignViewModel, IsDesignTimeCreatable=True}">
 
     <Page.TopAppBar>
         <AppBar Style="{StaticResource AppBarStyle}"
@@ -36,24 +36,26 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="100*"
+                                  MaxWidth="400" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Button x:Name="backButton"
-                    AutomationProperties.AutomationId="ItemDetailsPageBackButton"
-                    Command="{Binding GoBackCommand, ElementName=pageRoot}"
-                    Style="{StaticResource BackButtonStyle}" />
+            <AppBarButton x:Name="backButton"
+                          AutomationProperties.AutomationId="ItemDetailsPageBackButton"
+                          Command="{Binding GoBackCommand, ElementName=pageRoot}"
+                          Style="{StaticResource BackButtonStyle}" />
             <TextBlock x:Name="pageTitle"
                        x:Uid="ProductInformationTitle"
                        Text="Product Details"
                        Style="{StaticResource PageHeaderTextStyle}"
                        Grid.Column="1" />
             <views:SearchUserControl x:Name="searchUserControl"
-                                     Grid.Column="2"
-                                     Margin="15,15,0,15" />
+                                     Grid.Column="3"
+                                     Margin="0,20,0,0" />
             <views:ShoppingCartTabUserControl x:Name="shoppingCartTabUserControl"
-                                              Grid.Column="3"
+                                              Grid.Column="4"
                                               Margin="15"
                                               RenderTransformOrigin="0.5,0.5"
                                               Loaded="StartLayoutUpdates"
@@ -153,7 +155,8 @@
                                                FontSize="24"
                                                TextWrapping="Wrap"
                                                TextTrimming="WordEllipsis" />
-                                    <StackPanel Grid.Row="1" Orientation="Horizontal"
+                                    <StackPanel Grid.Row="1"
+                                                Orientation="Horizontal"
                                                 Margin="0,15,10,0">
                                         <TextBlock x:Uid="InventoryStatusLabel"
                                                    Text="Inventory Status:"
@@ -171,7 +174,7 @@
                                                Text="{Binding SalePrice}"
                                                FontWeight="ExtraBold"
                                                Margin="0,5,5,0"
-                                               FontSize="48" />
+                                               FontSize="40" />
                                     <StackPanel Grid.Row="4"
                                                 Margin="0,5,10,10">
                                         <TextBlock x:Uid="ReviewsLabel"
@@ -426,56 +429,64 @@
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="grid3">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)"
+                                                                           Storyboard.TargetName="grid3">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
                                                         <x:Double>NaN</x:Double>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.MaxWidth)" Storyboard.TargetName="textBlock2">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.MaxWidth)"
+                                                                           Storyboard.TargetName="textBlock2">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
                                                         <x:Double>380</x:Double>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="grid2">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)"
+                                                                           Storyboard.TargetName="grid2">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
                                                         <x:Double>NaN</x:Double>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.HorizontalAlignment)" Storyboard.TargetName="grid3">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.HorizontalAlignment)"
+                                                                           Storyboard.TargetName="grid3">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
                                                         <HorizontalAlignment>Left</HorizontalAlignment>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.MaxWidth)" Storyboard.TargetName="grid3">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.MaxWidth)"
+                                                                           Storyboard.TargetName="grid3">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
                                                         <x:Double>400</x:Double>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.HorizontalAlignment)" Storyboard.TargetName="textBlock2">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.HorizontalAlignment)"
+                                                                           Storyboard.TargetName="textBlock2">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
                                                         <HorizontalAlignment>Left</HorizontalAlignment>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="addToCartButton">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"
+                                                                           Storyboard.TargetName="addToCartButton">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
                                                         <Thickness>10,10,10,0</Thickness>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="ProductImage">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)"
+                                                                           Storyboard.TargetName="ProductImage">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
                                                         <x:Double>360</x:Double>
@@ -606,7 +617,8 @@
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ScrollViewer.HorizontalScrollBarVisibility)" Storyboard.TargetName="scrollViewer">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ScrollViewer.HorizontalScrollBarVisibility)"
+                                                                           Storyboard.TargetName="scrollViewer">
                                                 <DiscreteObjectKeyFrame KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
                                                         <ScrollBarVisibility>Hidden</ScrollBarVisibility>
@@ -645,12 +657,6 @@
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="{StaticResource PortraitBackButtonStyle}" />
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle"
-                                                       Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="{StaticResource MinimalPageHeaderTextStyle}" />
-                        </ObjectAnimationUsingKeyFrames>
-
                     </Storyboard>
                 </VisualState>
 
@@ -705,27 +711,26 @@
     <!-- AppBar -->
     <Page.BottomAppBar>
         <CommandBar Style="{StaticResource AppBarStyle}"
-                AutomationProperties.AutomationId="BottomAppBar"
-                x:Uid="BottomAppBar"
-                IsSticky="{Binding IsBottomAppBarSticky, Mode=TwoWay}"
-                IsOpen="{Binding IsBottomAppBarOpened, Mode=TwoWay}">
+                    AutomationProperties.AutomationId="BottomAppBar"
+                    x:Uid="BottomAppBar"
+                    IsSticky="{Binding IsBottomAppBarSticky, Mode=TwoWay}"
+                    IsOpen="{Binding IsBottomAppBarOpened, Mode=TwoWay}">
             <CommandBar.SecondaryCommands>
                 <AppBarButton  x:Name="PinAppBarButton"
-                            x:Uid="PinAppBarButton"
-                            AutomationProperties.AutomationId="PinAppBarButton"
-                            Label="Pin to Start"
-                            Icon="Pin"
-                            Visibility="{Binding IsSelectedProductPinned, Converter={StaticResource BooleanNegationToVisibilityConverter}}"
-                            Command="{Binding PinProductCommand}"/>
+                               x:Uid="PinAppBarButton"
+                               AutomationProperties.AutomationId="PinAppBarButton"
+                               Label="Pin to Start"
+                               Icon="Pin"
+                               Visibility="{Binding IsSelectedProductPinned, Converter={StaticResource BooleanNegationToVisibilityConverter}}"
+                               Command="{Binding PinProductCommand}" />
                 <AppBarButton x:Name="UnpinAppBarButton"
-                            x:Uid="UnpinAppBarButton"
-                            AutomationProperties.AutomationId="UnpinAppBarButton"
-                            Label="Unpin from Start"
-                            Icon="UnPin"
-                            Visibility="{Binding IsSelectedProductPinned, Converter={StaticResource BooleanToVisibilityConverter}}"
-                            Command="{Binding UnpinProductCommand}"/>
+                              x:Uid="UnpinAppBarButton"
+                              AutomationProperties.AutomationId="UnpinAppBarButton"
+                              Label="Unpin from Start"
+                              Icon="UnPin"
+                              Visibility="{Binding IsSelectedProductPinned, Converter={StaticResource BooleanToVisibilityConverter}}"
+                              Command="{Binding UnpinProductCommand}" />
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
-
-</Infrastructure:VisualStateAwarePage>
+</prism:VisualStateAwarePage>

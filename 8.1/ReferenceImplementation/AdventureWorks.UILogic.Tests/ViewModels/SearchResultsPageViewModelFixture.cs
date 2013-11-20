@@ -48,7 +48,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                     return Task.FromResult(new SearchResult(3, products));
                 };
 
-            var target = new SearchResultsPageViewModel(repository, new MockSearchPaneService(), new MockResourceLoader(), new MockAlertMessageService());
+            var target = new SearchResultsPageViewModel(repository, new MockResourceLoader(), new MockAlertMessageService());
             const string searchTerm = "bike";
             target.OnNavigatedTo(searchTerm, NavigationMode.New, null);
             Assert.AreEqual("bike", target.SearchTerm);
@@ -84,7 +84,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                 return Task.FromResult(new SearchResult(3, products));
             };
 
-            var target = new SearchResultsPageViewModel(repository, new MockSearchPaneService(), new MockResourceLoader(), new MockAlertMessageService());
+            var target = new SearchResultsPageViewModel(repository, new MockResourceLoader(), new MockAlertMessageService());
             var searchTerm = string.Empty;
             target.OnNavigatedTo(searchTerm, NavigationMode.New, null);
             Assert.AreEqual(string.Empty, target.SearchTerm);

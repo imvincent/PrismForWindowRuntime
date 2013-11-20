@@ -9,7 +9,6 @@
 using System.Globalization;
 using Microsoft.Practices.Prism.StoreApps;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
-using System;
 
 namespace AdventureWorks.UILogic.ViewModels
 {

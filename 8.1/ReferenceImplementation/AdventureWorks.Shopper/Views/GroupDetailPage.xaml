@@ -1,18 +1,19 @@
-<Infrastructure:VisualStateAwarePage x:Name="pageRoot"
+<prism:VisualStateAwarePage x:Name="pageRoot"
                                      x:Class="AdventureWorks.Shopper.Views.GroupDetailPage"
                                      IsTabStop="false"
                                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                                     xmlns:behaviors="using:AdventureWorks.Shopper.Behaviors"
+                                     xmlns:awbehaviors="using:AdventureWorks.Shopper.Behaviors"
                                      xmlns:interactivity="using:Microsoft.Xaml.Interactivity" xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+                                     xmlns:awcontrols="using:AdventureWorks.Shopper.Controls"
                                      xmlns:views="using:AdventureWorks.Shopper.Views"
                                      xmlns:designViewModels="using:AdventureWorks.Shopper.DesignViewModels"
-                                     xmlns:Infrastructure="using:Microsoft.Practices.Prism.StoreApps"
+                                     xmlns:prism="using:Microsoft.Practices.Prism.StoreApps"
                                      x:Uid="Page"
                                      mc:Ignorable="d"
-                                     Infrastructure:ViewModelLocator.AutoWireViewModel="true"
+                                     prism:ViewModelLocator.AutoWireViewModel="true"
                                      d:DataContext="{d:DesignInstance designViewModels:GroupDetailPageDesignViewModel, IsDesignTimeCreatable=True}">
 
     <Page.TopAppBar>
@@ -38,23 +39,26 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="100*"
+                                  MaxWidth="400" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Button x:Name="backButton"
-                    AutomationProperties.AutomationId="GroupDetailsPageBackButton"
-                    Command="{Binding GoBackCommand, ElementName=pageRoot}"
-                    Style="{StaticResource BackButtonStyle}" />
+            <AppBarButton x:Name="backButton"
+                          AutomationProperties.AutomationId="GroupDetailsPageBackButton"
+                          Command="{Binding GoBackCommand, ElementName=pageRoot}"
+                          Style="{StaticResource BackButtonStyle}" />
             <TextBlock x:Name="pageTitle"
                        Text="{Binding Title}"
                        Style="{StaticResource PageHeaderTextStyle}"
                        Grid.Column="1" />
             <views:SearchUserControl x:Name="searchUserControl"
-                                     Grid.Column="2"
-                                     Margin="15,15,0,15" />
+                                     Grid.Column="3"
+                                     Margin="0,20,0,0"
+                                     Height="80" />
             <views:ShoppingCartTabUserControl x:Name="shoppingCartTabUserControl"
-                                              Grid.Column="3"
+                                              Grid.Column="4"
                                               RenderTransformOrigin="0.5,0.5"
                                               Margin="15"
                                               Loaded="StartLayoutUpdates"
@@ -64,10 +68,10 @@
                 </views:ShoppingCartTabUserControl.RenderTransform>
             </views:ShoppingCartTabUserControl>
         </Grid>
-
-
-        <!-- Horizontal scrolling grid used in most view states -->
-        <GridView Grid.Row="1"
+        <!-- The AutoRotatingGridView control, that automatically rearranges items,
+                when the app is switched to portrait mode, or to minimal layout mode. -->
+        <awcontrols:AutoRotatingGridView
+                  Grid.Row="1"
                   x:Name="itemsGridView"
                   AutomationProperties.AutomationId="ItemsGridView"
                   AutomationProperties.Name="Items In Category"
@@ -76,39 +80,27 @@
                   Padding="120,0,30,50"
                   ItemsSource="{Binding Items}"
                   ItemTemplate="{StaticResource ProductTemplate}"
+                  MinimalItemTemplate="{StaticResource ProductTemplateMinimal}"
                   SelectionMode="None"
-                  IsItemClickEnabled="True"
-                  
-                  Loaded="itemsGridView_Loaded">
+                  IsItemClickEnabled="True">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="ItemClick">
-                    <behaviors:NavigateWithEventArgsToPageAction TargetPage="AdventureWorks.Shopper.Views.ItemDetailPage" EventArgsParameterPath="ClickedItem.ProductNumber"/>
+                    <awbehaviors:NavigateWithEventArgsToPageAction TargetPage="AdventureWorks.Shopper.Views.ItemDetailPage" EventArgsParameterPath="ClickedItem.ProductNumber"/>
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
-            <GridView.ItemsPanel>
+            <awcontrols:AutoRotatingGridView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <ItemsWrapGrid />
                 </ItemsPanelTemplate>
-            </GridView.ItemsPanel>
-            <GridView.ItemContainerStyle>
+            </awcontrols:AutoRotatingGridView.ItemsPanel>
+            <awcontrols:AutoRotatingGridView.ItemContainerStyle>
                 <Style TargetType="GridViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                    <Setter Property="Padding" Value="5,5,40,5"/>
+                    <Setter Property="Padding" Value="5,5,5,5"/>
                 </Style>
-            </GridView.ItemContainerStyle>
-        </GridView>
-        <ListView x:Name="itemsListView"
-                  AutomationProperties.AutomationId="ItemsListView"
-                  AutomationProperties.Name="Items In Category"
-                  TabIndex="1"
-                  Grid.Row="1"
-                  Visibility="Collapsed"
-                  Padding="10,0,0,0"
-                  ItemsSource="{Binding Items}"
-                  ItemTemplate="{StaticResource ProductTemplateMinimal}"
-                  SelectionMode="None"
-                  IsItemClickEnabled="True">
-        </ListView>
+            </awcontrols:AutoRotatingGridView.ItemContainerStyle>
+        </awcontrols:AutoRotatingGridView>
+
         <VisualStateManager.VisualStateGroups>
             <!-- Visual states reflect the application's view state -->
             <VisualStateGroup x:Name="ApplicationViewStates">
@@ -122,58 +114,12 @@
                                                     Value="{StaticResource PortraitBackButtonStyle}" />
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemsGridView"
-                                                       Storyboard.TargetProperty="ItemsPanel">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="{StaticResource VerticalItemsStackPanelItemsPanel}" />
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemsGridView"
                                                        Storyboard.TargetProperty="Padding">
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="40,0,30,0" />
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemsGridView"
-                                                       Storyboard.TargetProperty="(ScrollViewer.VerticalScrollMode)">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <ScrollMode>Enabled</ScrollMode>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemsGridView"
-                                                       Storyboard.TargetProperty="(ScrollViewer.HorizontalScrollMode)">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <ScrollMode>Disabled</ScrollMode>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemsGridView"
-                                                       Storyboard.TargetProperty="(ScrollViewer.VerticalScrollBarVisibility)">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <ScrollBarVisibility>Auto</ScrollBarVisibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemsGridView"
-                                                       Storyboard.TargetProperty="(ScrollViewer.HorizontalScrollBarVisibility)">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <ScrollBarVisibility>Hidden</ScrollBarVisibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemsGridView"
-                                                       Storyboard.TargetProperty="(ScrollViewer.ZoomMode)">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <ZoomMode>Disabled</ZoomMode>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
-
                 <!--
                     The back button and title have different styles when in minimal layout, and the list representation is substituted
                     for the grid displayed in all other view states
@@ -189,16 +135,6 @@
                                                        Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="{StaticResource MinimalPageHeaderTextStyle}" />
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemsListView"
-                                                       Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="Visible" />
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemsGridView"
-                                                       Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="Collapsed" />
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"
                                                        Storyboard.TargetName="shoppingCartTabUserControl">
@@ -216,9 +152,14 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemsGridView"
+                                                       Storyboard.TargetProperty="Padding">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="20,0,0,0" />
+                        </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </Grid>
-</Infrastructure:VisualStateAwarePage>
+</prism:VisualStateAwarePage>

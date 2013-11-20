@@ -72,7 +72,12 @@ namespace AdventureWorks.UILogic.Repositories
             return searchResult;
         }
 
-
+        public async Task<ReadOnlyCollection<string>> GetSearchSuggestionsAsync(string searchTerm)
+        {
+            // Retrieve the search suggestions from the service
+            var searchSuggestions = await _productCatalogService.GetSearchSuggestionsAsync(searchTerm);
+            return searchSuggestions;
+        }
 
         public async Task<ReadOnlyCollection<Product>> GetProductsAsync(int categoryId)
         {

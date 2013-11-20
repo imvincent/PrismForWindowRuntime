@@ -6,15 +6,12 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
-using AdventureWorks.UILogic.Services;
 using AdventureWorks.UILogic.Tests.Mocks;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using Windows.Storage.Streams;
 
 namespace AdventureWorks.UILogic.Tests.Repositories
 {

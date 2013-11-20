@@ -18,33 +18,16 @@ namespace AdventureWorks.Shopper.Views
 {
     public sealed partial class SearchResultsPage : VisualStateAwarePage
     {
-        private double _scrollViewerHorizontalOffset;
+        private double _scrollViewerOffsetProportion;
+        private bool _isPageLoading = true;
 
         public SearchResultsPage()
         {
             this.InitializeComponent();
+            this.SizeChanged += Page_SizeChanged;
         }
 
-        private void itemsGridView_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            // Find the ScrollViewer inside the GridView
-            var scrollViewer = VisualTreeUtilities.GetVisualChild<ScrollViewer>(itemsGridView);
-
-            if (scrollViewer != null)
-            {
-                if (scrollViewer.ComputedHorizontalScrollBarVisibility == Visibility.Visible)
-                {
-                    scrollViewer.ChangeView(_scrollViewerHorizontalOffset, null, null);
-                }
-                else
-                {
-                    DependencyPropertyChangedHelper helper = new DependencyPropertyChangedHelper(scrollViewer, "ComputedHorizontalScrollBarVisibility");
-                    helper.PropertyChanged += ScrollBarHorizontalVisibilityChanged;
-                }
-            }
-        }
-
-        private void ScrollBarHorizontalVisibilityChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void ScrollBarVisibilityChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             var helper = (DependencyPropertyChangedHelper)sender;
 
@@ -52,10 +35,15 @@ namespace AdventureWorks.Shopper.Views
 
             if (((Visibility)e.NewValue) == Visibility.Visible)
             {
-                // Update the Horizontal offset
-                scrollViewer.ChangeView(_scrollViewerHorizontalOffset, null, null);
-                helper.PropertyChanged -= ScrollBarHorizontalVisibilityChanged;
+                ScrollViewerUtilities.ScrollToProportion(scrollViewer, _scrollViewerOffsetProportion);
+                helper.PropertyChanged -= ScrollBarVisibilityChanged;
             };
+
+            if (_isPageLoading)
+            {
+                itemsGridView.LayoutUpdated += itemsGridView_LayoutUpdated;
+                _isPageLoading = false;
+            }
         }
 
         protected override void SaveState(System.Collections.Generic.Dictionary<string, object> pageState)
@@ -64,11 +52,7 @@ namespace AdventureWorks.Shopper.Views
 
             base.SaveState(pageState);
 
-            var scrollViewer = VisualTreeUtilities.GetVisualChild<ScrollViewer>(itemsGridView);
-            if (scrollViewer != null)
-            {
-                pageState["scrollViewerHorizontalOffset"] = scrollViewer.HorizontalOffset;
-            }
+            pageState["scrollViewerOffsetProportion"] = ScrollViewerUtilities.GetScrollViewerOffsetProportion(itemsGridView);
         }
 
         protected override void LoadState(object navigationParameter, System.Collections.Generic.Dictionary<string, object> pageState)
@@ -77,10 +61,36 @@ namespace AdventureWorks.Shopper.Views
 
             base.LoadState(navigationParameter, pageState);
 
-            if (pageState.ContainsKey("scrollViewerHorizontalOffset"))
+            if (pageState.ContainsKey("scrollViewerOffsetProportion"))
             {
-                _scrollViewerHorizontalOffset = double.Parse(pageState["scrollViewerHorizontalOffset"].ToString(), CultureInfo.InvariantCulture.NumberFormat);
+                _scrollViewerOffsetProportion = double.Parse(pageState["scrollViewerOffsetProportion"].ToString(), CultureInfo.InvariantCulture.NumberFormat);
             }
+        }
+
+        void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var scrollViewer = VisualTreeUtilities.GetVisualChild<ScrollViewer>(itemsGridView);
+
+            if (scrollViewer != null)
+            {
+                if (scrollViewer.ComputedHorizontalScrollBarVisibility == Visibility.Visible && scrollViewer.ComputedVerticalScrollBarVisibility == Visibility.Visible)
+                {
+                    ScrollViewerUtilities.ScrollToProportion(scrollViewer, _scrollViewerOffsetProportion);
+                }
+                else
+                {
+                    DependencyPropertyChangedHelper horizontalHelper = new DependencyPropertyChangedHelper(scrollViewer, "ComputedHorizontalScrollBarVisibility");
+                    horizontalHelper.PropertyChanged += ScrollBarVisibilityChanged;
+
+                    DependencyPropertyChangedHelper verticalHelper = new DependencyPropertyChangedHelper(scrollViewer, "ComputedVerticalScrollBarVisibility");
+                    verticalHelper.PropertyChanged += ScrollBarVisibilityChanged;
+                }
+            }
+        }
+
+        private void itemsGridView_LayoutUpdated(object sender, object e)
+        {
+            _scrollViewerOffsetProportion = ScrollViewerUtilities.GetScrollViewerOffsetProportion(itemsGridView);
         }
     }
 }

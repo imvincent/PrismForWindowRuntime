@@ -9,7 +9,6 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Services;
 using Microsoft.Practices.Prism.StoreApps;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;

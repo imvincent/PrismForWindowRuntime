@@ -11,7 +11,6 @@ using System.Windows.Input;
 using AdventureWorks.UILogic.Models;
 using Microsoft.Practices.Prism.StoreApps;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
-using AdventureWorks.UILogic.Repositories;
 using AdventureWorks.UILogic.Services;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -52,8 +51,6 @@ namespace AdventureWorks.UILogic.ViewModels
         }
 
         public ICommand SaveCommand { get; private set; }
-
-        public ICommand GoBackCommand { get; private set; }
 
         public override async void OnNavigatedTo(object navigationParameter, Windows.UI.Xaml.Navigation.NavigationMode navigationMode, Dictionary<string, object> viewModelState)
         {

@@ -11,7 +11,6 @@ using System.Security;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using System;
-using Microsoft.Practices.Prism.StoreApps;
 using Windows.Security.Cryptography;
 using Windows.Security.Cryptography.Core;
 using Windows.Web.Http;

@@ -7,13 +7,10 @@
 
 
 using System.Collections.Generic;
-using System.Globalization;
 using System.Windows.Input;
 using AdventureWorks.UILogic.Models;
 using Microsoft.Practices.Prism.StoreApps;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
 using System;
 using System.Linq;
 using System.Collections.ObjectModel;

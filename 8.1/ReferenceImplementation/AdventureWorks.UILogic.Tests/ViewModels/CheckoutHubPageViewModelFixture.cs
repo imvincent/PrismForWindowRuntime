@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
-using AdventureWorks.UILogic.Repositories;
 using AdventureWorks.UILogic.Services;
 using AdventureWorks.UILogic.Tests.Mocks;
 using AdventureWorks.UILogic.ViewModels;
@@ -150,34 +149,6 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             paymentMethodPageViewModel.ValidateFormDelegate = () => false;
 
             Assert.IsFalse(formProcessStarted);
-        }
-
-        [TestMethod, Ignore]
-        public async Task ExecuteGoNextCommand_DisplaysSignInFlyout_IfViewModelsAreValidAndUserNotLoggedIn()
-        {
-            bool signInFlyoutDisplayed = false;
-            var shippingAddressPageViewModel = new MockShippingAddressPageViewModel()
-                {
-                    ValidateFormDelegate = () => true
-                };
-            var billingAddressPageViewModel = new MockBillingAddressPageViewModel()
-                {
-                    ValidateFormDelegate = () => true
-                };
-            var paymentMethodPageViewModel = new MockPaymentMethodPageViewModel()
-                {
-                    ValidateFormDelegate = () => true
-                };
-            var accountService = new MockAccountService()
-                {
-                    VerifyUserAuthenticationAsyncDelegate = () => Task.FromResult<UserInfo>(null)
-                };
-
-            var target = new CheckoutHubPageViewModel(new MockNavigationService(), accountService, null, null, shippingAddressPageViewModel,
-                                                      billingAddressPageViewModel, paymentMethodPageViewModel, null, null);
-            await target.GoNextCommand.Execute();
-
-            Assert.IsTrue(signInFlyoutDisplayed);
         }
 
         [TestMethod]

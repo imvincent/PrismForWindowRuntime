@@ -8,7 +8,6 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Windows.UI.Xaml.Navigation;
 
 namespace Microsoft.Practices.Prism.StoreApps.Tests.Mocks

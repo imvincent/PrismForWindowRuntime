@@ -16,7 +16,6 @@ using Windows.UI.Xaml.Navigation;
 using AdventureWorks.UILogic.Services;
 using System.Globalization;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace AdventureWorks.UILogic.ViewModels
 {
@@ -25,16 +24,14 @@ namespace AdventureWorks.UILogic.ViewModels
         private readonly IProductCatalogRepository _productCatalogRepository;
         private readonly IAlertMessageService _alertMessageService;
         private readonly IResourceLoader _resourceLoader;
-        private readonly ISearchPaneService _searchPaneService;
         private string _title;
         private IReadOnlyCollection<ProductViewModel> _items;
 
-        public GroupDetailPageViewModel(IProductCatalogRepository productCatalogRepository, IAlertMessageService alertMessageService, IResourceLoader resourceLoader, ISearchPaneService searchPaneService)
+        public GroupDetailPageViewModel(IProductCatalogRepository productCatalogRepository, IAlertMessageService alertMessageService, IResourceLoader resourceLoader)
         {
             _productCatalogRepository = productCatalogRepository;
             _alertMessageService = alertMessageService;
             _resourceLoader = resourceLoader;
-            _searchPaneService = searchPaneService;
         }
 
         public string Title
@@ -51,7 +48,6 @@ namespace AdventureWorks.UILogic.ViewModels
 
         public async override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewModelState)
         {
-            _searchPaneService.ShowOnKeyboardInput(true);
             var categoryId = Convert.ToInt32(navigationParameter);
 
             string errorMessage = string.Empty;
@@ -76,15 +72,5 @@ namespace AdventureWorks.UILogic.ViewModels
                 await _alertMessageService.ShowAsync(errorMessage, _resourceLoader.GetString("ErrorServiceUnreachable"));
             }
         }
-
-        public override void OnNavigatedFrom(Dictionary<string, object> viewModelState, bool suspending)
-        {
-            base.OnNavigatedFrom(viewModelState, suspending);
-            if (!suspending)
-            {
-                _searchPaneService.ShowOnKeyboardInput(false);
-            }
-        }
-
     }
 }

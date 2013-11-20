@@ -15,7 +15,6 @@ using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 using Windows.UI.Xaml.Navigation;
 
 namespace AdventureWorks.UILogic.ViewModels
@@ -26,17 +25,15 @@ namespace AdventureWorks.UILogic.ViewModels
         private INavigationService _navigationService;
         private readonly IAlertMessageService _alertMessageService;
         private readonly IResourceLoader _resourceLoader;
-        private readonly ISearchPaneService _searchPaneService;
         private IReadOnlyCollection<CategoryViewModel> _subcategories;
         private string _title;
 
-        public CategoryPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService, IAlertMessageService alertMessageService, IResourceLoader resourceLoader, ISearchPaneService searchPaneService)
+        public CategoryPageViewModel(IProductCatalogRepository productCatalogRepository, INavigationService navigationService, IAlertMessageService alertMessageService, IResourceLoader resourceLoader)
         {
             _productCatalogRepository = productCatalogRepository;
             _navigationService = navigationService;
             _alertMessageService = alertMessageService;
             _resourceLoader = resourceLoader;
-            _searchPaneService = searchPaneService;
         }
 
         public IReadOnlyCollection<CategoryViewModel> Subcategories
@@ -85,16 +82,7 @@ namespace AdventureWorks.UILogic.ViewModels
                 subCategoryViewModels.Add(new CategoryViewModel(subCategory, _navigationService));
             }
             Subcategories = new ReadOnlyCollection<CategoryViewModel>(subCategoryViewModels);
-            _searchPaneService.ShowOnKeyboardInput(true);
         }
 
-        public override void OnNavigatedFrom(Dictionary<string, object> viewModelState, bool suspending)
-        {
-            base.OnNavigatedFrom(viewModelState, suspending);
-            if (!suspending)
-            {
-                _searchPaneService.ShowOnKeyboardInput(false);
-            }
-        }
     }
 }

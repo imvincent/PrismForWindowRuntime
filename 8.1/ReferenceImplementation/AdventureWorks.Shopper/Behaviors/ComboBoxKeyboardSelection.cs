@@ -6,53 +6,28 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System;
 using AdventureWorks.UILogic.Models;
-using Windows.UI.Xaml;
+using System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
 namespace AdventureWorks.Shopper.Behaviors
 {
-    public static class ComboBoxKeyboardSelection
+    public class ComboBoxKeyboardSelection : Behavior<ComboBox>
     {
-        public static DependencyProperty EnabledProperty =
-          DependencyProperty.RegisterAttached("Enabled", typeof(bool), typeof(ComboBoxKeyboardSelection), new PropertyMetadata(false, OnEnabledChanged));
-
-        public static void SetEnabled(DependencyObject sender, bool enabled)
+        protected override void OnAttached()
         {
-            if (sender == null)
-            {
-                return;
-            }
-
-            sender.SetValue(EnabledProperty, enabled);
-        }
-
-        public static bool GetEnabled(DependencyObject sender)
-        {
-            if (sender == null)
-            {
-                return false;
-            }
-
-            return (bool)sender.GetValue(EnabledProperty);
-        }
-
-        private static void OnEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
-        {
-            ComboBox comboBox = (ComboBox)d;
+            ComboBox comboBox = this.AssociatedObject;
 
             if (comboBox != null)
             {
                 comboBox.KeyUp += comboBox_KeyUp;
-                comboBox.Unloaded += comboBox_Unloaded;
             }
         }
 
-        static void comboBox_KeyUp(object sender, KeyRoutedEventArgs e)
+        private void comboBox_KeyUp(object sender, KeyRoutedEventArgs e)
         {
-            var comboBox = (ComboBox) sender;
+            var comboBox = (ComboBox)sender;
             foreach (var item in comboBox.Items)
             {
                 var comboBoxItemValue = item as ComboBoxItemValue;
@@ -63,12 +38,14 @@ namespace AdventureWorks.Shopper.Behaviors
                 }
             }
         }
-
-        static void comboBox_Unloaded(object sender, RoutedEventArgs e)
+        protected override void OnDetached()
         {
-            var comboBox = (ComboBox) sender;
-            comboBox.KeyUp -= comboBox_KeyUp;
-            comboBox.Unloaded -= comboBox_Unloaded;
+            ComboBox comboBox = this.AssociatedObject;
+
+            if (comboBox != null)
+            {
+                comboBox.KeyUp -= comboBox_KeyUp;
+            }
         }
     }
 }

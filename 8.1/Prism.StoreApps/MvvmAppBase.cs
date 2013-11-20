@@ -28,6 +28,8 @@ namespace Microsoft.Practices.Prism.StoreApps
     // Documentation on using the MVVM pattern is at http://go.microsoft.com/fwlink/?LinkID=288814&clcid=0x409
     public abstract class MvvmAppBase : Application
     {
+        private bool _isRestoringFromTermination;
+
         /// <summary>
         /// Initializes the singleton application object. This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -54,6 +56,15 @@ namespace Microsoft.Practices.Prism.StoreApps
         protected INavigationService NavigationService { get; set; }
 
         /// <summary>
+        /// Factory for creating the ExtendedSplashScreen instance.
+        /// </summary>
+        /// <value>
+        /// The Func that creates the ExtendedSplashScreen. It requires a SplashScreen parameter,
+        /// and must return a Page instance.
+        /// </value>
+        protected Func<SplashScreen, Page> ExtendedSplashScreenFactory { get; set; }
+
+        /// <summary>
         /// Gets a value indicating whether the application is suspending.
         /// </summary>
         /// <value>
@@ -65,13 +76,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// Override this method with logic that will be performed after the application is initialized. For example, navigating to the application's home page.
         /// </summary>
         /// <param name="args">The <see cref="LaunchActivatedEventArgs"/> instance containing the event data.</param>
-        protected abstract void OnLaunchApplication(LaunchActivatedEventArgs args);
-        
-        /// <summary>
-        /// Called when any of the search entry points are triggered. You do not need to override this method if your application does not implement the Search contract.
-        /// </summary>
-        /// <param name="args">The search query arguments.</param>
-        protected virtual void OnSearchApplication(SearchQueryArguments args) { }
+        protected abstract Task OnLaunchApplication(LaunchActivatedEventArgs args);
 
         /// <summary>
         /// Gets the type of the page based on a page token.
@@ -109,7 +114,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// <param name="args">The <see cref="IActivatedEventArgs"/> instance containing the event data.</param>
         protected virtual void OnInitialize(IActivatedEventArgs args) { }
 
-                /// <summary>
+        /// <summary>
         /// Gets the Settings charm action items.
         /// </summary>
         /// <returns>The list of Setting charm action items that will populate the Settings pane.</returns>
@@ -143,43 +148,9 @@ namespace Microsoft.Practices.Prism.StoreApps
             // See http://go.microsoft.com/fwlink/?LinkID=288842
             string tileId = AppManifestHelper.GetApplicationId();
 
-            if (rootFrame != null && (rootFrame.Content == null || (args != null && args.TileId != tileId)))
+            if (rootFrame != null && (!_isRestoringFromTermination || (args != null && args.TileId != tileId)))
             {
-                OnLaunchApplication(args);
-            }
-
-            // Ensure the current window is active
-            Window.Current.Activate();
-        }
-
-        /// <summary>
-        /// Raises the WindowCreated event.
-        /// </summary>
-        /// <param name="args">The <see cref="WindowCreatedEventArgs"/> instance containing the event data.</param>
-        protected override void OnWindowCreated(WindowCreatedEventArgs args)
-        {
-            if (AppManifestHelper.IsSearchDeclared())
-            {
-                // Register the Windows.ApplicationModel.Search.SearchPane.GetForCurrentView().QuerySubmitted
-                // event in OnWindowCreated to speed up searches once the application is already running
-                SearchPane.GetForCurrentView().QuerySubmitted += OnQuerySubmitted;
-            }
-        }
-
-        /// <summary>
-        /// Invoked when the application is activated through a search association.
-        /// </summary>
-        /// <param name="args">Event data for the event.</param>
-        // Documentation on using search is at http://go.microsoft.com/fwlink/?LinkID=288822&clcid=0x409
-        protected async override void OnSearchActivated(SearchActivatedEventArgs args)
-        {
-            // If the Window isn't already using Frame navigation, insert our own Frame
-            var rootFrame = await InitializeFrameAsync(args);
-
-            if (rootFrame != null)
-            {
-                var searchQueryArguments = new SearchQueryArguments(args);
-                OnSearchApplication(searchQueryArguments);
+                await OnLaunchApplication(args);
             }
 
             // Ensure the current window is active
@@ -191,7 +162,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// </summary>
         /// <param name="args">The <see cref="IActivatedEventArgs"/> instance containing the event data.</param>
         /// <returns>A task of a Frame that holds the app content.</returns>
-        private async Task<Frame> InitializeFrameAsync(IActivatedEventArgs args)
+        protected async Task<Frame> InitializeFrameAsync(IActivatedEventArgs args)
         {
             var rootFrame = Window.Current.Content as Frame;
             // Do not repeat app initialization when the Window already has content,
@@ -200,11 +171,18 @@ namespace Microsoft.Practices.Prism.StoreApps
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
+
+                if (ExtendedSplashScreenFactory != null)
+                {
+                    Page extendedSplashScreen = this.ExtendedSplashScreenFactory.Invoke(args.SplashScreen);
+                    rootFrame.Content = extendedSplashScreen;
+                }
+
                 var frameFacade = new FrameFacadeAdapter(rootFrame);
 
                 //Initialize MvvmAppBase common services
                 SessionStateService = new SessionStateService();
-                
+
                 //Configure VisualStateAwarePage with the ability to get the session state for its frame
                 VisualStateAwarePage.GetSessionStateForFrame =
                     frame => SessionStateService.GetSessionStateForFrame(frameFacade);
@@ -233,6 +211,7 @@ namespace Microsoft.Practices.Prism.StoreApps
                     {
                         SessionStateService.RestoreFrameState();
                         NavigationService.RestoreSavedNavigation();
+                        _isRestoringFromTermination = true;
                     }
                     catch (SessionStateServiceException)
                     {
@@ -286,17 +265,6 @@ namespace Microsoft.Practices.Prism.StoreApps
             {
                 IsSuspending = false;
             }
-        }
-
-        /// <summary>
-        /// Called when a search is performed when the application is running.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="args">The <see cref="SearchPaneQuerySubmittedEventArgs"/> instance containing the event data.</param>
-        private void OnQuerySubmitted(SearchPane sender, SearchPaneQuerySubmittedEventArgs args)
-        {
-            var searchQueryArguments = new SearchQueryArguments(args);
-            OnSearchApplication(searchQueryArguments);
         }
 
         /// <summary>

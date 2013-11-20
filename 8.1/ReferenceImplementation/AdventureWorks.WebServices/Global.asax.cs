@@ -6,7 +6,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using AdventureWorks.WebServices.Repositories;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;

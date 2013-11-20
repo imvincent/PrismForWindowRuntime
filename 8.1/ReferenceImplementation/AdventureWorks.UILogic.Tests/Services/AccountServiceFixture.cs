@@ -6,7 +6,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System.Security;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Services;
 using AdventureWorks.UILogic.Tests.Mocks;

@@ -9,11 +9,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
-using AdventureWorks.UILogic.Services;
 using AdventureWorks.UILogic.Tests.Mocks;
 using AdventureWorks.UILogic.ViewModels;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using Windows.UI.Xaml.Navigation;
 using System;
 
 namespace AdventureWorks.UILogic.Tests.ViewModels

@@ -10,7 +10,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
-using Microsoft.Practices.Prism.StoreApps;
 using Newtonsoft.Json;
 using Windows.Web.Http;
 using System;
@@ -21,6 +20,7 @@ namespace AdventureWorks.UILogic.Services
     {
         private string _productsBaseUrl = string.Format(CultureInfo.InvariantCulture, "{0}/api/Product/", Constants.ServerAddress);
         private string _categoriesBaseUrl = string.Format(CultureInfo.InvariantCulture, "{0}/api/Category/", Constants.ServerAddress);
+        private string _searchSuggestionsBaseUrl = string.Format(CultureInfo.InvariantCulture, "{0}/api/SearchSuggestion/", Constants.ServerAddress);
 
         public async Task<ReadOnlyCollection<Category>> GetCategoriesAsync(int parentId, int maxAmountOfProducts)
         {
@@ -43,6 +43,19 @@ namespace AdventureWorks.UILogic.Services
                 response.EnsureSuccessStatusCode();
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<SearchResult>(responseContent);
+
+                return result;
+            }
+        }
+
+        public async Task<ReadOnlyCollection<string>> GetSearchSuggestionsAsync(string searchTerm)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                var response = await httpClient.GetAsync(new Uri(string.Format("{0}?searchTerm={1}", _searchSuggestionsBaseUrl, searchTerm)));
+                response.EnsureSuccessStatusCode();
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<ReadOnlyCollection<string>>(responseContent);
 
                 return result;
             }

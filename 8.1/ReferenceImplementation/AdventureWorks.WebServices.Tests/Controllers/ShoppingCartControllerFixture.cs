@@ -6,7 +6,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Web.Http;
 using AdventureWorks.WebServices.Controllers;

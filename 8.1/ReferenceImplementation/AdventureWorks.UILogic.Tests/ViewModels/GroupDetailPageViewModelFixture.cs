@@ -25,7 +25,6 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
         public void OnNavigatedTo_Fill_Items_And_Title()
         {
             var repository = new MockProductCatalogRepository();
-            var searchPaneService = new MockSearchPaneService();
 
             repository.GetCategoryAsyncDelegate = (categoryId) =>
             {
@@ -55,7 +54,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                 return Task.FromResult(products);
             };
 
-           var viewModel = new GroupDetailPageViewModel(repository, null, null, searchPaneService);
+           var viewModel = new GroupDetailPageViewModel(repository, null, null);
             viewModel.OnNavigatedTo(1, NavigationMode.New, null);
 
             Assert.IsNotNull(viewModel.Items);
@@ -83,7 +82,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                 return Task.FromResult(string.Empty);
             };
 
-            var viewModel = new GroupDetailPageViewModel(repository, alertService, resourceLoader, new MockSearchPaneService());
+            var viewModel = new GroupDetailPageViewModel(repository, alertService, resourceLoader);
             viewModel.OnNavigatedTo("1", NavigationMode.New, null);
 
             Assert.IsTrue(alertCalled);

@@ -147,14 +147,8 @@ namespace AdventureWorks.UILogic.ViewModels
 
             try
             {
-                if (await _accountService.VerifyUserAuthenticationAsync() == null)
-                {
-                    //Show sign in modal dialog? _flyoutService.ShowFlyout("SignIn", null, async () => await ProcessFormAsync());
-                }
-                else
-                {
-                    await ProcessFormAsync();
-                }
+                await _accountService.VerifyUserAuthenticationAsync();
+                await ProcessFormAsync();
             }
             catch (Exception ex)
             {

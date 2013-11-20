@@ -7,9 +7,6 @@
 
 
 using System.Collections.Generic;
-using AdventureWorks.WebServices.Models;
-using System.Linq;
-using System;
 
 namespace AdventureWorks.WebServices.Repositories
 {

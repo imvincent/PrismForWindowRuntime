@@ -29,7 +29,6 @@ namespace AdventureWorks.UILogic.ViewModels
         private readonly IAlertMessageService _alertService;
         private readonly IResourceLoader _resourceLoader;
         private readonly ISecondaryTileService _secondaryTileService;
-        private readonly ISearchPaneService _searchPaneService;
         private IReadOnlyCollection<ProductViewModel> _items;
         private ProductViewModel _selectedProduct;
         private bool _isSelectedProductPinned;
@@ -38,14 +37,13 @@ namespace AdventureWorks.UILogic.ViewModels
         private bool _isBottomAppBarOpened;
         private int _selectedIndex;
 
-        public ItemDetailPageViewModel(IProductCatalogRepository productCatalogRepository, IShoppingCartRepository shoppingCartRepository, IAlertMessageService alertMessageService, IResourceLoader resourceLoader, ISecondaryTileService secondaryTileService, ISearchPaneService searchPaneService)
+        public ItemDetailPageViewModel(IProductCatalogRepository productCatalogRepository, IShoppingCartRepository shoppingCartRepository, IAlertMessageService alertMessageService, IResourceLoader resourceLoader, ISecondaryTileService secondaryTileService)
         {
             _productCatalogRepository = productCatalogRepository;
             _shoppingCartRepository = shoppingCartRepository;
             _alertService = alertMessageService;
             _resourceLoader = resourceLoader;
             _secondaryTileService = secondaryTileService;
-            _searchPaneService = searchPaneService;
 
             PinProductCommand = DelegateCommand.FromAsyncHandler(PinProduct, () => SelectedProduct != null);
             UnpinProductCommand = DelegateCommand.FromAsyncHandler(UnpinProduct, () => SelectedProduct != null);
@@ -128,7 +126,6 @@ namespace AdventureWorks.UILogic.ViewModels
                 SelectedProduct = Items.First(p => p.ProductNumber == productNumber);
                 SelectedIndex = items.IndexOf(SelectedProduct);
                 Title = SelectedProduct.Title;
-                _searchPaneService.ShowOnKeyboardInput(true);
             }
             catch (Exception ex)
             {
@@ -145,16 +142,7 @@ namespace AdventureWorks.UILogic.ViewModels
                 base.OnNavigatedTo(navigationParameter, navigationMode, viewModelState);
             }
         }
-
-        public override void OnNavigatedFrom(Dictionary<string, object> viewModelState, bool suspending)
-        {
-            base.OnNavigatedFrom(viewModelState, suspending);
-            if (!suspending)
-            {
-                _searchPaneService.ShowOnKeyboardInput(false);
-            }
-        }
-
+        
         private async Task PinProduct()
         {
             if (SelectedProduct == null)

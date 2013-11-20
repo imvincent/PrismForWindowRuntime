@@ -533,7 +533,7 @@
     <value>Search</value>
     <comment>Title of the Search Page</comment>
   </data>
-  <data name="SearchPanePlaceHolderText" xml:space="preserve">
+  <data name="SearchBoxUserControl.PlaceholderText" xml:space="preserve">
     <value>Search for a Product</value>
     <comment>PlaceHolder Text for the Search Pane's input box</comment>
   </data>

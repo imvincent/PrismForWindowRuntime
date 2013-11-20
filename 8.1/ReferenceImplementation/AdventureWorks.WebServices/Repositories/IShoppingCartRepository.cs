@@ -6,7 +6,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System;
 using AdventureWorks.WebServices.Models;
 
 namespace AdventureWorks.WebServices.Repositories

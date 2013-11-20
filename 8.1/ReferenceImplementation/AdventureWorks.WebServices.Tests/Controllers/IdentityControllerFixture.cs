@@ -8,10 +8,8 @@
 
 using System;
 using System.Globalization;
-using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using AdventureWorks.WebServices.Controllers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Web.Http;

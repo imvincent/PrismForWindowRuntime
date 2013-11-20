@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Threading.Tasks;
-using Microsoft.Practices.Prism.StoreApps;
 using AdventureWorks.UILogic.Models;
 using Windows.Web.Http;
 using System;

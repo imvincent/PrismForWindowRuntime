@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
-using System.Windows.Input;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
 using AdventureWorks.UILogic.Services;
@@ -26,7 +25,6 @@ namespace AdventureWorks.UILogic.ViewModels
     public class SearchResultsPageViewModel : ViewModel
     {
         private readonly IProductCatalogRepository _productCatalogRepository;
-        private readonly ISearchPaneService _searchPaneService;
         private readonly IResourceLoader _resourceLoader;
         private readonly IAlertMessageService _alertMessageService;
         private string _searchTerm;
@@ -35,10 +33,9 @@ namespace AdventureWorks.UILogic.ViewModels
         private ReadOnlyCollection<ProductViewModel> _results;
         private int _totalCount;
 
-        public SearchResultsPageViewModel(IProductCatalogRepository productCatalogRepository, ISearchPaneService searchPaneService, IResourceLoader resourceLoader, IAlertMessageService alertMessageService)
+        public SearchResultsPageViewModel(IProductCatalogRepository productCatalogRepository, IResourceLoader resourceLoader, IAlertMessageService alertMessageService)
         {
             _productCatalogRepository = productCatalogRepository;
-            _searchPaneService = searchPaneService;
             _resourceLoader = resourceLoader;
             _alertMessageService = alertMessageService;
         }
@@ -116,7 +113,6 @@ namespace AdventureWorks.UILogic.ViewModels
 
                 // Update VM status
                 PreviousSearchTerm = SearchTerm;
-                _searchPaneService.ShowOnKeyboardInput(true);
             }
             catch (Exception ex)
             {
@@ -129,15 +125,5 @@ namespace AdventureWorks.UILogic.ViewModels
             }
 
         }
-
-        public override void OnNavigatedFrom(Dictionary<string, object> viewModelState, bool suspending)
-        {
-            base.OnNavigatedFrom(viewModelState, suspending);
-            if (!suspending)
-            {
-                _searchPaneService.ShowOnKeyboardInput(false);
-            }
-        }
-
     }
 }

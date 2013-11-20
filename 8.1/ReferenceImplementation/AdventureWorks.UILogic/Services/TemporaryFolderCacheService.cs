@@ -12,8 +12,6 @@ using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
-using AdventureWorks.UILogic.Models;
-using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Windows.Storage;
 
 namespace AdventureWorks.UILogic.Services

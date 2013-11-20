@@ -20,7 +20,7 @@ namespace AdventureWorks.UILogic.Services
         public const string PasswordVaultResourceName = "AdventureWorksShopper";
         private const string UserNameKey = "AccountService_UserName";
         private const string PasswordKey = "AccountService_Password";
-        
+
 
         private readonly IIdentityService _identityService;
         private readonly ISessionStateService _sessionStateService;
@@ -103,39 +103,45 @@ namespace AdventureWorks.UILogic.Services
 
         public async Task<bool> SignInUserAsync(string userName, string password, bool useCredentialStore)
         {
-            var result = await _identityService.LogOnAsync(userName, password);
-
-            UserInfo previousUser = _signedInUser;
-            _signedInUser = result.UserInfo;
-
-            // Save SignedInUser in the StateService
-            _sessionStateService.SessionState[SignedInUserKey] = _signedInUser;
-
-            // Save username and password in state service
-            _userName = userName;
-            _password = password;
-            _sessionStateService.SessionState[UserNameKey] = userName;
-            _sessionStateService.SessionState[PasswordKey] = password;
-
-            if (useCredentialStore)
+            try
             {
-                // Save credentials in the CredentialStore
-                _credentialStore.SaveCredentials(PasswordVaultResourceName, userName, password);
+                var result = await _identityService.LogOnAsync(userName, password);
 
-                // Documentation on managing application data is at http://go.microsoft.com/fwlink/?LinkID=288818&clcid=0x409
-            }
+                UserInfo previousUser = _signedInUser;
+                _signedInUser = result.UserInfo;
 
-            if (previousUser == null)
-            {
-                //Raise use changed event if user logged in
-                RaiseUserChanged(_signedInUser, previousUser);
+                // Save SignedInUser in the StateService
+                _sessionStateService.SessionState[SignedInUserKey] = _signedInUser;
+
+                // Save username and password in state service
+                _userName = userName;
+                _password = password;
+                _sessionStateService.SessionState[UserNameKey] = userName;
+                _sessionStateService.SessionState[PasswordKey] = password;
+
+                if (useCredentialStore)
+                {
+                    // Save credentials in the CredentialStore
+                    _credentialStore.SaveCredentials(PasswordVaultResourceName, userName, password);
+
+                    // Documentation on managing application data is at http://go.microsoft.com/fwlink/?LinkID=288818&clcid=0x409
+                }
+
+                if (previousUser == null)
+                {
+                    //Raise use changed event if user logged in
+                    RaiseUserChanged(_signedInUser, previousUser);
+                }
+                else if (_signedInUser != null && _signedInUser.UserName != previousUser.UserName)
+                {
+                    //Raise use changed event if user changed
+                    RaiseUserChanged(_signedInUser, previousUser);
+                }
+                return true;
             }
-            else if (_signedInUser != null && _signedInUser.UserName != previousUser.UserName)
-            {   
-                //Raise use changed event if user changed
-                RaiseUserChanged(_signedInUser, previousUser);
-            }
-            return true;
+            catch (Exception){}
+
+            return false;
         }
 
         public event EventHandler<UserChangedEventArgs> UserChanged;

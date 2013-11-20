@@ -129,9 +129,6 @@
   <data name="SessionStateServiceFailed" xml:space="preserve">
     <value>Session state service failed</value>
   </data>
-  <data name="CouldNotFindAssociatedFlyoutInTheViewsFolder" xml:space="preserve">
-    <value>Could not find associated Flyout in the Views folder.</value>
-  </data>
   <data name="FrameNavigationServiceUnableResolveMessage" xml:space="preserve">
     <value>Unable to resolve the pageToken {0} to a type.</value>
   </data>

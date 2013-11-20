@@ -8,7 +8,6 @@
 
 using System.ComponentModel.DataAnnotations;
 using AdventureWorks.WebServices.Strings;
-using System;
 
 namespace AdventureWorks.WebServices.Models
 {

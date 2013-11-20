@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -14,7 +14,6 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>TemporaryKey.pfx</PackageCertificateKeyFile><SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
@@ -108,6 +107,7 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Models\AddressType.cs" />
+    <Compile Include="Models\FocusOnKeyboardInputChangedEvent.cs" />
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Models\ShoppingCartItemUpdatedEvent.cs" />
     <Compile Include="Models\ShoppingCartUpdatedEvent.cs" />
@@ -139,9 +139,9 @@
     <Compile Include="Services\AddressServiceProxy.cs" />
     <Compile Include="ViewModels\CategoryPageViewModel.cs" />
     <Compile Include="ViewModels\ISignInUserControlViewModel.cs" />
+    <Compile Include="ViewModels\SearchUserControlViewModel.cs" />
     <Compile Include="ViewModels\SignInUserControlViewModel.cs" />
     <Compile Include="ViewModels\OrderConfirmationPageViewModel.cs" />
-    <Compile Include="ViewModels\SearchUserControlViewModel.cs" />
     <Compile Include="Services\AccountService.cs" />
     <Compile Include="Services\DialogCommand.cs" />
     <Compile Include="Services\HttpResponseMessageExtensions.cs" />
@@ -212,6 +212,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Newtonsoft.Json.5.0.6\lib\netcore45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0">
+      <Name>Behaviors SDK %28XAML%29</Name>
+    </SDKReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>

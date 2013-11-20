@@ -4,12 +4,12 @@
                            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                            xmlns:designViewModels="using:AdventureWorks.Shopper.DesignViewModels"
-                           xmlns:Infrastructure="using:Microsoft.Practices.Prism.StoreApps"
+                           xmlns:prism="using:Microsoft.Practices.Prism.StoreApps"
                            mc:Ignorable="d"
                            Title="Change Defaults"
                            Background="White"
                            x:Uid="Page"
-                           Infrastructure:ViewModelLocator.AutoWireViewModel="true"
+                           prism:ViewModelLocator.AutoWireViewModel="true"
                            d:DataContext="{d:DesignInstance designViewModels:ChangeDefaultsDesignViewModel, IsDesignTimeCreatable=True}">
 
     <!-- Settings Panel Content -->

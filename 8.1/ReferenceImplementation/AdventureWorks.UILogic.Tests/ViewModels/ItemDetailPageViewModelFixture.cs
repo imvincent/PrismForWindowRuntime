@@ -11,7 +11,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
-using AdventureWorks.UILogic.Services;
 using AdventureWorks.UILogic.Tests.Mocks;
 using AdventureWorks.UILogic.ViewModels;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
@@ -59,7 +58,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
 
             var secondaryTileService = new MockSecondaryTileService() { SecondaryTileExistsDelegate = s => false};
 
-            var target = new ItemDetailPageViewModel(repository, new MockShoppingCartRepository(), null, null, secondaryTileService, new MockSearchPaneService());
+            var target = new ItemDetailPageViewModel(repository, new MockShoppingCartRepository(), null, null, secondaryTileService);
             target.OnNavigatedTo("1", NavigationMode.New, null);
 
             Assert.IsNotNull(target.Items);
@@ -91,7 +90,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                     return Task.FromResult(string.Empty);
                 };
 
-            var target = new ItemDetailPageViewModel(repository, new MockShoppingCartRepository(), alertService, resourceLoader, null, new MockSearchPaneService());
+            var target = new ItemDetailPageViewModel(repository, new MockShoppingCartRepository(), alertService, resourceLoader, null);
             target.OnNavigatedTo("1", NavigationMode.New, null);
 
             Assert.IsTrue(alertCalled);
@@ -102,7 +101,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
         {
             bool fired = false;
             var secondaryTileService = new MockSecondaryTileService() { ActivateTileNotificationsDelegate = (a, b, c) => Task.Delay(0) };
-            var target = new ItemDetailPageViewModel(null, null, null, null, secondaryTileService, null);
+            var target = new ItemDetailPageViewModel(null, null, null, null, secondaryTileService);
 
             // Case 1: Item not selected --> should not be fired
             secondaryTileService.SecondaryTileExistsDelegate = (a) => false;
@@ -142,7 +141,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                 SecondaryTileExistsDelegate = (a) => false ,
                 ActivateTileNotificationsDelegate = (a, b, c) => Task.Delay(0)
             };
-            var target = new ItemDetailPageViewModel(null, null, null, null, secondaryTileService, null);
+            var target = new ItemDetailPageViewModel(null, null, null, null, secondaryTileService);
             target.SelectedProduct = new ProductViewModel(new Product() { ImageUri = new Uri("http://dummy-image-uri.com") });
 
             // The AppBar should be sticky when the item is being pinned
@@ -181,7 +180,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                         Assert.IsNotNull(recurrence);
                     }
             };
-            var target = new ItemDetailPageViewModel(null, null, null, null, tileService, null);
+            var target = new ItemDetailPageViewModel(null, null, null, null, tileService);
             target.SelectedProduct = new ProductViewModel(new Product() { ProductNumber = "MyProduct", ImageUri = new Uri("http://dummy-image-uri.com") });
 
             await target.PinProductCommand.Execute();
@@ -192,7 +191,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
         {
             bool fired = false;
             var secondaryTileService = new MockSecondaryTileService();
-            var target = new ItemDetailPageViewModel(null, null, null, null, secondaryTileService, null);
+            var target = new ItemDetailPageViewModel(null, null, null, null, secondaryTileService);
 
             // Case 1: Item not selected --> should not be fired
             secondaryTileService.SecondaryTileExistsDelegate = (a) => true;
@@ -223,7 +222,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
         public async Task UnpinFromStart_Changes_IsBottomAppBarSticky()
         {
             var tileService = new MockSecondaryTileService() { SecondaryTileExistsDelegate = (a) => false };
-            var target = new ItemDetailPageViewModel(null, null, null, null, tileService, null);
+            var target = new ItemDetailPageViewModel(null, null, null, null, tileService);
             target.SelectedProduct = new ProductViewModel(new Product() { ImageUri = new Uri("http://dummy-image-uri.com") });
 
             // The AppBar should be sticky when the item is being unpinned

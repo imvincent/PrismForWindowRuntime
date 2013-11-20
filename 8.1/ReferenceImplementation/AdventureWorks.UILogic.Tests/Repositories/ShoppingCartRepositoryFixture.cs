@@ -11,10 +11,8 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
-using AdventureWorks.UILogic.Services;
 using AdventureWorks.UILogic.Tests.Mocks;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using Windows.Storage;
 
 namespace AdventureWorks.UILogic.Tests.Repositories
 {

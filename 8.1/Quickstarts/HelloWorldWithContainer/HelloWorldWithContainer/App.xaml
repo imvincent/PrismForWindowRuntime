@@ -6,7 +6,6 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Common/StandardStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <x:String x:Key="AppName">Hello World (with Container)!</x:String>
         </ResourceDictionary>

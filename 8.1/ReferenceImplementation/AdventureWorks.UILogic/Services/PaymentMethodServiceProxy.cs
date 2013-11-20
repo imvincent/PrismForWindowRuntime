@@ -11,10 +11,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
-using Microsoft.Practices.Prism.StoreApps;
 using System.Globalization;
 using Windows.Web.Http;
-using Windows.Web.Http.Filters;
 using Newtonsoft.Json;
 
 namespace AdventureWorks.UILogic.Services

@@ -9,7 +9,6 @@
 using System.Globalization;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
-using Microsoft.Practices.Prism.StoreApps;
 using Newtonsoft.Json;
 using Windows.Web.Http;
 using System;

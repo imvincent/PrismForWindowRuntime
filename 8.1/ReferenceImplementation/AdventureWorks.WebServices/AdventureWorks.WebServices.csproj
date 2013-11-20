@@ -111,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\PaymentMethodController.cs" />
+    <Compile Include="Controllers\SearchSuggestionController.cs" />
     <Compile Include="Models\AddressType.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\AddressController.cs" />
@@ -143,6 +144,7 @@
     <Compile Include="Repositories\IAddressRepository.cs" />
     <Compile Include="Repositories\IProductRepository.cs" />
     <Compile Include="Repositories\PaymentMethodRepository.cs" />
+    <Compile Include="Repositories\SearchSuggestionRepository.cs" />
     <Compile Include="Repositories\ShippingMethodRepository.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\OrderRepository.cs" />
@@ -161,6 +163,73 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="Global.asax" />
+    <Content Include="Images\awc_jersey_male_large.jpg" />
+    <Content Include="Images\awc_tee_male_large.jpg" />
+    <Content Include="Images\bikepump_large.jpg" />
+    <Content Include="Images\bike_lock_large.jpg" />
+    <Content Include="Images\bike_shorts_male_large.jpg" />
+    <Content Include="Images\bike_stand.jpg" />
+    <Content Include="Images\bike_wash.jpg" />
+    <Content Include="Images\chain_large.jpg" />
+    <Content Include="Images\classic_vest.jpg" />
+    <Content Include="Images\clipless_pedals_large.jpg" />
+    <Content Include="Images\crankset.jpg" />
+    <Content Include="Images\double_headlight_large.jpg" />
+    <Content Include="Images\fork_large.jpg" />
+    <Content Include="Images\frame_large.jpg" />
+    <Content Include="Images\frame_silver_large.jpg" />
+    <Content Include="Images\front_brakes.jpg" />
+    <Content Include="Images\half_finger_gloves.jpg" />
+    <Content Include="Images\handlebar_large.jpg" />
+    <Content Include="Images\handpump_large.jpg" />
+    <Content Include="Images\headset.jpg" />
+    <Content Include="Images\hitch_rack.jpg" />
+    <Content Include="Images\hotrodbike_black_large.jpg" />
+    <Content Include="Images\hotrodbike_f_large.jpg" />
+    <Content Include="Images\hotrodbike_red_large.jpg" />
+    <Content Include="Images\hotrod_frame_black_large.jpg" />
+    <Content Include="Images\hotrod_frame_red_large.jpg" />
+    <Content Include="Images\hydration_pack.jpg" />
+    <Content Include="Images\innertube_large.jpg" />
+    <Content Include="Images\julianax_r_02_blue_large.jpg" />
+    <Content Include="Images\julianax_r_02_yellow_large.jpg" />
+    <Content Include="Images\logo_cap.jpg" />
+    <Content Include="Images\mb_tires_large.jpg" />
+    <Content Include="Images\mtn _socks.jpg" />
+    <Content Include="Images\mtn_fender_set.jpg" />
+    <Content Include="Images\mtn_innertube_large.jpg" />
+    <Content Include="Images\mtn_seat.jpg" />
+    <Content Include="Images\pedal_large.jpg" />
+    <Content Include="Images\race_socks.jpg" />
+    <Content Include="Images\roadster_black_large.jpg" />
+    <Content Include="Images\roadster_red_large.jpg" />
+    <Content Include="Images\roadster_yellow_large.jpg" />
+    <Content Include="Images\road_frame_black_large.jpg" />
+    <Content Include="Images\road_frame_large.jpg" />
+    <Content Include="Images\road_frame_red_large.jpg" />
+    <Content Include="Images\road_frame_yellow_large.jpg" />
+    <Content Include="Images\road_handlebar_large.jpg" />
+    <Content Include="Images\road_innertube_large.jpg" />
+    <Content Include="Images\road_seat.jpg" />
+    <Content Include="Images\shorts_female_large.jpg" />
+    <Content Include="Images\shorts_male_large.jpg" />
+    <Content Include="Images\sport_helmet_red.jpg" />
+    <Content Include="Images\sprocket_front.jpg" />
+    <Content Include="Images\sprocket_large.jpg" />
+    <Content Include="Images\street_tires_large.jpg" />
+    <Content Include="Images\tail_lights_large.jpg" />
+    <Content Include="Images\tights_female.jpg" />
+    <Content Include="Images\tirepatch_kit_large.jpg" />
+    <Content Include="Images\touring_frame_blue_large.jpg" />
+    <Content Include="Images\touring_frame_yellow_large.jpg" />
+    <Content Include="Images\touring_handlebar_large.jpg" />
+    <Content Include="Images\touring_panniers.jpg" />
+    <Content Include="Images\touring_seat.jpg" />
+    <Content Include="Images\touring_tires_large.jpg" />
+    <Content Include="Images\water_bottle_cage_large.jpg" />
+    <Content Include="Images\water_bottle_large.jpg" />
+    <Content Include="Images\wheel_large.jpg" />
+    <Content Include="Images\Woodinville_bicycle.jpg" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -172,7 +241,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Images\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -12,7 +12,6 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>TemporaryKey.pfx</PackageCertificateKeyFile><SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
@@ -110,37 +109,87 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Behaviors\ChangeVisualState.cs" />
+    <Compile Include="Behaviors\Behavior.cs" />
     <Compile Include="Behaviors\ComboBoxKeyboardSelection.cs" />
-    <Compile Include="Behaviors\HighlightFormComboOnErrors.cs" />
     <Compile Include="Behaviors\HighlightFormFieldOnErrors.cs" />
-    <Compile Include="Behaviors\HighlightSearchBehavior.cs" />
+    <Compile Include="Behaviors\HighlightSearchAction.cs" />
     <Compile Include="Behaviors\NavigateWithEventArgsToPageAction.cs" />
-    <Compile Include="Common\DependencyPropertyChangedHelper.cs" />
-    <Compile Include="Controls\AutoRotatingGridView.cs" />
-    <Compile Include="Controls\MultipleSizedGridView.cs" />
-    <Compile Include="Converters\BooleanNegationToVisibilityConverter.cs" />
-    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
-    <Compile Include="Converters\NullToVisibleConverter.cs" />
-    <Compile Include="Converters\FirstErrorConverter.cs" />
-    <Compile Include="Converters\FormStatusToStyleConverter.cs" />
-    <Compile Include="Converters\FormStatusToVisibilityConverter.cs" />
-    <Compile Include="Converters\IsSignInInvalidConverter.cs" />
-    <Compile Include="Converters\NotNullToVisibleConverter.cs" />
-    <Compile Include="DesignViewModels\ChangeDefaultDesignViewModel.cs" />
-    <Compile Include="DesignViewModels\CheckoutHubPageDesignViewModel.cs" />
-    <Compile Include="DesignViewModels\CheckoutSummaryPageDesignViewModel.cs" />
-    <Compile Include="DesignViewModels\GroupDetailPageDesignViewModel.cs" />
-    <Compile Include="DesignViewModels\HubPageDesignViewModel.cs" />
-    <Compile Include="DesignViewModels\ItemDetailsPageDesignViewModel.cs" />
-    <Compile Include="DesignViewModels\SearchResultsPageDesignViewModel.cs" />
-    <Compile Include="DesignViewModels\ShoppingCartPageDesignViewModel.cs" />
-    <Compile Include="DesignViewModels\ShoppingCartTabDesignViewModel.cs" />
+    <Compile Include="Common\DependencyPropertyChangedHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\AutoRotatingGridView.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\MultipleSizedGridView.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Converters\BooleanNegationToVisibilityConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Converters\BooleanToVisibilityConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Converters\FirstErrorConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Converters\FormStatusToStyleConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Converters\FormStatusToVisibilityConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Converters\IsSignInInvalidConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Converters\NotNullToVisibleConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Converters\NullToVisibleConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DesignViewModels\ChangeDefaultDesignViewModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DesignViewModels\CheckoutHubPageDesignViewModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DesignViewModels\CheckoutSummaryPageDesignViewModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DesignViewModels\GroupDetailPageDesignViewModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DesignViewModels\HubPageDesignViewModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DesignViewModels\ItemDetailsPageDesignViewModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DesignViewModels\SearchResultsPageDesignViewModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DesignViewModels\ShoppingCartPageDesignViewModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DesignViewModels\ShoppingCartTabDesignViewModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Services\AlertMessageService.cs" />
-    <Compile Include="Services\SecondaryTileService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AlertMessageService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Services\SecondaryTileService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Views\BillingAddressPage.xaml.cs">
+      <DependentUpon>BillingAddressPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BillingAddressUserControl.xaml.cs">
       <DependentUpon>BillingAddressUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CategoryPage.xaml.cs">
+      <DependentUpon>CategoryPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ChangeDefaultsFlyout.xaml.cs">
       <DependentUpon>ChangeDefaultsFlyout.xaml</DependentUpon>
@@ -151,38 +200,8 @@
     <Compile Include="Views\CheckoutSummaryPage.xaml.cs">
       <DependentUpon>CheckoutSummaryPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\BillingAddressPage.xaml.cs">
-      <DependentUpon>BillingAddressPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\CategoryPage.xaml.cs">
-      <DependentUpon>CategoryPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\OrderConfirmationPage.xaml.cs">
-      <DependentUpon>OrderConfirmationPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SearchResultsPage.xaml.cs">
-      <DependentUpon>SearchResultsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SearchUserControl.xaml.cs">
-      <DependentUpon>SearchUserControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ShippingAddressPage.xaml.cs">
-      <DependentUpon>ShippingAddressPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PaymentMethodPage.xaml.cs">
-      <DependentUpon>PaymentMethodPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ShoppingCartTabUserControl.xaml.cs">
-      <DependentUpon>ShoppingCartTabUserControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SignInUserControl.xaml.cs">
-      <DependentUpon>SignInUserControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SignOutFlyout.xaml.cs">
-      <DependentUpon>SignOutFlyout.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PaymentMethodUserControl.xaml.cs">
-      <DependentUpon>PaymentMethodUserControl.xaml</DependentUpon>
+    <Compile Include="Views\ExtendedSplashScreen.xaml.cs">
+      <DependentUpon>ExtendedSplashScreen.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\GroupDetailPage.xaml.cs">
       <DependentUpon>GroupDetailPage.xaml</DependentUpon>
@@ -193,15 +212,42 @@
     <Compile Include="Views\ItemDetailPage.xaml.cs">
       <DependentUpon>ItemDetailPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\OrderConfirmationPage.xaml.cs">
+      <DependentUpon>OrderConfirmationPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PaymentMethodPage.xaml.cs">
+      <DependentUpon>PaymentMethodPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PaymentMethodUserControl.xaml.cs">
+      <DependentUpon>PaymentMethodUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ScrollViewerUtilities.cs" />
+    <Compile Include="Views\SearchResultsPage.xaml.cs">
+      <DependentUpon>SearchResultsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SearchUserControl.xaml.cs">
+      <DependentUpon>SearchUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ShippingAddressPage.xaml.cs">
+      <DependentUpon>ShippingAddressPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ShippingAddressUserControl.xaml.cs">
       <DependentUpon>ShippingAddressUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ShoppingCartPage.xaml.cs">
+      <DependentUpon>ShoppingCartPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ShoppingCartTabUserControl.xaml.cs">
+      <DependentUpon>ShoppingCartTabUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SignInFlyout.xaml.cs">
       <DependentUpon>SignInFlyout.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ShoppingCartPage.xaml.cs">
-      <DependentUpon>ShoppingCartPage.xaml</DependentUpon>
+    <Compile Include="Views\SignInUserControl.xaml.cs">
+      <DependentUpon>SignInUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SignOutFlyout.xaml.cs">
+      <DependentUpon>SignOutFlyout.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TopAppBarUserControl.xaml.cs">
       <DependentUpon>TopAppBarUserControl.xaml</DependentUpon>
@@ -212,7 +258,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <PRIResource Include="Strings\en-US\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\BannerLogo.png" />
@@ -243,104 +288,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Themes\DataTemplates.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Page>
-    <Page Include="Views\BillingAddressUserControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ChangeDefaultsFlyout.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\CheckoutHubPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\CheckoutSummaryPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\BillingAddressPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\CategoryPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\OrderConfirmationPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\SearchResultsPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SearchUserControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ShippingAddressPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\PaymentMethodPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ShoppingCartTabUserControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SignInUserControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SignOutFlyout.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\PaymentMethodUserControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\GroupDetailPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\HubPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\ItemDetailPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\ShippingAddressUserControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SignInFlyout.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\ShoppingCartPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Themes\AWShopperStyles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Page>
-    <Page Include="Views\TopAppBarUserControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Prism.PubSubEvents\Microsoft.Practices.Prism.PubSubEvents.csproj">
@@ -368,6 +315,111 @@
     <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0">
       <Name>Behaviors SDK %28XAML%29</Name>
     </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Themes\AWShopperStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\DataTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BillingAddressPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BillingAddressUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CategoryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ChangeDefaultsFlyout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CheckoutHubPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CheckoutSummaryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ExtendedSplashScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GroupDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\HubPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ItemDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OrderConfirmationPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PaymentMethodPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PaymentMethodUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SearchResultsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SearchUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ShippingAddressPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ShippingAddressUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ShoppingCartPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ShoppingCartTabUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SignInFlyout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SignInUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SignOutFlyout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TopAppBarUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Strings\en-US\Resources.resw" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>

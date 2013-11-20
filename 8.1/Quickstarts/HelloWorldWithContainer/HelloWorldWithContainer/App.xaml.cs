@@ -10,6 +10,7 @@ using HelloWorldWithContainer.Services;
 using Microsoft.Practices.Prism.StoreApps;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Microsoft.Practices.Unity;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
@@ -33,7 +34,7 @@ namespace HelloWorldWithContainer
         /// to the page approriate based on a search, sharing, or secondary tile launch of the app
         /// </summary>
         /// <param name="args">The launch arguments passed to the application</param>
-        protected override void OnLaunchApplication(LaunchActivatedEventArgs args)
+        protected override Task OnLaunchApplication(LaunchActivatedEventArgs args)
         {
             // Use the logical name for the view to navigate to. The default convention
             // in the NavigationService will be to append "Page" to the name and look 
@@ -41,6 +42,7 @@ namespace HelloWorldWithContainer
             // for mapping view names to view types, you can override 
             // the MvvmAppBase.GetPageNameToTypeResolver method
             NavigationService.Navigate("Main", null);
+            return Task.FromResult<object>(null);
         }
 
         /// <summary>

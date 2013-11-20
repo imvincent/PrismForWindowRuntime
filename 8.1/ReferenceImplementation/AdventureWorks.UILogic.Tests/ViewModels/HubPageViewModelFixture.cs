@@ -10,7 +10,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using AdventureWorks.UILogic.Models;
-using AdventureWorks.UILogic.Services;
 using AdventureWorks.UILogic.Tests.Mocks;
 using AdventureWorks.UILogic.ViewModels;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
@@ -27,7 +26,6 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
         {
             var repository = new MockProductCatalogRepository();
             var navigationService = new MockNavigationService();
-            var searchPaneService = new MockSearchPaneService();
 
             repository.GetRootCategoriesAsyncDelegate = (maxAmmountOfProducts) =>
             {
@@ -40,7 +38,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                 return Task.FromResult(categories);
             };
 
-            var viewModel = new HubPageViewModel(repository, navigationService, null, null, searchPaneService);
+            var viewModel = new HubPageViewModel(repository, navigationService, null, null);
             viewModel.OnNavigatedTo(null, NavigationMode.New, null);
 
             Assert.IsNotNull(viewModel.RootCategories);
@@ -53,7 +51,6 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             var alertCalled = false;
             var productCatalogRepository = new MockProductCatalogRepository();
             var navService = new MockNavigationService();
-            var searchPaneService = new MockSearchPaneService();
             productCatalogRepository.GetRootCategoriesAsyncDelegate = (maxAmmountOfProducts) =>
             {
                 throw new Exception();
@@ -66,7 +63,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                 return Task.FromResult(string.Empty);
             };
             var target = new HubPageViewModel(productCatalogRepository, navService,
-                                                                 alertMessageService, new MockResourceLoader(), searchPaneService);
+                                                                 alertMessageService, new MockResourceLoader());
             target.OnNavigatedTo(null, NavigationMode.New, null);
             
             Assert.IsTrue(alertCalled);

@@ -67,8 +67,6 @@ namespace AdventureWorks.Shopper.Controls
 
             this.PortraitGroupStyle = new ObservableCollection<GroupStyle>();
             this.MinimalGroupStyle = new ObservableCollection<GroupStyle>();
-
-            UpdateLayout(AutoRotateGridViewLayouts.Landscape);
         }
 
         // Properties
