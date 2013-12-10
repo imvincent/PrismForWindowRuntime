@@ -169,8 +169,6 @@ namespace AdventureWorks.UILogic.Services
             // remove user from the CredentialStore, if any
             _credentialStore.RemoveSavedCredentials(PasswordVaultResourceName);
 
-            //TODO: remove cookie?
-
             RaiseUserChanged(_signedInUser, previousUser);
         }
     }

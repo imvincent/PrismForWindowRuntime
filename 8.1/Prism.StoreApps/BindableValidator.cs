@@ -158,7 +158,6 @@ namespace Microsoft.Practices.Prism.StoreApps
             }
 
             var propertyInfo = _entityToValidate.GetType().GetRuntimeProperty(propertyName);
-
             if (propertyInfo == null)
             {
                 var errorString = _getResourceDelegate(Constants.StoreAppsInfrastructureResourceMapId, "InvalidPropertyNameException");

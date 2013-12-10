@@ -18,7 +18,7 @@ namespace AdventureWorks.UILogic.Repositories
 
         Task<ReadOnlyCollection<Category>> GetSubcategoriesAsync(int parentId, int maxAmountOfProducts);
 
-        Task<SearchResult> GetFilteredProductsAsync(string productsQueryString);
+        Task<SearchResult> GetFilteredProductsAsync(string productsQueryString, int maxResults);
 
         Task<ReadOnlyCollection<Product>> GetProductsAsync(int categoryId);
 

@@ -20,6 +20,7 @@ namespace AdventureWorks.Shopper.DesignViewModels
             this.QueryText = '\u201c' + "bike" + '\u201d';
             this.SearchTerm = "bike";
             this.NoResults = false;
+            this.TotalCount = 99;
             FillWithDummyData();
         }
 
@@ -28,6 +29,8 @@ namespace AdventureWorks.Shopper.DesignViewModels
         public string SearchTerm { get; set; }
 
         public bool NoResults { get; set; }
+
+        public int TotalCount { get; set; }
 
         public List<ProductViewModel> Results { get; private set; }
 

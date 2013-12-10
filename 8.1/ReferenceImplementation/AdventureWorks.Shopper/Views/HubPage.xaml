@@ -18,7 +18,7 @@
                                      d:DataContext="{d:DesignInstance designViewModels:HubPageDesignViewModel, IsDesignTimeCreatable=True}">
 
     <prism:VisualStateAwarePage.Resources>
-        <Style TargetType="views:ItemDetailPage" />
+        <!--<Style TargetType="views:ItemDetailPage" />-->
         <!--
             Collection of grouped items displayed by this page, bound to a subset
             of the complete item list because items in groups cannot be virtualized
@@ -46,18 +46,13 @@
             <RowDefinition Height="140" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid>
+        <Grid x:Name="titleGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="100*"
-                                  MaxWidth="400" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <AppBarButton x:Name="backButton"
-                          MinWidth="60"
-                          MinHeight="60"
+            <Button x:Name="backButton"
                           AutomationProperties.AutomationId="HubPageGoBackButton"
                           Command="{Binding GoBackCommand, ElementName=pageRoot}"
                           Style="{StaticResource BackButtonStyle}" />
@@ -68,11 +63,14 @@
                    Margin="0,0,0,0"
                    Grid.Column="1"
                    HorizontalAlignment="Left" />
-            <views:SearchUserControl x:Name="searchBoxControl"
+            <views:SearchUserControl x:Name="searchUserControl"
                                      Height="80"
-                                     Grid.Column="3" />
+                                     Grid.Column="0"
+                                     Grid.ColumnSpan="2"
+                                     HorizontalAlignment="Right"
+                                     Width="400"/>
             <views:ShoppingCartTabUserControl x:Name="shoppingCartTabUserControl"
-                                              Grid.Column="4"
+                                              Grid.Column="2"
                                               RenderTransformOrigin="0.5,0.5"
                                               Margin="15"
                                               Loaded="StartLayoutUpdates"
@@ -104,9 +102,7 @@
                         </ItemsPanelTemplate>
                     </GridView.ItemsPanel>
                 </GridView>
-
             </SemanticZoom.ZoomedOutView>
-
             <SemanticZoom.ZoomedInView>
                 <!-- The MultipleSizedGridView is a custom user control that is used to display multiple-sized elements in the grid.
                 It also includes the functionality of the custom AutoRotatingGridView control, that automatically rearranges items,
@@ -121,7 +117,8 @@
                                                 MinimalItemTemplate="{StaticResource ProductTemplateMinimal}"
                                                 SelectionMode="None"
                                                 ScrollViewer.IsHorizontalScrollChainingEnabled="False"
-                                                IsItemClickEnabled="True">
+                                                IsItemClickEnabled="True"
+                                                Loaded="itemsGridView_Loaded">
                     <interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="ItemClick">
                             <awbehaviors:NavigateWithEventArgsToPageAction TargetPage="AdventureWorks.Shopper.Views.ItemDetailPage"
@@ -226,11 +223,19 @@
                             </GroupStyle.HeaderTemplate>
                             <GroupStyle.Panel>
                                 <ItemsPanelTemplate>
-                                    <StackPanel HorizontalAlignment="Left" />
+                                    <StackPanel HorizontalAlignment="Stretch" Margin="0,0,5,0" />
                                 </ItemsPanelTemplate>
                             </GroupStyle.Panel>
                         </GroupStyle>
                     </awcontrols:MultipleSizedGridView.MinimalGroupStyle>
+                    <awcontrols:MultipleSizedGridView.ItemContainerStyle>
+                        <Style TargetType="Control">
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Stretch" />
+                            <Setter Property="HorizontalContentAlignment"
+                                    Value="Left" />
+                        </Style>
+                    </awcontrols:MultipleSizedGridView.ItemContainerStyle>
                 </awcontrols:MultipleSizedGridView>
             </SemanticZoom.ZoomedInView>
         </SemanticZoom>
@@ -257,11 +262,15 @@
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="false" />
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"
-                                                       Storyboard.TargetName="AppLogo">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.ColumnDefinitions[0].Width"
+                                                       Storyboard.TargetName="titleGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="40" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(views:SearchUserControl.IsCompact)"
+                                                       Storyboard.TargetName="searchUserControl">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
-                                    <Thickness>-90,0,0,0</Thickness>
+                                    <x:Boolean>True</x:Boolean>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
@@ -317,13 +326,37 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                       Storyboard.TargetName="searchBoxControl">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"
+                                                       Storyboard.TargetName="searchUserControl">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Collapsed</Visibility>
+                                    <Thickness>0,37,0,0</Thickness>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(views:SearchUserControl.IsCompact)"
+                                                       Storyboard.TargetName="searchUserControl">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Boolean>True</x:Boolean>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="HorizontalAlignment"
+                                                       Storyboard.TargetName="searchUserControl">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Stretch" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Width"
+                                                       Storyboard.TargetName="searchUserControl">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Double>NaN</x:Double>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Grid.ColumnDefinitions[0].Width"
+                                                       Storyboard.TargetName="titleGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="20" />
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>

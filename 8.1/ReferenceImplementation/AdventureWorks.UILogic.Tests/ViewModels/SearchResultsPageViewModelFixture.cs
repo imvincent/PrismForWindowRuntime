@@ -26,7 +26,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
         public void OnNavigatingTo_Search_Results_Page_With_Search_Term()
         {
             var repository = new MockProductCatalogRepository();
-            repository.GetFilteredProductsAsyncDelegate = (queryString) =>
+            repository.GetFilteredProductsAsyncDelegate = (queryString, maxResults) =>
                 {
                     ReadOnlyCollection<Product> products;
                     if (queryString == "bike")
@@ -62,7 +62,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
         public void OnNavigatingTo_Search_Results_Page_Without_Search_Term()
         {
             var repository = new MockProductCatalogRepository();
-            repository.GetFilteredProductsAsyncDelegate = (queryString) =>
+            repository.GetFilteredProductsAsyncDelegate = (queryString, maxResults) =>
             {
                 ReadOnlyCollection<Product> products;
                 if (queryString == "bike")

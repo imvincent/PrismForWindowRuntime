@@ -36,7 +36,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <AppBarButton x:Name="backButton"
+            <Button x:Name="backButton"
                           Command="{Binding GoBackCommand, ElementName=pageRoot}"
                           Style="{StaticResource BackButtonStyle}" />
             <TextBlock x:Uid="CheckoutSummaryTitle"
@@ -1067,6 +1067,7 @@
         <CommandBar Style="{StaticResource AppBarStyle}"
                     IsOpen="{Binding IsBottomAppBarOpened, Mode=TwoWay}"
                     IsSticky="True"
+                    Visibility="{Binding SelectedCheckoutData, Converter={StaticResource NotNullToVisibleConverter}}"
                     x:Uid="BottomAppBar">
             <CommandBar.SecondaryCommands>
                 <AppBarButton x:Name="SelectCheckoutDataAppBarButton"
@@ -1079,7 +1080,7 @@
                     <AppBarButton.Flyout>
                         <Flyout FlyoutPresenterStyle="{StaticResource AWShopperFlyoutStyle}">
                             <Grid x:Name="PopupPanel"
-                                  Background="Black"
+                                  Background="{StaticResource AppBarBackgroundThemeBrush}"
                                   Opacity=".9"
                                   Height="250"
                                   Width="410">
@@ -1091,7 +1092,7 @@
                                 <TextBlock x:Name="PopupTitle"
                                            Margin="15,5"
                                            Text="{Binding SelectCheckoutDataLabel}"
-                                           Foreground="{StaticResource AWShopperAccentBrush}"
+                                           Foreground="{StaticResource AWShopperAccentTextBrush}"
                                            Style="{StaticResource GroupHeaderTextStyle}"
                                            VerticalAlignment="Center" />
                                 <ListView x:Name="PopupItems"

@@ -22,5 +22,28 @@ namespace AdventureWorks.Shopper.Views
         {
             this.InitializeComponent();
         }
+
+        protected override void OnNavigatedTo(Windows.UI.Xaml.Navigation.NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            // It is important to call EnableFocusOnKeyboardInput here in the OnNavigatedTo method to
+            // give the previous page's SearchUserControl time to tear down.
+            this.searchUserControl.EnableFocusOnKeyboardInput();
+        }
+
+        protected override void OnNavigatedFrom(Windows.UI.Xaml.Navigation.NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+
+            var adventureWorksApp = App.Current as App;
+            if (adventureWorksApp != null && !adventureWorksApp.IsSuspending)
+            {
+                // It is important to call DisableFocusOnKeyboardInput here in the OnNavigatedFrom method 
+                // to ensure that this page's SearchUserControl.FocusOnKeyboardInput is set to false 
+                // prior to the next page's SearchUserControl.FocusOnKeyboardInput value is set to true
+                this.searchUserControl.DisableFocusOnKeyboardInput();
+            }
+        }
     }
 }

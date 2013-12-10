@@ -1,7 +1,7 @@
-﻿<Infrastructure:MvvmAppBase x:Class="HelloWorldWithContainer.App"
+﻿<prism:MvvmAppBase x:Class="HelloWorldWithContainer.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:Infrastructure="using:Microsoft.Practices.Prism.StoreApps">
+             xmlns:prism="using:Microsoft.Practices.Prism.StoreApps">
 
     <Application.Resources>
         <ResourceDictionary>
@@ -10,4 +10,4 @@
             <x:String x:Key="AppName">Hello World (with Container)!</x:String>
         </ResourceDictionary>
     </Application.Resources>
-</Infrastructure:MvvmAppBase>
+</prism:MvvmAppBase>

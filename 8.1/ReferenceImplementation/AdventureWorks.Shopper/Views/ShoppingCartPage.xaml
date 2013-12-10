@@ -145,7 +145,6 @@
                             Background="{StaticResource AWShopperAccentBrush}" />
                 </StackPanel>
 
-
                 <!-- Items -->
                 <TextBlock x:Uid="ItemsLabel"
                            x:Name="ItemsLabel"
@@ -155,9 +154,9 @@
                            Margin="5,2,0,8"
                            Style="{StaticResource SubheaderTextStyle}"
                            Foreground="{StaticResource AWShopperAccentTextBrush}" />
+
                 <!-- The AutoRotatingGridView control, that automatically rearranges items,
                 when the app is switched to portrait mode, or to minimal layout mode. -->
-
                 <awcontrols:AutoRotatingGridView x:Name="ShoppingCartItemsGridView"
                                                x:Uid="ShoppingCartItemsGridView"
                                                AutomationProperties.AutomationId="ShoppingCartItemsGridView"
@@ -178,19 +177,23 @@
                                       ItemWidth="400" />
                         </ItemsPanelTemplate>
                     </awcontrols:AutoRotatingGridView.ItemsPanel>
-
                     <awcontrols:AutoRotatingGridView.PortraitItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapGrid Orientation="Horizontal"
                                       ItemWidth="400" />
                         </ItemsPanelTemplate>
                     </awcontrols:AutoRotatingGridView.PortraitItemsPanel>
-
                     <awcontrols:AutoRotatingGridView.MinimalItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel HorizontalAlignment="Left" />
                         </ItemsPanelTemplate>
                     </awcontrols:AutoRotatingGridView.MinimalItemsPanel>
+                    <Style TargetType="Control">
+                        <Setter Property="HorizontalAlignment"
+                                    Value="Stretch" />
+                        <Setter Property="HorizontalContentAlignment"
+                                    Value="Left" />
+                    </Style>
                 </awcontrols:AutoRotatingGridView>
             </Grid>
         </ScrollViewer>
@@ -666,7 +669,7 @@
                     <AppBarButton.Flyout>
                         <Flyout FlyoutPresenterStyle="{StaticResource AWShopperFlyoutStyle}">
                             <Grid x:Name="PopupPanel"
-                                  Background="Black"
+                                  Background="{StaticResource AppBarBackgroundThemeBrush}"
                                   Opacity=".9"
                                   Height="200">
                                 <Grid.RowDefinitions>
@@ -679,7 +682,7 @@
                                            Text="Edit Quantity"
                                            TextTrimming="WordEllipsis"
                                            FontSize="34"
-                                           Foreground="White"></TextBlock>
+                                           Foreground="{StaticResource AWShopperItemForegroundBrush}"></TextBlock>
                                 <Grid x:Name="ContentPopupGrid"
                                       Grid.Row="1"
                                       Margin="20,0,10,15">
@@ -711,7 +714,7 @@
                                                Grid.Column="2"
                                                Text="{Binding SelectedItem.Quantity}"
                                                FontSize="55"
-                                               Foreground="#FFE2742F"
+                                               Foreground="{StaticResource AwShopperAccentText2Brush}"
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center" />
                                     <AppBarButton x:Name="IncrementQuantityButton"

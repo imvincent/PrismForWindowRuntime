@@ -15,91 +15,107 @@ using AdventureWorks.UILogic.Repositories;
 using Microsoft.Practices.Prism.PubSubEvents;
 using Microsoft.Practices.Prism.StoreApps;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
+using Windows.UI.Xaml.Navigation;
 
 namespace AdventureWorks.UILogic.ViewModels
 {
     public class SearchUserControlViewModel : ViewModel
     {
+        private const uint MaxNumberOfSuggestions = 5;
+        private const int MaxNumberOfResultSuggestions = 2;
         private readonly INavigationService _navigationService;
         private readonly IProductCatalogRepository _productCatalogRepository;
         private readonly IEventAggregator _eventAggregator;
-        private bool _focusOnKeyBoardInput;
+        private readonly IResourceLoader _resourceLoader;
 
-        public SearchUserControlViewModel(INavigationService navigationService, IProductCatalogRepository productCatalogRepository, IEventAggregator eventAggregator)
+        public SearchUserControlViewModel(INavigationService navigationService, IProductCatalogRepository productCatalogRepository, IEventAggregator eventAggregator, IResourceLoader resourceLoader)
         {
             _navigationService = navigationService;
             _productCatalogRepository = productCatalogRepository;
             _eventAggregator = eventAggregator;
-            this.MaxNumberOfSuggestions = 5;
-            this.FocusOnKeyBoardInput = true;
+            _resourceLoader = resourceLoader;
             this.SearchCommand = new DelegateCommand<SearchBoxQuerySubmittedEventArgs>(SearchBoxQuerySubmitted);
+            this.ResultSuggestionChosenCommand =  new DelegateCommand<SearchBoxResultSuggestionChosenEventArgs>(SearchBoxResultSuggestionChosen);
             this.SearchSuggestionsCommand = new DelegateCommand<SearchBoxSuggestionsRequestedEventArgs>(async (eventArgs) =>
             {
                 await SearchBoxSuggestionsRequested(eventArgs);
             });
-            if (_eventAggregator != null)
-            {
-                eventAggregator.GetEvent<FocusOnKeyboardInputChangedEvent>().Subscribe(FocusOnKeybordInputToggle);
-            }
-        }
 
-        public bool FocusOnKeyBoardInput
-        {
-            get
-            {
-                return this._focusOnKeyBoardInput;
-            }
-
-            private set { SetProperty(ref _focusOnKeyBoardInput, value); }
         }
 
         public IList<string> SuggestionsList { get; set; }
-
-        public uint MaxNumberOfSuggestions { get; set; }
 
         public DelegateCommand<SearchBoxQuerySubmittedEventArgs> SearchCommand { get; set; }
 
         public DelegateCommand<SearchBoxSuggestionsRequestedEventArgs> SearchSuggestionsCommand { get; set; }
 
-        private void FocusOnKeybordInputToggle(bool value)
-        {
-            this.FocusOnKeyBoardInput = value;
-        }
+        public DelegateCommand<SearchBoxResultSuggestionChosenEventArgs> ResultSuggestionChosenCommand { get; set; }
 
         private void SearchBoxQuerySubmitted(SearchBoxQuerySubmittedEventArgs eventArgs)
         {
-            var searchTerm = eventArgs.QueryText;
+            var searchTerm = eventArgs.QueryText != null ? eventArgs.QueryText.Trim() : null;
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 _navigationService.Navigate("SearchResults", searchTerm);
-            }
-            else
-            {
-                _navigationService.Navigate("Hub", null);
             }
         }
 
         private async Task SearchBoxSuggestionsRequested(SearchBoxSuggestionsRequestedEventArgs args)
         {
-            var queryText = args.QueryText;
+            var queryText = args.QueryText != null ? args.QueryText.Trim() : null;
             if (string.IsNullOrEmpty(queryText)) return;
             var deferral = args.Request.GetDeferral();
-            this.SuggestionsList = await _productCatalogRepository.GetSearchSuggestionsAsync(queryText);
-            if (this.SuggestionsList != null && !string.IsNullOrEmpty(queryText))
-            {
-                foreach (string suggestion in this.SuggestionsList)
-                {
-                    // Add suggestion to Search Pane
-                    args.Request.SearchSuggestionCollection.AppendQuerySuggestion(suggestion);
 
-                    // Break since the Search Pane can show at most 25 suggestions
-                    if (args.Request.SearchSuggestionCollection.Size >= this.MaxNumberOfSuggestions)
+            try
+            {
+                this.SuggestionsList = await _productCatalogRepository.GetSearchSuggestionsAsync(queryText);
+                if (this.SuggestionsList != null && !string.IsNullOrEmpty(queryText))
+                {
+                    var suggestionCollection = args.Request.SearchSuggestionCollection;
+
+                    // This call to GetFilteredProductsAsync is used to populate the SearchBox control's
+                    // Result Suggestions. This would be replaced with a call to a promotions/marketing engine that 
+                    // provides more realistic product promotions.
+                    var resultsSuggestions = await _productCatalogRepository.GetFilteredProductsAsync(queryText, MaxNumberOfResultSuggestions);
+                    if (resultsSuggestions.Products.Count > 0)
                     {
-                        break;
+                        foreach (var result in resultsSuggestions.Products)
+                        {
+                            var imageSource = Windows.Storage.Streams.RandomAccessStreamReference.CreateFromUri(result.ImageUri);
+                            suggestionCollection.AppendResultSuggestion(result.Title, result.ListPrice.ToString(), result.ProductNumber, imageSource, result.Title);
+                        }
+                    }
+
+                    suggestionCollection.AppendSearchSeparator(string.Empty);
+                    var querySuggestionCount = 0;
+                    foreach (string suggestion in this.SuggestionsList)
+                    {
+                        querySuggestionCount++;
+                        // Add suggestion to Search Pane
+                        suggestionCollection.AppendQuerySuggestion(suggestion);
+
+                        // Break since the Search Pane can show at most 25 suggestions
+                        if (querySuggestionCount >= MaxNumberOfSuggestions)
+                        {
+                            break;
+                        }
                     }
                 }
             }
+            catch (Exception)
+            {
+                //Ignore any exceptions that occur trying to find search suggestions.
+            }
+            
             deferral.Complete();
         }
+
+
+        private void SearchBoxResultSuggestionChosen(SearchBoxResultSuggestionChosenEventArgs eventArgs)
+        {
+            var tag = eventArgs.Tag;
+                _navigationService.Navigate("ItemDetail", tag);
+        }
+
     }
 }

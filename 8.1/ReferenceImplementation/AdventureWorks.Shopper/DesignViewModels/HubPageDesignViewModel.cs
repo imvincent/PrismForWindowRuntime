@@ -28,7 +28,7 @@ namespace AdventureWorks.Shopper.DesignViewModels
 
         public void FillWithDummyData()
         {
-            Title = "Accesories";
+            Title = "Accessories";
             RootCategories = new List<CategoryViewModel>()
                 {
                     new CategoryViewModel(new Category()

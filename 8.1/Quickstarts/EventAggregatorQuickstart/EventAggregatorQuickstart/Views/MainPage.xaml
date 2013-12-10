@@ -4,8 +4,8 @@
       xmlns:local="using:EventAggregatorQuickstart"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:Infrastructure="using:Microsoft.Practices.Prism.StoreApps" mc:Ignorable="d"
-      Infrastructure:ViewModelLocator.AutoWireViewModel="True">
+      xmlns:prism="using:Microsoft.Practices.Prism.StoreApps" mc:Ignorable="d"
+      prism:ViewModelLocator.AutoWireViewModel="True">
     <Page.Resources>
         <DataTemplate x:Key="SubscriberTemplate">
             <local:SubscriberView />

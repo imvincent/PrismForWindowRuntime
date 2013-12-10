@@ -1,0 +1,50 @@
+﻿<Page
+    x:Name="pageRoot"
+    x:Class="IncrementalLoadingQuickstart.MainPage"
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:IncrementalLoadingQuickstart"
+    xmlns:common="using:IncrementalLoadingQuickstart.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+   
+    <Grid x:Name="LayoutRoot" Margin="100">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.ColumnSpan="3">            
+            <Button x:Name="backButton" Margin="39,59,39,0" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
+                        Style="{StaticResource NavigationBackButtonNormalStyle}"
+                        VerticalAlignment="Top"
+                        AutomationProperties.Name="Back"
+                        AutomationProperties.AutomationId="BackButton"
+                        AutomationProperties.ItemType="Navigation Button"/>
+            <TextBlock x:Name="pageTitle" Text="The demonstration below shows three ways to display GridView data in 8.1. To see the differences, scroll rapidly to the right." Style="{StaticResource SubheaderTextBlockStyle}" 
+                        IsHitTestVisible="false" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
+        </Grid>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="3">
+            <StackPanel Grid.Column="0" Width="240">
+                <Button Content="Data Binding" Click="Button_Click"/>
+                <TextBlock x:Name="DataBindingText" TextWrapping="Wrap" FontSize="18" Margin="10,20,10,10">This demonstration shows basic DataBinding, which is the simplest to implement, but does not always scale well for larger data sets.</TextBlock>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Width="240" Margin="20,0,20,0">
+                <Button Content="Content Container Changing" Click="Button_Click2"/>
+                <TextBlock x:Name="CCCText" TextWrapping="Wrap" FontSize="18" Margin="10,20,10,10">This demonstration shows how to use the ContainerContentChanging event to render grid items in layers, which is more complex to code, but provides best perf for larger data sets. </TextBlock>
+            </StackPanel>
+            <StackPanel Grid.Column="2" Width="240">
+            <Button Content="Blend Behavior" Click="Button_Click3"/>
+                <TextBlock x:Name="BlendBehavior" TextWrapping="Wrap" FontSize="18" Margin="10,20,10,10">This demonstration shows how to use a Blend behavior to achieve layered item rendering. The perf is not as good as with the ContainerContentChanging event code, but it is simpler and does scale well for larger data sets.</TextBlock>
+            </StackPanel>
+        </StackPanel>
+        
+    </Grid>
+</Page>

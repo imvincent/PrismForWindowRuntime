@@ -153,6 +153,10 @@
     <value>Address*</value>
     <comment>Label for Address</comment>
   </data>
+  <data name="Address.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Address</value>
+    <comment>AutomationProperties' Name for Address</comment>
+  </data>
   <data name="TitleArea.Text" xml:space="preserve">
     <value>Area*</value>
     <comment>Label for the Area controls in the Billing &amp; Shipping Addresses user controls</comment>
@@ -161,37 +165,77 @@
     <value>First Name*</value>
     <comment>Label for the First Name textbox in the Billing &amp; Shipping Addresses user controls</comment>
   </data>
+  <data name="FirstName.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>First Name</value>
+    <comment>AutomationProperties' Name for FirstName</comment>
+  </data>
   <data name="LastName.Header" xml:space="preserve">
     <value>Last Name*</value>
     <comment>Label for the Last Name textbox in the Billing &amp; Shipping Addresses user controls</comment>
+  </data>
+  <data name="LastName.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Last Name</value>
+    <comment>AutomationProperties' Name for LastName</comment>
   </data>
   <data name="MiddleInitial.Header" xml:space="preserve">
     <value>Middle Initial</value>
     <comment>Label for the Middle Initial textbox in the Billing &amp; Shipping Addresses user controls</comment>
   </data>
+  <data name="MiddleInitial.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Middle Initial</value>
+    <comment>AutomationProperties' Name for MiddleInitial</comment>
+  </data>
   <data name="OptionalAddress.Header" xml:space="preserve">
     <value>Optional Address</value>
     <comment>Label for the Optional Address textbox in the Billing &amp; Shipping Addresses user controls</comment>
+  </data>
+  <data name="OptionalAddress.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Optional Address</value>
+    <comment>AutomationProperties' Name for OptionalAddress</comment>
   </data>
   <data name="Phone.Header" xml:space="preserve">
     <value>Phone*</value>
     <comment>Label for the Phone textbox in the Billing &amp; Shipping Addresses user controls</comment>
   </data>
+  <data name="Phone.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Phone</value>
+    <comment>AutomationProperties' Name for Phone</comment>
+  </data>
+  <data name="PaymentPhone.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Phone Number</value>
+    <comment>AutomationProperties' Name for PaymentPhone</comment>
+  </data>
   <data name="CardholderName.Header" xml:space="preserve">
     <value>Cardholder Name*</value>
     <comment>Label for the Cardholder Name</comment>
+  </data>
+  <data name="CardholderName.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Card Holder Name</value>
+    <comment>AutomationProperties' Name for CardholderName</comment>
   </data>
   <data name="CardNumber.Header" xml:space="preserve">
     <value>Card Number*</value>
     <comment>Label for the Card Number</comment>
   </data>
+  <data name="CardNumber.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Card Number</value>
+    <comment>AutomationProperties' Name for CardNumber</comment>
+  </data>
   <data name="CardVerificationCode.Header" xml:space="preserve">
     <value>CVC2*</value>
     <comment>Label for the Card Verification Code</comment>
   </data>
+  <data name="CardVerificationCode.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Card Verification Code</value>
+    <comment>AutomationProperties' Name for CardVerificationCode</comment>
+  </data>
   <data name="TitleExpirationDate.Text" xml:space="preserve">
     <value>Expiration Date*</value>
     <comment>Label for the Expiration Date textbox in the Billing &amp; Shipping Addresses user controls</comment>
+  </data>
+  <data name="TitleExpirationDate.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Expiration Date</value>
+    <comment>AutomationProperties' Name for TitleExpirationDate</comment>
   </data>
   <data name="TitlePhoneNumber.Text" xml:space="preserve">
     <value>Phone Number</value>
@@ -285,6 +329,10 @@
     <value>Username</value>
     <comment>Label for the username textbox in the login screen</comment>
   </data>
+  <data name="Username.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Username</value>
+    <comment>AutomationProperties' Name for Username</comment>
+  </data>
   <data name="GrandTotalLabel.Text" xml:space="preserve">
     <value>Grand Total:</value>
     <comment>Label for the Total amount of the order</comment>
@@ -320,6 +368,10 @@
   <data name="PasswordBox.Header" xml:space="preserve">
     <value>Password</value>
     <comment>Label for the Password box of the Login Flyout</comment>
+  </data>
+  <data name="PasswordBox.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Password</value>
+    <comment>AutomationProperties' Name for PasswordBox</comment>
   </data>
   <data name="PaymentMethodLabel.Text" xml:space="preserve">
     <value>Payment Method</value>
@@ -414,7 +466,7 @@
     <comment>Caption for the Edit Amount button on the Shopping Cart page</comment>
   </data>
   <data name="ExpirationMonth.PlaceholderText" xml:space="preserve">
-    <value>Month</value>
+    <value>Month (1 - 12)</value>
     <comment>Watermark for the expiration month of the credit card</comment>
   </data>
   <data name="ExpirationYear.PlaceholderText" xml:space="preserve">
@@ -658,5 +710,20 @@
   <data name="SignInTextBlock.Text" xml:space="preserve">
     <value>Sign in to the app</value>
     <comment>Label for Sign In pop up textblock.</comment>
+  </data>
+  <data name="HelpUrl" xml:space="preserve">
+    <value>http://go.microsoft.com/fwlink/?LinkID=288811&amp;clcid=0x409</value>
+    <comment>URL for help on using this guidance.</comment>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Help</value>
+    <comment>Text for the help item in the settings charm</comment>
+  </data>
+  <data name="PrivacyPolicy	Privacy Policy	Text for the privacy policy item in the settings charm" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Products" xml:space="preserve">
+    <value>Products</value>
+    <comment>Text used in the separator of the Search Results Suggestions.</comment>
   </data>
 </root>

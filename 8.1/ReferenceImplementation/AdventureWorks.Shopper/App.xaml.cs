@@ -41,14 +41,14 @@ namespace AdventureWorks.Shopper
         private readonly IUnityContainer _container = new UnityContainer();
 
         //Bootstrap: App singleton service declarations
-        private IEventAggregator _eventAggregator;
         private TileUpdater _tileUpdater;
+
+        public IEventAggregator EventAggregator { get; set; }
 
         public App()
         {
             this.InitializeComponent();
             this.RequestedTheme = ApplicationTheme.Dark;
-            this.ExtendedSplashScreenFactory = (splashscreen) => new ExtendedSplashScreen(splashscreen);
         }
 
         // Documentation on navigation between pages is at http://go.microsoft.com/fwlink/?LinkID=288815&clcid=0x409
@@ -66,10 +66,6 @@ namespace AdventureWorks.Shopper
                 NavigationService.Navigate("Hub", null);
             }
 
-            // As an extended splash screen is set, the MvvmAppBase does not activate the window by itself.
-            // Instead, it delegates the activation of the current window to the splash screen.
-            // Therefore we want to ensure that the window is active, in case the initialization is so fast that
-            // the extended splashscreen does not get to show.
             Window.Current.Activate();
             return Task.FromResult<object>(null);
         }
@@ -91,11 +87,11 @@ namespace AdventureWorks.Shopper
 
         protected override void OnInitialize(IActivatedEventArgs args)
         {
-            _eventAggregator = new EventAggregator();
+            EventAggregator = new EventAggregator();
 
             _container.RegisterInstance<INavigationService>(NavigationService);
             _container.RegisterInstance<ISessionStateService>(SessionStateService);
-            _container.RegisterInstance<IEventAggregator>(_eventAggregator);
+            _container.RegisterInstance<IEventAggregator>(EventAggregator);
             _container.RegisterInstance<IResourceLoader>(new ResourceLoaderAdapter(new ResourceLoader()));
 
             _container.RegisterType<IAccountService, AccountService>(new ContainerControlledLifetimeManager());
@@ -167,6 +163,7 @@ namespace AdventureWorks.Shopper
                 settingsCommands.Add(new SettingsCommand(Guid.NewGuid().ToString(), resourceLoader.GetString("ChangeDefaults"), (c) => new ChangeDefaultsFlyout().Show()));
             }
             settingsCommands.Add(new SettingsCommand(Guid.NewGuid().ToString(), resourceLoader.GetString("PrivacyPolicy"), async (c) => await Launcher.LaunchUriAsync(new Uri(resourceLoader.GetString("PrivacyPolicyUrl")))));
+            settingsCommands.Add(new SettingsCommand(Guid.NewGuid().ToString(), resourceLoader.GetString("Help"), async (c) => await Launcher.LaunchUriAsync(new Uri(resourceLoader.GetString("HelpUrl")))));
 
             return settingsCommands;
         }

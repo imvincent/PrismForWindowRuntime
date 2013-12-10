@@ -16,7 +16,7 @@ namespace AdventureWorks.UILogic.ViewModels
     {
         private readonly IResourceLoader _resourceLoader;
 
-        public OrderConfirmationPageViewModel(INavigationService navigationService, IResourceLoader resourceLoader)
+        public OrderConfirmationPageViewModel(IResourceLoader resourceLoader)
         {
             _resourceLoader = resourceLoader;
         }

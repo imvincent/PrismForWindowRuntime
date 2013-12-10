@@ -188,7 +188,7 @@
             <TextBlock x:Name="TitleArea"
                        x:Uid="TitleArea"
                        Style="{StaticResource FormTitleStyle}"
-                       Margin="5,0"
+                       Margin="5,0,5,-4"
                        Grid.Row="0"
                        Grid.Column="0"
                        Text="Area" />
@@ -219,6 +219,7 @@
                       x:Uid="StateComboBox"
                       AutomationProperties.AutomationId="StateComboBox"
                       AutomationProperties.IsRequiredForForm="True"
+                      VerticalAlignment="Bottom"
                       Margin="5,0"
                       Grid.Row="1"
                       Grid.Column="1"
@@ -229,7 +230,7 @@
                       IsEnabled="{Binding IsEnabled}">
                 <interactivity:Interaction.Behaviors>
                     <awbehaviors:ComboBoxKeyboardSelection/>
-                    <awbehaviors:HighlightFormFieldOnErrors PropertyErrors="{Binding Address.Errors[State]}" HighlightStyleName="HighlightComboBoxStyle" />
+                    <awbehaviors:HighlightFormFieldOnErrors PropertyErrors="{Binding Address.Errors[State]}" HighlightStyleName="HighlightComboBoxStyle" OriginalStyleName="BaseComboBoxStyle" />
                 </interactivity:Interaction.Behaviors>
 
             </ComboBox>

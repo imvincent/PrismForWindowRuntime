@@ -26,6 +26,7 @@
             <awconverters:FormStatusToVisibilityConverter x:Key="FormStatusToVisibilityConverter" />
             <awconverters:FormStatusToStyleConverter x:Key="FormStatusToStyleConverter" />
             <awconverters:FirstErrorConverter x:Key="FirstErrorConverter" />
+            <awconverters:TextToHeaderVisibilityConverter x:Key="TextToHeaderVisibilityConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </prism:MvvmAppBase>

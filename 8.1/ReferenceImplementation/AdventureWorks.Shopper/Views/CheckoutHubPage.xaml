@@ -32,7 +32,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <AppBarButton x:Name="backButton"
+            <Button x:Name="backButton"
                           AutomationProperties.AutomationId="CheckoutHubPageBackButton"
                           Command="{Binding GoBackCommand, ElementName=pageRoot}"
                           Style="{StaticResource BackButtonStyle}" />
@@ -103,6 +103,7 @@
                 <CheckBox x:Name="SameAsShippingAddressCheckBox"
                           x:Uid="SameAsShippingAddressCheckBox"
                           AutomationProperties.AutomationId="SameAsShippingAddressCheckBox"
+                          Foreground="{StaticResource ApplicationForegroundThemeBrush}"
                           Grid.Row="1"
                           Grid.Column="2"
                           Margin="5,20,5,0"

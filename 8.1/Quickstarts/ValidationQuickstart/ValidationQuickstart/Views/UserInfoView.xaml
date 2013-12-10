@@ -4,7 +4,7 @@
                                      xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
                                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                                      xmlns:vm="using:ValidationQuickStart.ViewModels"
-                                     xmlns:behaviors="using:ValidationQuickStart.Behaviors"
+                                     xmlns:quickstartbehaviors="using:ValidationQuickStart.Behaviors"
                                      xmlns:prism="using:Microsoft.Practices.Prism.StoreApps">
 
     <Page.DataContext>
@@ -46,7 +46,7 @@
                      Grid.Row="2"
                      Text="{Binding UserInfo.FirstName, Mode=TwoWay}">
                 <interactivity:Interaction.Behaviors>
-                    <behaviors:HighlightFormFieldOnErrors PropertyErrors="{Binding UserInfo.Errors[FirstName]}" />
+                    <quickstartbehaviors:HighlightFormFieldOnErrors PropertyErrors="{Binding UserInfo.Errors[FirstName]}" />
                 </interactivity:Interaction.Behaviors>
 
             </TextBox>
@@ -62,7 +62,7 @@
                      Text="{Binding UserInfo.MiddleName, Mode=TwoWay}"
                      Grid.RowSpan="2">
                 <interactivity:Interaction.Behaviors>
-                    <behaviors:HighlightFormFieldOnErrors PropertyErrors="{Binding UserInfo.Errors[MiddleName]}" />
+                    <quickstartbehaviors:HighlightFormFieldOnErrors PropertyErrors="{Binding UserInfo.Errors[MiddleName]}" />
                 </interactivity:Interaction.Behaviors>
             </TextBox>
 
@@ -76,7 +76,7 @@
                      Grid.Row="7"
                      Text="{Binding UserInfo.LastName, Mode=TwoWay}">
                 <interactivity:Interaction.Behaviors>
-                    <behaviors:HighlightFormFieldOnErrors PropertyErrors="{Binding UserInfo.Errors[LastName]}" />
+                    <quickstartbehaviors:HighlightFormFieldOnErrors PropertyErrors="{Binding UserInfo.Errors[LastName]}" />
                 </interactivity:Interaction.Behaviors>
             </TextBox>
 

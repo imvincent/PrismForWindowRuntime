@@ -52,14 +52,14 @@ namespace AdventureWorks.WebServices.Controllers
         }
 
         // GET /api/Product?queryString={queryString}
-        public SearchResult GetSearchResults(string queryString)
+        public SearchResult GetSearchResults(string queryString, int maxResults)
         {
             var fullsearchResult = _productRepository.GetProducts().Where(p => p.Title.ToUpperInvariant().Contains(queryString.ToUpperInvariant()));
-
+            
             var searchResult = new SearchResult
                                    {
                                        TotalCount = fullsearchResult.Count(),
-                                       Products = fullsearchResult.Take(MaxSearchResults)
+                                       Products = fullsearchResult.Take(maxResults > 0 ? maxResults : MaxSearchResults)
                                    };
 
             return searchResult;

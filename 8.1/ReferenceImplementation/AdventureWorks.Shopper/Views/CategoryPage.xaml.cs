@@ -24,6 +24,7 @@ namespace AdventureWorks.Shopper.Views
     {
         private double _scrollViewerOffsetProportion;
         private bool _isPageLoading = true;
+        private ScrollViewer _itemsGridViewScrollViewer;
        
         public CategoryPage()
         {
@@ -39,6 +40,10 @@ namespace AdventureWorks.Shopper.Views
             {
                 viewModel.PropertyChanged += viewModel_PropertyChanged;
             }
+
+            // It is important to call EnableFocusOnKeyboardInput here in the OnNavigatedTo method to
+            // give the previous page's SearchUserControl time to tear down.
+            this.searchUserControl.EnableFocusOnKeyboardInput();
         }
 
         protected override void OnNavigatedFrom(Windows.UI.Xaml.Navigation.NavigationEventArgs e)
@@ -46,9 +51,17 @@ namespace AdventureWorks.Shopper.Views
             base.OnNavigatedFrom(e);
             var viewModel = this.DataContext as INotifyPropertyChanged;
             var adventureWorksApp = Application.Current as App;
-            if (adventureWorksApp != null && (!adventureWorksApp.IsSuspending && viewModel != null))
+            if (adventureWorksApp != null && !adventureWorksApp.IsSuspending && viewModel != null)
             {
                 viewModel.PropertyChanged -= viewModel_PropertyChanged;
+            }
+
+            if (adventureWorksApp != null && !adventureWorksApp.IsSuspending)
+            {
+                // It is important to call DisableFocusOnKeyboardInput here in the OnNavigatedFrom method 
+                // to ensure that this page's SearchUserControl.FocusOnKeyboardInput is set to false 
+                // prior to the next page's SearchUserControl.FocusOnKeyboardInput value is set to true
+                this.searchUserControl.DisableFocusOnKeyboardInput();
             }
         }
 
@@ -87,7 +100,7 @@ namespace AdventureWorks.Shopper.Views
 
             base.SaveState(pageState);
 
-            pageState["scrollViewerOffsetProportion"] = ScrollViewerUtilities.GetScrollViewerOffsetProportion(itemsGridView);
+            pageState["scrollViewerOffsetProportion"] = ScrollViewerUtilities.GetScrollViewerOffsetProportion(_itemsGridViewScrollViewer);
         }
 
         protected override void LoadState(object navigationParameter, System.Collections.Generic.Dictionary<string, object> pageState)
@@ -125,7 +138,12 @@ namespace AdventureWorks.Shopper.Views
 
         private void itemsGridView_LayoutUpdated(object sender, object e)
         {
-            _scrollViewerOffsetProportion = ScrollViewerUtilities.GetScrollViewerOffsetProportion(itemsGridView);
+            _scrollViewerOffsetProportion = ScrollViewerUtilities.GetScrollViewerOffsetProportion(_itemsGridViewScrollViewer);
+        }
+
+        private void itemsGridView_Loaded(object sender, RoutedEventArgs e)
+        {
+            _itemsGridViewScrollViewer = VisualTreeUtilities.GetVisualChild<ScrollViewer>(itemsGridView);
         }
     }
 }

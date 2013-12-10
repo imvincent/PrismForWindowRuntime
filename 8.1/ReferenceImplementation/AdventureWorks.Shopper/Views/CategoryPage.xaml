@@ -47,26 +47,30 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="100*"
-                                  MaxWidth="400" />
+                <ColumnDefinition Width="50" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <AppBarButton x:Name="backButton"
+            <Button x:Name="backButton"
                           AutomationProperties.AutomationId="CategoryPageGoBackButton"
                           Command="{Binding GoBackCommand, ElementName=pageRoot}"
                           Style="{StaticResource BackButtonStyle}"/>
             <TextBlock x:Name="pageTitle"
                        Text="{Binding Title}"
                        Style="{StaticResource PageHeaderTextStyle}"
-                       Grid.Column="1" />
+                       Margin="0,0,0,40"
+                       Grid.Column="1"
+                       HorizontalAlignment="Stretch"
+                       TextTrimming="CharacterEllipsis" />
             <views:SearchUserControl x:Name="searchUserControl"
-                                     Grid.Column="3"
+                                     Grid.Column="0"
+                                     Grid.ColumnSpan="3"
+                                     Width="400"
+                                     HorizontalAlignment="Right"
                                      Margin="0,20,0,0"
                                      Height="80" />
             <views:ShoppingCartTabUserControl x:Name="shoppingCartTabUserControl"
-                                              Grid.Column="4"
+                                              Grid.Column="3"
                                               RenderTransformOrigin="0.5,0.5"
                                               Margin="15"
                                               Loaded="StartLayoutUpdates"
@@ -110,7 +114,8 @@
                                                 MinimalItemTemplate="{StaticResource ProductTemplateMinimal}"
                                                 SelectionMode="None"
                                                 ScrollViewer.IsHorizontalScrollChainingEnabled="False"
-                                                IsItemClickEnabled="True">
+                                                IsItemClickEnabled="True"
+                                                Loaded="itemsGridView_Loaded">
                     <interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="ItemClick">
                             <awbehaviors:NavigateWithEventArgsToPageAction TargetPage="AdventureWorks.Shopper.Views.ItemDetailPage"
@@ -215,11 +220,19 @@
                             </GroupStyle.HeaderTemplate>
                             <GroupStyle.Panel>
                                 <ItemsPanelTemplate>
-                                    <StackPanel HorizontalAlignment="Left" />
+                                    <StackPanel HorizontalAlignment="Stretch" Margin="0,0,5,0" />
                                 </ItemsPanelTemplate>
                             </GroupStyle.Panel>
                         </GroupStyle>
                     </awcontrols:MultipleSizedGridView.MinimalGroupStyle>
+                    <awcontrols:MultipleSizedGridView.ItemContainerStyle>
+                        <Style TargetType="Control">
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Stretch" />
+                            <Setter Property="HorizontalContentAlignment"
+                                    Value="Left" />
+                        </Style>
+                    </awcontrols:MultipleSizedGridView.ItemContainerStyle>
                 </awcontrols:MultipleSizedGridView>
             </SemanticZoom.ZoomedInView>
         </SemanticZoom>
@@ -244,6 +257,14 @@
                                                        Storyboard.TargetProperty="IsZoomOutButtonEnabled">
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="false" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(views:SearchUserControl.IsCompact)"
+                                                       Storyboard.TargetName="searchUserControl">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Boolean>True</x:Boolean>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
@@ -287,11 +308,31 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"
                                                        Storyboard.TargetName="searchUserControl">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Collapsed</Visibility>
+                                    <Thickness>0,37,0,0</Thickness>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(views:SearchUserControl.IsCompact)"
+                                                       Storyboard.TargetName="searchUserControl">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Boolean>True</x:Boolean>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="HorizontalAlignment"
+                                                       Storyboard.TargetName="searchUserControl">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Stretch" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Width"
+                                                       Storyboard.TargetName="searchUserControl">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Double>NaN</x:Double>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>

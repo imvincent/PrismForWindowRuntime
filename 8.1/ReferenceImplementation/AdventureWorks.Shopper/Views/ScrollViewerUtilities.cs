@@ -20,15 +20,17 @@ namespace AdventureWorks.Shopper.Views
         public static void ScrollToProportion(ScrollViewer scrollViewer, double scrollViewerOffsetProportion)
         {
             // Update the Horizontal and Vertical offset
+            if (scrollViewer == null) return;
             var scrollViewerHorizontalOffset = scrollViewerOffsetProportion * scrollViewer.ScrollableWidth;
             var scrollViewerVerticalOffset = scrollViewerOffsetProportion * scrollViewer.ScrollableHeight;
 
             scrollViewer.ChangeView(scrollViewerHorizontalOffset, scrollViewerVerticalOffset, null);
         }
 
-        public static double GetScrollViewerOffsetProportion(GridView gridView)
+        public static double GetScrollViewerOffsetProportion(ScrollViewer scrollViewer)
         {
-            var scrollViewer = VisualTreeUtilities.GetVisualChild<ScrollViewer>(gridView);
+            if (scrollViewer == null) return 0;
+
             var horizontalOffsetProportion = (scrollViewer.ScrollableWidth == 0) ? 0 : (scrollViewer.HorizontalOffset / scrollViewer.ScrollableWidth);
             var verticalOffsetProportion = (scrollViewer.ScrollableHeight == 0) ? 0 : (scrollViewer.VerticalOffset / scrollViewer.ScrollableHeight);
 

@@ -94,12 +94,11 @@ namespace AdventureWorks.UILogic.ViewModels
                 }
                 else
                 {
-                    var searchResults = await _productCatalogRepository.GetFilteredProductsAsync(queryText);
+                    var searchResults = await _productCatalogRepository.GetFilteredProductsAsync(queryText, 0);
                     products = searchResults.Products;
                     TotalCount = searchResults.TotalCount;
                     PreviousResults = products;
                 }
-
 
                 var productViewModels = new List<ProductViewModel>();
                 foreach (var product in products)
@@ -123,7 +122,6 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 await _alertMessageService.ShowAsync(errorMessage, _resourceLoader.GetString("ErrorServiceUnreachable"));
             }
-
         }
     }
 }

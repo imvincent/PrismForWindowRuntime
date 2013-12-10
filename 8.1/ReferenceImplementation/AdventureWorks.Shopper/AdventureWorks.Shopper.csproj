@@ -148,6 +148,7 @@
     <Compile Include="Converters\NullToVisibleConverter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Converters\TextToHeaderVisibilityConverter.cs" />
     <Compile Include="DesignViewModels\ChangeDefaultDesignViewModel.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -175,6 +176,7 @@
     <Compile Include="DesignViewModels\ShoppingCartTabDesignViewModel.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Events\FocusOnKeyboardInputChangedEvent.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AlertMessageService.cs">
@@ -200,9 +202,6 @@
     </Compile>
     <Compile Include="Views\CheckoutSummaryPage.xaml.cs">
       <DependentUpon>CheckoutSummaryPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ExtendedSplashScreen.xaml.cs">
-      <DependentUpon>ExtendedSplashScreen.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\GroupDetailPage.xaml.cs">
       <DependentUpon>GroupDetailPage.xaml</DependentUpon>
@@ -347,10 +346,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CheckoutSummaryPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ExtendedSplashScreen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

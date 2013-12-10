@@ -6,8 +6,9 @@
                            xmlns:designViewModels="using:AdventureWorks.Shopper.DesignViewModels"
                            xmlns:prism="using:Microsoft.Practices.Prism.StoreApps"
                            mc:Ignorable="d"
+                           BorderBrush="{StaticResource AWShopperFlyoutBorderBrush}"
                            Title="Change Defaults"
-                           Background="White"
+                           Background="{StaticResource SettingsFlyoutBackgroundThemeBrush}"
                            x:Uid="Page"
                            prism:ViewModelLocator.AutoWireViewModel="true"
                            d:DataContext="{d:DesignInstance designViewModels:ChangeDefaultsDesignViewModel, IsDesignTimeCreatable=True}">
@@ -41,8 +42,9 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock x:Uid="ShippingAddressLabel"
                                            Text="Shipping Address"
-                                           TextTrimming="WordEllipsis"
-                                           Style="{StaticResource GroupHeaderTextStyle}" />
+                                           Style="{StaticResource GroupHeaderTextStyle}"
+                                           FontSize="22"
+                                           Padding="5,0,5,5"/>
                         <TextBlock x:Name="ShippingAddressChevronGlyph"
                                            Text="{StaticResource OpenedChevronGlyph}"
                                            FontFamily="{StaticResource SymbolThemeFontFamily}"
@@ -94,7 +96,8 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock x:Uid="BillingAddressLabel"
                                            Text="Billing Address"
-                                           TextTrimming="WordEllipsis"
+                                           Padding="5,0,5,5"
+                                           FontSize="22"
                                            Style="{StaticResource GroupHeaderTextStyle}" />
                         <TextBlock x:Name="BillingAddressChevronGlyph"
                                            Text="{StaticResource OpenedChevronGlyph}"
@@ -147,7 +150,8 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock x:Uid="PaymentMethodLabel"
                                            Text="Payment Method"
-                                           TextTrimming="WordEllipsis"
+                                           Padding="5,0,5,5"
+                                           FontSize="22"
                                            Style="{StaticResource GroupHeaderTextStyle}" />
                         <TextBlock x:Name="PaymentMethodChevronGlyph"
                                            Text="{StaticResource OpenedChevronGlyph}"

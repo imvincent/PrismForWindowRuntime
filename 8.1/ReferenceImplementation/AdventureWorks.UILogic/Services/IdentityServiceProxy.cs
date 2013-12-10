@@ -26,7 +26,6 @@ namespace AdventureWorks.UILogic.Services
         {
             using (var client = new HttpClient())
             {
-
                 // Ask the server for a password challenge string
                 var requestId = CryptographicBuffer.EncodeToHexString(CryptographicBuffer.GenerateRandom(4));
                 var challengeResponse = await client.GetAsync(new Uri(_clientBaseUrl + "GetPasswordChallenge?requestId=" + requestId));

@@ -5,7 +5,8 @@
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     xmlns:prism="using:Microsoft.Practices.Prism.StoreApps"
                     Title="Logout"
-                    Background="White"
+                    Background="{StaticResource SettingsFlyoutBackgroundThemeBrush}"
+                    BorderBrush="{StaticResource AWShopperFlyoutBorderBrush}"
                     x:Uid="Page"
                     mc:Ignorable="d"
                     prism:ViewModelLocator.AutoWireViewModel="true">
@@ -20,9 +21,9 @@
         <Button x:Uid="LogoutButton"
                             Background="{StaticResource AWShopperAccentBrush}"
                             Content="Logout"
-                            Width="280"
+                            Width="265"
                             Margin="0,25,0,0"
-                            Foreground="White"
+                            Foreground="{StaticResource AWShopperButtonForegroundBrush}"
                             Command="{Binding SignOutCommand}"
                             AutomationProperties.AutomationId="LogoutButton" />
     </StackPanel>

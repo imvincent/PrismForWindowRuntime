@@ -35,11 +35,11 @@ namespace AdventureWorks.UILogic.Services
             }
         }
 
-        public async Task<SearchResult> GetFilteredProductsAsync(string productsQueryString)
+        public async Task<SearchResult> GetFilteredProductsAsync(string productsQueryString, int maxResults)
         {
             using (var httpClient = new HttpClient())
             {
-                var response = await httpClient.GetAsync(new Uri(string.Format("{0}?queryString={1}", _productsBaseUrl, productsQueryString)));
+                var response = await httpClient.GetAsync(new Uri(string.Format("{0}?queryString={1}&maxResults={2}", _productsBaseUrl, productsQueryString, maxResults)));
                 response.EnsureSuccessStatusCode();
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<SearchResult>(responseContent);

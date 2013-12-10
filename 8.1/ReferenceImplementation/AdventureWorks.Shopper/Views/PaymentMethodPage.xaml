@@ -27,7 +27,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <AppBarButton x:Name="backButton"
+            <Button x:Name="backButton"
                           Command="{Binding GoBackCommand, ElementName=pageRoot}"
                           Style="{StaticResource BackButtonStyle}" />
             <TextBlock x:Name="pageTitle"

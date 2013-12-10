@@ -1,4 +1,4 @@
-﻿<prism:VisualStateAwarePage x:Name="pageRoot"
+<prism:VisualStateAwarePage x:Name="pageRoot"
                                      x:Class="AdventureWorks.Shopper.Views.SearchResultsPage"
                                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,7 +7,7 @@
                                      xmlns:awbehaviors="using:AdventureWorks.Shopper.Behaviors"
                                      xmlns:interactivity="using:Microsoft.Xaml.Interactivity" xmlns:core="using:Microsoft.Xaml.Interactions.Core"
                                      xmlns:designViewModels="using:AdventureWorks.Shopper.DesignViewModels"
-                                     xmlns:Views="using:AdventureWorks.Shopper.Views"
+                                     xmlns:views="using:AdventureWorks.Shopper.Views"
                                      xmlns:awconverters="using:AdventureWorks.Shopper.Converters"
                                      xmlns:awcontrols="using:AdventureWorks.Shopper.Controls"
                                      xmlns:prism="using:Microsoft.Practices.Prism.StoreApps"
@@ -21,8 +21,8 @@
         <awconverters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <awconverters:BooleanNegationToVisibilityConverter x:Key="BooleanNegationToVisibilityConverter" />
         <DataTemplate x:Key="SearchResultsTemplate">
-            <Grid MinWidth="420"
-                  Margin="10,0">
+
+            <Grid Margin="10,0" HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition MinWidth="150" Width="Auto" />
                     <ColumnDefinition Width="*" />
@@ -40,34 +40,37 @@
                     </Image>
                 </Border>
                 <StackPanel Grid.Column="1"
-                            Margin="10,-10,0,0" HorizontalAlignment="Stretch">
+                            Margin="10,0,0,0" HorizontalAlignment="Stretch">
                     <TextBlock Margin="5"
                                FontSize="25"
                                Height="Auto"
                                MaxHeight="80"
                                TextWrapping="Wrap"
-                               TextTrimming="WordEllipsis">
+                               TextTrimming="WordEllipsis" 
+                               Foreground="{StaticResource AWShopperItemForegroundBrush}">
                         <interactivity:Interaction.Behaviors>
                             <core:IncrementalUpdateBehavior Phase="1"/>
                             <core:DataTriggerBehavior Binding="{Binding Title}" ComparisonCondition="NotEqual" Value="{x:Null}">
                                 <awbehaviors:HighlightSearchAction SearchText="{Binding Title}" SearchTerm="{Binding DataContext.SearchTerm, ElementName=pageRoot}"/>                                
                             </core:DataTriggerBehavior>
-                        </interactivity:Interaction.Behaviors>                        
+                        </interactivity:Interaction.Behaviors>
                     </TextBlock>
                     <TextBlock Text="{Binding SalePrice}"
                                Style="{StaticResource BodyTextStyle}"
                                Margin="5"
-                               FontSize="32"
-                               FontWeight="ExtraBold">
+                               FontSize="27"
+                               FontWeight="ExtraBold"
+                               Foreground="{StaticResource AWShopperItemForegroundBrush}">
                         <interactivity:Interaction.Behaviors>
                             <core:IncrementalUpdateBehavior Phase="2"/>
                         </interactivity:Interaction.Behaviors>
                     </TextBlock>
                 </StackPanel>
             </Grid>
+
         </DataTemplate>
         <DataTemplate x:Key="SearchResultsTemplateMinimal">
-            <Grid Margin="6,0">
+            <Grid HorizontalAlignment="Stretch" Margin="6,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
@@ -92,7 +95,8 @@
                                Height="Auto"
                                MaxHeight="60"
                                TextWrapping="Wrap"
-                               TextTrimming="WordEllipsis">
+                               TextTrimming="WordEllipsis"
+                               Foreground="{StaticResource AWShopperItemForegroundBrush}">
                         <interactivity:Interaction.Behaviors>
                             <core:IncrementalUpdateBehavior Phase="1"/>
                             <core:DataTriggerBehavior Binding="{Binding Title}" ComparisonCondition="NotEqual" Value="{x:Null}">
@@ -103,13 +107,13 @@
                     <TextBlock Text="{Binding SalePrice}"
                                Style="{StaticResource BodyTextStyle}"
                                Margin="5"
-                               FontSize="27"
-                               FontWeight="ExtraBold">
+                               FontSize="24"
+                               FontWeight="ExtraBold"
+                               Foreground="{StaticResource AWShopperItemForegroundBrush}">
                         <interactivity:Interaction.Behaviors>
                             <core:IncrementalUpdateBehavior Phase="2"/>
                         </interactivity:Interaction.Behaviors>
                     </TextBlock>
-
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -118,7 +122,7 @@
     <Page.TopAppBar>
         <AppBar Style="{StaticResource AppBarStyle}"
                 x:Uid="TopAppBar">
-            <Views:TopAppBarUserControl />
+            <views:TopAppBarUserControl />
         </AppBar>
     </Page.TopAppBar>
     <!--
@@ -138,12 +142,13 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="45" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="0" />
             </Grid.RowDefinitions>
-            <AppBarButton x:Name="backButton"
+            <Button x:Name="backButton"
                           Command="{Binding GoBackCommand, ElementName=pageRoot}"
                           Style="{StaticResource BackButtonStyle}" />
             <TextBlock x:Name="pageTitle"
@@ -152,8 +157,13 @@
                        Text="Search"
                        IsHitTestVisible="false"
                        Style="{StaticResource PageHeaderTextStyle}" />
-            <StackPanel x:Name="searchHeader" Orientation="Horizontal"
-                        Grid.Column="2">
+            <Grid x:Name="searchHeader"
+                        Grid.Column="2" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
                 <TextBlock x:Name="resultNumber"
                            x:Uid="ResultsNumberLabel"
                            Text="{Binding TotalCount}"
@@ -165,12 +175,23 @@
                            Text="Results for"
                            IsHitTestVisible="false"
                            Margin="0,0,10,40"
+                           Grid.Column="1"
                            Style="{StaticResource PageSubheaderTextStyle}" />
                 <TextBlock x:Name="queryText"
                            Text="{Binding QueryText}"
                            IsHitTestVisible="false"
-                           Style="{StaticResource PageSubheaderTextStyle}" />
-            </StackPanel>
+                           Grid.Column="2"
+                           Style="{StaticResource PageSubheaderTextStyle}"
+                           TextTrimming="CharacterEllipsis"
+                           />
+            </Grid>
+            <views:SearchUserControl x:Name="searchUserControl"
+                                     Grid.Column="1"
+                                     Grid.ColumnSpan="3"
+                                     Width="400"
+                                     HorizontalAlignment="Right"
+                                     Margin="0,20,0,0"
+                                     Height="80" />
         </Grid>
 
         <Grid x:Name="resultsPanel"
@@ -190,11 +211,13 @@
                           AutomationProperties.Name="Search Results"
                           TabIndex="1"
                           Grid.Row="1"
-                          Padding="120,0,80,50"
+                          Padding="100,0,80,50"
                           SelectionMode="None"
                           IsItemClickEnabled="True"
                           ItemsSource="{Binding Results}"
-                          ItemTemplate="{StaticResource SearchResultsTemplate}">
+                          ItemTemplate="{StaticResource SearchResultsTemplate}"
+                          MinimalItemTemplate="{StaticResource SearchResultsTemplateMinimal}"
+                          Loaded="itemsGridView_Loaded">
                     <interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="ItemClick">
                             <awbehaviors:NavigateWithEventArgsToPageAction TargetPage="AdventureWorks.Shopper.Views.ItemDetailPage" EventArgsParameterPath="ClickedItem.ProductNumber"/>
@@ -202,18 +225,26 @@
                     </interactivity:Interaction.Behaviors>
                     <awcontrols:AutoRotatingGridView.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <ItemsWrapGrid />
+                            <WrapGrid ItemWidth="420" />
                         </ItemsPanelTemplate>
                     </awcontrols:AutoRotatingGridView.ItemsPanel>
+                    <awcontrols:AutoRotatingGridView.PortraitItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel />
+                        </ItemsPanelTemplate>
+                    </awcontrols:AutoRotatingGridView.PortraitItemsPanel>
                     <awcontrols:AutoRotatingGridView.ItemContainerStyle>
                         <Style TargetType="Control">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Setter Property="BorderBrush"
+                                    Value="{StaticResource AwShopperItemBorderBrush}" />
+                            <Setter Property="BorderThickness"
+                                    Value="1" />
                             <Setter Property="Background"
-                                    Value="{StaticResource AWShopperItemBackgroundBrush}" />
+                                    Value="{StaticResource AwShopperItemBackgroundBrush}" />
+                            <Setter Property="HorizontalContentAlignment"
+                                    Value="Left" />
                             <Setter Property="Height"
                                     Value="130" />
-                            <Setter Property="Margin"
-                                    Value="0,0,38,8" />
                         </Style>
                     </awcontrols:AutoRotatingGridView.ItemContainerStyle>
                 </awcontrols:AutoRotatingGridView>
@@ -233,7 +264,23 @@
             <!-- Visual states reflect the application's view state -->
             <VisualStateGroup x:Name="ApplicationViewStates">
                 <VisualState x:Name="DefaultLayout" />
-                <VisualState x:Name="PortraitLayout"/>
+                <VisualState x:Name="PortraitLayout">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemsGridView"
+                                                       Storyboard.TargetProperty="Padding">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="20,0,30,0" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(views:SearchUserControl.IsCompact)"
+                                                       Storyboard.TargetName="searchUserControl">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Boolean>True</x:Boolean>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
 
                 <!--
                     The back button and title have different styles when in minimal layout in addition to more extensive changes:
@@ -246,6 +293,14 @@
                                                        Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="{StaticResource MinimalBackButtonStyle}" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton"
+                                                       Storyboard.TargetProperty="(Grid.RowSpan)">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>2</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle"
                                                        Storyboard.TargetProperty="Style">
@@ -302,6 +357,47 @@
                                                        Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="{StaticResource BaselineTextStyle}" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemsGridView"
+                                                       Storyboard.TargetProperty="Padding">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="10,0,15,0" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"
+                                                       Storyboard.TargetName="searchUserControl">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Thickness>0,37,0,0</Thickness>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.RowSpan)"
+                                                       Storyboard.TargetName="searchUserControl">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Int32>2</x:Int32>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(views:SearchUserControl.IsCompact)"
+                                                       Storyboard.TargetName="searchUserControl">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Boolean>True</x:Boolean>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="HorizontalAlignment"
+                                                       Storyboard.TargetName="searchUserControl">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Stretch" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Width"
+                                                       Storyboard.TargetName="searchUserControl">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <x:Double>NaN</x:Double>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>

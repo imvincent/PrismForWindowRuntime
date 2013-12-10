@@ -17,7 +17,7 @@ namespace AdventureWorks.UILogic.Tests.Mocks
     public class MockProductCatalogService : IProductCatalogService
     {
         public Func<int, int, Task<ReadOnlyCollection<Category>>> GetSubcategoriesAsyncDelegate { get; set; }
-        public Func<string, Task<SearchResult>> GetFilteredProductsAsyncDelegate { get; set; }
+        public Func<string, int, Task<SearchResult>> GetFilteredProductsAsyncDelegate { get; set; }
         public Func<int, Task<ReadOnlyCollection<Product>>> GetProductsAsyncDelegate { get; set; }
         public Func<string, Task<ReadOnlyCollection<string>>> GetSearchSuggestionsAsyncDelegate { get; set; }
         public Func<int, Task<Category>> GetCategoryAsyncDelegate { get; set; }
@@ -28,9 +28,9 @@ namespace AdventureWorks.UILogic.Tests.Mocks
             return this.GetSubcategoriesAsyncDelegate(parentId, maxAmountOfProducts);
         }
 
-        public Task<SearchResult> GetFilteredProductsAsync(string productsQueryString)
+        public Task<SearchResult> GetFilteredProductsAsync(string productsQueryString, int maxResults)
         {
-            return this.GetFilteredProductsAsyncDelegate(productsQueryString);
+            return this.GetFilteredProductsAsyncDelegate(productsQueryString, maxResults);
         }
 
         public Task<ReadOnlyCollection<Product>> GetProductsAsync(int categoryId)

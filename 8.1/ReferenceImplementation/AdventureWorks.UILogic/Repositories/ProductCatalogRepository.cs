@@ -65,10 +65,10 @@ namespace AdventureWorks.UILogic.Repositories
             return categories;
         }
 
-        public async Task<SearchResult> GetFilteredProductsAsync(string productsQueryString)
+        public async Task<SearchResult> GetFilteredProductsAsync(string productsQueryString, int maxResults)
         {
             // Retrieve the items from the service
-            var searchResult = await _productCatalogService.GetFilteredProductsAsync(productsQueryString);
+            var searchResult = await _productCatalogService.GetFilteredProductsAsync(productsQueryString, maxResults);
             return searchResult;
         }
 
