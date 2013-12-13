@@ -719,9 +719,6 @@
     <value>Help</value>
     <comment>Text for the help item in the settings charm</comment>
   </data>
-  <data name="PrivacyPolicy	Privacy Policy	Text for the privacy policy item in the settings charm" xml:space="preserve">
-    <value />
-  </data>
   <data name="Products" xml:space="preserve">
     <value>Products</value>
     <comment>Text used in the separator of the Search Results Suggestions.</comment>

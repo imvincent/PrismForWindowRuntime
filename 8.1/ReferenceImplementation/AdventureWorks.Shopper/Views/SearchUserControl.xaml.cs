@@ -17,6 +17,10 @@ using Windows.UI.Xaml.Controls;
 
 namespace AdventureWorks.Shopper.Views
 {
+    /// <summary>
+    /// The SearchUserControl encapsulates the functionality and configuration related to the SearchBox control.
+    /// http://go.microsoft.com/fwlink/?LinkID=386787
+    /// </summary>
     public sealed partial class SearchUserControl : UserControl
     {
         private readonly IEventAggregator _eventAggregator;
@@ -43,6 +47,10 @@ namespace AdventureWorks.Shopper.Views
             }
         }
 
+        /// <summary>
+        /// The IsCompact property is a Dependency Property that provides the ability to hide 
+        /// the SearchBox control and display a small search button.
+        /// </summary>
         public bool IsCompact
         {
             get
@@ -59,13 +67,20 @@ namespace AdventureWorks.Shopper.Views
             }
         }
 
+        /// <summary>
+        /// The EnableFocusOnKeyboardInput method sets the SearchBox control's FocusOnKeyboardInput property
+        /// to true and subscribes to the FocusOnKeyboardInputChangedEvent (EventAggregator event).
+        /// There may be only one SearchBox control that has its FocusOnKeyboardInput property set to true, at a time.
+        /// Therefore, it is important to call the DisableFocusOnKeyboardInput method on any SearchUserControl instances
+        /// that were enabled prior to enabling a new instance.
+        /// </summary>
         public void EnableFocusOnKeyboardInput()
         {
             this.searchBox.FocusOnKeyboardInput = true;
             
             if (_eventAggregator != null)
             {
-                _eventAggregator.GetEvent<FocusOnKeyboardInputChangedEvent>().Subscribe(FocusOnKeybordInputToggle);
+                _eventAggregator.GetEvent<FocusOnKeyboardInputChangedEvent>().Subscribe(FocusOnKeyboardInputToggle);
             }
         }
 
@@ -75,8 +90,13 @@ namespace AdventureWorks.Shopper.Views
 
             if (_eventAggregator != null)
             {
-                _eventAggregator.GetEvent<FocusOnKeyboardInputChangedEvent>().Unsubscribe(FocusOnKeybordInputToggle);
+                _eventAggregator.GetEvent<FocusOnKeyboardInputChangedEvent>().Unsubscribe(FocusOnKeyboardInputToggle);
             }
+        }
+
+        private void FocusOnKeyboardInputToggle(bool value)
+        {
+            this.searchBox.FocusOnKeyboardInput = value;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -116,9 +136,5 @@ namespace AdventureWorks.Shopper.Views
             }
         }
 
-        private void FocusOnKeybordInputToggle(bool value)
-        {
-            this.searchBox.FocusOnKeyboardInput = value;
-        }
     }
 }

@@ -35,9 +35,6 @@
                 <core:EventTriggerBehavior EventName="SuggestionsRequested">
                     <core:InvokeCommandAction Command="{Binding SearchSuggestionsCommand}" />
                 </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="ResultSuggestionChosen">
-                    <core:InvokeCommandAction Command="{Binding ResultSuggestionChosenCommand}" />
-                </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
         </SearchBox>
     </Grid>
