@@ -11,13 +11,13 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using Windows.UI.Xaml.Navigation;
+using Microsoft.Practices.Prism.Mvvm;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
 using AdventureWorks.UILogic.Services;
-using Microsoft.Practices.Prism.StoreApps;
-using Microsoft.Practices.Prism.StoreApps.Interfaces;
-using Windows.UI.Xaml.Navigation;
-using System.Collections.ObjectModel;
 
 namespace AdventureWorks.UILogic.ViewModels
 {
@@ -67,7 +67,7 @@ namespace AdventureWorks.UILogic.ViewModels
                 if (navigationMode == NavigationMode.Refresh)
                 {
                     // Restore the errors collection manually
-                    var errorsCollection = RetrieveEntityStateValue<IDictionary<string, ReadOnlyCollection<string>>>("errorsCollection", viewState);
+                    var errorsCollection = RetrieveEntityStateValue<IDictionary<string, Collection<string>>>("errorsCollection", viewState);
 
                     if (errorsCollection != null)
                     {

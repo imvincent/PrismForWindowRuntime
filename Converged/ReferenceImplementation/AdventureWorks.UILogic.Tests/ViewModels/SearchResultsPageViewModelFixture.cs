@@ -28,16 +28,16 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             var repository = new MockProductCatalogRepository();
             repository.GetFilteredProductsAsyncDelegate = (queryString, maxResults) =>
                 {
-                    ReadOnlyCollection<Product> products;
+                    Collection<Product> products;
                     if (queryString == "bike")
-                        products = new ReadOnlyCollection<Product>(new List<Product>
+                        products = new Collection<Product>(new List<Product>
                         {
                             new Product(){Title = "bike1", ProductNumber = "1", ImageUri = new Uri("http://image")},
                             new Product(){Title = "bike2", ProductNumber = "2", ImageUri = new Uri("http://image")}
                         });
                     else
                     {
-                        products = new ReadOnlyCollection<Product>(new List<Product>
+                        products = new Collection<Product>(new List<Product>
                         {
                             new Product(){Title = "bike1", ProductNumber = "1", ImageUri = new Uri("http://image")},
                             new Product(){Title = "bike2", ProductNumber = "2", ImageUri = new Uri("http://image")},
@@ -64,16 +64,16 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             var repository = new MockProductCatalogRepository();
             repository.GetFilteredProductsAsyncDelegate = (queryString, maxResults) =>
             {
-                ReadOnlyCollection<Product> products;
+                Collection<Product> products;
                 if (queryString == "bike")
-                    products = new ReadOnlyCollection<Product>(new List<Product>
+                    products = new Collection<Product>(new List<Product>
                         {
                             new Product(){Title = "bike1", ProductNumber = "1", ImageUri = new Uri("http://image")},
                             new Product(){Title = "bike2", ProductNumber = "2", ImageUri = new Uri("http://image")}
                         });
                 else
                 {
-                    products = new ReadOnlyCollection<Product>(new List<Product>
+                    products = new Collection<Product>(new List<Product>
                         {
                             new Product(){Title = "bike1", ProductNumber = "1", ImageUri = new Uri("http://image")},
                             new Product(){Title = "bike2", ProductNumber = "2", ImageUri = new Uri("http://image")},

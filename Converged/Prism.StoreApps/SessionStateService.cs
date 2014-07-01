@@ -11,15 +11,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using Microsoft.Practices.Prism.StoreApps.Interfaces;
+using Microsoft.Practices.Prism.Mvvm.Interfaces;
 using Windows.ApplicationModel.Resources;
 using Windows.Security.Cryptography.DataProtection;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Microsoft.Practices.Prism.StoreApps;
 
-namespace Microsoft.Practices.Prism.StoreApps
+namespace Microsoft.Practices.Prism.Mvvm
 {
     /// <summary>
     /// SessionStateService captures global session state to simplify process lifetime management
@@ -85,7 +86,7 @@ namespace Microsoft.Practices.Prism.StoreApps
                 serializer.WriteObject(sessionData, _sessionState);
 
                 // Get an output stream for the SessionState file and write the state asynchronously
-                StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(Constants.SessionStateFileName, CreationCollisionOption.ReplaceExisting);
+                StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(PrismConstants.SessionStateFileName, CreationCollisionOption.ReplaceExisting);
                 using (var fileStream = await file.OpenAsync(FileAccessMode.ReadWrite))
                 {
                     sessionData.Seek(0, SeekOrigin.Begin);
@@ -115,7 +116,7 @@ namespace Microsoft.Practices.Prism.StoreApps
             try
             {
                 // Get the input stream for the SessionState file
-                StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync(Constants.SessionStateFileName);
+                StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync(PrismConstants.SessionStateFileName);
                 using (IInputStream inStream = await file.OpenSequentialReadAsync())
                 {
                     var memoryStream = new MemoryStream();
@@ -187,7 +188,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         {
             if (frame == null) throw new ArgumentNullException("frame");
 
-            var resourceLoader = ResourceLoader.GetForCurrentView(Constants.StoreAppsInfrastructureResourceMapId);
+            var resourceLoader = ResourceLoader.GetForCurrentView(PrismConstants.StoreAppsInfrastructureResourceMapId);
 
             if (frame.GetValue(FrameSessionStateKeyProperty) != null)
             {
@@ -293,7 +294,8 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// <summary>
         /// Initializes a new instance of the <see cref="SessionStateServiceException"/> class.
         /// </summary>
-        public SessionStateServiceException() : base((ResourceLoader.GetForCurrentView(Constants.StoreAppsInfrastructureResourceMapId)).GetString("SessionStateServiceFailed"))
+        public SessionStateServiceException()
+            : base((ResourceLoader.GetForCurrentView(PrismConstants.StoreAppsInfrastructureResourceMapId)).GetString("SessionStateServiceFailed"))
         {
         }
 
@@ -310,7 +312,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         /// </summary>
         /// <param name="exception">The exception.</param>
         public SessionStateServiceException(Exception exception)
-            : base((ResourceLoader.GetForCurrentView(Constants.StoreAppsInfrastructureResourceMapId)).GetString("SessionStateServiceFailed"), exception)
+            : base((ResourceLoader.GetForCurrentView(PrismConstants.StoreAppsInfrastructureResourceMapId)).GetString("SessionStateServiceFailed"), exception)
         {
         }
 

@@ -7,7 +7,7 @@
 
 
 using System.Globalization;
-using Microsoft.Practices.Prism.StoreApps;
+using Microsoft.Practices.Prism.Mvvm;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
 
 namespace AdventureWorks.UILogic.ViewModels

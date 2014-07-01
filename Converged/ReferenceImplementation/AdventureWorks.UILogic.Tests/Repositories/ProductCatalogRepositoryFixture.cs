@@ -18,27 +18,33 @@ using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 
 namespace AdventureWorks.UILogic.Tests.Repositories
 {
+    using System.Collections;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.ServiceModel;
+
     [TestClass]
     public class ProductCatalogRepositoryFixture
     {
         [TestMethod]
         public async Task GetCategories_Calls_Service_When_Cache_Miss()
         {
-            var cacheService = new MockCacheService();
-            cacheService.GetDataDelegate = s => { throw new FileNotFoundException(); };
-            cacheService.SaveDataAsyncDelegate = (s, c) => Task.FromResult(new Uri("http://test.org"));
+            var cacheService = new MockCacheService
+                               {
+                                   GetDataDelegate = s => { throw new FileNotFoundException(); },
+                                   SaveDataAsyncDelegate =
+                                       (s, c) => Task.FromResult(new Uri("http://test.org"))
+                               };
 
             var productCatalogService = new MockProductCatalogService();
-            var categories = new List<Category>
-            {
-                new Category{ Id = 1},
-                new Category{ Id = 2}
-            };
+            var categories = new List<Category> { new Category { Id = 1 }, new Category { Id = 2 } };
 
-            productCatalogService.GetSubcategoriesAsyncDelegate = (parentId, maxProducts) => Task.FromResult(new ReadOnlyCollection<Category>(categories));
+            productCatalogService.GetSubcategoriesAsyncDelegate =
+                (parentId, maxProducts) =>
+                    Task.FromResult((ICollection<Category>)(new Collection<Category>(categories)));
             
             var target = new ProductCatalogRepository(productCatalogService, cacheService);
-            var returnedCategories = await target.GetRootCategoriesAsync(0);
+            var returnedCategories = (await target.GetRootCategoriesAsync(0)).ToList();
 
             Assert.AreEqual(2, returnedCategories.Count);
             Assert.AreEqual(1, returnedCategories[0].Id);
@@ -65,12 +71,17 @@ namespace AdventureWorks.UILogic.Tests.Repositories
                 return new ReadOnlyCollection<Category>(null);
             };
 
-            var productCatalogService = new MockProductCatalogService();
-            productCatalogService.GetSubcategoriesAsyncDelegate = (parentId, maxProducts) => Task.FromResult(new ReadOnlyCollection<Category>(null));
+            var productCatalogService = new MockProductCatalogService
+                                        {
+                                            GetSubcategoriesAsyncDelegate =
+                                                (parentId, maxProducts) =>
+                                                Task.FromResult<ICollection<Category>>(
+                                                    new Collection<Category>(null))
+                                        };
 
             var target = new ProductCatalogRepository(productCatalogService, cacheService);
 
-            var returnedCategories = await target.GetRootCategoriesAsync(0);
+            var returnedCategories = (await target.GetRootCategoriesAsync(0)).ToList();
 
             Assert.AreEqual(2, returnedCategories.Count);
             Assert.AreEqual(1, returnedCategories[0].Id);
@@ -80,18 +91,19 @@ namespace AdventureWorks.UILogic.Tests.Repositories
         [TestMethod]
         public async Task GetCategories_Saves_Data_To_Cache()
         {
-            var cacheService = new MockCacheService();
-            cacheService.GetDataDelegate = s => { throw new FileNotFoundException(); };
-
-            cacheService.SaveDataAsyncDelegate = (s, o) =>
-            {
-                var collection = (ReadOnlyCollection<Category>)o;
-                Assert.AreEqual("Categories-0-0", s);
-                Assert.AreEqual(2, collection.Count);
-                Assert.AreEqual(1, collection[0].Id);
-                Assert.AreEqual(2, collection[1].Id);
-                return Task.FromResult(new Uri("http://test.org"));
-            };
+            var cacheService = new MockCacheService
+                               {
+                                   GetDataDelegate = s => { throw new FileNotFoundException(); },
+                                   SaveDataAsyncDelegate = (s, o) =>
+                                   {
+                                       var collection = (Collection<Category>)o;
+                                       Assert.AreEqual("Categories-0-0", s);
+                                       Assert.AreEqual(2, collection.Count);
+                                       Assert.AreEqual(1, collection[0].Id);
+                                       Assert.AreEqual(2, collection[1].Id);
+                                       return Task.FromResult(new Uri("http://test.org"));
+                                   }
+                               };
 
             var productCatalogService = new MockProductCatalogService();
             var categories = new List<Category>
@@ -99,7 +111,8 @@ namespace AdventureWorks.UILogic.Tests.Repositories
                                      new Category{ Id = 1},
                                      new Category{ Id = 2}
                                  };
-            productCatalogService.GetSubcategoriesAsyncDelegate = (parentId, maxProducts) => Task.FromResult(new ReadOnlyCollection<Category>(categories));
+            productCatalogService.GetSubcategoriesAsyncDelegate =
+                (parentId, maxProducts) => Task.FromResult<ICollection<Category>>(new Collection<Category>(categories));
 
             var target = new ProductCatalogRepository(productCatalogService, cacheService);
 
@@ -119,11 +132,13 @@ namespace AdventureWorks.UILogic.Tests.Repositories
                                      new Category{ Id = 10},
                                      new Category{ Id = 11}
                                  };
-            productCatalogService.GetSubcategoriesAsyncDelegate = (parentId, maxProducts) => Task.FromResult(new ReadOnlyCollection<Category>(subCategories));
+            productCatalogService.GetSubcategoriesAsyncDelegate =
+                (parentId, maxProducts) =>
+                    Task.FromResult<ICollection<Category>>(new Collection<Category>(subCategories));
 
             var target = new ProductCatalogRepository(productCatalogService, cacheService);
 
-            var returnedSubcategories = await target.GetSubcategoriesAsync(1, 10);
+            var returnedSubcategories = (await target.GetSubcategoriesAsync(1, 10)).ToList();
 
             Assert.AreEqual(2, returnedSubcategories.Count);
             Assert.AreEqual(10, returnedSubcategories[0].Id);
@@ -148,11 +163,12 @@ namespace AdventureWorks.UILogic.Tests.Repositories
             };
 
             var productCatalogService = new MockProductCatalogService();
-            productCatalogService.GetSubcategoriesAsyncDelegate = (parentId, maxProducts) => Task.FromResult(new ReadOnlyCollection<Category>(null));
+            productCatalogService.GetSubcategoriesAsyncDelegate =
+                (parentId, maxProducts) => Task.FromResult<ICollection<Category>>(new Collection<Category>(null));
 
             var target = new ProductCatalogRepository(productCatalogService, cacheService);
 
-            var returnedCategories = await target.GetSubcategoriesAsync(1,10);
+            var returnedCategories = (await target.GetSubcategoriesAsync(1, 10)).ToList();
 
             Assert.AreEqual(2, returnedCategories.Count);
             Assert.AreEqual(10, returnedCategories[0].Id);
@@ -166,7 +182,7 @@ namespace AdventureWorks.UILogic.Tests.Repositories
             cacheService.GetDataDelegate = s => { throw new FileNotFoundException(); };
             cacheService.SaveDataAsyncDelegate = (s, o) => 
             {
-                var collection = (ReadOnlyCollection<Category>)o;
+                var collection = (Collection<Category>)o;
                 Assert.AreEqual("Categories-1-10", s);
                 Assert.AreEqual(2, collection.Count);
                 Assert.AreEqual(10, collection[0].Id);
@@ -180,7 +196,9 @@ namespace AdventureWorks.UILogic.Tests.Repositories
                                      new Category{ Id = 10},
                                      new Category{ Id = 11}
                                  };
-            productCatalogService.GetSubcategoriesAsyncDelegate = (parentId, maxProducts) => Task.FromResult(new ReadOnlyCollection<Category>(subCategories));
+            productCatalogService.GetSubcategoriesAsyncDelegate =
+                (parentId, maxProducts) =>
+                    Task.FromResult<ICollection<Category>>(new Collection<Category>(subCategories));
 
             var target = new ProductCatalogRepository(productCatalogService, cacheService);
 

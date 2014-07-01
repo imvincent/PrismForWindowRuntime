@@ -22,9 +22,9 @@ namespace AdventureWorks.UILogic.Repositories
         Task<Address> GetDefaultBillingAddressAsync();
         Task<PaymentMethod> GetDefaultPaymentMethodAsync();
 
-        Task<IReadOnlyCollection<Address>> GetAllShippingAddressesAsync();
-        Task<IReadOnlyCollection<Address>> GetAllBillingAddressesAsync();
-        Task<IReadOnlyCollection<PaymentMethod>> GetAllPaymentMethodsAsync();
+        Task<ICollection<Address>> GetAllShippingAddressesAsync();
+        Task<ICollection<Address>> GetAllBillingAddressesAsync();
+        Task<ICollection<PaymentMethod>> GetAllPaymentMethodsAsync();
 
         Task SaveShippingAddressAsync(Address address);
         Task SaveBillingAddressAsync(Address address);

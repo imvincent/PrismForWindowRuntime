@@ -59,7 +59,6 @@ namespace AdventureWorks.WebServices.Models
         [RegularExpression(NUMBERS_REGEX_PATTERN, ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRegex")]
         [CustomValidation(typeof(Address), "ValidateZipCodeState")]
         public string ZipCode { get; set; }
-
         [Required(ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRequired")]
         [RegularExpression(NUMBERS_REGEX_PATTERN, ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "ErrorRegex")]
         public string Phone { get; set; }

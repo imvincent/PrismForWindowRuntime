@@ -8,7 +8,7 @@
 
 using System;
 
-namespace Microsoft.Practices.Prism.StoreApps.Interfaces
+namespace Microsoft.Practices.Prism.Mvvm.Interfaces
 {
     /// <summary>
     /// The IFlyoutViewModel interface should be implemented by the Flyout view model classes, to provide actions used for opening the Flyout, closing it,

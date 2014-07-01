@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace Microsoft.Practices.Prism.StoreApps.Tests.Mocks
 {
-    public class MockViewModelWithRestorableStateCollection : ViewModel
+    public class MockViewModelWithRestorableStateCollection : Microsoft.Practices.Prism.Mvvm.ViewModel
     {
         private string _title;
         private string _description;

@@ -11,12 +11,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using Windows.UI.Xaml.Navigation;
+using Microsoft.Practices.Prism.Mvvm;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
 using AdventureWorks.UILogic.Services;
-using Microsoft.Practices.Prism.StoreApps;
-using Microsoft.Practices.Prism.StoreApps.Interfaces;
-using Windows.UI.Xaml.Navigation;
 
 namespace AdventureWorks.UILogic.ViewModels
 {
@@ -44,7 +44,7 @@ namespace AdventureWorks.UILogic.ViewModels
         public static string PreviousSearchTerm { get; private set; }
 
         [RestorableState]
-        public static ReadOnlyCollection<Product> PreviousResults { get; private set; }
+        public static Collection<Product> PreviousResults { get; private set; }
 
         public string QueryText
         {
@@ -87,7 +87,7 @@ namespace AdventureWorks.UILogic.ViewModels
 
             try
             {
-                ReadOnlyCollection<Product> products;
+                Collection<Product> products;
                 if (queryText == PreviousSearchTerm)
                 {
                     products = PreviousResults;

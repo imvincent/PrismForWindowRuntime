@@ -8,13 +8,12 @@
 
 using System.Collections.Generic;
 using System.Windows.Input;
-using AdventureWorks.UILogic.Models;
-using Microsoft.Practices.Prism.StoreApps;
-using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using System;
 using System.Linq;
 using System.Collections.ObjectModel;
 using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Mvvm.Interfaces;
+using AdventureWorks.UILogic.Models;
 
 namespace AdventureWorks.UILogic.ViewModels
 {

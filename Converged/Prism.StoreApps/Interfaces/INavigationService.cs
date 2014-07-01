@@ -6,7 +6,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-namespace Microsoft.Practices.Prism.StoreApps.Interfaces
+namespace Microsoft.Practices.Prism.Mvvm.Interfaces
 {
     /// <summary>
     /// The INavigationService interface is used for creating a navigation service for your Windows Store app.

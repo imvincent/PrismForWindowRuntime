@@ -41,11 +41,11 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
 
             repository.GetProductsAsyncDelegate = (subCategoryId) =>
                 {
-                    ReadOnlyCollection<Product> products = null;
+                    ICollection<Product> products = null;
 
                     if (subCategoryId == 1)
                     {
-                        products = new ReadOnlyCollection<Product>(new List<Product>
+                        products = new Collection<Product>(new List<Product>
                         {
                             new Product(){ ProductNumber = "1", ImageUri = new Uri("http://image") },
                             new Product(){ ProductNumber = "2", ImageUri = new Uri("http://image") },

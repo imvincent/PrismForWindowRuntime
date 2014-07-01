@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Microsoft.Practices.Prism.StoreApps.Tests.Mocks
 {
-    public class MockPageViewModel : ViewModel
+    public class MockPageViewModel : Microsoft.Practices.Prism.Mvvm.ViewModel
     {
         public Action<object, NavigationMode, Dictionary<string, object>> OnNavigatedToCommand { get; set; }
         public Action<Dictionary<string, object>, bool> OnNavigatedFromCommand { get; set; }

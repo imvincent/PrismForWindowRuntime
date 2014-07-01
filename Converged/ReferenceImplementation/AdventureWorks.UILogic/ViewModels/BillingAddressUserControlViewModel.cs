@@ -12,12 +12,12 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Windows.UI.Xaml.Navigation;
+using Microsoft.Practices.Prism.Mvvm;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
 using AdventureWorks.UILogic.Services;
-using Microsoft.Practices.Prism.StoreApps;
-using Microsoft.Practices.Prism.StoreApps.Interfaces;
-using Windows.UI.Xaml.Navigation;
 
 namespace AdventureWorks.UILogic.ViewModels
 {
@@ -82,7 +82,7 @@ namespace AdventureWorks.UILogic.ViewModels
                 if (navigationMode == NavigationMode.Refresh)
                 {
                     // Restore the errors collection manually
-                    var errorsCollection = RetrieveEntityStateValue<IDictionary<string, ReadOnlyCollection<string>>>("errorsCollection", viewState);
+                    var errorsCollection = RetrieveEntityStateValue<IDictionary<string, Collection<string>>>("errorsCollection", viewState);
 
                     if (errorsCollection != null)
                     {
@@ -119,7 +119,6 @@ namespace AdventureWorks.UILogic.ViewModels
                 }
             }
         }
-
         public override void OnNavigatedFrom(Dictionary<string, object> viewState, bool suspending)
         {
             base.OnNavigatedFrom(viewState, suspending);
@@ -130,7 +129,6 @@ namespace AdventureWorks.UILogic.ViewModels
                 AddEntityStateValue("errorsCollection", _address.GetAllErrors(), viewState);
             }
         }
-
         public bool ValidateForm()
         {
             return _address.ValidateProperties();

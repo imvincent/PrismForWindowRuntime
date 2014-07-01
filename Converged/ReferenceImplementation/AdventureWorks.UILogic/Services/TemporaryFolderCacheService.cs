@@ -36,6 +36,9 @@ namespace AdventureWorks.UILogic.Services
         public async Task<T> GetDataAsync<T>(string cacheKey)
         {
             await CacheKeyPreviousTask(cacheKey);
+
+            //throw new FileNotFoundException();
+            //TODO: fix issue with serializer on Phone
             var result = GetDataAsyncInternal<T>(cacheKey);
             SetCacheKeyPreviousTask(cacheKey, result);
             return await result;
@@ -57,10 +60,10 @@ namespace AdventureWorks.UILogic.Services
 
             return toReturn;
         }
-
         public async Task SaveDataAsync<T>(string cacheKey, T content)
         {
             await CacheKeyPreviousTask(cacheKey);
+            //TODO: fix issue with serializer on Phone
             var result = SaveDataAsyncInternal<T>(cacheKey, content);
             SetCacheKeyPreviousTask(cacheKey, result);
             await result;
@@ -72,6 +75,7 @@ namespace AdventureWorks.UILogic.Services
 
             var textContent = Serialize<T>(content);
             await FileIO.WriteTextAsync(file, textContent);
+            //TODO: figure out why serializing ReadOnlyCollection<Category> fails
         }
         
         // Note: This method assumes that we are controlling the interleaving of async methods on a single thread.

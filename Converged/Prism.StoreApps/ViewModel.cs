@@ -11,9 +11,8 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.Practices.Prism.Mvvm;
 
-namespace Microsoft.Practices.Prism.StoreApps
+namespace Microsoft.Practices.Prism.Mvvm
 {
     /// <summary>
     /// This is the view model base class that includes INotifyPropertyChange support and is aware of navigation events.
@@ -34,7 +33,6 @@ namespace Microsoft.Practices.Prism.StoreApps
                 RestoreViewModel(viewModelState, this);
             }
         }
-
         /// <summary>
         /// This method will be called when navigating away from a page. You can use this method to save your view model data in case of a suspension event.
         /// </summary>
@@ -47,7 +45,6 @@ namespace Microsoft.Practices.Prism.StoreApps
                 FillStateDictionary(viewModelState, this);
             }
         }
-
         /// <summary>
         /// Retrieves the entity state value of the specified entity state key.
         /// </summary>

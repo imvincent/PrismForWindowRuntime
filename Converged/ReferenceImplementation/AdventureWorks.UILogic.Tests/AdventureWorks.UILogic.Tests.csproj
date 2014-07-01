@@ -116,9 +116,11 @@
     <SDKReference Include="TestPlatform, Version=11.0" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BindableValidatorFixture.cs" />
     <Compile Include="Mocks\MockAddressService.cs" />
     <Compile Include="Mocks\MockCheckoutDataRepository.cs" />
     <Compile Include="Mocks\MockLocationService.cs" />
+    <Compile Include="Mocks\MockModelWithValidation.cs" />
     <Compile Include="Mocks\MockOrderRepository.cs" />
     <Compile Include="Mocks\MockPaymentMethodService.cs" />
     <Compile Include="Mocks\MockSessionStateService.cs" />
@@ -194,21 +196,27 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Practices.Prism.Mvvm">
-      <HintPath>..\..\packages\Prism.Mvvm.1.0.0\lib\windows8\Microsoft.Practices.Prism.Mvvm.dll</HintPath>
+    <Reference Include="Microsoft.Practices.Prism.Mvvm, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Prism.Mvvm.1.1.0\lib\windows8\Microsoft.Practices.Prism.Mvvm.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.Prism.Mvvm.Store">
-      <HintPath>..\..\packages\Prism.Mvvm.1.0.0\lib\windows8\Microsoft.Practices.Prism.Mvvm.Store.dll</HintPath>
+    <Reference Include="Microsoft.Practices.Prism.Mvvm.Store, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Prism.Mvvm.1.1.0\lib\windows8\Microsoft.Practices.Prism.Mvvm.Store.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.Prism.PubSubEvents">
-      <HintPath>..\..\packages\Prism.PubSubEvents.1.0.0\lib\portable-sl4+wp7+windows8+net40\Microsoft.Practices.Prism.PubSubEvents.dll</HintPath>
+    <Reference Include="Microsoft.Practices.Prism.PubSubEvents, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Prism.PubSubEvents.1.1.0\lib\portable-sl5+windowsphone8+windows8+net40+wpa81\Microsoft.Practices.Prism.PubSubEvents.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.Prism.SharedInterfaces">
-      <HintPath>..\..\packages\Prism.Mvvm.1.0.0\lib\windows8\Microsoft.Practices.Prism.SharedInterfaces.dll</HintPath>
+    <Reference Include="Microsoft.Practices.Prism.SharedInterfaces, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Prism.Mvvm.1.1.0\lib\windows8\Microsoft.Practices.Prism.SharedInterfaces.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>

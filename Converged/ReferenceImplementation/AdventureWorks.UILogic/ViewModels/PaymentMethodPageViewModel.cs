@@ -7,12 +7,13 @@
 
 
 using System.Windows.Input;
-using AdventureWorks.UILogic.Services;
-using Microsoft.Practices.Prism.StoreApps;
-using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using System.Threading.Tasks;
-using AdventureWorks.UILogic.Repositories;
 using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Mvvm;
+using Microsoft.Practices.Prism.Mvvm.Interfaces;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
+using AdventureWorks.UILogic.Repositories;
+using AdventureWorks.UILogic.Services;
 
 namespace AdventureWorks.UILogic.ViewModels
 {

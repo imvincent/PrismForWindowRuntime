@@ -14,7 +14,7 @@ namespace AdventureWorks.UILogic.Services
 {
     public interface IAddressService
     {
-        Task<IReadOnlyCollection<Address>> GetAddressesAsync();
+        Task<ICollection<Address>> GetAddressesAsync();
         Task SaveAddressAsync(Address address);
         Task SetDefault(string defaultAddressId, AddressType addressType);
     }

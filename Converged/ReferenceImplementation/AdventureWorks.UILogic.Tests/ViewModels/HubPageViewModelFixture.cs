@@ -29,13 +29,13 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
 
             repository.GetRootCategoriesAsyncDelegate = (maxAmmountOfProducts) =>
             {
-                var categories = new ReadOnlyCollection<Category>(new List<Category>{
+                var categories = new Collection<Category>(new List<Category>{
                     new Category(),
                     new Category(),
                     new Category()
                 });
 
-                return Task.FromResult(categories);
+                return Task.FromResult((ICollection<Category>)categories);
             };
 
             var viewModel = new HubPageViewModel(repository, navigationService, null, null);
@@ -44,7 +44,6 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             Assert.IsNotNull(viewModel.RootCategories);
             Assert.AreEqual(((ICollection<CategoryViewModel>)viewModel.RootCategories).Count, 3);
         }
-
         [TestMethod]
         public void FailedCallToProductCatalogRepository_ShowsAlert()
         {

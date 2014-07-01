@@ -27,14 +27,14 @@ namespace AdventureWorks.UILogic.Services
             _accountService = accountService;
         }
 
-        public async Task<IReadOnlyCollection<Address>> GetAddressesAsync()
+        public async Task<ICollection<Address>> GetAddressesAsync()
         {
             using (var client = new HttpClient())
             {
                 var response = await client.GetAsync(new Uri(_clientBaseUrl));
                 response.EnsureSuccessStatusCode();
                 var responseContent = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<ReadOnlyCollection<Address>>(responseContent);
+                return JsonConvert.DeserializeObject<Collection<Address>>(responseContent);
             }
         }
 

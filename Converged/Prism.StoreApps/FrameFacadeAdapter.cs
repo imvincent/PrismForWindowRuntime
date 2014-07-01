@@ -8,11 +8,11 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Practices.Prism.StoreApps.Interfaces;
+using Microsoft.Practices.Prism.Mvvm.Interfaces;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
 
-namespace Microsoft.Practices.Prism.StoreApps
+namespace Microsoft.Practices.Prism.Mvvm
 {
     /// <summary>
     /// Abstracts the Windows.UI.Xaml.Controls.Frame object for use by apps that derive from the MvvmAppBase class.

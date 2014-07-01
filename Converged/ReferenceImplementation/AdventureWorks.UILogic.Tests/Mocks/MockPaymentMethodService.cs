@@ -24,10 +24,10 @@ namespace AdventureWorks.UILogic.Tests.Mocks
 
         public List<PaymentMethod> PaymentMethods { get; set; }
 
-        public Task<IReadOnlyCollection<PaymentMethod>> GetPaymentMethodsAsync()
+        public Task<ICollection<PaymentMethod>> GetPaymentMethodsAsync()
         {
-            if (PaymentMethods == null) return Task.FromResult<IReadOnlyCollection<PaymentMethod>>(null);
-            return Task.FromResult<IReadOnlyCollection<PaymentMethod>>(new ReadOnlyCollection<PaymentMethod>(PaymentMethods));
+            if (PaymentMethods == null) return Task.FromResult<ICollection<PaymentMethod>>(null);
+            return Task.FromResult<ICollection<PaymentMethod>>(new ReadOnlyCollection<PaymentMethod>(PaymentMethods));
         }
 
         public Task SavePaymentMethodAsync(PaymentMethod paymentMethod)

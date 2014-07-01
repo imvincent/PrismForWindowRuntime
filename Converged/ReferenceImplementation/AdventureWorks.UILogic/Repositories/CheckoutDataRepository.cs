@@ -21,8 +21,8 @@ namespace AdventureWorks.UILogic.Repositories
         private readonly IAddressService _addressService;
         private readonly IPaymentMethodService _paymentMethodService;
         private readonly IAccountService _accountService;
-        private IReadOnlyCollection<Address> _cachedAddresses;
-        private IReadOnlyCollection<PaymentMethod> _cachedPaymentMethods;
+        private ICollection<Address> _cachedAddresses;
+        private ICollection<PaymentMethod> _cachedPaymentMethods;
 
         public CheckoutDataRepository(IAddressService addressService, IPaymentMethodService paymentMethodService, IAccountService accountService)
         {
@@ -92,32 +92,29 @@ namespace AdventureWorks.UILogic.Repositories
 
         }
 
-        public async Task<IReadOnlyCollection<Address>> GetAllShippingAddressesAsync()
+        public async Task<ICollection<Address>> GetAllShippingAddressesAsync()
         {
             var addresses = await GetAllAddressesViaCacheAsync();
             var shippingAddresses = (addresses != null)
                                         ? addresses.Where(address => address.AddressType == AddressType.Shipping)
                                         : new List<Address>();
 
-            return new ReadOnlyCollection<Address>(shippingAddresses.ToList());
+            return new Collection<Address>(shippingAddresses.ToList());
         }
 
-        public async Task<IReadOnlyCollection<Address>> GetAllBillingAddressesAsync()
+        public async Task<ICollection<Address>> GetAllBillingAddressesAsync()
         {
             var addresses = await GetAllAddressesViaCacheAsync();
             var billingAddresses = (addresses != null)
                                         ? addresses.Where(address => address.AddressType == AddressType.Billing)
                                         : new List<Address>();
 
-            return new ReadOnlyCollection<Address>(billingAddresses.ToList());
+            return new Collection<Address>(billingAddresses.ToList());
         }
-
-        public async Task<IReadOnlyCollection<PaymentMethod>> GetAllPaymentMethodsAsync()
+        public async Task<ICollection<PaymentMethod>> GetAllPaymentMethodsAsync()
         {
             var paymentMethods = await GetAllPaymentMethodsViaCacheAsync();
-            return (paymentMethods != null)
-                       ? paymentMethods
-                       : new ReadOnlyCollection<PaymentMethod>(new List<PaymentMethod>());
+            return paymentMethods ?? new Collection<PaymentMethod>(new Collection<PaymentMethod>());
         }
 
         public async Task SaveShippingAddressAsync(Address address)
@@ -157,7 +154,6 @@ namespace AdventureWorks.UILogic.Repositories
 
             ExpireCachedAddresses();
         }
-
         public async Task SavePaymentMethodAsync(PaymentMethod paymentMethod)
         {
             if (paymentMethod == null) throw new ArgumentNullException("paymentMethod");
@@ -243,7 +239,7 @@ namespace AdventureWorks.UILogic.Repositories
             ExpireCachedPaymentMethods();
         }
 
-        private async Task<IReadOnlyCollection<Address>> GetAllAddressesViaCacheAsync()
+        private async Task<ICollection<Address>> GetAllAddressesViaCacheAsync()
         {
             if (_cachedAddresses == null)
             {
@@ -270,7 +266,7 @@ namespace AdventureWorks.UILogic.Repositories
             _cachedAddresses = null;
         }
 
-        private async Task<IReadOnlyCollection<PaymentMethod>> GetAllPaymentMethodsViaCacheAsync()
+        private async Task<ICollection<PaymentMethod>> GetAllPaymentMethodsViaCacheAsync()
         {
             if (_cachedPaymentMethods == null)
             {

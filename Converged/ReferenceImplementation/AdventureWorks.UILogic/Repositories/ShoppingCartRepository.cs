@@ -6,12 +6,12 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using AdventureWorks.UILogic.Models;
-using AdventureWorks.UILogic.Services;
-using Microsoft.Practices.Prism.PubSubEvents;
 using System;
 using System.Threading.Tasks;
-using Microsoft.Practices.Prism.StoreApps.Interfaces;
+using Microsoft.Practices.Prism.PubSubEvents;
+using Microsoft.Practices.Prism.Mvvm.Interfaces;
+using AdventureWorks.UILogic.Models;
+using AdventureWorks.UILogic.Services;
 
 namespace AdventureWorks.UILogic.Repositories
 {
@@ -121,7 +121,6 @@ namespace AdventureWorks.UILogic.Repositories
             // Documentation on loosely coupled communication is at http://go.microsoft.com/fwlink/?LinkID=288820&clcid=0x409
             _eventAggregator.GetEvent<ShoppingCartUpdatedEvent>().Publish(null);
         }
-
         private void RaiseShoppingCartItemUpdated()
         {
             // Documentation on loosely coupled communication is at http://go.microsoft.com/fwlink/?LinkID=288820&clcid=0x409

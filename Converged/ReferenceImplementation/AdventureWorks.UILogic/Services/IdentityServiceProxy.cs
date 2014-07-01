@@ -54,7 +54,6 @@ namespace AdventureWorks.UILogic.Services
                 return new LogOnResult { UserInfo = result };
             }
         }
-
         public async Task<bool> VerifyActiveSessionAsync(string userId)
         {
             using (var client = new HttpClient())

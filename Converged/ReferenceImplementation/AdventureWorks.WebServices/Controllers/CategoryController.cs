@@ -52,7 +52,6 @@ namespace AdventureWorks.WebServices.Controllers
             return trimmedCategories;
         }
 
-
         // GET /api/Category/id
         public Category GetCategory(int id)
         {

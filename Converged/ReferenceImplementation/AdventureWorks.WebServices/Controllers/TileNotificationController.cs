@@ -48,8 +48,6 @@ namespace AdventureWorks.WebServices.Controllers
                 new System.Net.Http.Headers.MediaTypeHeaderValue("text/xml");
             return response;
         } 
-
-
         // GET /api/TileNotification?categoryId={categoryId}/id
 
         public HttpResponseMessage GetSecondaryTileNotification(string id)

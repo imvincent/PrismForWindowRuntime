@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace Microsoft.Practices.Prism.StoreApps.Tests.Mocks
 {
-    public class MockViewModelWithNoRestorableStateAttributes : ViewModel
+    public class MockViewModelWithNoRestorableStateAttributes : Microsoft.Practices.Prism.Mvvm.ViewModel
     {
         private string title;
         public string Title
@@ -28,9 +28,9 @@ namespace Microsoft.Practices.Prism.StoreApps.Tests.Mocks
 
         }
 
-        private ICollection<ViewModel> childViewModels;
+        private ICollection<Microsoft.Practices.Prism.Mvvm.ViewModel> childViewModels;
 
-        public ICollection<ViewModel> ChildViewModels
+        public ICollection<Microsoft.Practices.Prism.Mvvm.ViewModel> ChildViewModels
         {
             get { return this.childViewModels; }
             set { this.SetProperty(ref this.childViewModels, value); }

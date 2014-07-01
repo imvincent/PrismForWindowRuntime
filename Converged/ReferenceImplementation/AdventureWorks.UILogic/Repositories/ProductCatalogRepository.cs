@@ -30,7 +30,7 @@ namespace AdventureWorks.UILogic.Repositories
             _cacheService = cacheService;
         }
 
-        public async Task<ReadOnlyCollection<Category>> GetRootCategoriesAsync(int maxAmountOfProducts)
+        public async Task<ICollection<Category>> GetRootCategoriesAsync(int maxAmountOfProducts)
         {
             var rootCategories = await GetSubcategoriesAsync(0, maxAmountOfProducts);
             if (_rootCategoriesNames == null)
@@ -44,14 +44,14 @@ namespace AdventureWorks.UILogic.Repositories
             return rootCategories;
         }
 
-        public async Task<ReadOnlyCollection<Category>> GetSubcategoriesAsync(int parentId, int maxAmountOfProducts)
+        public async Task<ICollection<Category>> GetSubcategoriesAsync(int parentId, int maxAmountOfProducts)
         {
             string cacheFileName = String.Format("Categories-{0}-{1}", parentId, maxAmountOfProducts);
 
             try
             {
                 // Case 1: Retrieve the items from the cache
-                return await _cacheService.GetDataAsync<ReadOnlyCollection<Category>>(cacheFileName);
+                return await _cacheService.GetDataAsync<ICollection<Category>>(cacheFileName);
             }
             catch (FileNotFoundException)
             { }
@@ -64,7 +64,6 @@ namespace AdventureWorks.UILogic.Repositories
 
             return categories;
         }
-
         public async Task<SearchResult> GetFilteredProductsAsync(string productsQueryString, int maxResults)
         {
             // Retrieve the items from the service
@@ -79,14 +78,14 @@ namespace AdventureWorks.UILogic.Repositories
             return searchSuggestions;
         }
 
-        public async Task<ReadOnlyCollection<Product>> GetProductsAsync(int categoryId)
+        public async Task<ICollection<Product>> GetProductsAsync(int categoryId)
         {
             string cacheFileName = string.Format("SubProductsOfCategoryId{0}", categoryId);
 
             try
             {
                 // Retrieve the items from the cache
-                return await _cacheService.GetDataAsync<ReadOnlyCollection<Product>>(cacheFileName);
+                return await _cacheService.GetDataAsync<ICollection<Product>>(cacheFileName);
             }
             catch (FileNotFoundException)
             {

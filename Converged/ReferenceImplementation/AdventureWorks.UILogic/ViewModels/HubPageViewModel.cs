@@ -6,17 +6,18 @@
 // Copyright (c) Microsoft Corporation. All rights reserved
 
 
-using System.Globalization;
-using Windows.UI.Xaml.Controls;
-using AdventureWorks.UILogic.Models;
-using AdventureWorks.UILogic.Repositories;
-using AdventureWorks.UILogic.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Microsoft.Practices.Prism.StoreApps;
-using Microsoft.Practices.Prism.StoreApps.Interfaces;
+using System.Globalization;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Practices.Prism.Mvvm;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
+using Microsoft.Practices.Prism.Mvvm.Interfaces;
+using AdventureWorks.UILogic.Models;
+using AdventureWorks.UILogic.Repositories;
+using AdventureWorks.UILogic.Services;
 
 namespace AdventureWorks.UILogic.ViewModels
 {
@@ -48,11 +49,10 @@ namespace AdventureWorks.UILogic.ViewModels
             get { return _rootCategories; }
             private set { SetProperty(ref _rootCategories, value); }
         }
-
         public async override void OnNavigatedTo(object navigationParameter, NavigationMode navigationMode, Dictionary<string, object> viewModelState)
         {
             string errorMessage = string.Empty;
-            ReadOnlyCollection<Category> rootCategories = null;
+            ICollection<Category> rootCategories = null;
             try
             {
                 LoadingData = true;

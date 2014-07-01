@@ -11,8 +11,9 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
+using Microsoft.Practices.Prism.StoreApps;
 
-namespace Microsoft.Practices.Prism.StoreApps.Interfaces
+namespace Microsoft.Practices.Prism.Mvvm.Interfaces
 {
     /// <summary>
     /// The ISessionStateService interface will be implemented by a class that handles the application's state saving and retrieving. The default implementation of ISessionStateService

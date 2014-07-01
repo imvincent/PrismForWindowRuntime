@@ -9,11 +9,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
+using Windows.UI.Xaml.Navigation;
+using Microsoft.Practices.Prism.Mvvm;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
-using Microsoft.Practices.Prism.StoreApps;
-using Windows.UI.Xaml.Navigation;
-using System.Threading.Tasks;
 
 namespace AdventureWorks.UILogic.ViewModels
 {
@@ -45,7 +45,7 @@ namespace AdventureWorks.UILogic.ViewModels
                 if (navigationMode == NavigationMode.Refresh)
                 {
                     // Restore the errors collection manually
-                    var errorsCollection = RetrieveEntityStateValue<IDictionary<string, ReadOnlyCollection<string>>>("errorsCollection", viewState);
+                    var errorsCollection = RetrieveEntityStateValue<IDictionary<string, Collection<string>>>("errorsCollection", viewState);
 
                     if (errorsCollection != null)
                     {

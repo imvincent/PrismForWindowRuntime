@@ -11,7 +11,9 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Microsoft.Practices.Prism.StoreApps.Tests.Mocks
 {
-    public class MockPage : Page
+    using Microsoft.Practices.Prism.Mvvm;
+
+    public class MockPage : Page, IView
     {
         public object PageParameter { get; set; }
 

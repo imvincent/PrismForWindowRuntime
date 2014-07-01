@@ -13,6 +13,7 @@ using AdventureWorks.UILogic.Services;
 using Microsoft.Practices.Prism.StoreApps;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Microsoft.Practices.Prism.Mvvm;
+using Microsoft.Practices.Prism.Mvvm.Interfaces;
 using Microsoft.Practices.Prism.Commands;
 
 namespace AdventureWorks.UILogic.ViewModels
@@ -101,7 +102,6 @@ namespace AdventureWorks.UILogic.ViewModels
 
 
         public DelegateCommand SignInCommand { get; private set; }
-
         public bool CanSignIn()
         {
             return !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Password);

@@ -9,7 +9,7 @@
 using System;
 using Windows.UI.Xaml.Navigation;
 
-namespace Microsoft.Practices.Prism.StoreApps
+namespace Microsoft.Practices.Prism.Mvvm
 {
     /// <summary>
     /// Provides data for navigation methods and event handlers that cannot cancel the navigation request.

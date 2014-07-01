@@ -28,9 +28,9 @@ namespace AdventureWorks.UILogic.Tests.Mocks
             Addresses.Add(address);
         }
 
-        public Task<IReadOnlyCollection<Address>> GetAddressesAsync()
+        public Task<ICollection<Address>> GetAddressesAsync()
         {
-            return Task.FromResult<IReadOnlyCollection<Address>>(Addresses);
+            return Task.FromResult<ICollection<Address>>(Addresses);
         }
 
         public Task SaveAddressAsync(Address address)

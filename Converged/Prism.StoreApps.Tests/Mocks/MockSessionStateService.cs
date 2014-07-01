@@ -9,7 +9,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Practices.Prism.StoreApps.Interfaces;
+using Microsoft.Practices.Prism.Mvvm.Interfaces;
+
 namespace Microsoft.Practices.Prism.StoreApps.Tests.Mocks
 {
     public class MockSessionStateService : ISessionStateService

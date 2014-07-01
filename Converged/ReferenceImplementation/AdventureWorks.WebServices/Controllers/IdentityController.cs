@@ -96,7 +96,6 @@ namespace AdventureWorks.WebServices.Controllers
                 }
             }
         }
-
         // GET /api/Identity/GetIsValidSession
         [Authorize]
         public bool GetIsValidSession()

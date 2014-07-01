@@ -9,7 +9,7 @@
 using System;
 using Windows.UI.Xaml;
 
-namespace Microsoft.Practices.Prism.StoreApps.Interfaces
+namespace Microsoft.Practices.Prism.Mvvm.Interfaces
 {
     /// <summary>
     /// The IFrameFacade interface abstracts the Windows.UI.Xaml.Controls.Frame object for use by apps that derive from the MvvmAppBase class. A Frame 

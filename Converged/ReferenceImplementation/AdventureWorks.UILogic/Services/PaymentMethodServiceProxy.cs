@@ -27,14 +27,14 @@ namespace AdventureWorks.UILogic.Services
             _accountService = accountService;
         }
 
-        public async Task<IReadOnlyCollection<PaymentMethod>> GetPaymentMethodsAsync()
+        public async Task<ICollection<PaymentMethod>> GetPaymentMethodsAsync()
         {
             using (var client = new HttpClient())
             {
                 var response = await client.GetAsync(new Uri(_clientBaseUrl));
                 response.EnsureSuccessStatusCode();
                 var responseContent = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<ReadOnlyCollection<PaymentMethod>>(responseContent);
+                return JsonConvert.DeserializeObject<Collection<PaymentMethod>>(responseContent);
             }
         }
 

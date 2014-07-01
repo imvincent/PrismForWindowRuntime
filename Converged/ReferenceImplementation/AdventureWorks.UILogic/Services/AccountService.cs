@@ -8,9 +8,10 @@
 
 using System;
 using System.Threading.Tasks;
-using AdventureWorks.UILogic.Models;
 using System.Security;
+using Microsoft.Practices.Prism.Mvvm.Interfaces;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
+using AdventureWorks.UILogic.Models;
 
 namespace AdventureWorks.UILogic.Services
 {
@@ -106,7 +107,6 @@ namespace AdventureWorks.UILogic.Services
             try
             {
                 var result = await _identityService.LogOnAsync(userName, password);
-
                 UserInfo previousUser = _signedInUser;
                 _signedInUser = result.UserInfo;
 
@@ -118,7 +118,6 @@ namespace AdventureWorks.UILogic.Services
                 _password = password;
                 _sessionStateService.SessionState[UserNameKey] = userName;
                 _sessionStateService.SessionState[PasswordKey] = password;
-
                 if (useCredentialStore)
                 {
                     // Save credentials in the CredentialStore

@@ -65,7 +65,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
 
             var checkoutDataRepository = new MockCheckoutDataRepository();
             checkoutDataRepository.GetAllPaymentMethodsAsyncDelegate =
-                () => Task.FromResult<IReadOnlyCollection<PaymentMethod>>(new ReadOnlyCollection<PaymentMethod>(existingPaymentMethods));
+                () => Task.FromResult<ICollection<PaymentMethod>>(new ReadOnlyCollection<PaymentMethod>(existingPaymentMethods));
 
             var target = new PaymentMethodUserControlViewModel(checkoutDataRepository);
             target.PaymentMethod = newPaymentMethod;
@@ -88,7 +88,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             var existingPaymentMethods = new List<PaymentMethod>();
             var checkoutDataRepository = new MockCheckoutDataRepository();
             checkoutDataRepository.GetAllPaymentMethodsAsyncDelegate =
-                () => Task.FromResult<IReadOnlyCollection<PaymentMethod>>(new ReadOnlyCollection<PaymentMethod>(existingPaymentMethods));
+                () => Task.FromResult<ICollection<PaymentMethod>>(new Collection<PaymentMethod>(existingPaymentMethods));
 
             checkoutDataRepository.SavePaymentMethodAsyncDelegate = paymentMethod =>
             {

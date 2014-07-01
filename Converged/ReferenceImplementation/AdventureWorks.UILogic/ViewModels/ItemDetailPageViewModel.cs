@@ -8,18 +8,18 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System;
 using System.Globalization;
 using System.Linq;
-using AdventureWorks.UILogic.Repositories;
-using Microsoft.Practices.Prism.StoreApps;
-using Microsoft.Practices.Prism.StoreApps.Interfaces;
-using Windows.UI.Xaml.Navigation;
-using AdventureWorks.UILogic.Services;
 using System.Threading.Tasks;
-using System;
 using Windows.UI.Notifications;
-using AdventureWorks.UILogic.Models;
+using Windows.UI.Xaml.Navigation;
 using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Mvvm;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
+using AdventureWorks.UILogic.Models;
+using AdventureWorks.UILogic.Repositories;
+using AdventureWorks.UILogic.Services;
 
 namespace AdventureWorks.UILogic.ViewModels
 {
@@ -154,7 +154,6 @@ namespace AdventureWorks.UILogic.ViewModels
             var tileId = SelectedProduct.ProductNumber;
 
             bool isPinned = _secondaryTileService.SecondaryTileExists(tileId);
-
             if (!isPinned)
             {
                 IsBottomAppBarSticky = true;
@@ -187,7 +186,6 @@ namespace AdventureWorks.UILogic.ViewModels
             var tileId = SelectedProduct.ProductNumber;
 
             bool isPinned = _secondaryTileService.SecondaryTileExists(tileId);
-
             if (isPinned)
             {
                 IsBottomAppBarSticky = true;

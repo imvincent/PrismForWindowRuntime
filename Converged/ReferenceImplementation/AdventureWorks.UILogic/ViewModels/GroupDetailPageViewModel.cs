@@ -7,15 +7,15 @@
 
 
 using System.Linq;
-using AdventureWorks.UILogic.Repositories;
 using System;
 using System.Collections.Generic;
-using Microsoft.Practices.Prism.StoreApps;
-using Microsoft.Practices.Prism.StoreApps.Interfaces;
-using Windows.UI.Xaml.Navigation;
-using AdventureWorks.UILogic.Services;
 using System.Globalization;
 using System.Collections.ObjectModel;
+using Windows.UI.Xaml.Navigation;
+using Microsoft.Practices.Prism.Mvvm;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
+using AdventureWorks.UILogic.Repositories;
+using AdventureWorks.UILogic.Services;
 
 namespace AdventureWorks.UILogic.ViewModels
 {

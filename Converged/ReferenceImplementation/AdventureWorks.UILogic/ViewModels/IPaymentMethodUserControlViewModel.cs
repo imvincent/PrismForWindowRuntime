@@ -9,9 +9,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using AdventureWorks.UILogic.Models;
-using Microsoft.Practices.Prism.StoreApps;
 using Windows.UI.Xaml.Navigation;
 using System.Threading.Tasks;
+using Microsoft.Practices.Prism.Mvvm;
 
 namespace AdventureWorks.UILogic.ViewModels
 {

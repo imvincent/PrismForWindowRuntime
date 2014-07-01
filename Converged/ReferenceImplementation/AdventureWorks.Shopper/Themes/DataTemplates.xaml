@@ -467,7 +467,6 @@
             </StackPanel>
         </Grid>
     </DataTemplate>
-
     <DataTemplate x:Key="ProductTemplateMinimal">
         <Grid Margin="6,0" HorizontalAlignment="Stretch" Height="90">
             <Grid.ColumnDefinitions>

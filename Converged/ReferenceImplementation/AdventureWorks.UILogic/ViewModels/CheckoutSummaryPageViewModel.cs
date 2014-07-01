@@ -12,14 +12,15 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using AdventureWorks.UILogic.Models;
-using AdventureWorks.UILogic.Repositories;
-using AdventureWorks.UILogic.Services;
-using Microsoft.Practices.Prism.StoreApps;
-using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using Windows.Globalization.NumberFormatting;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Mvvm;
+using Microsoft.Practices.Prism.Mvvm.Interfaces;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
+using AdventureWorks.UILogic.Models;
+using AdventureWorks.UILogic.Repositories;
+using AdventureWorks.UILogic.Services;
 
 namespace AdventureWorks.UILogic.ViewModels
 {
@@ -298,7 +299,6 @@ namespace AdventureWorks.UILogic.ViewModels
             {
                 await _alertMessageService.ShowAsync(errorMessage, _resourceLoader.GetString("ErrorProcessingOrder"));
             }
-
             return false;
         }
 

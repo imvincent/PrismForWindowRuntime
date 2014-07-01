@@ -8,15 +8,16 @@
 
 using System;
 using System.Windows.Input;
-using AdventureWorks.UILogic.Models;
-using Microsoft.Practices.Prism.StoreApps;
-using Microsoft.Practices.Prism.StoreApps.Interfaces;
-using AdventureWorks.UILogic.Services;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Mvvm;
+using Microsoft.Practices.Prism.Mvvm.Interfaces;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
+using AdventureWorks.UILogic.Models;
+using AdventureWorks.UILogic.Services;
 
 namespace AdventureWorks.UILogic.ViewModels
 {
@@ -100,14 +101,14 @@ namespace AdventureWorks.UILogic.ViewModels
 
         private void DisplayValidationErrors(ModelValidationResult modelValidationResults)
         {
-            var errors = new Dictionary<string, ReadOnlyCollection<string>>();
+            var errors = new Dictionary<string, Collection<string>>();
 
             // Property keys format: address.{Propertyname}
             foreach (var propkey in modelValidationResults.ModelState.Keys)
             {
                 string propertyName = propkey.Substring(propkey.IndexOf('.') + 1); // strip off order. prefix
 
-                errors.Add(propertyName, new ReadOnlyCollection<string>(modelValidationResults.ModelState[propkey]));
+                errors.Add(propertyName, new Collection<string>(modelValidationResults.ModelState[propkey]));
             }
 
             if (errors.Count > 0) BillingAddressViewModel.Address.Errors.SetAllErrors(errors);

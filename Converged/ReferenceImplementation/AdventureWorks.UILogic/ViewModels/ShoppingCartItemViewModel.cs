@@ -8,13 +8,13 @@
 
 using System;
 using System.Globalization;
-using AdventureWorks.UILogic.Models;
-using Microsoft.Practices.Prism.StoreApps;
+using System.Runtime.Serialization;
 using Windows.Globalization.NumberFormatting;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using System.Runtime.Serialization;
+using Microsoft.Practices.Prism.Mvvm;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
+using AdventureWorks.UILogic.Models;
 
 namespace AdventureWorks.UILogic.ViewModels
 {

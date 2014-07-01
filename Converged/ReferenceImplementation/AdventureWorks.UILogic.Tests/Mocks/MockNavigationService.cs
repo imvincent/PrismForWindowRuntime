@@ -7,7 +7,7 @@
 
 
 using System;
-using Microsoft.Practices.Prism.StoreApps.Interfaces;
+using Microsoft.Practices.Prism.Mvvm.Interfaces;
 
 namespace AdventureWorks.UILogic.Tests.Mocks
 {

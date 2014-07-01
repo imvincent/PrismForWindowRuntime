@@ -1,0 +1,16 @@
+﻿<prism:MvvmAppBase
+    x:Class="ExtendedSplashScreen.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ExtendedSplashScreen"
+    xmlns:localData="using:ExtendedSplashScreen.Data"
+    xmlns:prism="using:Microsoft.Practices.Prism.Mvvm">
+
+    <Application.Resources>
+
+        <!-- Application-specific resources -->
+
+        <x:String x:Key="AppName">Extended Splash Screen QuickStart</x:String>
+
+    </Application.Resources>
+</prism:MvvmAppBase>

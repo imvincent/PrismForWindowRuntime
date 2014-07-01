@@ -9,17 +9,18 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using AdventureWorks.UILogic.Models;
-using AdventureWorks.UILogic.Repositories;
-using AdventureWorks.UILogic.Services;
-using Microsoft.Practices.Prism.StoreApps;
-using Microsoft.Practices.Prism.StoreApps.Interfaces;
+using System.Threading.Tasks;
+using System.Globalization;
 using Windows.Globalization.NumberFormatting;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Practices.Prism.PubSubEvents;
-using System.Threading.Tasks;
-using System.Globalization;
 using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Mvvm;
+using Microsoft.Practices.Prism.Mvvm.Interfaces;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
+using AdventureWorks.UILogic.Models;
+using AdventureWorks.UILogic.Repositories;
+using AdventureWorks.UILogic.Services;
 
 namespace AdventureWorks.UILogic.ViewModels
 {
@@ -117,7 +118,6 @@ namespace AdventureWorks.UILogic.ViewModels
                 }
             }
         }
-
         public ObservableCollection<ShoppingCartItemViewModel> ShoppingCartItemViewModels
         {
             get { return _shoppingCartItemViewModels; }

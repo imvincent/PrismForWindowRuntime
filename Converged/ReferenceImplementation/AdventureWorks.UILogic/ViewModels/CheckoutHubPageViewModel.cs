@@ -9,15 +9,17 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Navigation;
+using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Mvvm;
+using Microsoft.Practices.Prism.Mvvm.Interfaces;
+using Microsoft.Practices.Prism.StoreApps;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using AdventureWorks.UILogic.Models;
 using AdventureWorks.UILogic.Repositories;
 using AdventureWorks.UILogic.Services;
-using System.Globalization;
-using Microsoft.Practices.Prism.StoreApps;
-using Microsoft.Practices.Prism.StoreApps.Interfaces;
-using Windows.UI.Xaml.Navigation;
-using Microsoft.Practices.Prism.Commands;
 
 namespace AdventureWorks.UILogic.ViewModels
 {
@@ -216,9 +218,9 @@ namespace AdventureWorks.UILogic.ViewModels
 
         private void DisplayOrderErrorMessages(ModelValidationResult validationResult)
         {
-            var shippingAddressErrors = new Dictionary<string, ReadOnlyCollection<string>>();
-            var billingAddressErrors = new Dictionary<string, ReadOnlyCollection<string>>();
-            var paymentMethodErrors = new Dictionary<string, ReadOnlyCollection<string>>();
+            var shippingAddressErrors = new Dictionary<string, Collection<string>>();
+            var billingAddressErrors = new Dictionary<string, Collection<string>>();
+            var paymentMethodErrors = new Dictionary<string, Collection<string>>();
 
             // Property keys of the form. Format: order.{ShippingAddress/BillingAddress/PaymentMethod}.{Property}
             foreach (var propkey in validationResult.ModelState.Keys)
@@ -227,9 +229,9 @@ namespace AdventureWorks.UILogic.ViewModels
                 string orderProperty = orderPropAndEntityProp.Substring(0, orderPropAndEntityProp.IndexOf('.') + 1);
                 string entityProperty = orderPropAndEntityProp.Substring(orderProperty.IndexOf('.') + 1);
 
-                if (orderProperty.ToLower().Contains("shipping")) shippingAddressErrors.Add(entityProperty, new ReadOnlyCollection<string>(validationResult.ModelState[propkey]));
-                if (orderProperty.ToLower().Contains("billing") && !UseSameAddressAsShipping) billingAddressErrors.Add(entityProperty, new ReadOnlyCollection<string>(validationResult.ModelState[propkey]));
-                if (orderProperty.ToLower().Contains("payment")) paymentMethodErrors.Add(entityProperty, new ReadOnlyCollection<string>(validationResult.ModelState[propkey]));
+                if (orderProperty.ToLower().Contains("shipping")) shippingAddressErrors.Add(entityProperty, new Collection<string>(validationResult.ModelState[propkey]));
+                if (orderProperty.ToLower().Contains("billing") && !UseSameAddressAsShipping) billingAddressErrors.Add(entityProperty, new Collection<string>(validationResult.ModelState[propkey]));
+                if (orderProperty.ToLower().Contains("payment")) paymentMethodErrors.Add(entityProperty, new Collection<string>(validationResult.ModelState[propkey]));
             }
 
             if (shippingAddressErrors.Count > 0) _shippingAddressViewModel.Address.Errors.SetAllErrors(shippingAddressErrors);

@@ -7,15 +7,17 @@
 
 
 using System.Globalization;
-using AdventureWorks.UILogic.Models;
-using AdventureWorks.UILogic.Repositories;
-using AdventureWorks.UILogic.Services;
-using Microsoft.Practices.Prism.StoreApps;
-using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Practices.Prism.StoreApps;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
+using Microsoft.Practices.Prism.Mvvm;
+using Microsoft.Practices.Prism.Mvvm.Interfaces;
+using AdventureWorks.UILogic.Models;
+using AdventureWorks.UILogic.Repositories;
+using AdventureWorks.UILogic.Services;
 
 namespace AdventureWorks.UILogic.ViewModels
 {
@@ -53,7 +55,7 @@ namespace AdventureWorks.UILogic.ViewModels
         {
             base.OnNavigatedTo(navigationParameter, navigationMode, viewModelState);
             int parentCategoryId = int.Parse(navigationParameter.ToString());
-            ReadOnlyCollection<Category> subCategories = null;
+            ICollection<Category> subCategories = null;
             string errorMessage = string.Empty;
             try
             {

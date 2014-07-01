@@ -41,10 +41,10 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             };
             repository.GetProductsAsyncDelegate = i =>
             {
-                ReadOnlyCollection<Product> products = null;
+                ICollection<Product> products = null;
                 if (i == 1)
                 {
-                    products =new ReadOnlyCollection<Product>( new List<Product>
+                    products = new Collection<Product>(new List<Product>
                                     {
                                         new Product(),
                                         new Product(),

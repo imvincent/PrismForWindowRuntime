@@ -1,0 +1,14 @@
+﻿<prism:MvvmAppBase
+    x:Class="HelloWorld.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:prism="using:Microsoft.Practices.Prism.Mvvm">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary.MergedDictionaries>
+            <x:String x:Key="AppName">Hello World!</x:String>
+        </ResourceDictionary>
+    </Application.Resources>
+</prism:MvvmAppBase>

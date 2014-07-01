@@ -9,12 +9,14 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Microsoft.Practices.Prism.StoreApps.Interfaces;
+using Microsoft.Practices.Prism.Mvvm.Interfaces;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml;
+using Microsoft.Practices.Prism.StoreApps.Interfaces;
+using Microsoft.Practices.Prism.StoreApps;
 
-namespace Microsoft.Practices.Prism.StoreApps
+namespace Microsoft.Practices.Prism.Mvvm
 {
     /// <summary>
     /// The FrameNavigationService interface is used for navigating across the pages of your Windows Store app.
@@ -60,7 +62,7 @@ namespace Microsoft.Practices.Prism.StoreApps
 
             if (pageType == null)
             {
-                var resourceLoader = ResourceLoader.GetForCurrentView(Constants.StoreAppsInfrastructureResourceMapId);
+                var resourceLoader = ResourceLoader.GetForCurrentView(PrismConstants.StoreAppsInfrastructureResourceMapId);
                 var error = string.Format(CultureInfo.CurrentCulture, resourceLoader.GetString("FrameNavigationServiceUnableResolveMessage"), pageToken);
                 throw new ArgumentException(error, "pageToken");
             }
@@ -77,7 +79,6 @@ namespace Microsoft.Practices.Prism.StoreApps
 
             return false;
         }
-
 
         /// <summary>
         /// Goes to the previous page in the navigation stack.
@@ -122,7 +123,6 @@ namespace Microsoft.Practices.Prism.StoreApps
         {
             NavigateFromCurrentViewModel(true);
         }
-
         /// <summary>
         /// This method is triggered after navigating to a view model. It is used to load the view model state that was saved previously.
         /// </summary>
@@ -164,7 +164,6 @@ namespace Microsoft.Practices.Prism.StoreApps
                 frameState[viewModelKey] = viewModelState;
             }
         }
-
         /// <summary>
         /// Navigates away from the current viewmodel.
         /// </summary>
@@ -186,7 +185,6 @@ namespace Microsoft.Practices.Prism.StoreApps
                 departingViewModel.OnNavigatedFrom(viewModelState, suspending);
             }
         }
-
         /// <summary>
         /// Handles the Navigating event of the Frame control.
         /// </summary>

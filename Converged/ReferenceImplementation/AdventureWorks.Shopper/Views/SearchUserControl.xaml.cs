@@ -99,7 +99,6 @@ namespace AdventureWorks.Shopper.Views
         {
             this.searchBox.FocusOnKeyboardInput = value;
         }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             this.ChangeSearchBoxVisibility(true);

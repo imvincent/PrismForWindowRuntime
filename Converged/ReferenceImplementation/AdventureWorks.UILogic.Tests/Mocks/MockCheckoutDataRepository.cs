@@ -16,9 +16,9 @@ namespace AdventureWorks.UILogic.Tests.Mocks
 {
     public class MockCheckoutDataRepository : ICheckoutDataRepository
     {
-        public Func<Task<IReadOnlyCollection<Address>>> GetAllShippingAddressesAsyncDelegate { get; set; }
-        public Func<Task<IReadOnlyCollection<Address>>> GetAllBillingAddressesAsyncDelegate { get; set; }
-        public Func<Task<IReadOnlyCollection<PaymentMethod>>> GetAllPaymentMethodsAsyncDelegate { get; set; }
+        public Func<Task<ICollection<Address>>> GetAllShippingAddressesAsyncDelegate { get; set; }
+        public Func<Task<ICollection<Address>>> GetAllBillingAddressesAsyncDelegate { get; set; }
+        public Func<Task<ICollection<PaymentMethod>>> GetAllPaymentMethodsAsyncDelegate { get; set; }
         public Func<string, Task<Address>> GetShippingAddressAsyncDelegate { get; set; }
         public Func<string, Task<Address>> GetBillingAddressAsyncDelegate { get; set; }
         public Func<string, Task<PaymentMethod>> GetPaymentMethodDelegate { get; set; }
@@ -59,17 +59,17 @@ namespace AdventureWorks.UILogic.Tests.Mocks
             return GetDefaultPaymentMethodAsyncDelegate();
         }
 
-        public Task<IReadOnlyCollection<Address>> GetAllShippingAddressesAsync()
+        public Task<ICollection<Address>> GetAllShippingAddressesAsync()
         {
             return GetAllShippingAddressesAsyncDelegate();
         }
 
-        public Task<IReadOnlyCollection<Address>> GetAllBillingAddressesAsync()
+        public Task<ICollection<Address>> GetAllBillingAddressesAsync()
         {
             return GetAllBillingAddressesAsyncDelegate();
         }
 
-        public Task<IReadOnlyCollection<PaymentMethod>> GetAllPaymentMethodsAsync()
+        public Task<ICollection<PaymentMethod>> GetAllPaymentMethodsAsync()
         {
             return GetAllPaymentMethodsAsyncDelegate();
         }

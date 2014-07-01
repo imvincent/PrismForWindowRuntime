@@ -8,6 +8,7 @@
 
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Mvvm;
+using Microsoft.Practices.Prism.Mvvm.Interfaces;
 using Microsoft.Practices.Prism.StoreApps.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -318,7 +319,7 @@ namespace Microsoft.Practices.Prism.StoreApps
         }
 
         /// <summary>
-        /// Translates <see cref="ApplicationViewState"/> values into strings for visual state
+        /// Translates the app width and height values into strings for visual state
         /// management within the page. The default implementation uses the names of enum values.
         /// Subclasses may override this method to control the mapping scheme used.
         /// </summary>

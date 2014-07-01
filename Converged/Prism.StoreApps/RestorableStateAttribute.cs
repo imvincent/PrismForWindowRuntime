@@ -8,7 +8,7 @@
 
 using System;
 
-namespace Microsoft.Practices.Prism.StoreApps
+namespace Microsoft.Practices.Prism.Mvvm
 {
     /// <summary>
     /// This attribute indicates that the marked property will have its state saved on suspension.

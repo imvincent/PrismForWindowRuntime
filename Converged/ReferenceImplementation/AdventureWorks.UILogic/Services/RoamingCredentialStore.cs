@@ -25,7 +25,6 @@ namespace AdventureWorks.UILogic.Services
             var passwordCredential = new PasswordCredential(resource, userName, password);
             vault.Add(passwordCredential); 
         }
-
         private static void RemoveAllCredentialsByResource(string resource, PasswordVault vault)
         {
             try

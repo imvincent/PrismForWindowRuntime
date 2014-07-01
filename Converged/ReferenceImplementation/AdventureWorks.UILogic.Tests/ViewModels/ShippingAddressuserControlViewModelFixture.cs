@@ -63,7 +63,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
 
             var checkoutDataRepository = new MockCheckoutDataRepository();
             checkoutDataRepository.GetAllShippingAddressesAsyncDelegate =
-                () => Task.FromResult<IReadOnlyCollection<Address>>(new ReadOnlyCollection<Address>(existingAddresses));
+                () => Task.FromResult<ICollection<Address>>(new ReadOnlyCollection<Address>(existingAddresses));
 
             var target = new ShippingAddressUserControlViewModel(checkoutDataRepository, null, null, null);
             target.Address = newAddress;
@@ -86,7 +86,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             var existingAddresses = new List<Address>();
             var checkoutDataRepository = new MockCheckoutDataRepository();
             checkoutDataRepository.GetAllShippingAddressesAsyncDelegate =
-                () => Task.FromResult<IReadOnlyCollection<Address>>(new ReadOnlyCollection<Address>(existingAddresses));
+                () => Task.FromResult<ICollection<Address>>(new Collection<Address>(existingAddresses));
 
             checkoutDataRepository.SaveShippingAddressAsyncDelegate = address =>
                                                                           {
