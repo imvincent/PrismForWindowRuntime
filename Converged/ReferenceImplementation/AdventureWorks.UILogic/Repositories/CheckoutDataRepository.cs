@@ -1,10 +1,4 @@
-// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
-// ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
-// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
-// PARTICULAR PURPOSE.
-//
-// Copyright (c) Microsoft Corporation. All rights reserved
-
+// Copyright (c) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 
 using System;
 using System.Collections.Generic;
@@ -166,11 +160,11 @@ namespace AdventureWorks.UILogic.Repositories
                 {
                     Id = paymentMethod.Id,
                     CardNumber = "********",
+                    CardVerificationCode = "****",
                     CardholderName = paymentMethod.CardholderName,
                     ExpirationMonth = paymentMethod.ExpirationMonth,
                     ExpirationYear = paymentMethod.ExpirationYear,
-                    Phone = paymentMethod.Phone,
-                    CardVerificationCode = paymentMethod.CardVerificationCode
+                    Phone = paymentMethod.Phone
                 };
 
             // If there's no default value stored, use this one

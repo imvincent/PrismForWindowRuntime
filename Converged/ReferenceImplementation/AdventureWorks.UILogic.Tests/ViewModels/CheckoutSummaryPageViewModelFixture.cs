@@ -1,10 +1,4 @@
-// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
-// ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
-// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
-// PARTICULAR PURPOSE.
-//
-// Copyright (c) Microsoft Corporation. All rights reserved
-
+// Copyright (c) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +19,6 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
         public async Task SubmitValidOrder_NavigatesToOrderConfirmation()
         {
             bool navigateCalled = false;
-            bool clearHistoryCalled = false;
             bool clearCartCalled = false;
             var navigationService = new MockNavigationService();
             navigationService.NavigateDelegate = (s, o) =>
@@ -34,10 +27,7 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
                                                          navigateCalled = true;
                                                          return true;
                                                      };
-            navigationService.ClearHistoryDelegate = () =>
-                                                         {
-                                                             clearHistoryCalled = true;
-                                                         };
+            
             var accountService = new MockAccountService()
                 {
                     VerifySavedCredentialsAsyncDelegate = () => Task.FromResult<UserInfo>(new UserInfo())
@@ -61,7 +51,6 @@ namespace AdventureWorks.UILogic.Tests.ViewModels
             await target.SubmitCommand.Execute();
 
             Assert.IsTrue(navigateCalled);
-            Assert.IsTrue(clearHistoryCalled);
             Assert.IsTrue(clearCartCalled);
         }
 

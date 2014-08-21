@@ -1,10 +1,4 @@
-// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
-// ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
-// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
-// PARTICULAR PURPOSE.
-//
-// Copyright (c) Microsoft Corporation. All rights reserved
-
+// Copyright (c) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 
 using System;
 using System.Collections.Generic;
@@ -81,7 +75,7 @@ namespace Microsoft.Practices.Prism.Mvvm
         /// Override this method with logic that will be performed after the application is initialized. For example, navigating to the application's home page.
         /// </summary>
         /// <param name="args">The <see cref="LaunchActivatedEventArgs"/> instance containing the event data.</param>
-        protected abstract Task OnLaunchApplication(LaunchActivatedEventArgs args);
+        protected abstract Task OnLaunchApplicationAsync(LaunchActivatedEventArgs args);
 
         /// <summary>
         /// Gets the type of the page based on a page token.
@@ -117,7 +111,7 @@ namespace Microsoft.Practices.Prism.Mvvm
         /// Override this method with the initialization logic of your application. Here you can initialize services, repositories, and so on.
         /// </summary>
         /// <param name="args">The <see cref="IActivatedEventArgs"/> instance containing the event data.</param>
-        protected virtual Task OnInitialize(IActivatedEventArgs args) 
+        protected virtual Task OnInitializeAsync(IActivatedEventArgs args) 
         {
             return Task.FromResult<object>(null);
         }
@@ -149,7 +143,7 @@ namespace Microsoft.Practices.Prism.Mvvm
 
             if (rootFrame != null && (!_isRestoringFromTermination || (args != null && args.TileId != tileId)))
             {
-                await OnLaunchApplication(args);
+                await OnLaunchApplicationAsync(args);
             }
 
             // Ensure the current window is active
@@ -206,7 +200,7 @@ namespace Microsoft.Practices.Prism.Mvvm
                     await SessionStateService.RestoreSessionStateAsync();
                 }
 
-                await OnInitialize(args);
+                await OnInitializeAsync(args);
                 if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
                     // Restore the saved session state and navigate to the last page visited
@@ -285,6 +279,7 @@ namespace Microsoft.Practices.Prism.Mvvm
                 NavigationService.GoBack();
                 e.Handled = true;
             }
+            else this.Exit();
         }
 #endif
 #if WINDOWS_APP

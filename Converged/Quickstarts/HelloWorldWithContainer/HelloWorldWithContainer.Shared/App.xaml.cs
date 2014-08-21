@@ -1,10 +1,4 @@
-// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
-// ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
-// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
-// PARTICULAR PURPOSE.
-//
-// Copyright (c) Microsoft Corporation. All rights reserved
-
+// Copyright (c) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 
 using HelloWorldWithContainer.Services;
 using Microsoft.Practices.Prism.Mvvm;
@@ -33,7 +27,7 @@ namespace HelloWorldWithContainer
         /// to the page approriate based on a search, sharing, or secondary tile launch of the app
         /// </summary>
         /// <param name="args">The launch arguments passed to the application</param>
-        protected override Task OnLaunchApplication(LaunchActivatedEventArgs args)
+        protected override Task OnLaunchApplicationAsync(LaunchActivatedEventArgs args)
         {
             // Use the logical name for the view to navigate to. The default convention
             // in the NavigationService will be to append "Page" to the name and look 
@@ -49,7 +43,7 @@ namespace HelloWorldWithContainer
         /// This is the place you initialize your services and set default factory or default resolver for the view model locator
         /// </summary>
         /// <param name="args">The same launch arguments passed when the app starts.</param>
-        protected override Task OnInitialize(IActivatedEventArgs args)
+        protected override Task OnInitializeAsync(IActivatedEventArgs args)
         {
             // Register MvvmAppBase services with the container so that view models can take dependencies on them
             _container.RegisterInstance<ISessionStateService>(SessionStateService);

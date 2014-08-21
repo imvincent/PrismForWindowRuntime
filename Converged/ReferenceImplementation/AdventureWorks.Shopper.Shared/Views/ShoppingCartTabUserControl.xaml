@@ -367,7 +367,7 @@
                 Style="{StaticResource ShoppingCartButtonStyle}">
             <Interactivity:Interaction.Behaviors>
                 <Core:EventTriggerBehavior EventName="Click">
-                    <Core:NavigateToPageAction TargetPage="AdventureWorks.Shopper.Views.ShoppingCartPage" Parameter="{x:Null}"/>
+                    <Core:NavigateToPageAction TargetPage="AdventureWorks.Shopper.Views.ShoppingCartPage" Parameter="IgnoredParameter"/>
                 </Core:EventTriggerBehavior>
             </Interactivity:Interaction.Behaviors>
             <Grid x:Name="Grid">

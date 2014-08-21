@@ -154,6 +154,7 @@
     <Compile Include="ViewModels\BillingAddressUserControlViewModelFixture.cs" />
     <Compile Include="ViewModels\CheckoutHubPageViewModelFixture.cs" />
     <Compile Include="ViewModels\CheckoutSummaryPageViewModelFixture.cs" />
+    <Compile Include="ViewModels\OrderConfirmationPageViewModelFixture.cs" />
     <Compile Include="ViewModels\PaymentMethodUserControlViewModelFixture.cs" />
     <Compile Include="ViewModels\SearchResultsPageViewModelFixture.cs" />
     <Compile Include="ViewModels\ShippingAddressuserControlViewModelFixture.cs" />
@@ -186,31 +187,34 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Prism.StoreApps\Microsoft.Practices.Prism.StoreApps.csproj">
-      <Project>{a2303152-0f67-4ca5-8639-0a16e64a8b6d}</Project>
-      <Name>Microsoft.Practices.Prism.StoreApps</Name>
-    </ProjectReference>
     <ProjectReference Include="..\AdventureWorks.UILogic\AdventureWorks.UILogic.csproj">
       <Project>{5B10DC48-600B-4F27-84D8-F041FEE71A34}</Project>
       <Name>AdventureWorks.UILogic</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Practices.Prism.Mvvm, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Practices.Prism.Mvvm, Version=1.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Prism.Mvvm.1.1.0\lib\windows8\Microsoft.Practices.Prism.Mvvm.dll</HintPath>
+      <HintPath>..\..\packages\Prism.Mvvm.1.1.1\lib\windows8\Microsoft.Practices.Prism.Mvvm.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.Prism.Mvvm.Store, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Practices.Prism.Mvvm.Store, Version=1.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Prism.Mvvm.1.1.0\lib\windows8\Microsoft.Practices.Prism.Mvvm.Store.dll</HintPath>
+      <HintPath>..\..\packages\Prism.Mvvm.1.1.1\lib\windows8\Microsoft.Practices.Prism.Mvvm.Store.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.Prism.PubSubEvents, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Prism.PubSubEvents.1.1.0\lib\portable-sl5+windowsphone8+windows8+net40+wpa81\Microsoft.Practices.Prism.PubSubEvents.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.Prism.SharedInterfaces, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Practices.Prism.SharedInterfaces, Version=1.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Prism.Mvvm.1.1.0\lib\windows8\Microsoft.Practices.Prism.SharedInterfaces.dll</HintPath>
+      <HintPath>..\..\packages\Prism.Mvvm.1.1.1\lib\windows8\Microsoft.Practices.Prism.SharedInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism.StoreApps, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Prism.StoreApps.2.0.0\lib\windows8\Microsoft.Practices.Prism.StoreApps.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism.StoreApps.Windows">
+      <HintPath>..\..\packages\Prism.StoreApps.2.0.0\lib\windows8\Microsoft.Practices.Prism.StoreApps.Windows.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

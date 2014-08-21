@@ -1,10 +1,4 @@
-// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
-// ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
-// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
-// PARTICULAR PURPOSE.
-//
-// Copyright (c) Microsoft Corporation. All rights reserved
-
+// Copyright (c) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 
 using HelloWorld.Services;
 using HelloWorld.ViewModels;
@@ -36,7 +30,7 @@ namespace HelloWorld
         /// to the page approriate based on a search, sharing, or secondary tile launch of the app
         /// </summary>
         /// <param name="args">The launch arguments passed to the application</param>
-        protected override Task OnLaunchApplication(LaunchActivatedEventArgs args)
+        protected override Task OnLaunchApplicationAsync(LaunchActivatedEventArgs args)
         {
             // Use the logical name for the view to navigate to. The default convention
             // in the NavigationService will be to append "Page" to the name and look 
@@ -51,7 +45,7 @@ namespace HelloWorld
         /// This is the place you initialize your services and set default factory or default resolver for the view model locator
         /// </summary>
         /// <param name="args">The same launch arguments passed when the app starts.</param>
-        protected override Task OnInitialize(IActivatedEventArgs args)
+        protected override Task OnInitializeAsync(IActivatedEventArgs args)
         {
             // New up the singleton data repository, and pass it the state service it depends on from the base class
             _dataRepository = new DataRepository(SessionStateService);

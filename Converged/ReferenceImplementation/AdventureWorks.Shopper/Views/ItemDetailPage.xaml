@@ -13,6 +13,12 @@
                             x:Uid="Page"
                             mc:Ignorable="d"
                             d:DataContext="{d:DesignInstance designViewModels:ItemDetailsPageDesignViewModel, IsDesignTimeCreatable=True}">
+    <Page.TopAppBar>
+        <AppBar Style="{StaticResource AppBarStyle}"
+                x:Uid="TopAppBar">
+            <views:TopAppBarUserControl />
+        </AppBar>
+    </Page.TopAppBar>
 
     <!--
         This grid acts as a root panel for the page that defines two rows:
@@ -669,11 +675,6 @@
                 <!-- The back button and title have different styles when in minimal layout -->
                 <VisualState x:Name="MinimalLayout">
                     <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="flipView"
-                                                       Storyboard.TargetProperty="ItemsPanel">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="{StaticResource VerticalStackPanelItemsPanel}" />
-                        </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton"
                                                        Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0"
@@ -708,7 +709,7 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(SearchUserControl.IsCompact)"
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(views:SearchUserControl.IsCompact)"
                                                        Storyboard.TargetName="searchUserControl">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>

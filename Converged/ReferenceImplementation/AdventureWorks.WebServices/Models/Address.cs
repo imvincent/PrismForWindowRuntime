@@ -1,10 +1,4 @@
-// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
-// ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
-// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
-// PARTICULAR PURPOSE.
-//
-// Copyright (c) Microsoft Corporation. All rights reserved
-
+// Copyright (c) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 
 using System;
 using System.Linq;
@@ -93,7 +87,13 @@ namespace AdventureWorks.WebServices.Models
 
                 string stateName = address.State;
                 State state = new StateRepository().GetAll().FirstOrDefault(c => c.Name == stateName);
-                int zipCode = Convert.ToInt32(address.ZipCode.Substring(0, 3), CultureInfo.InvariantCulture);
+                int zipCode;
+                Int32.TryParse(address.ZipCode.Substring(0, 3), out zipCode);
+                if (zipCode == 0)
+                {
+                    //Only supporting numeric zip codes.
+                    return new ValidationResult(Resources.ErrorInvalidZipCodeInState);
+                }
 
                 foreach (var range in state.ValidZipCodeRanges)
                 {

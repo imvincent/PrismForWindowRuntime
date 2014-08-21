@@ -1,10 +1,4 @@
-// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
-// ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
-// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
-// PARTICULAR PURPOSE.
-//
-// Copyright (c) Microsoft Corporation. All rights reserved
-
+// Copyright (c) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 
 using System;
 using System.Collections.Generic;
@@ -55,7 +49,7 @@ namespace AdventureWorks.Shopper
         }
 
         // Documentation on navigation between pages is at http://go.microsoft.com/fwlink/?LinkID=288815&clcid=0x409
-        protected override Task OnLaunchApplication(LaunchActivatedEventArgs args)
+        protected override Task OnLaunchApplicationAsync(LaunchActivatedEventArgs args)
         {
             if (args != null && !string.IsNullOrEmpty(args.Arguments))
             {
@@ -87,7 +81,7 @@ namespace AdventureWorks.Shopper
             SessionStateService.RegisterKnownType(typeof(Collection<Product>));
         }
 
-        protected override Task OnInitialize(IActivatedEventArgs args)
+        protected override Task OnInitializeAsync(IActivatedEventArgs args)
         {
             EventAggregator = new EventAggregator();
 
@@ -140,7 +134,7 @@ namespace AdventureWorks.Shopper
             _tileUpdater.StartPeriodicUpdate(new Uri(Constants.ServerAddress + "/api/TileNotification"), PeriodicUpdateRecurrence.HalfHour);
             var resourceLoader = _container.Resolve<IResourceLoader>();
 
-            return base.OnInitialize(args);
+            return base.OnInitializeAsync(args);
         }
 
         protected override object Resolve(Type type)

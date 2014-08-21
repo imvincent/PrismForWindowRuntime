@@ -89,7 +89,7 @@
 				Background="{StaticResource AWShopperAccentBrush}">
 				<Interactivity:Interaction.Behaviors>
 					<Core:EventTriggerBehavior EventName="Click">
-						<Core:NavigateToPageAction TargetPage="AdventureWorks.Shopper.Views.HubPage"/>
+                        <Core:NavigateToPageAction TargetPage="AdventureWorks.Shopper.Views.HubPage" Parameter="{x:Null}"/>
 					</Core:EventTriggerBehavior>
 				</Interactivity:Interaction.Behaviors>
 			</Button>
